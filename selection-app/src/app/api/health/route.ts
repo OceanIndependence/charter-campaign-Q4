@@ -16,9 +16,17 @@ export async function GET(request: NextRequest) {
   const denied = requirePortalAuth(request);
   if (denied) return denied;
 
+  const imagesConfigured = Boolean(
+    process.env.YFIMAGES_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN
+  );
+  const dataConfigured = Boolean(
+    process.env.PORTAL_DATA_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN
+  );
+
   const checks: Record<string, unknown> = {
     storage: storageMode(),
-    blobConnected: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
+    imagesStoreConfigured: imagesConfigured,
+    dataStoreConfigured: dataConfigured,
     cronSecretConfigured: Boolean(process.env.CRON_SECRET),
     ...fleetDiagnostics(),
   };
@@ -32,6 +40,6 @@ export async function GET(request: NextRequest) {
   // Refresh after the fleet attempt — it may have recorded a storage error.
   Object.assign(checks, fleetDiagnostics());
 
-  const healthy = (checks.fleet as { ok: boolean }).ok && checks.blobConnected !== false;
+  const healthy = (checks.fleet as { ok: boolean }).ok && (checks.lastStorageError ?? null) === null;
   return NextResponse.json(checks, { status: healthy ? 200 : 503 });
 }

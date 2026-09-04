@@ -10,28 +10,33 @@ const TYPES: Record<string, string> = {
   ".jpeg": "image/jpeg",
   ".png": "image/png",
   ".webp": "image/webp",
-  ".json": "application/json",
 };
 
 /**
- * Serves files from the local filesystem store — development fallback when
- * no Vercel Blob store is configured (in blob mode URLs point straight at
- * the blob CDN and this route is never referenced).
+ * Serves processed IMAGES from the local filesystem store — development
+ * fallback when no public images Blob store is configured (in blob mode
+ * image URLs point straight at the blob CDN and this route is never
+ * referenced). It only ever serves image keys: the private DATA store
+ * (drafts, page configs) is never reachable here, even in dev.
  */
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ key: string[] }> }
 ) {
-  if (process.env.BLOB_READ_WRITE_TOKEN) {
+  if (process.env.YFIMAGES_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN) {
     return NextResponse.json({ error: "Not found." }, { status: 404 });
   }
   const { key } = await params;
   const rel = key.join("/");
-  const file = localPath(rel);
-  // localPath anchors under .portal-store; reject any traversal attempt.
-  if (rel.split("/").some((part) => part === ".." || part === "")) {
+  // Only image keys are servable; reject traversal and any non-image path.
+  if (
+    !rel.startsWith("yachtfolio/images/") ||
+    rel.split("/").some((part) => part === ".." || part === "") ||
+    !/\.(jpe?g|png|webp)$/i.test(rel)
+  ) {
     return NextResponse.json({ error: "Not found." }, { status: 404 });
   }
+  const file = localPath(rel);
   try {
     const body = await readFile(file);
     const type = TYPES[path.extname(file).toLowerCase()] ?? "application/octet-stream";
