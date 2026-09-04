@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getFleet } from "@/server/fleet.mjs";
+import { describeFleetFailure, getFleet } from "@/server/fleet.mjs";
 import { requirePortalAuth } from "@/server/portal-auth";
 import { clientIp, rateLimit } from "@/server/rate-limit";
 
@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
   } catch (err) {
     console.error("[api/fleet]", err);
     return NextResponse.json(
-      { error: "The fleet list is unavailable at the moment." },
+      { error: `The fleet list is unavailable. ${describeFleetFailure(err)}` },
       { status: 502 }
     );
   }

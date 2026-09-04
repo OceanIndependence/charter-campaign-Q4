@@ -19,10 +19,15 @@ import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile, readdir } from "node:fs/promises";
 import path from "node:path";
 
-const FS_ROOT = path.join(process.cwd(), ".portal-store");
+const FS_ROOT = process.env.PORTAL_STORE_DIR ?? path.join(process.cwd(), ".portal-store");
 
 function useBlob() {
   return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+}
+
+/** Which backend is active — for diagnostics only. */
+export function storageMode() {
+  return useBlob() ? "blob" : "filesystem";
 }
 
 async function blob() {

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getYachtDetail } from "@/server/fleet.mjs";
+import { describeFleetFailure, getYachtDetail } from "@/server/fleet.mjs";
 import { requirePortalAuth } from "@/server/portal-auth";
 import { clientIp, rateLimit } from "@/server/rate-limit";
 
@@ -27,7 +27,7 @@ export async function GET(
   } catch (err) {
     console.error(`[api/fleet/${yfId}]`, err);
     return NextResponse.json(
-      { error: "Yachtfolio did not return this yacht's details." },
+      { error: `This yacht's details are unavailable. ${describeFleetFailure(err)}` },
       { status: 502 }
     );
   }

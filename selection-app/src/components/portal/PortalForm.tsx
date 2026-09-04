@@ -89,12 +89,16 @@ export default function PortalForm() {
           window.location.href = "/portal/login";
           return;
         }
-        if (!res.ok) throw new Error(String(res.status));
+        if (!res.ok) {
+          const body = await res.json().catch(() => null);
+          throw new Error(body?.error ?? "The fleet list is unavailable.");
+        }
         const cache: FleetCache = await res.json();
         setFleet(cache.yachts ?? []);
         setRemovedIds(new Set(Object.keys(cache.removed ?? {}).map(Number)));
-      } catch {
-        setFleetError("The fleet list is unavailable — fields can still be completed by hand.");
+      } catch (err) {
+        const detail = err instanceof Error && err.message ? err.message : "The fleet list is unavailable.";
+        setFleetError(`${detail} Fields can still be completed by hand.`);
       }
     })();
   }, []);

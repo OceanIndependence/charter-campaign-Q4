@@ -43,14 +43,66 @@ async function passkeyOrThrow() {
 }
 
 /**
+ * Belt-and-braces cache in module scope: keeps the portal working when
+ * durable storage is missing or broken (serverless instances are reused,
+ * so this survives across requests within an instance).
+ */
+let memoryFleet = null;
+let lastStorageError = null;
+
+/** Diagnostics for /api/health and error responses (no secrets). */
+export function fleetDiagnostics() {
+  return {
+    passkeyConfigured: Boolean(process.env.YACHTFOLIO_PASSKEY),
+    lastStorageError,
+    memoryCache: memoryFleet ? { syncedAt: memoryFleet.syncedAt, count: memoryFleet.count } : null,
+  };
+}
+
+/** A short, safe explanation of why a fleet call failed. */
+export function describeFleetFailure(err) {
+  const msg = String(err?.message ?? err);
+  if (msg.includes("YACHTFOLIO_PASSKEY")) {
+    return "The server is missing the YACHTFOLIO_PASSKEY environment variable.";
+  }
+  if (/BLOB_READ_WRITE_TOKEN|Vercel Blob|blob\.vercel|EROFS|EACCES|ENOSPC|read-only/i.test(msg)) {
+    return "Storage is not available — connect a Vercel Blob store to the project (Storage tab) and redeploy.";
+  }
+  return "Yachtfolio did not respond — see the server logs for detail.";
+}
+
+/**
  * Pull the charter fleet list from Yachtfolio into the cache. Records
  * yachts that have disappeared since the previous sync (kept until they
  * reappear) so the form can warn on drafts and published pages that
  * reference them.
  */
+let memoryReference = null;
+
+async function readStoredJson(key) {
+  try {
+    return await getJson(key);
+  } catch (err) {
+    lastStorageError = String(err?.message ?? err);
+    console.warn(`[fleet] storage read failed for ${key}: ${lastStorageError}`);
+    return null;
+  }
+}
+
+async function writeStoredJson(key, value) {
+  try {
+    await putJson(key, value);
+    return true;
+  } catch (err) {
+    lastStorageError = String(err?.message ?? err);
+    console.warn(`[fleet] storage write failed for ${key}: ${lastStorageError}`);
+    return false;
+  }
+}
+
 export async function syncFleet() {
   const passkey = await passkeyOrThrow();
-  const previous = await getJson(FLEET_KEY);
+  const previous = (await readStoredJson(FLEET_KEY)) ?? memoryFleet;
 
   const list = await fetchFleetList(passkey);
   await sleep(REQUEST_DELAY_MS);
@@ -73,19 +125,27 @@ export async function syncFleet() {
     yachts: list.map((y) => ({ id: y.id, name: y.name, registryPort: y.registry_port ?? "" })),
     removed,
   };
-  await putJson(FLEET_KEY, fleet);
-  await putJson(REFERENCE_KEY, reference);
-  return { count: fleet.count, removedCount: Object.keys(removed).length, syncedAt: fleet.syncedAt };
+  memoryFleet = fleet;
+  memoryReference = reference;
+  // Persist best-effort: a broken store must not take down a list we already hold.
+  const persisted =
+    (await writeStoredJson(FLEET_KEY, fleet)) && (await writeStoredJson(REFERENCE_KEY, reference));
+  return {
+    count: fleet.count,
+    removedCount: Object.keys(removed).length,
+    syncedAt: fleet.syncedAt,
+    persisted,
+  };
 }
 
 /** The cached fleet list; bootstraps from the live API when missing/stale. */
 export async function getFleet() {
-  let fleet = await getJson(FLEET_KEY);
+  let fleet = (await readStoredJson(FLEET_KEY)) ?? memoryFleet;
   const stale = !fleet || Date.now() - Date.parse(fleet.syncedAt ?? 0) > FLEET_STALE_MS;
   if (stale) {
     try {
       await syncFleet();
-      fleet = await getJson(FLEET_KEY);
+      fleet = memoryFleet;
     } catch (err) {
       if (!fleet) throw err;
       // Serve the stale cache rather than failing the form.
@@ -96,10 +156,11 @@ export async function getFleet() {
 }
 
 async function getReference(passkey) {
-  const cached = await getJson(REFERENCE_KEY);
+  const cached = (await readStoredJson(REFERENCE_KEY)) ?? memoryReference;
   if (cached?.seasons?.length) return cached;
   const reference = await fetchReferenceData(passkey);
-  await putJson(REFERENCE_KEY, reference);
+  memoryReference = reference;
+  await writeStoredJson(REFERENCE_KEY, reference);
   return reference;
 }
 
@@ -110,7 +171,7 @@ async function getReference(passkey) {
  * file was already done). Cached for a few hours.
  */
 export async function getYachtDetail(yfId, { forceRefresh = false } = {}) {
-  const cached = await getJson(detailKey(yfId));
+  const cached = await readStoredJson(detailKey(yfId));
   if (
     !forceRefresh &&
     cached &&
@@ -208,6 +269,6 @@ export async function getYachtDetail(yfId, { forceRefresh = false } = {}) {
     warnings: facts.notes,
   };
 
-  await putJson(detailKey(yfId), detail);
+  await writeStoredJson(detailKey(yfId), detail);
   return detail;
 }
