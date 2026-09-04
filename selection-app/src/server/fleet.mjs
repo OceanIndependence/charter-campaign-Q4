@@ -65,6 +65,9 @@ export function describeFleetFailure(err) {
   if (msg.includes("YACHTFOLIO_PASSKEY")) {
     return "The server is missing the YACHTFOLIO_PASSKEY environment variable.";
   }
+  if (/private store/i.test(msg)) {
+    return "The connected Blob store is private — create one with public access (client pages must load the images directly) and connect that instead.";
+  }
   if (/BLOB_READ_WRITE_TOKEN|Vercel Blob|blob\.vercel|EROFS|EACCES|ENOSPC|read-only/i.test(msg)) {
     return "Storage is not available — connect a Vercel Blob store to the project (Storage tab) and redeploy.";
   }
@@ -250,9 +253,9 @@ export async function getYachtDetail(yfId, { forceRefresh = false } = {}) {
       : "",
     location: facts.location ?? "",
     cruisingArea: facts.cruisingArea ?? "",
-    availability: facts.unavailableForTarget
-      ? `Not currently available for ${TARGET_SEASON.label} — confirm with the CA`
-      : "",
+    // Consultant-voice field: never auto-filled. facts.notes carries the
+    // seasons_unavailable warning for the form to surface instead.
+    availability: "",
     weeklyRateEUR: facts.weeklyRateEUR ?? null,
     weeklyRateIsFrom: facts.weeklyRateIsFrom,
     apaPct: 35,
