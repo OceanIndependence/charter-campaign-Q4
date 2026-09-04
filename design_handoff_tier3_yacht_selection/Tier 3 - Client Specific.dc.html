@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/use-ocean-independence-design-system-0088b55d-8fa4-464e-bfce-382c26b195bc/colors_and_type.css">
+  <link rel="stylesheet" href="_ds/use-ocean-independence-design-system-0088b55d-8fa4-464e-bfce-382c26b195bc/styles.css">
+  <script src="_ds/use-ocean-independence-design-system-0088b55d-8fa4-464e-bfce-382c26b195bc/_ds_bundle.js"></script>
+  <script src="image-slot.js"></script>
+  <style>
+    html, body { margin: 0; padding: 0; background: #04080A; overflow-x: hidden; }
+    body { font-family: "Gotham", "Helvetica Neue", Arial, sans-serif; }
+    a { color: #FFFFFF; }
+    a:hover { color: #A7E6D7; }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #0B0E10; }
+    ::-webkit-scrollbar-thumb { background: #2A3134; }
+  </style>
+</helmet>
+<div style="min-height: 100svh; background: radial-gradient(ellipse 120% 80% at 50% 30%, #0A1214 0%, #04080A 60%); color: #FFFFFF; font-family: var(--font-sans); font-weight: 300;">
+
+  <section data-screen-label="Cover" style="position: relative; padding: 96px clamp(24px, 6vw, 72px) 8px;">
+    <header style="position: absolute; top: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 0 40px; min-height: 72px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+      <img src="assets/logo-white.png" alt="Ocean Independence" style="height: 28px; display: block;">
+      <span style="font-size: 10px; letter-spacing: 0.36em; font-weight: 500; color: rgba(255,255,255,0.6);">SUMMER 2027 · MEDITERRANEAN</span>
+    </header>
+    <div style="display: flex; flex-direction: column; align-items: center; text-align: center; padding-top: 32px;">
+      <div style="font-size: 10px; letter-spacing: 0.36em; font-weight: 500; color: #A7E6D7; margin-bottom: 22px;">10 YACHTS, HELD FOR YOUR REVIEW</div>
+      <h1 style="font-family: var(--font-display); font-weight: 700; font-size: clamp(28px, 4.4vw, 48px); letter-spacing: 0.28em; line-height: 1.3; margin: 0 0 20px; text-transform: uppercase; text-wrap: balance;">Yacht Charter Selection</h1>
+      <p style="font-size: 13px; letter-spacing: 0.08em; line-height: 1.9; color: rgba(255,255,255,0.7); margin: 0;">Prepared for Mr and Mrs Harrington by Lucy — Summer 2027, Mediterranean</p>
+    </div>
+  </section>
+
+  <section data-screen-label="Showcase ring" id="ys-stage" style="position: relative; touch-action: pan-y; padding: 18px 0 56px;">
+    <div style="display: flex; justify-content: center; pointer-events: none; position: relative; z-index: 5;">
+      <span style="font-size: 9.5px; letter-spacing: 0.4em; font-weight: 500; color: rgba(255,255,255,0.5);">{{ progress }}</span>
+    </div>
+    <div id="ys-ringstage" style="position: relative; height: {{ stageH }}px; margin-top: 6px;">
+      <div style="position: absolute; inset: 0; perspective: 1500px; perspective-origin: 50% 40%;">
+        <div style="position: absolute; left: 50%; top: 46%; width: 0; height: 0; transform-style: preserve-3d; transform: {{ ringTransform }}; transition: transform 1100ms cubic-bezier(0.16, 1, 0.3, 1);">
+          <div style="position: absolute; left: 0; top: 0; width: {{ floorD }}px; height: {{ floorD }}px; margin-left: {{ negHalfFloor }}px; margin-top: {{ negHalfFloor }}px; transform: rotateX(90deg) translateZ({{ floorDrop }}px); border-radius: 50%; border: 1px solid rgba(167,230,215,0.35); box-shadow: 0 0 50px rgba(167,230,215,0.12); background: radial-gradient(circle, rgba(167,230,215,0.05) 0%, rgba(167,230,215,0) 68%); pointer-events: none;"></div>
+          <sc-for list="{{ ringCards }}" as="card" hint-placeholder-count="10">
+            <div onClick="{{ card.pick }}" style="position: absolute; left: 0; top: 0; width: {{ cardW }}px; height: {{ cardH }}px; margin-left: {{ negHalfW }}px; margin-top: {{ negHalfH }}px; border-radius: 16px; border: 1px solid rgba(167,230,215,0.55); background: linear-gradient(180deg, rgba(167,230,215,0.07) 0%, rgba(255,255,255,0.02) 55%, rgba(167,230,215,0.04) 100%); box-shadow: 0 0 18px rgba(167,230,215,0.28), 0 0 60px rgba(167,230,215,0.14), inset 0 0 24px rgba(167,230,215,0.08), 0 30px 60px rgba(0,0,0,0.55); transform: {{ card.transform }}; opacity: {{ card.opacity }}; filter: {{ card.filter }}; transition: opacity 1100ms cubic-bezier(0.16,1,0.3,1), filter 1100ms cubic-bezier(0.16,1,0.3,1); cursor: {{ card.cursor }}; overflow: hidden;">
+              <div onClick="{{ card.toggleCompare }}" title="Add to comparison" style="position: absolute; top: 10px; right: 10px; z-index: 5; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border: 1px solid {{ card.cmpBorder }}; background: {{ card.cmpBg }}; cursor: pointer; user-select: none; pointer-events: {{ card.cmpEvents }};" style-hover="border-color: #A7E6D7;">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="{{ card.cmpPath }}" stroke="{{ card.cmpInk }}" stroke-width="1.2"></path></svg>
+              </div>
+              <div style="display: flex; flex-direction: column; height: 100%; box-sizing: border-box; padding: 0 0 14px; pointer-events: none;">
+                <div style="position: relative; aspect-ratio: 2000 / 1250;">
+                  <image-slot id="{{ card.slotLead }}" shape="rect" src="{{ card.src }}" placeholder="{{ card.name }} — 2000 x 1250"></image-slot>
+                  <div style="position: absolute; left: 0; right: 0; bottom: 0; padding: 46px 16px 13px; background: linear-gradient(to top, rgba(4,8,10,0.88) 0%, rgba(4,8,10,0.4) 55%, rgba(4,8,10,0) 100%); text-align: center;">
+                    <div style="font-size: 18px; letter-spacing: 0.28em; font-weight: 500">{{ card.name }}</div>
+                  </div>
+                </div>
+                <div style="flex: 1; display: flex; justify-content: space-around; align-items: center; padding: 12px 10px 4px;">
+                  <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                    <svg width="19" height="19" viewBox="0 0 14 14" fill="none"><circle cx="5" cy="4.5" r="2" stroke="rgba(167,230,215,0.6)" stroke-width="1"></circle><path d="M1.5 12C1.5 9.8 3 8.5 5 8.5C7 8.5 8.5 9.8 8.5 12" stroke="rgba(167,230,215,0.6)" stroke-width="1"></path><circle cx="10" cy="4.5" r="1.6" stroke="rgba(167,230,215,0.6)" stroke-width="1"></circle><path d="M10.8 8.2C12 8.6 12.8 9.9 12.8 11.4" stroke="rgba(167,230,215,0.6)" stroke-width="1"></path></svg>
+                    <span style="font-size: 15px; font-weight: 400;">{{ card.statGuests }}</span>
+                    <span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: rgba(255,255,255,0.45)">GUESTS</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                    <svg width="19" height="19" viewBox="0 0 14 14" fill="none"><path d="M1.5 11.5V6.5H12.5V11.5" stroke="rgba(167,230,215,0.6)" stroke-width="1"></path><path d="M1.5 9.5H12.5" stroke="rgba(167,230,215,0.6)" stroke-width="1"></path><path d="M3 6.5V4.5C3 3.9 3.4 3.5 4 3.5H6C6.6 3.5 7 3.9 7 4.5V6.5" stroke="rgba(167,230,215,0.6)" stroke-width="1"></path></svg>
+                    <span style="font-size: 15px; font-weight: 400">{{ card.statRooms }}</span>
+                    <span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: rgba(255,255,255,0.45)">STATEROOMS</span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                    <svg width="19" height="19" viewBox="0 0 14 14" fill="none"><path d="M1 7H13" stroke="rgba(167,230,215,0.6)" stroke-width="1"></path><path d="M3 5L1 7L3 9" stroke="rgba(167,230,215,0.6)" stroke-width="1"></path><path d="M11 5L13 7L11 9" stroke="rgba(167,230,215,0.6)" stroke-width="1"></path></svg>
+                    <span style="font-size: 15px; font-weight: 400;">{{ card.statLength }}</span>
+                    <span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: rgba(255,255,255,0.45)">LENGTH</span>
+                  </div>
+                </div>
+                <div style="text-align: center; padding: 4px 14px 0;">
+                  <div style="font-size: 12px; letter-spacing: 0.14em; font-weight: 500; color: #A7E6D7">FROM {{ card.rate }}</div>
+                  <div style="font-size: 9px; letter-spacing: 0.28em; font-weight: 500; color: rgba(255,255,255,0.5); margin-top: 8px">CRUISING AREA · {{ card.area }}</div>
+                </div>
+                <div style="width: 26px; height: 3px; background: {{ card.dashBg }}; border-radius: 2px; margin: 12px auto 0;"></div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div onClick="{{ prev }}" style="position: absolute; left: 12px; top: 44%; transform: translateY(-50%); z-index: 40; width: 44px; height: 64px; display: flex; align-items: center; justify-content: center; cursor: pointer; user-select: none;" style-hover="background: rgba(167,230,215,0.06);">
+        <svg width="10" height="20" viewBox="0 0 10 20" fill="none"><path d="M9 1L1 10L9 19" stroke="rgba(167,230,215,0.8)" stroke-width="1"></path></svg>
+      </div>
+      <div onClick="{{ next }}" style="position: absolute; right: 12px; top: 44%; transform: translateY(-50%); z-index: 40; width: 44px; height: 64px; display: flex; align-items: center; justify-content: center; cursor: pointer; user-select: none;" style-hover="background: rgba(167,230,215,0.06);">
+        <svg width="10" height="20" viewBox="0 0 10 20" fill="none"><path d="M1 1L9 10L1 19" stroke="rgba(167,230,215,0.8)" stroke-width="1"></path></svg>
+      </div>
+      <div onClick="{{ toggleSound }}" style="position: absolute; right: 18px; bottom: 0; z-index: 40; display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 10px; user-select: none;" style-hover="background: rgba(255,255,255,0.05);">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 4H3.5L7 1V11L3.5 8H1V4Z" stroke="{{ soundInk }}" stroke-width="1" fill="none"></path><path d="M9 4C9.8 4.9 9.8 7.1 9 8" stroke="{{ soundWave }}" stroke-width="1"></path></svg>
+        <span style="font-size: 8.5px; letter-spacing: 0.34em; font-weight: 500; color: {{ soundInk }};">{{ soundLabel }}</span>
+      </div>
+    </div>
+
+    <sc-if value="{{ cmpBarShown }}" hint-placeholder-val="{{ false }}">
+      <div style="position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 90; display: flex; align-items: center; gap: 18px; background: #0B0E10; border: 1px solid rgba(167,230,215,0.5); box-shadow: 0 12px 40px rgba(0,0,0,0.6); padding: 12px 18px; max-width: 92vw;">
+        <span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: rgba(255,255,255,0.6); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;">{{ cmpNames }}</span>
+        <span onClick="{{ openCompare }}" style="font-size: 10px; letter-spacing: 0.3em; font-weight: 500; color: {{ cmpGoInk }}; cursor: {{ cmpGoCursor }}; border-bottom: 1.5px solid {{ cmpGoInk }}; padding-bottom: 3px; white-space: nowrap; user-select: none;">COMPARE</span>
+        <span onClick="{{ clearCompare }}" style="font-size: 14px; color: rgba(255,255,255,0.5); cursor: pointer; user-select: none; line-height: 1;" style-hover="color: #FFFFFF;">×</span>
+      </div>
+    </sc-if>
+    <sc-if value="{{ cmpOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="position: fixed; inset: 0; z-index: 100; background: rgba(4,8,10,0.97); overflow-y: auto;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 0 40px; min-height: 72px; border-bottom: 1px solid rgba(255,255,255,0.14);">
+          <span style="font-family: var(--font-display); font-weight: 500; font-size: 18px; letter-spacing: 0.28em;">COMPARE</span>
+          <span onClick="{{ closeCompare }}" style="font-size: 26px; font-weight: 300; color: rgba(255,255,255,0.6); cursor: pointer; user-select: none; line-height: 1;" style-hover="color: #FFFFFF;">×</span>
+        </div>
+        <div style="padding: 40px clamp(16px, 4vw, 64px) 72px; max-width: 1080px; margin: 0 auto; overflow-x: auto;">
+        <div style="min-width: {{ cmpMinW }}px;">
+          <div style="display: grid; grid-template-columns: {{ cmpGridCols }}; gap: 0 18px;">
+            <div></div>
+            <sc-for list="{{ cmpHeads }}" as="h" hint-placeholder-count="2">
+              <div style="font-size: 13px; letter-spacing: 0.24em; font-weight: 500; padding: 0 0 18px; text-align: left;">{{ h.name }}</div>
+            </sc-for>
+          </div>
+          <sc-for list="{{ cmpRows }}" as="row" hint-placeholder-count="6">
+            <div style="display: grid; grid-template-columns: {{ cmpGridCols }}; gap: 0 18px; border-top: 1px solid rgba(255,255,255,0.12); padding: 13px 0;">
+              <div style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: rgba(255,255,255,0.45); align-self: center;">{{ row.label }}</div>
+              <sc-for list="{{ row.vals }}" as="v" hint-placeholder-count="2">
+                <div style="font-size: 12.5px; letter-spacing: 0.04em; line-height: 1.6; align-self: center;">{{ v.text }}</div>
+              </sc-for>
+            </div>
+          </sc-for>
+        </div>
+        </div>
+      </div>
+    </sc-if>
+    <div id="ys-specs" style="max-width: 680px; margin: 44px auto 0; padding: 0 clamp(20px, 5vw, 40px); opacity: {{ panelOpacity }}; transition: opacity 340ms ease;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+        <span style="font-size: 9px; letter-spacing: 0.36em; font-weight: 500; color: rgba(255,255,255,0.4);">{{ sp.pos }}</span>
+        <div style="display: flex; gap: 10px;">
+          <div onClick="{{ prev }}" style="width: 36px; height: 36px; border: 1px solid rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; cursor: pointer; user-select: none;" style-hover="border-color: #A7E6D7; background: rgba(167,230,215,0.06);">
+            <svg width="7" height="14" viewBox="0 0 7 14" fill="none"><path d="M6 1L1 7L6 13" stroke="rgba(255,255,255,0.75)" stroke-width="1"></path></svg>
+          </div>
+          <div onClick="{{ next }}" style="width: 36px; height: 36px; border: 1px solid rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; cursor: pointer; user-select: none;" style-hover="border-color: #A7E6D7; background: rgba(167,230,215,0.06);">
+            <svg width="7" height="14" viewBox="0 0 7 14" fill="none"><path d="M1 1L6 7L1 13" stroke="rgba(255,255,255,0.75)" stroke-width="1"></path></svg>
+          </div>
+        </div>
+      </div>
+      <h2 style="font-family: var(--font-display); font-weight: 500; font-size: clamp(26px, 3vw, 34px); letter-spacing: 0.24em; margin: 0 0 20px;">{{ sp.name }}</h2>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 24px;">
+        <div style="aspect-ratio: 2000 / 1250; position: relative;"><image-slot id="{{ sp.slotT1 }}" shape="rect" src="assets/demo-interior.jpg" placeholder="Interior"></image-slot></div>
+        <div style="aspect-ratio: 2000 / 1250; position: relative;"><image-slot id="{{ sp.slotT2 }}" shape="rect" src="assets/demo-deck.jpg" placeholder="Deck spaces"></image-slot></div>
+        <div style="aspect-ratio: 2000 / 1250; position: relative;"><image-slot id="{{ sp.slotT3 }}" shape="rect" src="assets/demo-lifestyle.jpg" placeholder="Watertoys"></image-slot></div>
+      </div>
+      <div style="display: grid;">
+        <div style="display: flex; justify-content: space-between; gap: 18px; padding: 11px 0; border-top: 1px solid rgba(255,255,255,0.1);"><span style="font-size: 10.5px; letter-spacing: 0.3em; font-weight: 500; color: rgba(255,255,255,0.45)">LENGTH</span><span style="font-size: 12.5px; letter-spacing: 0.04em; text-align: right;">{{ sp.length }}</span></div>
+        <div style="display: flex; justify-content: space-between; gap: 18px; padding: 11px 0; border-top: 1px solid rgba(255,255,255,0.1);"><span style="font-size: 10.5px; letter-spacing: 0.3em; font-weight: 500; color: rgba(255,255,255,0.45)">YEAR / REFIT</span><span style="font-size: 12.5px; letter-spacing: 0.04em; text-align: right;">{{ sp.year }}</span></div>
+        <div style="display: flex; justify-content: space-between; gap: 18px; padding: 11px 0; border-top: 1px solid rgba(255,255,255,0.1);"><span style="font-size: 10.5px; letter-spacing: 0.3em; font-weight: 500; color: rgba(255,255,255,0.45)">GUESTS</span><span style="font-size: 12.5px; letter-spacing: 0.04em; text-align: right;">{{ sp.guests }}</span></div>
+        <div style="display: flex; justify-content: space-between; gap: 18px; padding: 11px 0; border-top: 1px solid rgba(255,255,255,0.1);"><span style="font-size: 10.5px; letter-spacing: 0.3em; font-weight: 500; color: rgba(255,255,255,0.45)">STATEROOMS</span><span style="font-size: 12.5px; letter-spacing: 0.04em; text-align: right;">{{ sp.staterooms }}</span></div>
+        <div style="display: flex; justify-content: space-between; gap: 18px; padding: 11px 0; border-top: 1px solid rgba(255,255,255,0.1);"><span style="font-size: 10.5px; letter-spacing: 0.3em; font-weight: 500; color: rgba(255,255,255,0.45)">LOCATION</span><span style="font-size: 12.5px; letter-spacing: 0.04em; text-align: right;">{{ sp.location }}</span></div>
+        <div style="display: flex; justify-content: space-between; gap: 18px; padding: 11px 0; border-top: 1px solid rgba(255,255,255,0.1);"><span style="font-size: 10.5px; letter-spacing: 0.3em; font-weight: 500; color: rgba(255,255,255,0.45)">AVAILABILITY</span><span style="font-size: 12.5px; letter-spacing: 0.04em; text-align: right; max-width: 24ch;">{{ sp.avail }}</span></div>
+      </div>
+      <div style="margin-top: 22px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px;">
+        <div style="display: flex; justify-content: space-between; gap: 18px; padding: 6px 0;"><span style="font-size: 10.5px; letter-spacing: 0.3em; font-weight: 500; color: rgba(255,255,255,0.45)">WEEKLY RATE</span><span style="font-size: 13px; letter-spacing: 0.04em;">{{ sp.rate }}</span></div>
+        <div style="display: flex; justify-content: space-between; gap: 18px; padding: 6px 0;"><span style="font-size: 10.5px; letter-spacing: 0.3em; font-weight: 500; color: rgba(255,255,255,0.45)">VAT</span><span style="font-size: 12px; letter-spacing: 0.04em; color: rgba(255,255,255,0.7);">TBC</span></div>
+        <div style="display: flex; justify-content: space-between; gap: 18px; padding: 6px 0;"><span style="font-size: 10.5px; letter-spacing: 0.3em; font-weight: 500; color: rgba(255,255,255,0.45)">APA (35%)</span><span style="font-size: 12px; letter-spacing: 0.04em; color: rgba(255,255,255,0.7);">{{ sp.apa }}</span></div>
+        <div style="display: flex; justify-content: space-between; gap: 18px; padding: 12px 0 0; margin-top: 8px; border-top: 1px solid rgba(167,230,215,0.4);"><span style="font-size: 11px; letter-spacing: 0.32em; font-weight: 500; color: #A7E6D7">TOTAL</span><span style="font-size: 14px; font-weight: 500; letter-spacing: 0.06em; color: #A7E6D7;">{{ sp.total }}</span></div>
+      </div>
+      <p style="font-size: 12.5px; line-height: 1.75; color: rgba(255,255,255,0.65); margin: 26px 0 0; border-left: 1px solid rgba(167,230,215,0.5); padding-left: 16px; text-wrap: pretty;">{{ sp.note }} — Lucy</p>
+      <div style="margin-top: 26px;"><a href="#" style="font-size: 10px; letter-spacing: 0.3em; font-weight: 500; color: rgba(255,255,255,0.6); text-decoration: none; border-bottom: 2px solid #A7E6D7; padding-bottom: 7px;" style-hover="color: #A7E6D7; border-color: #A7E6D7;">VIEW BROCHURE</a></div>
+    </div>
+  </section>
+
+  <section data-screen-label="Costs involved" style="border-top: 1px solid rgba(255,255,255,0.14);">
+    <div onClick="{{ toggleCosts }}" style="display: flex; align-items: center; justify-content: center; gap: 18px; padding: 30px clamp(24px, 6vw, 72px); cursor: pointer; user-select: none;" style-hover="background: rgba(255,255,255,0.02);">
+      <h2 style="font-family: var(--font-display); font-weight: 500; font-size: 22px; letter-spacing: 0.28em; margin: 0;">COSTS INVOLVED</h2>
+      <span style="font-size: 20px; font-weight: 300; color: rgba(255,255,255,0.6); line-height: 1;">{{ costsIcon }}</span>
+    </div>
+    <sc-if value="{{ costsOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-wrap: wrap; gap: 0; border-top: 1px solid rgba(255,255,255,0.1);">
+        <div style="flex: 1 1 320px; min-height: 380px; position: relative;">
+          <img src="assets/pptx/image5.jpg" alt="Swim platform at dusk" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;">
+        </div>
+        <div style="flex: 1.4 1 420px; padding: 44px clamp(24px, 5vw, 64px) 56px; display: grid; gap: 26px; align-content: start;">
+          <div><div style="font-size: 10px; letter-spacing: 0.32em; font-weight: 500; color: #A7E6D7; margin-bottom: 8px;">CHARTER FEE</div><p style="font-size: 13px; line-height: 1.8; color: rgba(255,255,255,0.72); margin: 0; text-wrap: pretty;">Covers the yacht and the crew.</p></div>
+          <div><div style="font-size: 10px; letter-spacing: 0.32em; font-weight: 500; color: #A7E6D7; margin-bottom: 8px;">APA</div><p style="font-size: 13px; line-height: 1.8; color: rgba(255,255,255,0.72); margin: 0; text-wrap: pretty;">The Advanced Provisioning Allowance is calculated at 35–40% of the charter fee and is an account of your money managed by the Captain to pay for fuel, marina/berth fees, food and drink provisions etc. throughout the charter. A breakdown of all costs incurred together with proof of purchase will be presented to you on the last day of your charter, and any remainder can be held on account and reimbursed.</p></div>
+          <div><div style="font-size: 10px; letter-spacing: 0.32em; font-weight: 500; color: #A7E6D7; margin-bottom: 8px;">DELIVERY FEE</div><p style="font-size: 13px; line-height: 1.8; color: rgba(255,255,255,0.72); margin: 0; text-wrap: pretty;">May be applicable, I will advise per yacht.</p></div>
+          <div><div style="font-size: 10px; letter-spacing: 0.32em; font-weight: 500; color: #A7E6D7; margin-bottom: 8px;">VAT</div><p style="font-size: 13px; line-height: 1.8; color: rgba(255,255,255,0.72); margin: 0; text-wrap: pretty;">Varies dependent on location.</p></div>
+          <div><div style="font-size: 10px; letter-spacing: 0.32em; font-weight: 500; color: #A7E6D7; margin-bottom: 8px;">CREW GRATUITY</div><p style="font-size: 13px; line-height: 1.8; color: rgba(255,255,255,0.72); margin: 0; text-wrap: pretty;">A crew gratuity is customary but given at your discretion; we advise anything between 5–15% of the charter fee.</p></div>
+        </div>
+      </div>
+    </sc-if>
+  </section>
+
+  <section data-screen-label="Itinerary" style="border-top: 1px solid rgba(255,255,255,0.14);">
+    <div onClick="{{ toggleItin }}" style="display: flex; align-items: center; justify-content: center; gap: 18px; padding: 30px clamp(24px, 6vw, 72px); cursor: pointer; user-select: none;" style-hover="background: rgba(255,255,255,0.02);">
+      <h2 style="font-family: var(--font-display); font-weight: 500; font-size: 22px; letter-spacing: 0.28em; margin: 0;">YOUR ITINERARY</h2>
+      <span style="font-size: 20px; font-weight: 300; color: rgba(255,255,255,0.6); line-height: 1;">{{ itinIcon }}</span>
+    </div>
+    <sc-if value="{{ itinOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="border-top: 1px solid rgba(255,255,255,0.1); padding: 56px clamp(24px, 6vw, 72px); display: flex; justify-content: center;">
+        <div style="max-width: 620px; text-align: center;">
+          <p style="font-size: 15px; line-height: 1.9; font-weight: 300; color: rgba(255,255,255,0.8); margin: 0 0 28px; text-wrap: pretty;">This itinerary is purely a suggestion, and we shall work with the captain of your chosen yacht to curate an itinerary with your preferences in mind.</p>
+          <a href="Harrington - Summer 2027.dc.html" style="font-size: 10px; letter-spacing: 0.3em; font-weight: 500; color: rgba(255,255,255,0.6); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 3px;" style-hover="color: #A7E6D7; border-color: #A7E6D7;">VIEW YOUR SUGGESTED ITINERARY</a>
+        </div>
+      </div>
+    </sc-if>
+  </section>
+
+  <section data-screen-label="Lucy" style="border-top: 1px solid rgba(255,255,255,0.14); padding: 72px clamp(24px, 6vw, 72px) 88px; display: flex; justify-content: center;">
+    <div style="display: flex; align-items: center; gap: 40px; flex-wrap: wrap; justify-content: center; max-width: 720px;">
+      <image-slot id="lucy-photo" shape="circle" style="width: 150px; height: 150px; flex: 0 0 128px" placeholder="Lucy"></image-slot>
+      <div style="min-width: 280px;">
+        <div style="font-size: 14px; letter-spacing: 0.3em; font-weight: 500; margin-bottom: 8px;">LUCY</div>
+        <div style="font-size: 11px; letter-spacing: 0.2em; color: rgba(255,255,255,0.5); margin-bottom: 18px;">CHARTER CONSULTANT, OCEAN INDEPENDENCE</div>
+        <div style="display: grid; gap: 10px; font-size: 13px; font-weight: 300; color: rgba(255,255,255,0.7);">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 1.5H5L6 4.5L4.5 5.5C5.2 7 7 8.8 8.5 9.5L9.5 8L12.5 9V11C12.5 11.8 11.8 12.5 11 12.5C5.8 12.2 1.8 8.2 1.5 3C1.5 2.2 2.2 1.5 3 1.5Z" stroke="rgba(167,230,215,0.7)" stroke-width="1" stroke-linejoin="round"></path></svg>
+            <span>+41 44 000 00 00</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1.5" y="3" width="11" height="8" stroke="rgba(167,230,215,0.7)" stroke-width="1"></rect><path d="M1.5 3.5L7 8L12.5 3.5" stroke="rgba(167,230,215,0.7)" stroke-width="1"></path></svg>
+            <a href="mailto:lucy@oceanindependence.com" style="text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.3);">lucy@ocyachts.com<br></a>
+          </div>
+        </div>
+        <a href="https://wa.me/41440000000" style="display: inline-block; margin-top: 28px; border: 1px solid rgba(255,255,255,0.5); padding: 13px 30px 13px calc(30px + 0.36em); font-size: 11px; letter-spacing: 0.36em; font-weight: 500; color: #FFFFFF; text-decoration: none; transition: all 240ms cubic-bezier(0.22,0.61,0.36,1); border-width: 1.5px" style-hover="background: #FFFFFF; color: #000000; border-color: #FFFFFF;">WHATSAPP ME</a>
+        <div style="margin-top: 24px;"><a href="The 2027 Atlas.dc.html" style="font-size: 10px; letter-spacing: 0.3em; font-weight: 500; color: rgba(255,255,255,0.45); text-decoration: none;" style-hover="color: #A7E6D7;">EXPLORE ALL 2027 DESTINATIONS →</a></div>
+      </div>
+    </div>
+  </section>
+
+  <div style="border-top: 1px solid rgba(255,255,255,0.1); padding: 22px clamp(24px, 6vw, 72px); text-align: center;">
+    <span style="font-size: 10px; letter-spacing: 0.14em; color: rgba(255,255,255,0.4); line-height: 1.8;" data-comment-anchor="d5621178:123">These vessels are offered subject to change, price change, and owners' final approval.</span>
+  </div>
+
+  <footer style="border-top: 1px solid rgba(255,255,255,0.14); padding: 28px clamp(24px, 6vw, 72px); display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;">
+    <img src="assets/logo-white.png" alt="Ocean Independence" style="height: 16px; display: block; opacity: 0.7;">
+    <span style="font-size: 9px; letter-spacing: 0.3em; color: rgba(255,255,255,0.35); font-weight: 500;">EXPLORE A WORLD OF POSSIBILITY</span>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;ringRadius&quot;: { &quot;editor&quot;: &quot;range&quot;, &quot;default&quot;: 1.95, &quot;min&quot;: 1.4, &quot;max&quot;: 2.8, &quot;step&quot;: 0.05, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Ring&quot; },
+  &quot;tiltDeg&quot;: { &quot;editor&quot;: &quot;range&quot;, &quot;default&quot;: 3, &quot;min&quot;: 0, &quot;max&quot;: 15, &quot;step&quot;: 1, &quot;unit&quot;: &quot;deg&quot;, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Ring&quot; },
+  &quot;blurFar&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Ring&quot; }
+}">
+class Component extends DCLogic {
+  state = { idx: 0, shown: 0, fade: false, sound: false, costs: false, itin: false, cmp: [], cmpOpen: false };
+  yachts = [
+    { id: 'serenity', name: 'SERENITY', tagline: 'THE YACHT YOU KNOW', length: '47.00 metres', year: '2019 / 2024', guests: '12', staterooms: '6 (5 double, 1 twin)', location: 'Naples, Italy', avail: 'July on request, August open', rate: 'EUR 245,000', apa: 'EUR 85,750', total: 'EUR 330,750', note: 'The yacht you know. I would expect her July weeks to be committed before Christmas.', src: 'assets/pptx/image2.jpeg' },
+    { id: 'eternal-spark', name: 'ETERNAL SPARK', tagline: 'WELLNESS FLAGSHIP', length: '50.00 metres', year: '2023', guests: '12', staterooms: '6 (5 double, 1 twin)', location: 'Bodrum, Turkey', avail: 'Open for summer 2027', rate: 'EUR 334,800', apa: 'EUR 117,180', total: 'EUR 451,980', note: 'Worth stretching for — a wellness-focused flagship with a vast beach club.', src: '' },
+    { id: 'lafayette', name: 'LAFAYETTE', tagline: 'COASTAL PACE', length: '36.00 metres', year: '2024', guests: '10', staterooms: '5 (4 double, 1 twin)', location: 'Cannes, France', avail: 'Open except the second week of August', rate: 'EUR 130,000', apa: 'EUR 45,500', total: 'EUR 175,500', note: 'A sleek 2024 delivery, ideal if you fancy coastal hopping at pace.', src: '' },
+    { id: 'damari', name: 'DAMARI', tagline: 'THE FAMILY FAVOURITE', length: '29.00 metres', year: '2018 / 2023', guests: '10', staterooms: '5 (3 double, 2 twin)', location: 'Athens, Greece', avail: 'Open for summer 2027', rate: 'EUR 79,000', apa: 'EUR 27,650', total: 'EUR 106,650', note: 'Effortless and warm, with a devoted crew — my clients\u2019 family favourite.', src: '' },
+    { id: 'aurelia', name: 'AURELIA', tagline: 'BALEARICS PROVEN', length: '44.00 metres', year: '2021', guests: '12', staterooms: '6 (4 double, 2 twin)', location: 'Palma, Spain', avail: 'Open for summer 2027', rate: 'EUR 195,000', apa: 'EUR 68,250', total: 'EUR 263,250', note: 'A proven Balearics performer — her crew know every cala worth anchoring in.', src: '' },
+    { id: 'white-heron', name: 'WHITE HERON', tagline: 'FRESH FROM REFIT', length: '40.00 metres', year: '2017 / 2025', guests: '11', staterooms: '5 (4 double, 1 convertible)', location: 'Split, Croatia', avail: 'Open except the final week of July', rate: 'EUR 120,000', apa: 'EUR 42,000', total: 'EUR 162,000', note: 'Fresh from her 2025 refit — the Adriatic option if you fancy somewhere new.', src: '' },
+    { id: 'calypso-blue', name: 'CALYPSO BLUE', tagline: 'THE IONIAN, GENTLY', length: '38.00 metres', year: '2020', guests: '10', staterooms: '5 (3 double, 2 twin)', location: 'Corfu, Greece', avail: 'Open for summer 2027', rate: 'EUR 105,000', apa: 'EUR 36,750', total: 'EUR 141,750', note: 'The Ionian at an easy pace — quiet anchorages and long lunches.', src: '' },
+    { id: 'mistral', name: 'MISTRAL', tagline: 'RIVIERA QUICK', length: '33.00 metres', year: '2019', guests: '8', staterooms: '4 (2 double, 2 twin)', location: 'Saint-Tropez, France', avail: 'July on request', rate: 'EUR 88,000', apa: 'EUR 30,800', total: 'EUR 118,800', note: 'Compact, quick and glamorous — made for the Riviera\u2019s short hops.', src: '' },
+    { id: 'alba', name: 'ALBA', tagline: 'SMERALDA CHARM', length: '31.00 metres', year: '2022', guests: '8', staterooms: '4 (3 double, 1 twin)', location: 'Olbia, Sardinia', avail: 'Open for summer 2027', rate: 'EUR 92,000', apa: 'EUR 32,200', total: 'EUR 124,200', note: 'A young boat with an easy charm — the Costa Smeralda suits her.', src: '' },
+    { id: 'odysseia', name: 'ODYSSEA', tagline: 'CYCLADES COMPLETE', length: '42.00 metres', year: '2016 / 2024', guests: '12', staterooms: '6 (5 double, 1 twin)', location: 'Mykonos, Greece', avail: 'Open for summer 2027', rate: 'EUR 150,000', apa: 'EUR 52,500', total: 'EUR 202,500', note: 'The Cyclades done properly — she carries every watertoy your family could ask for.', src: '' }
+  ];
+  componentDidMount() {
+    const stage = document.getElementById('ys-stage');
+    if (stage && !stage._ysWired) {
+      stage._ysWired = true;
+      let tx = 0, ty = 0, tt = 0;
+      stage.addEventListener('touchstart', (e) => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; tt = Date.now(); }, { passive: true });
+      stage.addEventListener('touchend', (e) => {
+        const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+        if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.4 && Date.now() - tt < 900) this._nav(dx < 0 ? 1 : -1);
+      }, { passive: true });
+      let px = 0, pd = false;
+      stage.addEventListener('pointerdown', (e) => { if (e.pointerType === 'mouse') { px = e.clientX; pd = true; } });
+      stage.addEventListener('pointerup', (e) => { if (pd) { pd = false; const dx = e.clientX - px; if (Math.abs(dx) > 70) this._nav(dx < 0 ? 1 : -1); } });
+      stage.addEventListener('wheel', (e) => {
+        if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 18) {
+          e.preventDefault();
+          const now = Date.now();
+          if (!this._wt || now - this._wt > 1000) { this._wt = now; this._nav(e.deltaX > 0 ? 1 : -1); }
+        }
+      }, { passive: false });
+    }
+    if (!window._ysKeys) {
+      window._ysKeys = true;
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') this._nav(1);
+        if (e.key === 'ArrowLeft') this._nav(-1);
+      });
+      window.addEventListener('resize', () => this.forceUpdate());
+    }
+  }
+  _mod(v) { const n = this.yachts.length; return ((v % n) + n) % n; }
+  _nav(d) {
+    const idx = this.state.idx + d;
+    this.setState({ idx, fade: true });
+    this._tone();
+    clearTimeout(this._ft);
+    this._ft = setTimeout(() => this.setState({ shown: this._mod(idx), fade: false }), 480);
+  }
+  _toggleCmp(id) {
+    let cmp = this.state.cmp.slice();
+    if (cmp.includes(id)) cmp = cmp.filter((x) => x !== id);
+    else { if (cmp.length >= 3) return; cmp.push(id); }
+    this.setState({ cmp });
+  }
+  _toSpecs() {
+    const el = document.getElementById('ys-specs');
+    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 24, behavior: 'smooth' });
+  }
+  _go(i) {
+    const n = this.yachts.length;
+    let delta = (i - this._mod(this.state.idx) + n) % n;
+    if (delta === 0) return;
+    if (delta > n / 2) delta -= n;
+    this._nav(delta);
+  }
+  _tone() {
+    if (!this.state.sound) return;
+    try {
+      const ctx = this._ctx || (this._ctx = new (window.AudioContext || window.webkitAudioContext)());
+      const t = ctx.currentTime, dur = 0.6;
+      if (!this._noise) {
+        const len = Math.floor(ctx.sampleRate * 1);
+        const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+        const d = buf.getChannelData(0);
+        for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+        this._noise = buf;
+      }
+      const src = ctx.createBufferSource(); src.buffer = this._noise;
+      const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = 0.9;
+      bp.frequency.setValueAtTime(600, t);
+      bp.frequency.exponentialRampToValueAtTime(3200, t + dur * 0.45);
+      bp.frequency.exponentialRampToValueAtTime(900, t + dur);
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.09, t + dur * 0.35);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      src.connect(bp); bp.connect(g); g.connect(ctx.destination);
+      src.start(t); src.stop(t + dur + 0.05);
+    } catch (e) {}
+  }
+  renderVals() {
+    const n = this.yachts.length, idx = this.state.idx, mod = this._mod(idx);
+    const vw = window.innerWidth || 1200;
+    const cardW = Math.min(420, Math.round(vw * 0.68));
+    const cardH = Math.round(cardW * 1.3);
+    const R = Math.round(cardW * (this.props.ringRadius ?? 1.95));
+    const blurFar = this.props.blurFar ?? true;
+    const tilt = this.props.tiltDeg ?? 3;
+    const step = 360 / n;
+    const ringCards = this.yachts.map((y, i) => {
+      let o = (i - mod + n) % n;
+      if (o > n / 2) o -= n;
+      const abs = Math.abs(o);
+      const far = abs >= 3;
+      return {
+        name: y.name, tagline: y.tagline, src: y.src, rate: y.rate,
+        area: ({ serenity: 'AMALFI COAST', 'eternal-spark': 'TURKISH RIVIERA', lafayette: 'FRENCH RIVIERA', damari: 'SARONIC & CYCLADES', aurelia: 'THE BALEARICS', 'white-heron': 'THE ADRIATIC', 'calypso-blue': 'IONIAN ISLANDS', mistral: 'FRENCH RIVIERA', alba: 'SARDINIA & CORSICA', odysseia: 'THE CYCLADES' })[y.id],
+        statGuests: y.guests,
+        statRooms: y.staterooms.split(' ')[0],
+        statLength: Math.round(parseFloat(y.length)) + 'M',
+        slotLead: 'ys-' + y.id + '-lead',
+        transform: 'rotateY(' + (i * step) + 'deg) translateZ(' + R + 'px)',
+        opacity: o === 0 ? 1 : (far ? 0.3 : (abs === 2 ? 0.55 : 0.8)),
+        filter: o === 0 ? 'none' : (far ? (blurFar ? 'blur(3px) brightness(0.45)' : 'brightness(0.45)') : (abs === 2 ? 'brightness(0.55)' : 'brightness(0.65)')),
+        dashBg: o === 0 ? '#A7E6D7' : 'rgba(167,230,215,0.3)',
+        cursor: 'pointer',
+        pick: () => { if (o === 0) this._toSpecs(); else this._go(i); },
+        cmpEvents: abs <= 1 ? 'auto' : 'none',
+        cmpBorder: this.state.cmp.includes(y.id) ? '#A7E6D7' : 'rgba(255,255,255,0.35)',
+        cmpBg: this.state.cmp.includes(y.id) ? 'rgba(167,230,215,0.15)' : 'rgba(4,8,10,0.55)',
+        cmpInk: this.state.cmp.includes(y.id) ? '#A7E6D7' : 'rgba(255,255,255,0.75)',
+        cmpPath: this.state.cmp.includes(y.id) ? 'M2.5 7.5L5.5 10.5L11.5 3.5' : 'M7 2V12M2 7H12',
+        toggleCompare: (e) => { e.stopPropagation(); this._toggleCmp(y.id); }
+      };
+    });
+    const s = this.yachts[this.state.shown];
+    return {
+      cardW, cardH,
+      negHalfW: -Math.round(cardW / 2),
+      negHalfH: -Math.round(cardH / 2),
+      floorD: 2 * R + Math.round(cardW * 0.7),
+      negHalfFloor: -(R + Math.round(cardW * 0.35)),
+      floorDrop: -(Math.round(cardH / 2) + 44),
+      stageH: cardH + 150,
+      ringTransform: 'translateY(' + (-Math.round(R * Math.sin(tilt * Math.PI / 180) * 0.9)) + 'px) translateZ(' + (-(R - Math.round(cardW * 0.12))) + 'px) rotateX(' + (-tilt) + 'deg) rotateY(' + (-idx * step) + 'deg)',
+      ringCards,
+      sp: Object.assign({}, s, { pos: String(this.state.shown + 1).padStart(2, '0') + ' OF ' + n, slotT1: 'ys-' + s.id + '-t1', slotT2: 'ys-' + s.id + '-t2', slotT3: 'ys-' + s.id + '-t3' }),
+      panelOpacity: this.state.fade ? 0 : 1,
+      progress: (mod + 1) + ' OF ' + n + ' — ' + this.yachts[mod].name,
+      prev: () => this._nav(-1),
+      next: () => this._nav(1),
+      toggleSound: () => { this.setState({ sound: !this.state.sound }, () => { if (this.state.sound) this._tone(); }); },
+      soundLabel: this.state.sound ? 'SOUND ON' : 'SOUND OFF',
+      soundInk: this.state.sound ? '#A7E6D7' : 'rgba(255,255,255,0.45)',
+      soundWave: this.state.sound ? '#A7E6D7' : 'transparent',
+      costsOpen: this.state.costs,
+      costsIcon: this.state.costs ? '\u2212' : '+',
+      toggleCosts: () => this.setState({ costs: !this.state.costs }),
+      cmpBarShown: this.state.cmp.length > 0 && !this.state.cmpOpen,
+      cmpNames: this.state.cmp.map((id) => this.yachts.find((y) => y.id === id).name).join('  ·  '),
+      cmpGoInk: this.state.cmp.length >= 2 ? '#A7E6D7' : 'rgba(255,255,255,0.3)',
+      cmpGoCursor: this.state.cmp.length >= 2 ? 'pointer' : 'default',
+      openCompare: () => { if (this.state.cmp.length >= 2) this.setState({ cmpOpen: true }); },
+      closeCompare: () => this.setState({ cmpOpen: false }),
+      clearCompare: () => this.setState({ cmp: [] }),
+      cmpOpen: this.state.cmpOpen,
+      cmpGridCols: 'minmax(86px, 130px) repeat(' + Math.max(this.state.cmp.length, 1) + ', 1fr)',
+      cmpMinW: 86 + Math.max(this.state.cmp.length, 1) * 150,
+      cmpHeads: this.state.cmp.map((id) => ({ name: this.yachts.find((y) => y.id === id).name })),
+      cmpRows: [
+        ['LENGTH', 'length'], ['YEAR / REFIT', 'year'], ['GUESTS', 'guests'], ['STATEROOMS', 'staterooms'], ['LOCATION', 'location'], ['AVAILABILITY', 'avail'], ['WEEKLY RATE', 'rate'], ['APA (35%)', 'apa'], ['TOTAL', 'total']
+      ].map(([label, key]) => ({ label, vals: this.state.cmp.map((id) => ({ text: this.yachts.find((y) => y.id === id)[key] })) })),
+      itinOpen: this.state.itin,
+      itinIcon: this.state.itin ? '\u2212' : '+',
+      toggleItin: () => this.setState({ itin: !this.state.itin })
+    };
+  }
+}
+</script>
+</body>
+</html>

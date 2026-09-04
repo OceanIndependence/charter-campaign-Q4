@@ -1,0 +1,105 @@
+/* Licensed Gotham TTFs — drop the files into /public/fonts (see its README).
+   Helvetica Neue carries the page until they arrive. */
+@font-face {
+  font-family: "Gotham";
+  src: url("/fonts/Gotham-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gotham";
+  src: url("/fonts/Gotham-Book.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gotham";
+  src: url("/fonts/Gotham-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gotham Condensed";
+  src: url("/fonts/GothamCondensed-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gotham Condensed";
+  src: url("/fonts/GothamCondensed-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* OI design tokens */
+  --ink: #04080a;
+  --ink-lift: #0a1214;
+  --panel: #0b0e10;
+  --mint: #a7e6d7;
+  --hairline: rgba(255, 255, 255, 0.1);
+  --hairline-strong: rgba(255, 255, 255, 0.14);
+  --mint-hairline: rgba(167, 230, 215, 0.4);
+  --mint-hairline-strong: rgba(167, 230, 215, 0.55);
+  --font-sans: "Gotham", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-display: "Gotham Condensed", "Gotham", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --ease-settle: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--ink);
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  color: #ffffff;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: #ffffff;
+}
+a:hover {
+  color: var(--mint);
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+img {
+  display: block;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0b0e10;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a3134;
+}

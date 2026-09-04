@@ -1,0 +1,166 @@
+.panel {
+  max-width: 680px;
+  margin: 44px auto 0;
+  padding: 0 clamp(20px, 5vw, 40px);
+  transition: opacity 340ms ease;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.pos {
+  font-size: 9px;
+  letter-spacing: 0.36em;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.navBtns {
+  display: flex;
+  gap: 10px;
+}
+
+.navBtn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+.navBtn:hover {
+  border-color: var(--mint);
+  background: rgba(167, 230, 215, 0.06);
+}
+
+.name {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(26px, 3vw, 34px);
+  letter-spacing: 0.24em;
+  margin: 0 0 20px;
+}
+
+.thumbs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.thumb {
+  aspect-ratio: 2000 / 1250;
+  position: relative;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.thumb img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.specRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 11px 0;
+  border-top: 1px solid var(--hairline);
+}
+
+.specLabel {
+  font-size: 9.5px;
+  letter-spacing: 0.3em;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.specValue {
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  text-align: right;
+  max-width: 24ch;
+}
+
+.priceBlock {
+  margin-top: 22px;
+  border-top: 1px solid var(--hairline);
+  padding-top: 16px;
+}
+
+.priceRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  padding: 6px 0;
+}
+
+.rateValue {
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
+.dimValue {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  padding: 12px 0 0;
+  margin-top: 8px;
+  border-top: 1px solid var(--mint-hairline);
+}
+
+.totalLabel {
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  font-weight: 500;
+  color: var(--mint);
+}
+
+.totalValue {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--mint);
+}
+
+.note {
+  font-size: 12.5px;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.65);
+  margin: 26px 0 0;
+  border-left: 1px solid rgba(167, 230, 215, 0.5);
+  padding-left: 16px;
+  text-wrap: pretty;
+}
+
+.brochure {
+  margin-top: 26px;
+}
+
+.brochureLink {
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  border-bottom: 2px solid var(--mint);
+  padding-bottom: 7px;
+}
+.brochureLink:hover {
+  color: var(--mint);
+}

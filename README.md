@@ -29,3 +29,14 @@ Notes
   production.
 - The cross-page links (e.g. Yacht Selection → itinerary) use the absolute
   slugs above, so keep the folder names as they are.
+
+## Tier 3 production app (`selection-app/`)
+
+`selection-app/` is the production rebuild of the Tier 3 Yacht Selection page
+as a Next.js (App Router) + TypeScript app, recreated from the design handoff
+in `design_handoff_tier3_yacht_selection/` (see its README for the full spec).
+Client pages are served at `/selection/[slug]`, driven by one typed
+`PageConfig` object per client (demo config included; swap
+`getPageConfig()` in `src/lib/demo-config.ts` for the Charter Portal API).
+Deploy it on Vercel as its own project with **Root Directory** set to
+`selection-app` — see the app's own structure for details.

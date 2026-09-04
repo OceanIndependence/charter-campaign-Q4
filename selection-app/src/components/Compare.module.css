@@ -1,0 +1,134 @@
+.bar {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: var(--panel);
+  border: 1px solid rgba(167, 230, 215, 0.5);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+  padding: 12px 18px;
+  max-width: 92vw;
+}
+
+.barNames {
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.barGo,
+.barGoDisabled {
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  font-weight: 500;
+  padding-bottom: 3px;
+  white-space: nowrap;
+  user-select: none;
+}
+.barGo {
+  color: var(--mint);
+  border-bottom: 1.5px solid var(--mint);
+}
+.barGoDisabled {
+  color: rgba(255, 255, 255, 0.3);
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.3);
+  cursor: default;
+}
+
+.barClear {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  user-select: none;
+  line-height: 1;
+}
+.barClear:hover {
+  color: #ffffff;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(4, 8, 10, 0.97);
+  overflow-y: auto;
+}
+
+.overlayHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 0 40px;
+  min-height: 72px;
+  border-bottom: 1px solid var(--hairline-strong);
+}
+
+.overlayTitle {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 18px;
+  letter-spacing: 0.28em;
+}
+
+.overlayClose {
+  font-size: 26px;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.6);
+  user-select: none;
+  line-height: 1;
+}
+.overlayClose:hover {
+  color: #ffffff;
+}
+
+/* Compare table scrolls horizontally inside the overlay on small screens */
+.scroller {
+  padding: 40px clamp(16px, 4vw, 64px) 72px;
+  max-width: 1080px;
+  margin: 0 auto;
+  overflow-x: auto;
+}
+
+.grid {
+  display: grid;
+  gap: 0 18px;
+}
+
+.head {
+  font-size: 13px;
+  letter-spacing: 0.24em;
+  font-weight: 500;
+  padding: 0 0 18px;
+  text-align: left;
+}
+
+.row {
+  display: grid;
+  gap: 0 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 13px 0;
+}
+
+.rowLabel {
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.45);
+  align-self: center;
+}
+
+.rowValue {
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+  align-self: center;
+}
