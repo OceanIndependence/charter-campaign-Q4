@@ -23,14 +23,14 @@
 }
 @font-face {
   font-family: "Gotham Condensed";
-  src: url("/fonts/GothamCondensed-Medium.ttf") format("truetype");
+  src: url("/fonts/GothamCond-Medium.ttf") format("truetype");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Gotham Condensed";
-  src: url("/fonts/GothamCondensed-Bold.ttf") format("truetype");
+  src: url("/fonts/GothamCond-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
