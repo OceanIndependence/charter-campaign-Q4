@@ -493,8 +493,14 @@ function renderReport({ mode, list, targetSeason, shapeNotes, yachtReports }) {
 
 async function writeReport(report) {
   await mkdir(SAMPLES_DIR, { recursive: true });
-  await writeFile(REPORT_PATH, renderReport(report), "utf8");
+  const rendered = renderReport(report);
+  await writeFile(REPORT_PATH, rendered, "utf8");
   console.log(`[yachtfolio] report written to ${path.relative(ROOT, REPORT_PATH)}`);
+  // Vercel builds cannot commit their output back to the repo, so echo the
+  // report into the build log where it can be read and copied.
+  console.log("[yachtfolio] ----- BEGIN FETCH REPORT -----");
+  console.log(rendered);
+  console.log("[yachtfolio] ----- END FETCH REPORT -----");
 }
 
 /* ------------------------------------------------------------------- main */

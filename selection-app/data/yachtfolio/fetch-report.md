@@ -1,6 +1,6 @@
 # Yachtfolio fetch report
 
-Generated: 2026-09-04T14:10:14.547Z
+Generated: 2026-09-04T14:22:32.390Z
 Mode: skipped — no passkey
 
 ## Warnings
