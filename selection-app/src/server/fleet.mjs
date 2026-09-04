@@ -181,6 +181,7 @@ export async function getYachtDetail(yfId, { forceRefresh = false } = {}) {
     lengthM: facts.lengthM ?? null,
     yearRefit: facts.yearRefit ?? "",
     guests: facts.guests ?? null,
+    builder: facts.builder ?? "",
     staterooms: facts.staterooms
       ? facts.staterooms.breakdown
         ? `${facts.staterooms.count} (${facts.staterooms.breakdown})`

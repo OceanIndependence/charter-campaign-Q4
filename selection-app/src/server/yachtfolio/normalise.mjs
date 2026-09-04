@@ -126,6 +126,9 @@ export function extractYachtFacts({ brochure, basic, reference, targetSeason }) 
   const guests = spec.guests_sleeping ?? detail.guests ?? basic?.guests_sleeping ?? undefined;
   if (!guests) missing.push("guests");
 
+  const builder = spec.builder ?? detail.builder ?? basic?.builder ?? undefined;
+  if (!builder) missing.push("builder");
+
   const cabins = spec.cabins ?? detail.cabins ?? basic?.cabins;
   const breakdown =
     normaliseCabinConfig(detail.cabin_config) ??
@@ -195,6 +198,7 @@ export function extractYachtFacts({ brochure, basic, reference, targetSeason }) 
     lengthM,
     yearRefit,
     guests,
+    builder,
     staterooms,
     location,
     cruisingArea,

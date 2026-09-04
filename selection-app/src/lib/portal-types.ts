@@ -78,6 +78,7 @@ export interface FleetDetail {
   lengthM: number | null;
   yearRefit: string;
   guests: number | null;
+  builder: string;
   staterooms: string;
   location: string;
   cruisingArea: string;

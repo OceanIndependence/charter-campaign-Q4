@@ -77,6 +77,19 @@ async function main() {
           );
         }
         lines.push(`- Name: ${detail.name || "?"}`);
+        lines.push(`- Length: ${detail.lengthM != null ? `${detail.lengthM} metres` : "missing"}`);
+        lines.push(`- Builder: ${detail.builder || "missing"}`);
+        lines.push(`- Guests: ${detail.guests ?? "missing"}`);
+        lines.push(`- Staterooms: ${detail.staterooms || "missing"}`);
+        lines.push(`- Year / refit: ${detail.yearRefit || "missing"}`);
+        lines.push(`- Operating areas (${detail.targetSeason}): ${detail.cruisingArea || "missing"}`);
+        lines.push(
+          `- Weekly rate (${detail.targetSeason}): ${
+            detail.weeklyRateEUR != null
+              ? `EUR ${Math.round(detail.weeklyRateEUR).toLocaleString("en-GB")}${detail.weeklyRateIsFrom ? " (from — season rate is a range)" : ""}`
+              : "missing"
+          }`
+        );
         lines.push(`- Data source: ${detail.dataSource ?? "missing"}`);
         lines.push(`- Images prepared: ${detail.gallery.length}`);
         lines.push(`- Missing fields: ${detail.missing.length ? detail.missing.join(", ") : "none"}`);
