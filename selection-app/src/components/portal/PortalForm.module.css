@@ -316,6 +316,23 @@
   color: #8a5a2b;
 }
 
+.retryBtn {
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  font-weight: 500;
+  color: #1d1d1d;
+  background: none;
+  border: 1px solid #c9c9c7;
+  padding: 5px 10px 5px calc(10px + 0.24em);
+  cursor: pointer;
+  font-family: inherit;
+  margin-left: 8px;
+}
+
+.retryBtn:hover {
+  border-color: #1d1d1d;
+}
+
 .addBtn {
   margin-top: 18px;
   border: 1px dashed #c9c9c7;

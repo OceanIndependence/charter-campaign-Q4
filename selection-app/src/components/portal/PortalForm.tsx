@@ -33,13 +33,46 @@ function newDraft(id: string): PortalDraft {
 
 type SaveState = "idle" | "saving" | "saved" | "error";
 
+/**
+ * Fields the Yachtfolio auto-fill manages. Consultant-voice fields
+ * (availability, notes) and APA are never auto-filled; edits to the fields
+ * below are tracked so a re-fetch cannot clobber them.
+ */
+const AUTO_FIELDS = [
+  "name",
+  "lengthM",
+  "yearRefit",
+  "guests",
+  "staterooms",
+  "location",
+  "cruisingArea",
+  "weeklyRateEUR",
+  "leadImageUrl",
+  "interiorImageUrl",
+  "deckImageUrl",
+  "watertoysImageUrl",
+  "brochureUrl",
+] as const;
+type AutoField = (typeof AUTO_FIELDS)[number];
+
+interface CardFetchState {
+  fetching: boolean;
+  error: string | null;
+  warnings: string[];
+  lastEntry: FleetEntry | null;
+}
+
 export default function PortalForm() {
   const [draft, setDraft] = useState<PortalDraft | null>(null);
   const [fleet, setFleet] = useState<FleetEntry[]>([]);
   const [removedIds, setRemovedIds] = useState<Set<number>>(new Set());
   const [fleetError, setFleetError] = useState<string | null>(null);
   const [openIds, setOpenIds] = useState<Set<string>>(new Set());
-  const [fetchingIds, setFetchingIds] = useState<Set<string>>(new Set());
+  const [cardState, setCardState] = useState<Record<string, CardFetchState>>({});
+  /** Auto-fill-managed fields the consultant has edited, per yacht entry. */
+  const dirtyFields = useRef<Map<string, Set<AutoField>>>(new Map());
+  /** Monotonic pick counter per entry so a stale response never applies. */
+  const fetchSeq = useRef<Map<string, number>>(new Map());
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [published, setPublished] = useState<{ slug: string; url: string } | null>(null);
   const [publishFlash, setPublishFlash] = useState(false);
@@ -89,12 +122,16 @@ export default function PortalForm() {
           window.location.href = "/portal/login";
           return;
         }
-        if (!res.ok) throw new Error(String(res.status));
+        if (!res.ok) {
+          const body = await res.json().catch(() => null);
+          throw new Error(body?.error ?? "The fleet list is unavailable.");
+        }
         const cache: FleetCache = await res.json();
         setFleet(cache.yachts ?? []);
         setRemovedIds(new Set(Object.keys(cache.removed ?? {}).map(Number)));
-      } catch {
-        setFleetError("The fleet list is unavailable — fields can still be completed by hand.");
+      } catch (err) {
+        const detail = err instanceof Error && err.message ? err.message : "The fleet list is unavailable.";
+        setFleetError(`${detail} Fields can still be completed by hand.`);
       }
     })();
   }, []);
@@ -156,46 +193,92 @@ export default function PortalForm() {
     [update]
   );
 
+  /** Consultant typing into an auto-fill-managed field: save and mark dirty. */
+  const editAutoField = useCallback(
+    (uid: string, field: AutoField, value: string) => {
+      const set = dirtyFields.current.get(uid) ?? new Set<AutoField>();
+      set.add(field);
+      dirtyFields.current.set(uid, set);
+      if (field === "name") setYacht(uid, { name: value, yfId: null });
+      else if (field === "weeklyRateEUR") setYacht(uid, { weeklyRateEUR: value, weeklyRateIsFrom: false });
+      else setYacht(uid, { [field]: value });
+    },
+    [setYacht]
+  );
+
+  const setCard = useCallback((uid: string, patch: Partial<CardFetchState>) => {
+    setCardState((s) => {
+      const base: CardFetchState = s[uid] ?? { fetching: false, error: null, warnings: [], lastEntry: null };
+      return { ...s, [uid]: { ...base, ...patch } };
+    });
+  }, []);
+
   const pickYacht = useCallback(
     async (uid: string, entry: FleetEntry) => {
+      // Only warn when replacing a yacht that was already auto-filled and
+      // then edited — typing a name to search the fleet is not an "edit".
+      const current = draftRef.current?.yachts.find((y) => y.uid === uid);
+      const dirty = dirtyFields.current.get(uid);
+      const hasEdits = current?.yfId != null && dirty && [...dirty].some((f) => f !== "name");
+      if (hasEdits) {
+        const proceed = window.confirm(
+          `You have edited fields on this yacht. Replace them with ${entry.name.toUpperCase()}'s Yachtfolio details?`
+        );
+        if (!proceed) return;
+      }
+      dirtyFields.current.set(uid, new Set());
+      const seq = (fetchSeq.current.get(uid) ?? 0) + 1;
+      fetchSeq.current.set(uid, seq);
+
       setYacht(uid, { yfId: entry.id, name: entry.name.toUpperCase() });
-      setFetchingIds((s) => new Set(s).add(uid));
+      setCard(uid, { fetching: true, error: null, warnings: [], lastEntry: entry });
       try {
         const res = await fetch(`/api/fleet/${entry.id}`);
-        if (!res.ok) throw new Error(String(res.status));
-        const detail: FleetDetail = await res.json();
-        setYacht(uid, {
-          yfId: entry.id,
-          name: detail.name || entry.name.toUpperCase(),
-          lengthM: detail.lengthM != null ? String(detail.lengthM) : "",
-          yearRefit: detail.yearRefit,
-          guests: detail.guests != null ? String(detail.guests) : "",
-          staterooms: detail.staterooms,
-          location: detail.location,
-          cruisingArea: detail.cruisingArea,
-          availability: detail.availability,
-          weeklyRateEUR: detail.weeklyRateEUR != null ? String(detail.weeklyRateEUR) : "",
-          weeklyRateIsFrom: detail.weeklyRateIsFrom,
-          leadImageUrl: detail.leadImageUrl,
-          interiorImageUrl: detail.interiorImageUrl,
-          deckImageUrl: detail.deckImageUrl,
-          watertoysImageUrl: detail.watertoysImageUrl,
-          brochureUrl: detail.brochureUrl,
-        });
-      } catch {
-        setYacht(uid, {
-          availability: "",
-        });
-        setFleetError("Yachtfolio did not return that yacht's details — the fields stay as they are.");
-      } finally {
-        setFetchingIds((s) => {
-          const next = new Set(s);
-          next.delete(uid);
-          return next;
+        const body = await res.json().catch(() => null);
+        if (!res.ok) {
+          throw new Error(body?.error ?? "Yachtfolio did not return this yacht's details.");
+        }
+        if (fetchSeq.current.get(uid) !== seq) return; // superseded by a newer pick
+        const detail: FleetDetail = body;
+
+        // Apply fetched values, skipping anything edited while the fetch ran.
+        // Fields Yachtfolio does not return become empty, never a guess;
+        // availability and notes are consultant-voice and stay untouched.
+        const dirtyNow = dirtyFields.current.get(uid) ?? new Set<AutoField>();
+        const patch: Partial<PortalDraft["yachts"][number]> = { yfId: entry.id };
+        const apply = (field: AutoField, value: string) => {
+          if (!dirtyNow.has(field)) Object.assign(patch, { [field]: value });
+        };
+        if (detail.name) apply("name", detail.name);
+        apply("lengthM", detail.lengthM != null ? String(detail.lengthM) : "");
+        apply("yearRefit", detail.yearRefit);
+        apply("guests", detail.guests != null ? String(detail.guests) : "");
+        apply("staterooms", detail.staterooms);
+        apply("location", detail.location);
+        apply("cruisingArea", detail.cruisingArea);
+        if (!dirtyNow.has("weeklyRateEUR")) {
+          patch.weeklyRateEUR = detail.weeklyRateEUR != null ? String(detail.weeklyRateEUR) : "";
+          patch.weeklyRateIsFrom = detail.weeklyRateIsFrom;
+        }
+        apply("leadImageUrl", detail.leadImageUrl);
+        apply("interiorImageUrl", detail.interiorImageUrl);
+        apply("deckImageUrl", detail.deckImageUrl);
+        apply("watertoysImageUrl", detail.watertoysImageUrl);
+        apply("brochureUrl", detail.brochureUrl);
+        setYacht(uid, patch);
+        setCard(uid, { fetching: false, error: null, warnings: detail.warnings ?? [] });
+      } catch (err) {
+        if (fetchSeq.current.get(uid) !== seq) return;
+        setCard(uid, {
+          fetching: false,
+          error:
+            err instanceof Error && err.message
+              ? err.message
+              : "Yachtfolio did not return this yacht's details.",
         });
       }
     },
-    [setYacht]
+    [setCard, setYacht]
   );
 
   const addYacht = useCallback(() => {
@@ -210,6 +293,8 @@ export default function PortalForm() {
     (uid: string, name: string) => {
       const label = name.trim() ? name.trim().toUpperCase() : "this yacht";
       if (!window.confirm(`Remove ${label} from the selection?`)) return;
+      dirtyFields.current.delete(uid);
+      fetchSeq.current.delete(uid);
       update((d) => ({ ...d, yachts: d.yachts.filter((y) => y.uid !== uid) }));
     },
     [update]
@@ -356,7 +441,8 @@ export default function PortalForm() {
           <div className={styles.yachtList}>
             {draft.yachts.map((y, i) => {
               const open = openIds.has(y.uid);
-              const fetching = fetchingIds.has(y.uid);
+              const card = cardState[y.uid] ?? { fetching: false, error: null, warnings: [], lastEntry: null };
+              const fetching = card.fetching;
               const gone = y.yfId != null && fleet.length > 0 && !fleet.some((f) => f.id === y.yfId);
               const removedRecord = y.yfId != null && removedIds.has(y.yfId);
               return (
@@ -407,7 +493,7 @@ export default function PortalForm() {
                           yfId={y.yfId}
                           disabled={fetching}
                           onPick={(entry) => pickYacht(y.uid, entry)}
-                          onNameChange={(name) => setYacht(y.uid, { name, yfId: null })}
+                          onNameChange={(name) => editAutoField(y.uid, "name", name)}
                         />
                       </label>
                       <label className={styles.field}>
@@ -417,7 +503,7 @@ export default function PortalForm() {
                           className={styles.input}
                           placeholder="Auto-filled on selection"
                           value={y.lengthM}
-                          onChange={(e) => setYacht(y.uid, { lengthM: e.target.value })}
+                          onChange={(e) => editAutoField(y.uid, "lengthM", e.target.value)}
                         />
                       </label>
                       <label className={styles.field}>
@@ -427,7 +513,7 @@ export default function PortalForm() {
                           className={styles.input}
                           placeholder="Auto-filled on selection"
                           value={y.yearRefit}
-                          onChange={(e) => setYacht(y.uid, { yearRefit: e.target.value })}
+                          onChange={(e) => editAutoField(y.uid, "yearRefit", e.target.value)}
                         />
                       </label>
                       <label className={styles.field}>
@@ -437,7 +523,7 @@ export default function PortalForm() {
                           className={styles.input}
                           placeholder="Auto-filled"
                           value={y.guests}
-                          onChange={(e) => setYacht(y.uid, { guests: e.target.value })}
+                          onChange={(e) => editAutoField(y.uid, "guests", e.target.value)}
                         />
                       </label>
                       <label className={styles.field}>
@@ -447,7 +533,7 @@ export default function PortalForm() {
                           className={styles.input}
                           placeholder="Auto-filled"
                           value={y.staterooms}
-                          onChange={(e) => setYacht(y.uid, { staterooms: e.target.value })}
+                          onChange={(e) => editAutoField(y.uid, "staterooms", e.target.value)}
                         />
                       </label>
                       <label className={styles.field}>
@@ -457,7 +543,7 @@ export default function PortalForm() {
                           className={styles.input}
                           placeholder="Auto-filled"
                           value={y.location}
-                          onChange={(e) => setYacht(y.uid, { location: e.target.value })}
+                          onChange={(e) => editAutoField(y.uid, "location", e.target.value)}
                         />
                       </label>
                       <label className={styles.field}>
@@ -467,7 +553,7 @@ export default function PortalForm() {
                           className={styles.input}
                           placeholder="Auto-filled"
                           value={y.cruisingArea}
-                          onChange={(e) => setYacht(y.uid, { cruisingArea: e.target.value })}
+                          onChange={(e) => editAutoField(y.uid, "cruisingArea", e.target.value)}
                         />
                       </label>
                       <label className={styles.field}>
@@ -487,9 +573,7 @@ export default function PortalForm() {
                           className={styles.input}
                           placeholder="Auto-filled — editable"
                           value={y.weeklyRateEUR}
-                          onChange={(e) =>
-                            setYacht(y.uid, { weeklyRateEUR: e.target.value, weeklyRateIsFrom: false })
-                          }
+                          onChange={(e) => editAutoField(y.uid, "weeklyRateEUR", e.target.value)}
                         />
                       </label>
                       <label className={styles.field}>
@@ -519,7 +603,7 @@ export default function PortalForm() {
                           className={styles.input}
                           placeholder="Auto-filled from the fleet library — replace to override"
                           value={y.leadImageUrl}
-                          onChange={(e) => setYacht(y.uid, { leadImageUrl: e.target.value })}
+                          onChange={(e) => editAutoField(y.uid, "leadImageUrl", e.target.value)}
                         />
                       </label>
                       <label className={styles.field}>
@@ -529,7 +613,7 @@ export default function PortalForm() {
                           className={styles.input}
                           placeholder="https://..."
                           value={y.interiorImageUrl}
-                          onChange={(e) => setYacht(y.uid, { interiorImageUrl: e.target.value })}
+                          onChange={(e) => editAutoField(y.uid, "interiorImageUrl", e.target.value)}
                         />
                       </label>
                       <label className={styles.field}>
@@ -539,7 +623,7 @@ export default function PortalForm() {
                           className={styles.input}
                           placeholder="https://..."
                           value={y.deckImageUrl}
-                          onChange={(e) => setYacht(y.uid, { deckImageUrl: e.target.value })}
+                          onChange={(e) => editAutoField(y.uid, "deckImageUrl", e.target.value)}
                         />
                       </label>
                       <label className={styles.field}>
@@ -549,7 +633,7 @@ export default function PortalForm() {
                           className={styles.input}
                           placeholder="https://..."
                           value={y.watertoysImageUrl}
-                          onChange={(e) => setYacht(y.uid, { watertoysImageUrl: e.target.value })}
+                          onChange={(e) => editAutoField(y.uid, "watertoysImageUrl", e.target.value)}
                         />
                       </label>
                       <label className={styles.field}>
@@ -559,12 +643,32 @@ export default function PortalForm() {
                           className={styles.input}
                           placeholder="https://..."
                           value={y.brochureUrl}
-                          onChange={(e) => setYacht(y.uid, { brochureUrl: e.target.value })}
+                          onChange={(e) => editAutoField(y.uid, "brochureUrl", e.target.value)}
                         />
                       </label>
                       {fetching && (
                         <span className={styles.fetchNote}>
-                          Fetching this yacht&rsquo;s details and preparing images…
+                          Fetching {y.name.trim() ? y.name.trim().toUpperCase() : "this yacht"}
+                          &rsquo;s details and preparing images…
+                        </span>
+                      )}
+                      {card.error && !fetching && (
+                        <span className={styles.fetchWarning}>
+                          {card.error}{" "}
+                          {card.lastEntry && (
+                            <button
+                              type="button"
+                              className={styles.retryBtn}
+                              onClick={() => pickYacht(y.uid, card.lastEntry as FleetEntry)}
+                            >
+                              RETRY
+                            </button>
+                          )}
+                        </span>
+                      )}
+                      {card.warnings.length > 0 && !fetching && (
+                        <span className={styles.fetchWarning}>
+                          {card.warnings.map((w) => `Yachtfolio note: ${w}`).join(" · ")}
                         </span>
                       )}
                       {(gone || removedRecord) && (
