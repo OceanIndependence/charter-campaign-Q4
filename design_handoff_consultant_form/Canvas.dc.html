@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/use-ocean-independence-design-system-0088b55d-8fa4-464e-bfce-382c26b195bc/colors_and_type.css">
+  <link rel="stylesheet" href="_ds/use-ocean-independence-design-system-0088b55d-8fa4-464e-bfce-382c26b195bc/styles.css">
+  <script src="_ds/use-ocean-independence-design-system-0088b55d-8fa4-464e-bfce-382c26b195bc/_ds_bundle.js"></script>
+  <style>
+    html, body { margin: 0; padding: 0; background: #FAFAF8; }
+    body { font-family: "Gotham", "Helvetica Neue", Arial, sans-serif; }
+    a { color: #1D1D1D; }
+    a:hover { color: #555759; }
+    input, textarea, select { font-family: "Gotham", "Helvetica Neue", Arial, sans-serif; }
+    input:focus, textarea:focus, select:focus { outline: none; border-color: #1D1D1D !important; }
+    ::placeholder { color: #99999A; opacity: 1; }
+  </style>
+</helmet>
+<div style="min-height: 100svh; background: #FAFAF8; color: #1D1D1D; font-family: var(--font-sans); font-weight: 300;">
+
+  <header data-screen-label="Portal header" style="background: #FFFFFF; border-bottom: 1px solid #E3E3E1; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 0 40px; min-height: 72px; position: sticky; top: 0; z-index: 50;">
+    <div style="display: flex; align-items: center; gap: 20px;">
+      <img src="assets/logo-black.png" alt="Ocean Independence" style="height: 24px; display: block;">
+      <span style="font-size: 10px; letter-spacing: 0.4em; font-weight: 500; color: #99999A; border-left: 1px solid #E3E3E1; padding-left: 20px;">CHARTER PORTAL</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 24px;">
+      <span style="font-size: 10px; letter-spacing: 0.24em; font-weight: 500; color: #555759;">LUCY · LONDON</span>
+      <span style="width: 34px; height: 34px; border-radius: 50%; background: #1D1D1D; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 11px; letter-spacing: 0.05em; font-weight: 500;">L</span>
+    </div>
+  </header>
+
+  <main style="max-width: 880px; margin: 0 auto; padding: 56px clamp(20px, 5vw, 48px) 120px;">
+    <div data-screen-label="Page intro">
+      <div style="font-size: 10px; letter-spacing: 0.36em; font-weight: 500; color: #99999A; margin-bottom: 16px;">NEW CLIENT PRESENTATION</div>
+      <h1 style="font-family: var(--font-display); font-weight: 500; font-size: clamp(28px, 4vw, 40px); letter-spacing: 0.26em; margin: 0 0 14px; text-transform: uppercase;">Yacht Selection</h1>
+      <p style="font-size: 13px; line-height: 1.8; color: #555759; margin: 0; max-width: 60ch; text-wrap: pretty;">Complete the fields below to build the client's landing page. Every field maps to the presentation — the ring carousel, specification panel and your contact block are generated automatically.</p>
+    </div>
+
+    <section data-screen-label="Client details" style="background: #FFFFFF; border: 1px solid #E3E3E1; margin-top: 40px; padding: 36px clamp(20px, 4vw, 44px) 44px;">
+      <div style="font-size: 11px; letter-spacing: 0.36em; font-weight: 500; margin-bottom: 28px;">01 — CLIENT &amp; SEASON</div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 22px 24px;">
+        <label style="display: grid; gap: 8px;"><span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: #555759;">CLIENT NAME(S)</span><input type="text" placeholder="Mr and Mrs Harrington" style="border: 1px solid #D8D8D6; background: #FFFFFF; padding: 12px 14px; font-size: 13px; font-weight: 300; color: #1D1D1D; border-radius: 0;"></label>
+        <label style="display: grid; gap: 8px;"><span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: #555759;">SEASON</span><input type="text" placeholder="Summer 2027" style="border: 1px solid #D8D8D6; background: #FFFFFF; padding: 12px 14px; font-size: 13px; font-weight: 300; color: #1D1D1D; border-radius: 0;"></label>
+        <label style="display: grid; gap: 8px;"><span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: #555759;">REGION</span><input type="text" placeholder="Mediterranean" style="border: 1px solid #D8D8D6; background: #FFFFFF; padding: 12px 14px; font-size: 13px; font-weight: 300; color: #1D1D1D; border-radius: 0;"></label>
+        <label style="display: grid; gap: 8px;"><span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: #555759;">PAGE HEADLINE</span><input type="text" placeholder="Yacht Charter Selection" style="border: 1px solid #D8D8D6; background: #FFFFFF; padding: 12px 14px; font-size: 13px; font-weight: 300; color: #1D1D1D; border-radius: 0;"></label>
+      </div>
+    </section>
+
+    <section data-screen-label="Yachts" style="background: #FFFFFF; border: 1px solid #E3E3E1; margin-top: 24px; padding: 36px clamp(20px, 4vw, 44px) 44px;">
+      <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 20px; margin-bottom: 10px;">
+        <div style="font-size: 11px; letter-spacing: 0.36em; font-weight: 500;">02 — THE SELECTION</div>
+        <span style="font-size: 9px; letter-spacing: 0.24em; font-weight: 500; color: #99999A;">{{ yachtCount }} OF 10</span>
+      </div>
+      <p style="font-size: 12px; line-height: 1.7; color: #99999A; margin: 0 0 26px;">Yachts appear on the ring in this order. Images must be 2000 x 1250 px (16:10).</p>
+      <div style="display: grid; gap: 14px;">
+        <sc-for list="{{ yachts }}" as="y" hint-placeholder-count="2">
+          <div style="border: 1px solid #E3E3E1;">
+            <div onClick="{{ y.toggle }}" style="display: flex; align-items: center; gap: 16px; padding: 16px 20px; cursor: pointer; user-select: none; background: #FAFAF8;" style-hover="background: #F4F4F2;">
+              <span style="font-size: 9px; letter-spacing: 0.2em; font-weight: 500; color: #99999A; min-width: 22px;">{{ y.num }}</span>
+              <span style="font-size: 12px; letter-spacing: 0.24em; font-weight: 500; flex: 1;">{{ y.title }}</span>
+              <span onClick="{{ y.remove }}" title="Remove yacht" style="font-size: 9px; letter-spacing: 0.24em; font-weight: 500; color: #99999A; padding: 4px 8px;" style-hover="color: #1D1D1D;">REMOVE</span>
+              <span style="font-size: 16px; font-weight: 300; color: #555759;">{{ y.icon }}</span>
+            </div>
+            <sc-if value="{{ y.open }}" hint-placeholder-val="{{ false }}">
+              <div style="padding: 26px 20px 30px; border-top: 1px solid #E3E3E1; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px 22px;">
+                <label style="display: grid; gap: 8px;"><span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: #555759;">YACHT NAME <span style="color: #99999A; letter-spacing: 0.1em;">— FROM FLEET API</span></span>
+                  <select onChange="{{ y.pickYacht }}" style="border: 1px solid #D8D8D6; background: #FFFFFF; padding: 11px 13px; font-size: 13px; font-weight: 300; color: #1D1D1D; border-radius: 0; appearance: none; background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2210%22 height=%226%22><path d=%22M1 1L5 5L9 1%22 stroke=%22%23555759%22 fill=%22none%22/></svg>'); background-repeat: no-repeat; background-position: right 13px center;">
+                    <option value="">Select a yacht…</option>
+                    <sc-for list="{{ fleet }}" as="f" hint-placeholder-count="4"><option value="{{ f.id }}">{{ f.label }}</option></sc-for>
+                  </select>
+                </label>
+                <label style="display: grid; gap: 8px;"><span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: #555759;">LENGTH (M)</span><input data-field="length" type="text" placeholder="Auto-filled on selection" style="border: 1px solid #D8D8D6; padding: 11px 13px; font-size: 13px; font-weight: 300; border-radius: 0;"></label>
+                <label style="display: grid; gap: 8px;"><span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: #555759;">YEAR / REFIT</span><input data-field="year" type="text" placeholder="Auto-filled on selection" style="border: 1px solid #D8D8D6; padding: 11px 13px; font-size: 13px; font-weight: 300; border-radius: 0;"></label>
+                <label style="display: grid; gap: 8px;"><span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: #555759;">GUESTS</span><input data-field="guests" type="number" placeholder="Auto-filled" style="border: 1px solid #D8D8D6; padding: 11px 13px; font-size: 13px; font-weight: 300; border-radius: 0;"></label>
+                <label style="display: grid; gap: 8px;"><span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: #555759;">STATEROOMS</span><input data-field="staterooms" type="text" placeholder="Auto-filled" style="border: 1px solid #D8D8D6; padding: 11px 13px; font-size: 13px; font-weight: 300; border-radius: 0;"></label>
+                <label style="display: grid; gap: 8px;"><span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: #555759;">LOCATION</span><input data-field="location" type="text" placeholder="Auto-filled" style="border: 1px solid #D8D8D6; padding: 11px 13px; font-size: 13px; font-weight: 300; border-radius: 0;"></label>
+                <label style="display: grid; gap: 8px;"><span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: #555759;">CRUISING AREA</span><input data-field="area" type="text" placeholder="Auto-filled" style="border: 1px solid #D8D8D6; padding: 11px 13px; font-size: 13px; font-weight: 300; border-radius: 0;"></label>
+                <label style="display: grid; gap: 8px;"><span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: #555759;">AVAILABILITY</span><input data-field="avail" type="text" placeholder="Auto-filled — editable" style="border: 1px solid #D8D8D6; padding: 11px 13px; font-size: 13px; font-weight: 300; border-radius: 0;"></label>
+                <label style="display: grid; gap: 8px;"><span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: #555759;">WEEKLY RATE (EUR)</span><input data-field="rate" type="text" placeholder="Auto-filled — editable" style="border: 1px solid #D8D8D6; padding: 11px 13px; font-size: 13px; font-weight: 300; border-radius: 0;"></label>
+                <label style="display: grid; gap: 8px;"><span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: #555759;">APA %</span><input type="number" placeholder="35" style="border: 1px solid #D8D8D6; padding: 11px 13px; font-size: 13px; font-weight: 300; border-radius: 0;"></label>
+                <label style="display: grid; gap: 8px; grid-column: 1 / -1;"><span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: #555759;">YOUR NOTE TO THE CLIENT</span><textarea rows="2" placeholder="The yacht you know. I would expect her July weeks to be committed before Christmas." style="border: 1px solid #D8D8D6; padding: 11px 13px; font-size: 13px; font-weight: 300; line-height: 1.7; resize: vertical; border-radius: 0;"></textarea></label>
+                <label style="display: grid; gap: 8px; grid-column: 1 / -1;"><span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: #555759;">LEAD IMAGE URL — 2000 x 1250</span><input data-field="lead" type="url" placeholder="Auto-filled from fleet library — replace to override" style="border: 1px solid #D8D8D6; padding: 11px 13px; font-size: 13px; font-weight: 300; border-radius: 0;"></label>
+                <label style="display: grid; gap: 8px;"><span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: #555759;">INTERIOR IMAGE URL</span><input type="url" placeholder="https://..." style="border: 1px solid #D8D8D6; padding: 11px 13px; font-size: 13px; font-weight: 300; border-radius: 0;"></label>
+                <label style="display: grid; gap: 8px;"><span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: #555759;">DECK IMAGE URL</span><input type="url" placeholder="https://..." style="border: 1px solid #D8D8D6; padding: 11px 13px; font-size: 13px; font-weight: 300; border-radius: 0;"></label>
+                <label style="display: grid; gap: 8px;"><span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: #555759;">WATERTOYS IMAGE URL</span><input type="url" placeholder="https://..." style="border: 1px solid #D8D8D6; padding: 11px 13px; font-size: 13px; font-weight: 300; border-radius: 0;"></label>
+                <label style="display: grid; gap: 8px;"><span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: #555759;">BROCHURE LINK</span><input type="url" placeholder="https://..." style="border: 1px solid #D8D8D6; padding: 11px 13px; font-size: 13px; font-weight: 300; border-radius: 0;"></label>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+      <div onClick="{{ addYacht }}" style="margin-top: 18px; border: 1px dashed #C9C9C7; padding: 16px; text-align: center; font-size: 10px; letter-spacing: 0.32em; font-weight: 500; color: {{ addInk }}; cursor: {{ addCursor }}; user-select: none;" style-hover="border-color: #1D1D1D; color: #1D1D1D;">{{ addLabel }}</div>
+    </section>
+
+    <section data-screen-label="Sections" style="background: #FFFFFF; border: 1px solid #E3E3E1; margin-top: 24px; padding: 36px clamp(20px, 4vw, 44px) 44px;">
+      <div style="font-size: 11px; letter-spacing: 0.36em; font-weight: 500; margin-bottom: 28px;">03 — PAGE SECTIONS</div>
+      <div style="display: grid; gap: 18px;">
+        <label style="display: flex; align-items: center; gap: 14px; cursor: pointer;"><input type="checkbox" checked style="width: 16px; height: 16px; accent-color: #1D1D1D;"><span style="font-size: 12px; letter-spacing: 0.1em; color: #1D1D1D;">Costs involved (charter fee, APA, VAT, delivery, gratuity)</span></label>
+        <label style="display: flex; align-items: center; gap: 14px; cursor: pointer;"><input type="checkbox" checked style="width: 16px; height: 16px; accent-color: #1D1D1D;"><span style="font-size: 12px; letter-spacing: 0.1em; color: #1D1D1D;">Suggested itinerary</span></label>
+        <div style="display: grid; gap: 8px; max-width: 480px; margin-left: 30px;"><span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: #555759;">ITINERARY LINK</span><input type="url" placeholder="https://... (client itinerary page)" style="border: 1px solid #D8D8D6; padding: 11px 13px; font-size: 13px; font-weight: 300; border-radius: 0;"></div>
+        <label style="display: flex; align-items: center; gap: 14px; cursor: pointer;"><input type="checkbox" checked style="width: 16px; height: 16px; accent-color: #1D1D1D;"><span style="font-size: 12px; letter-spacing: 0.1em; color: #1D1D1D;">Compare feature (side-by-side specifications)</span></label>
+      </div>
+    </section>
+
+    <section data-screen-label="Consultant" style="background: #FFFFFF; border: 1px solid #E3E3E1; margin-top: 24px; padding: 36px clamp(20px, 4vw, 44px) 44px;">
+      <div style="font-size: 11px; letter-spacing: 0.36em; font-weight: 500; margin-bottom: 28px;">04 — YOUR DETAILS</div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 22px 24px;">
+        <label style="display: grid; gap: 8px;"><span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: #555759;">NAME</span><input type="text" placeholder="Lucy" style="border: 1px solid #D8D8D6; padding: 12px 14px; font-size: 13px; font-weight: 300; border-radius: 0;"></label>
+        <label style="display: grid; gap: 8px;"><span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: #555759;">TITLE</span><input type="text" placeholder="Charter Consultant" style="border: 1px solid #D8D8D6; padding: 12px 14px; font-size: 13px; font-weight: 300; border-radius: 0;"></label>
+        <label style="display: grid; gap: 8px;"><span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: #555759;">PHONE</span><input type="tel" placeholder="+41 44 000 00 00" style="border: 1px solid #D8D8D6; padding: 12px 14px; font-size: 13px; font-weight: 300; border-radius: 0;"></label>
+        <label style="display: grid; gap: 8px;"><span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: #555759;">EMAIL</span><input type="email" placeholder="lucy@oceanindependence.com" style="border: 1px solid #D8D8D6; padding: 12px 14px; font-size: 13px; font-weight: 300; border-radius: 0;"></label>
+        <label style="display: grid; gap: 8px;"><span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: #555759;">WHATSAPP NUMBER</span><input type="tel" placeholder="+41 44 000 00 00" style="border: 1px solid #D8D8D6; padding: 12px 14px; font-size: 13px; font-weight: 300; border-radius: 0;"></label>
+        <label style="display: grid; gap: 8px;"><span style="font-size: 9px; letter-spacing: 0.3em; font-weight: 500; color: #555759;">PHOTO URL</span><input type="url" placeholder="https://..." style="border: 1px solid #D8D8D6; padding: 12px 14px; font-size: 13px; font-weight: 300; border-radius: 0;"></label>
+      </div>
+    </section>
+  </main>
+
+  <div data-screen-label="Publish bar" style="position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; background: #FFFFFF; border-top: 1px solid #E3E3E1; padding: 16px clamp(20px, 5vw, 48px); display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;">
+    <span style="font-size: 10px; letter-spacing: 0.14em; color: #99999A;">{{ statusLine }}</span>
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <a href="Yacht Selection - Showcase.dc.html" style="font-size: 10px; letter-spacing: 0.3em; font-weight: 500; color: #555759; text-decoration: none; border: 1px solid #C9C9C7; padding: 12px 22px 12px calc(22px + 0.3em); background: #FFFFFF;" style-hover="border-color: #1D1D1D; color: #1D1D1D;">PREVIEW CLIENT PAGE</a>
+      <span onClick="{{ publish }}" style="font-size: 10px; letter-spacing: 0.3em; font-weight: 500; color: #FFFFFF; background: #1D1D1D; border: 1px solid #1D1D1D; padding: 12px 22px 12px calc(22px + 0.3em); cursor: pointer; user-select: none;" style-hover="background: #FFFFFF; color: #1D1D1D;">{{ publishLabel }}</span>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: &quot;100%&quot;, &quot;height&quot;: 900}}">
+class Component extends DCLogic {
+  state = { yachts: [{ open: true }, { open: false }], published: false };
+  // Mock of the fleet API response — in production this list comes from the charter API.
+  fleet = [
+    { id: 'serenity', label: 'M/Y SERENITY — 47m', length: '47.00', year: '2019 / 2024', guests: '12', staterooms: '6 (5 double, 1 twin)', location: 'Naples, Italy', area: 'Amalfi Coast', avail: 'July on request, August open', rate: '245,000', lead: 'https://oceanindependence.sirv.com/fleet/serenity/lead.jpg' },
+    { id: 'eternal-spark', label: 'M/Y ETERNAL SPARK — 50m', length: '50.00', year: '2023', guests: '12', staterooms: '6 (5 double, 1 twin)', location: 'Bodrum, Turkey', area: 'Turkish Riviera', avail: 'Open for summer 2027', rate: '334,800', lead: 'https://oceanindependence.sirv.com/fleet/eternal-spark/lead.jpg' },
+    { id: 'lafayette', label: 'M/Y LAFAYETTE — 36m', length: '36.00', year: '2024', guests: '10', staterooms: '5 (4 double, 1 twin)', location: 'Cannes, France', area: 'French Riviera', avail: 'Open except the second week of August', rate: '130,000', lead: 'https://oceanindependence.sirv.com/fleet/lafayette/lead.jpg' },
+    { id: 'damari', label: 'M/Y DAMARI — 29m', length: '29.00', year: '2018 / 2023', guests: '10', staterooms: '5 (3 double, 2 twin)', location: 'Athens, Greece', area: 'Saronic & Cyclades', avail: 'Open for summer 2027', rate: '79,000', lead: 'https://oceanindependence.sirv.com/fleet/damari/lead.jpg' },
+    { id: 'aurelia', label: 'M/Y AURELIA — 44m', length: '44.00', year: '2021', guests: '12', staterooms: '6 (4 double, 2 twin)', location: 'Palma, Spain', area: 'The Balearics', avail: 'Open for summer 2027', rate: '195,000', lead: 'https://oceanindependence.sirv.com/fleet/aurelia/lead.jpg' },
+    { id: 'white-heron', label: 'M/Y WHITE HERON — 40m', length: '40.00', year: '2017 / 2025', guests: '11', staterooms: '5 (4 double, 1 convertible)', location: 'Split, Croatia', area: 'The Adriatic', avail: 'Open except the final week of July', rate: '120,000', lead: 'https://oceanindependence.sirv.com/fleet/white-heron/lead.jpg' },
+    { id: 'calypso-blue', label: 'M/Y CALYPSO BLUE — 38m', length: '38.00', year: '2020', guests: '10', staterooms: '5 (3 double, 2 twin)', location: 'Corfu, Greece', area: 'Ionian Islands', avail: 'Open for summer 2027', rate: '105,000', lead: 'https://oceanindependence.sirv.com/fleet/calypso-blue/lead.jpg' },
+    { id: 'mistral', label: 'M/Y MISTRAL — 33m', length: '33.00', year: '2019', guests: '8', staterooms: '4 (2 double, 2 twin)', location: 'Saint-Tropez, France', area: 'French Riviera', avail: 'July on request', rate: '88,000', lead: 'https://oceanindependence.sirv.com/fleet/mistral/lead.jpg' },
+    { id: 'alba', label: 'M/Y ALBA — 31m', length: '31.00', year: '2022', guests: '8', staterooms: '4 (3 double, 1 twin)', location: 'Olbia, Sardinia', area: 'Sardinia & Corsica', avail: 'Open for summer 2027', rate: '92,000', lead: 'https://oceanindependence.sirv.com/fleet/alba/lead.jpg' },
+    { id: 'odysseia', label: 'M/Y ODYSSEIA — 42m', length: '42.00', year: '2016 / 2024', guests: '12', staterooms: '6 (5 double, 1 twin)', location: 'Mykonos, Greece', area: 'The Cyclades', avail: 'Open for summer 2027', rate: '150,000', lead: 'https://oceanindependence.sirv.com/fleet/odysseia/lead.jpg' }
+  ];
+  renderVals() {
+    const max = 10;
+    const list = this.state.yachts;
+    return {
+      fleet: this.fleet.map((f) => ({ id: f.id, label: f.label })),
+      yachtCount: list.length,
+      yachts: list.map((y, i) => ({
+        num: String(i + 1).padStart(2, '0'),
+        title: y.name || 'UNTITLED YACHT',
+        open: y.open,
+        icon: y.open ? '\u2212' : '+',
+        toggle: () => {
+          const yachts = list.map((v, j) => j === i ? Object.assign({}, v, { open: !v.open }) : v);
+          this.setState({ yachts });
+        },
+        remove: (e) => {
+          e.stopPropagation();
+          this.setState({ yachts: list.filter((v, j) => j !== i) });
+        },
+        pickYacht: (e) => {
+          const f = this.fleet.find((x) => x.id === e.target.value);
+          const grid = e.target.closest('div');
+          if (f && grid) {
+            grid.querySelectorAll('[data-field]').forEach((inp) => {
+              const v = f[inp.getAttribute('data-field')];
+              if (v !== undefined) inp.value = v;
+            });
+          }
+          const yachts = list.map((v, j) => j === i ? Object.assign({}, v, { name: f ? f.label.split(' \u2014 ')[0] : undefined }) : v);
+          this.setState({ yachts });
+        }
+      })),
+      addYacht: () => { if (list.length < max) this.setState({ yachts: list.concat([{ open: true }]) }); },
+      addLabel: list.length < max ? '+ ADD A YACHT' : 'SELECTION FULL — 10 YACHTS',
+      addInk: list.length < max ? '#555759' : '#C9C9C7',
+      addCursor: list.length < max ? 'pointer' : 'default',
+      publish: () => { this.setState({ published: true }); clearTimeout(this._pt); this._pt = setTimeout(() => this.setState({ published: false }), 3200); },
+      publishLabel: this.state.published ? 'PUBLISHED \u2713' : 'PUBLISH TO CLIENT PAGE',
+      statusLine: this.state.published ? 'Client page updated \u2014 the link is ready to send.' : 'Draft \u2014 changes are saved as you type.'
+    };
+  }
+}
+</script>
+</body>
+</html>
