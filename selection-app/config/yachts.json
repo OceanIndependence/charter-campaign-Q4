@@ -1,5 +1,0 @@
-{
-  "$comment": "Curated yachts for the Tier 3 selection page, by Yachtfolio ID. Pick IDs from data/yachtfolio/yacht-list.json (or the table in data/yachtfolio/fetch-report.md) after a build with YACHTFOLIO_PASSKEY set. Every field except `id` is an optional override: `name` (display name), `slug` (URL/image folder), `headline` (card tagline), `weeklyRate` (EUR number, replaces the Yachtfolio summer 2027 rate), `heroImage` (path under /public, replaces the lead image), `location`, `cruisingArea`, `availability`, `notes` (consultant note), `brochureUrl`. `maxImagesPerCategory` caps downloads per gallery category.",
-  "maxImagesPerCategory": 4,
-  "yachts": []
-}

@@ -4,16 +4,16 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node scripts/fetch-yachtfolio.mjs",
     "build": "next build",
     "start": "next start",
     "yachts:fetch": "node scripts/fetch-yachtfolio.mjs"
   },
   "dependencies": {
+    "@vercel/blob": "^2.8.0",
     "next": "^15.5.4",
-    "sharp": "^0.34.3",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "sharp": "^0.34.3"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
