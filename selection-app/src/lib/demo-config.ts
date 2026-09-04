@@ -1,4 +1,5 @@
 import type { PageConfig, Yacht } from "./types";
+import generatedData from "../../data/yachts.json";
 
 /**
  * Demo content matching the design handoff prototype (Mr and Mrs Harrington,
@@ -179,13 +180,26 @@ const yachts: Yacht[] = [
   }),
 ];
 
+/**
+ * data/yachts.json is generated at build time by scripts/fetch-yachtfolio.mjs.
+ * When it carries real Yachtfolio data, it replaces the invented demo yachts;
+ * otherwise (no passkey, staging) the demo content above keeps the page alive.
+ */
+interface GeneratedYachtData {
+  source: string;
+  yachts: Yacht[];
+}
+const generated = generatedData as unknown as GeneratedYachtData;
+const activeYachts: Yacht[] =
+  generated.source === "yachtfolio" && generated.yachts.length > 0 ? generated.yachts : yachts;
+
 export const demoConfig: PageConfig = {
   slug: "harrington-summer-2027",
   clientNames: "Mr and Mrs Harrington",
   season: "Summer 2027",
   region: "Mediterranean",
   headline: "Yacht Charter Selection",
-  yachts,
+  yachts: activeYachts,
   sections: {
     costs: true,
     itinerary: true,

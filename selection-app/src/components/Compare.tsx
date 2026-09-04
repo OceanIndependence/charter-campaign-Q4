@@ -1,5 +1,5 @@
 import type { Yacht } from "@/lib/types";
-import { apaEUR, fmtEUR, fmtLength, fmtStaterooms, totalEUR } from "@/lib/format";
+import { apaEUR, fmtEUR, fmtLength, fmtStaterooms, fmtWeeklyRate, totalEUR } from "@/lib/format";
 import styles from "./Compare.module.css";
 
 export function CompareBar({
@@ -31,20 +31,32 @@ export function CompareBar({
 }
 
 export function CompareOverlay({ yachts, onClose }: { yachts: Yacht[]; onClose: () => void }) {
-  const rows: Array<[string, (y: Yacht) => string]> = [
-    ["LENGTH", fmtLength],
-    ["YEAR / REFIT", (y) => y.yearRefit],
-    ["GUESTS", (y) => String(y.guests)],
-    ["STATEROOMS", fmtStaterooms],
-    ["LOCATION", (y) => y.location],
-    ["AVAILABILITY", (y) => y.availability],
-    ["WEEKLY RATE", (y) => fmtEUR(y.weeklyRateEUR)],
+  /* A yacht with no value gets an empty cell; a row nobody can fill is hidden. */
+  const rows: Array<[string, (y: Yacht) => string | undefined]> = (
     [
-      yachts.every((y) => y.apaPct === yachts[0].apaPct) ? `APA (${yachts[0].apaPct}%)` : "APA",
-      (y) => fmtEUR(apaEUR(y)),
-    ],
-    ["TOTAL", (y) => fmtEUR(totalEUR(y))],
-  ];
+      ["LENGTH", fmtLength],
+      ["YEAR / REFIT", (y) => y.yearRefit],
+      ["GUESTS", (y) => (y.guests != null ? String(y.guests) : undefined)],
+      ["STATEROOMS", fmtStaterooms],
+      ["LOCATION", (y) => y.location],
+      ["AVAILABILITY", (y) => y.availability],
+      ["WEEKLY RATE", fmtWeeklyRate],
+      [
+        yachts.every((y) => y.apaPct === yachts[0].apaPct) ? `APA (${yachts[0].apaPct}%)` : "APA",
+        (y) => {
+          const apa = apaEUR(y);
+          return apa != null ? fmtEUR(apa) : undefined;
+        },
+      ],
+      [
+        "TOTAL",
+        (y) => {
+          const total = totalEUR(y);
+          return total != null ? fmtEUR(total) : undefined;
+        },
+      ],
+    ] as Array<[string, (y: Yacht) => string | undefined]>
+  ).filter(([, value]) => yachts.some((y) => value(y)));
 
   const k = Math.max(yachts.length, 1);
   const gridCols = `minmax(86px, 130px) repeat(${k}, 1fr)`;
@@ -73,7 +85,7 @@ export function CompareOverlay({ yachts, onClose }: { yachts: Yacht[]; onClose: 
               <div className={styles.rowLabel}>{label}</div>
               {yachts.map((y) => (
                 <div key={y.id} className={styles.rowValue}>
-                  {value(y)}
+                  {value(y) ?? ""}
                 </div>
               ))}
             </div>
