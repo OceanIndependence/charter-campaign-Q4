@@ -176,25 +176,35 @@ export default function RingCarousel(props: RingCarouselProps) {
                       </div>
                     </div>
                     <div className={styles.statRow}>
-                      <div className={styles.stat}>
-                        <GuestsIcon />
-                        <span className={styles.statValue}>{yacht.guests}</span>
-                        <span className={styles.statLabel}>GUESTS</span>
-                      </div>
-                      <div className={styles.stat}>
-                        <StateroomsIcon />
-                        <span className={styles.statValue}>{yacht.staterooms.count}</span>
-                        <span className={styles.statLabel}>STATEROOMS</span>
-                      </div>
-                      <div className={styles.stat}>
-                        <LengthIcon />
-                        <span className={styles.statValue}>{fmtLengthShort(yacht)}</span>
-                        <span className={styles.statLabel}>LENGTH</span>
-                      </div>
+                      {yacht.guests != null && (
+                        <div className={styles.stat}>
+                          <GuestsIcon />
+                          <span className={styles.statValue}>{yacht.guests}</span>
+                          <span className={styles.statLabel}>GUESTS</span>
+                        </div>
+                      )}
+                      {yacht.staterooms && (
+                        <div className={styles.stat}>
+                          <StateroomsIcon />
+                          <span className={styles.statValue}>{yacht.staterooms.count}</span>
+                          <span className={styles.statLabel}>STATEROOMS</span>
+                        </div>
+                      )}
+                      {yacht.lengthM != null && (
+                        <div className={styles.stat}>
+                          <LengthIcon />
+                          <span className={styles.statValue}>{fmtLengthShort(yacht)}</span>
+                          <span className={styles.statLabel}>LENGTH</span>
+                        </div>
+                      )}
                     </div>
                     <div className={styles.priceBlock}>
-                      <div className={styles.price}>FROM {fmtEUR(yacht.weeklyRateEUR)}</div>
-                      <div className={styles.area}>CRUISING AREA · {yacht.cruisingArea}</div>
+                      {yacht.weeklyRateEUR != null && (
+                        <div className={styles.price}>FROM {fmtEUR(yacht.weeklyRateEUR)}</div>
+                      )}
+                      {yacht.cruisingArea && (
+                        <div className={styles.area}>CRUISING AREA · {yacht.cruisingArea}</div>
+                      )}
                     </div>
                     <div className={isFront ? styles.dashActive : styles.dash} />
                   </div>

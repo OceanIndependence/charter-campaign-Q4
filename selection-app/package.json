@@ -4,11 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/fetch-yachtfolio.mjs",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "yachts:fetch": "node scripts/fetch-yachtfolio.mjs"
   },
   "dependencies": {
     "next": "^15.5.4",
+    "sharp": "^0.34.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
