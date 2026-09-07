@@ -221,18 +221,35 @@ export function extractYachtFacts({ brochure, basic, reference, targetSeason }) 
   };
 }
 
+/** True when a filename/url points at a PDF (ignoring any query string). */
+function looksLikePdfName(name) {
+  if (!name) return false;
+  const path = String(name).split(/[?#]/)[0].toLowerCase();
+  return path.endsWith(".pdf");
+}
+
 /**
- * The brochure PDF file, if the yacht has one. Yachtfolio exposes it in the
- * PDF gallery (falling back to the sample menu); the returned url embeds the
- * passkey, so callers must download it server-side, never hand it to a
- * browser. Returns { id_file, filename, url } or null.
+ * The brochure PDF file, if the yacht has one. Yachtfolio's `PDF` gallery is
+ * a slot brokers can (and do) upload the wrong thing into — some yachts hold
+ * only a JPEG cover render there, not a real PDF — so we select by file type,
+ * not by position: the first entry whose filename is genuinely `.pdf` wins,
+ * scanning the whole gallery (the PDF can sit behind an image), then the
+ * sample menu if it too is a PDF. The returned url embeds the passkey, so
+ * callers must download it server-side, never hand it to a browser.
+ *
+ * Returns { id_file, filename, url } for a usable PDF entry; otherwise
+ * { pdfEntries } reporting how many non-PDF entries the gallery held, so the
+ * caller can note "no PDF brochure" honestly rather than downloading a JPEG.
  */
 export function extractBrochureFile(brochure) {
-  const pdf = brochure?.galleries?.PDF?.find((f) => f?.url);
+  const entries = (brochure?.galleries?.PDF ?? []).filter((f) => f?.url);
+  const pdf = entries.find((f) => looksLikePdfName(f.filename) || looksLikePdfName(f.url));
   if (pdf) return { id_file: pdf.id_file, filename: pdf.filename ?? `${pdf.id_file}.pdf`, url: pdf.url };
   const menu = brochure?.sample_menu;
-  if (menu?.url) return { id_file: menu.id_file, filename: `${menu.id_file}.pdf`, url: menu.url };
-  return null;
+  if (menu?.url && looksLikePdfName(menu.filename ?? menu.url)) {
+    return { id_file: menu.id_file, filename: menu.filename ?? `${menu.id_file}.pdf`, url: menu.url };
+  }
+  return { pdfEntries: entries.length };
 }
 
 /**

@@ -214,7 +214,17 @@ export async function getYachtDetail(yfId, { forceRefresh = false } = {}) {
   // blank for the consultant to paste a link, with a note in the report.
   let brochureUrl = "";
   const brochureFile = extractBrochureFile(brochure);
-  if (brochureFile) {
+  if (brochureFile && !brochureFile.url) {
+    // No PDF-typed entry in the gallery — some yachts hold only a JPEG cover
+    // in the PDF slot. Leave the link blank and say so, rather than serving a
+    // non-PDF that the client viewer would reject.
+    if (brochureFile.pdfEntries > 0) {
+      facts.notes.push(
+        `no PDF brochure — Yachtfolio's PDF gallery holds ${brochureFile.pdfEntries} ` +
+          `non-PDF file(s) (e.g. an image cover), not a brochure PDF.`
+      );
+    }
+  } else if (brochureFile?.url) {
     const key = `yachtfolio/brochures/${yfId}/v${DETAIL_SCHEMA_VERSION}-${brochureFile.id_file}.pdf`;
     try {
       if (await fileExists(key)) {
