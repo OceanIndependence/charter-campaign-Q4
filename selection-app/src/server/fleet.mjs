@@ -38,12 +38,12 @@ const detailKey = (yfId) => `yachtfolio/details/${yfId}.json`;
 const FLEET_STALE_MS = 36 * 60 * 60 * 1000; // lazy re-sync if the cron hasn't run
 const DETAIL_FRESH_MS = 6 * 60 * 60 * 1000; // rates change; don't serve stale for long
 // Download the whole gallery (capped per category) so the consultant can pick
-// which image fills each page slot; the default slot assignment below still
-// uses the first one or two of each category.
+// which image fills each page slot; the default slot assignment below takes
+// the first of each category, falling back to another category at random.
 const GALLERY_MAX_PER_CATEGORY = 5;
 // Bump to invalidate cached detail JSON and versioned asset keys after a
 // normalisation change (e.g. brochure PDF validation) — old caches re-fetch.
-const DETAIL_SCHEMA_VERSION = 5;
+const DETAIL_SCHEMA_VERSION = 7;
 
 async function passkeyOrThrow() {
   const passkey = await loadPasskey([process.cwd()]);
@@ -295,11 +295,34 @@ export async function getYachtDetail(yfId, { forceRefresh = false, debug = false
     }
   }
 
+  // Default slot assignment. Each slot takes the first unused image of its
+  // own category; when Yachtfolio has none in that category, an image from
+  // the other categories is picked at random (unused first). The consultant
+  // can change any of these in the form's picker.
   const byCategory = (cat) => files.filter((f) => f.category === cat).map((f) => f.url);
   const exterior = byCategory("EXTERIOR");
   const lifestyle = byCategory("LIFESTYLE");
   const interior = byCategory("INTERIOR");
-  const leadImageUrl = exterior[0] ?? lifestyle[0] ?? interior[0] ?? "";
+  const used = new Set();
+  const take = (url) => {
+    if (url) used.add(url);
+    return url ?? "";
+  };
+  const randomFrom = (urls) => (urls.length ? urls[Math.floor(Math.random() * urls.length)] : undefined);
+  const unused = (urls) => urls.filter((u) => !used.has(u));
+  // Own category first (an image not used in another slot), then an unused
+  // image from the other categories, then reuse an own image, then anything.
+  const pick = (own, others) =>
+    take(unused(own)[0] ?? randomFrom(unused(others)) ?? randomFrom(own) ?? randomFrom(others));
+  const leadImageUrl = pick(exterior, [...lifestyle, ...interior]);
+  const interiorImageUrl = pick(interior, [...exterior, ...lifestyle]);
+  const exteriorImageUrl = pick(exterior, [...lifestyle, ...interior]);
+  const lifestyleImageUrl = pick(lifestyle, [...exterior, ...interior]);
+  if (files.length) {
+    for (const [cat, list] of [["interior", interior], ["exterior", exterior], ["lifestyle", lifestyle]]) {
+      if (!list.length) facts.notes.push(`no ${cat} images in Yachtfolio — another image was chosen for that slot; change it in the picker if needed.`);
+    }
+  }
 
   const detail = {
     yfId,
@@ -310,6 +333,7 @@ export async function getYachtDetail(yfId, { forceRefresh = false, debug = false
     lengthM: facts.lengthM ?? null,
     yearRefit: facts.yearRefit ?? "",
     guests: facts.guests ?? null,
+    crew: facts.crew ?? null,
     builder: facts.builder ?? "",
     staterooms: facts.staterooms
       ? facts.staterooms.breakdown
@@ -317,9 +341,7 @@ export async function getYachtDetail(yfId, { forceRefresh = false, debug = false
         : String(facts.staterooms.count)
       : "",
     cruisingArea: facts.cruisingArea ?? "",
-    // Consultant-voice field: never auto-filled. facts.notes carries the
-    // seasons_unavailable warning for the form to surface instead.
-    availability: "",
+    // facts.notes carries the seasons_unavailable warning for the form to surface.
     // Currency carried through as-is; APA/VAT are the consultant's, not fetched.
     // Default auto-fill is summer 2027 low; the form can switch season/tier
     // from rateOptions without re-fetching.
@@ -330,9 +352,9 @@ export async function getYachtDetail(yfId, { forceRefresh = false, debug = false
     rateTier: "low",
     rateOptions,
     leadImageUrl,
-    interiorImageUrl: interior[0] ?? "",
-    exteriorImageUrl: exterior[1] ?? lifestyle[1] ?? "",
-    lifestyleImageUrl: lifestyle[0] ?? "",
+    interiorImageUrl,
+    exteriorImageUrl,
+    lifestyleImageUrl,
     brochureUrl,
     description: facts.description ?? "",
     keyFeatures: facts.keyFeatures,

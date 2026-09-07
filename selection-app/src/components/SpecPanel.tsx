@@ -29,9 +29,9 @@ export default function SpecPanel({
       ["LENGTH", fmtLength(yacht)],
       ["YEAR / REFIT", yacht.yearRefit],
       ["GUESTS", yacht.guests != null ? String(yacht.guests) : undefined],
+      ["CREW", yacht.crew != null ? String(yacht.crew) : undefined],
       ["STATEROOMS", fmtStaterooms(yacht)],
       ["CRUISING AREA", yacht.cruisingArea],
-      ["AVAILABILITY", yacht.availability],
     ] as Array<[string, string | undefined]>
   ).filter((row): row is [string, string] => Boolean(row[1]));
 

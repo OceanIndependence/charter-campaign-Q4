@@ -15,7 +15,7 @@ type SaveState = "idle" | "saving" | "saved" | "error";
 
 /**
  * Fields the Yachtfolio auto-fill manages. Consultant-voice fields
- * (availability, notes) and APA are never auto-filled; edits to the fields
+ * (notes) and APA are never auto-filled; edits to the fields
  * below are tracked so a re-fetch cannot clobber them.
  */
 const AUTO_FIELDS = [
@@ -23,6 +23,7 @@ const AUTO_FIELDS = [
   "lengthM",
   "yearRefit",
   "guests",
+  "crew",
   "staterooms",
   "cruisingArea",
   "currency",
@@ -138,6 +139,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
             ...y,
             uid: y.uid || crypto.randomUUID(),
             gallery: y.gallery ?? [],
+            crew: y.crew ?? "",
             exteriorImageUrl: y.exteriorImageUrl ?? y.deckImageUrl ?? "",
             lifestyleImageUrl: y.lifestyleImageUrl ?? y.watertoysImageUrl ?? "",
           };
@@ -323,7 +325,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
 
         // Apply fetched values, skipping anything edited while the fetch ran.
         // Fields Yachtfolio does not return become empty, never a guess;
-        // availability and notes are consultant-voice and stay untouched.
+        // notes is consultant-voice and stays untouched.
         const dirtyNow = dirtyFields.current.get(uid) ?? new Set<AutoField>();
         const patch: Partial<PortalDraft["yachts"][number]> = { yfId: entry.id };
         const apply = (field: AutoField, value: string) => {
@@ -333,6 +335,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
         apply("lengthM", detail.lengthM != null ? String(detail.lengthM) : "");
         apply("yearRefit", detail.yearRefit);
         apply("guests", detail.guests != null ? String(detail.guests) : "");
+        apply("crew", detail.crew != null ? String(detail.crew) : "");
         apply("staterooms", detail.staterooms);
         apply("cruisingArea", detail.cruisingArea);
         apply("currency", detail.currency || "EUR");
@@ -680,6 +683,16 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
                         />
                       </label>
                       <label className={styles.field}>
+                        <span className={styles.fieldLabel}>CREW</span>
+                        <input
+                          type="number"
+                          className={styles.input}
+                          placeholder="Auto-filled"
+                          value={y.crew}
+                          onChange={(e) => editAutoField(y.uid, "crew", e.target.value)}
+                        />
+                      </label>
+                      <label className={styles.field}>
                         <span className={styles.fieldLabel}>STATEROOMS</span>
                         <input
                           type="text"
@@ -697,16 +710,6 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
                           placeholder="Auto-filled"
                           value={y.cruisingArea}
                           onChange={(e) => editAutoField(y.uid, "cruisingArea", e.target.value)}
-                        />
-                      </label>
-                      <label className={styles.field}>
-                        <span className={styles.fieldLabel}>AVAILABILITY</span>
-                        <input
-                          type="text"
-                          className={styles.input}
-                          placeholder="Auto-filled — editable"
-                          value={y.availability}
-                          onChange={(e) => setYacht(y.uid, { availability: e.target.value })}
                         />
                       </label>
                       {y.rateOptions && (
