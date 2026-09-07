@@ -894,21 +894,21 @@
   letter-spacing: 0.24em;
   font-weight: 500;
   color: #99999a;
-  padding: 10px 12px 12px;
+  padding: 10px 10px 12px;
   border-bottom: 1px solid #e3e3e1;
   white-space: nowrap;
 }
 
 .table td {
-  padding: 16px 12px 6px;
+  padding: 16px 10px 6px;
   vertical-align: top;
   white-space: nowrap;
 }
 
 .tdWrap {
   white-space: normal !important;
-  min-width: 140px;
-  max-width: 260px;
+  min-width: 120px;
+  max-width: 220px;
 }
 
 .actionsRow td {
