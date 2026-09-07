@@ -31,13 +31,29 @@ function ExpandIcon() {
   );
 }
 
-/** Order a gallery for a slot: its natural categories first, position preserved. */
+/**
+ * Most images shown per category. Mirrors the server download cap; applied
+ * again here so a draft saved before the cap changed (its gallery is only
+ * refreshed on a re-pick) still shows the capped set.
+ */
+const MAX_PER_CATEGORY = 5;
+
+/**
+ * Order a gallery for a slot: its natural categories first, position
+ * preserved within each, and at most MAX_PER_CATEGORY of each category.
+ */
 function orderFor(gallery: GalleryImage[], order: readonly string[]): GalleryImage[] {
   const rank = (c: string) => {
     const i = order.indexOf(c);
     return i === -1 ? order.length : i;
   };
+  const perCategory = new Map<string, number>();
   return gallery
+    .filter((img) => {
+      const n = (perCategory.get(img.category) ?? 0) + 1;
+      perCategory.set(img.category, n);
+      return n <= MAX_PER_CATEGORY;
+    })
     .map((img, i) => ({ img, i }))
     .sort((a, b) => rank(a.img.category) - rank(b.img.category) || a.i - b.i)
     .map((x) => x.img);
