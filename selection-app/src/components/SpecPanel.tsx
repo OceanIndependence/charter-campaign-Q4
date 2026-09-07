@@ -57,6 +57,12 @@ export default function SpecPanel({
       </div>
 
       <h2 className={styles.name}>{yacht.name}</h2>
+      {yacht.notes && (
+        <p className={styles.note}>
+          {yacht.notes} — {consultantName}
+        </p>
+      )}
+
 
       <div className={styles.thumbs}>
         <div className={styles.thumb}>
@@ -124,12 +130,6 @@ export default function SpecPanel({
             ))}
           </ol>
         </div>
-      )}
-
-      {yacht.notes && (
-        <p className={styles.note}>
-          {yacht.notes} — {consultantName}
-        </p>
       )}
 
       {yacht.brochureUrl && yacht.brochureUrl !== "#" && (

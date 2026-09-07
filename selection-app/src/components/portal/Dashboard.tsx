@@ -330,7 +330,9 @@ interface RowProps {
 function RowGroup(p: RowProps) {
   const { m } = p;
   const title = selectionTitle(m);
-  const previewHref = m.status === "published" && m.slug ? `/selection/${m.slug}` : `/portal/preview?id=${m.id}`;
+  // Preview always renders the current draft (what the next publish will
+  // show); the live client page is a separate action.
+  const previewHref = `/portal/preview?id=${m.id}`;
   const cols = p.showOwner ? 7 : 6; // table columns, for the full-width rows
   return (
     <>
@@ -368,6 +370,11 @@ function RowGroup(p: RowProps) {
               <a className={styles.actionBtn} href={previewHref} target="_blank" rel="noopener noreferrer">
                 PREVIEW
               </a>
+              {m.status === "published" && m.slug && (
+                <a className={styles.actionBtn} href={`/selection/${m.slug}`} target="_blank" rel="noopener noreferrer">
+                  LIVE PAGE
+                </a>
+              )}
               {m.status === "published" && (
                 <button type="button" className={styles.actionBtn} onClick={p.onCopy}>
                   {p.copied ? "COPIED" : "COPY LINK"}
