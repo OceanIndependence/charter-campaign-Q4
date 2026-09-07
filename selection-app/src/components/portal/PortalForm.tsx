@@ -14,9 +14,9 @@ const AUTOSAVE_MS = 900;
 type SaveState = "idle" | "saving" | "saved" | "error";
 
 /**
- * Fields the Yachtfolio auto-fill manages. Consultant-voice fields
- * (notes) and APA are never auto-filled; edits to the fields
- * below are tracked so a re-fetch cannot clobber them.
+ * Fields the Yachtfolio auto-fill manages. Consultant fields (notes, the
+ * brochure link) and APA are never auto-filled; edits to the fields below
+ * are tracked so a re-fetch cannot clobber them.
  */
 const AUTO_FIELDS = [
   "name",
@@ -33,7 +33,6 @@ const AUTO_FIELDS = [
   "interiorImageUrl",
   "exteriorImageUrl",
   "lifestyleImageUrl",
-  "brochureUrl",
 ] as const;
 type AutoField = (typeof AUTO_FIELDS)[number];
 
@@ -356,7 +355,6 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
         apply("interiorImageUrl", detail.interiorImageUrl);
         apply("exteriorImageUrl", detail.exteriorImageUrl);
         apply("lifestyleImageUrl", detail.lifestyleImageUrl);
-        apply("brochureUrl", detail.brochureUrl);
         setYacht(uid, patch);
         setCard(uid, { fetching: false, error: null, warnings: detail.warnings ?? [] });
       } catch (err) {
@@ -860,13 +858,15 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
                         />
                       </div>
                       <label className={styles.field}>
-                        <span className={styles.fieldLabel}>BROCHURE LINK</span>
+                        <span className={styles.fieldLabel}>
+                          BROCHURE LINK <span className={styles.fieldLabelHint}>— paste the Yachtfolio e-brochure link</span>
+                        </span>
                         <input
                           type="url"
                           className={styles.input}
-                          placeholder="https://..."
+                          placeholder="https://www.yachtfolio.com/e-brochure/…"
                           value={y.brochureUrl}
-                          onChange={(e) => editAutoField(y.uid, "brochureUrl", e.target.value)}
+                          onChange={(e) => setYacht(y.uid, { brochureUrl: e.target.value })}
                         />
                       </label>
                       {card.error && !fetching && (

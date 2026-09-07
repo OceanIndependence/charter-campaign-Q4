@@ -11,8 +11,11 @@ export const IMAGE_SIZES = [
   { suffix: "-sm", width: 1000, height: 625 },
 ];
 
-/** Gallery categories published to the client page, in display order. */
-export const GALLERY_ORDER = ["EXTERIOR", "LIFESTYLE", "INTERIOR"];
+/**
+ * Gallery categories prepared for the client page, in display order. FULL is
+ * Yachtfolio's profile shot of the yacht and feeds the lead image.
+ */
+export const GALLERY_ORDER = ["FULL", "EXTERIOR", "LIFESTYLE", "INTERIOR"];
 
 let sharpModule;
 export async function loadSharp() {
@@ -23,8 +26,8 @@ export async function loadSharp() {
 }
 
 /**
- * Order a brochure's galleries EXTERIOR, LIFESTYLE, INTERIOR (by id_order
- * within each category), capped per category. Returns
+ * Order a brochure's galleries FULL, EXTERIOR, LIFESTYLE, INTERIOR (by
+ * id_order within each category), capped per category. Returns
  * [{ category, image, baseName }] with baseName like "01-exterior".
  */
 export function selectGalleryImages(galleries, maxPerCategory = 4) {

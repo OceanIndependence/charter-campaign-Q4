@@ -237,54 +237,12 @@ function forEachString(value, fn, seen = new Set()) {
   }
 }
 
-const EBROCHURE_RE = /https?:\/\/[^\s"'<>]*\/e-brochure\/[^\s"'<>]+/i;
-
-/** Strip any passkey/api query param from a URL — never expose the passkey. */
-function stripSecretParams(url) {
-  try {
-    const u = new URL(url);
-    u.searchParams.delete("passkey");
-    u.searchParams.delete("api");
-    return u.toString();
-  } catch {
-    return url.replace(/([?&])(passkey|api)=[^&]*/gi, "$1").replace(/[?&]+$/, "");
-  }
-}
-
-/**
- * The yacht's hosted e-brochure page link — e.g.
- * https://www.yachtfolio.com/e-brochure/AQUA_MARE/ZFgftYj0CwY7 — if it appears
- * anywhere in the live brochure/basic responses. The 2023 v1.2 documentation
- * does not document this link on any endpoint, but the live API shape drifts
- * from the doc (undocumented keys have already been observed), so we scan
- * every string value defensively rather than assume a key. The brochure is a
- * hosted page, not a downloadable PDF, so the link is used as-is. Returns the
- * passkey-stripped URL, or null when the response carries no such link.
- */
-export function extractEbrochureUrl(...sources) {
-  let found = null;
-  const visit = (s) => {
-    if (found) return;
-    const m = s.match(EBROCHURE_RE);
-    if (m) {
-      found = m[0];
-      visit.done = true;
-    }
-  };
-  for (const src of sources) {
-    visit.done = false;
-    forEachString(src, visit);
-    if (found) break;
-  }
-  return found ? stripSecretParams(found) : null;
-}
-
 /**
  * Raw-shape diagnostics: the top-level keys of the brochure and basic
  * responses (plus the brochure's general/broker sub-keys) and every string
- * value pointing at yachtfolio.com. Used to locate fields the 2023 doc does
- * not describe. Links are returned unredacted — the caller must redact the
- * passkey before anything leaves the server.
+ * value pointing at yachtfolio.com. Used to locate fields the documentation
+ * does not describe. Links are returned unredacted — the caller must redact
+ * the passkey before anything leaves the server.
  */
 export function describeRawShape(brochure, basic) {
   const yachtfolioLinks = [];
@@ -298,37 +256,6 @@ export function describeRawShape(brochure, basic) {
     basicKeys: Object.keys(basic ?? {}),
     yachtfolioLinks: [...new Set(yachtfolioLinks)].slice(0, 20),
   };
-}
-
-/** True when a filename/url points at a PDF (ignoring any query string). */
-function looksLikePdfName(name) {
-  if (!name) return false;
-  const path = String(name).split(/[?#]/)[0].toLowerCase();
-  return path.endsWith(".pdf");
-}
-
-/**
- * The brochure PDF file, if the yacht has one. Yachtfolio's `PDF` gallery is
- * a slot brokers can (and do) upload the wrong thing into — some yachts hold
- * only a JPEG cover render there, not a real PDF — so we select by file type,
- * not by position: the first entry whose filename is genuinely `.pdf` wins,
- * scanning the whole gallery (the PDF can sit behind an image), then the
- * sample menu if it too is a PDF. The returned url embeds the passkey, so
- * callers must download it server-side, never hand it to a browser.
- *
- * Returns { id_file, filename, url } for a usable PDF entry; otherwise
- * { pdfEntries } reporting how many non-PDF entries the gallery held, so the
- * caller can note "no PDF brochure" honestly rather than downloading a JPEG.
- */
-export function extractBrochureFile(brochure) {
-  const entries = (brochure?.galleries?.PDF ?? []).filter((f) => f?.url);
-  const pdf = entries.find((f) => looksLikePdfName(f.filename) || looksLikePdfName(f.url));
-  if (pdf) return { id_file: pdf.id_file, filename: pdf.filename ?? `${pdf.id_file}.pdf`, url: pdf.url };
-  const menu = brochure?.sample_menu;
-  if (menu?.url && looksLikePdfName(menu.filename ?? menu.url)) {
-    return { id_file: menu.id_file, filename: menu.filename ?? `${menu.id_file}.pdf`, url: menu.url };
-  }
-  return { pdfEntries: entries.length };
 }
 
 /**

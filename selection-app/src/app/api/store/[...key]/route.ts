@@ -10,18 +10,16 @@ const TYPES: Record<string, string> = {
   ".jpeg": "image/jpeg",
   ".png": "image/png",
   ".webp": "image/webp",
-  ".pdf": "application/pdf",
 };
 
 // Only these public-asset prefixes/extensions are servable — never the
 // private DATA store (drafts, page configs).
 const SERVABLE = [
   { prefix: "yachtfolio/images/", ext: /\.(jpe?g|png|webp)$/i },
-  { prefix: "yachtfolio/brochures/", ext: /\.pdf$/i },
 ];
 
 /**
- * Serves processed IMAGES and brochure PDFs from the local filesystem store —
+ * Serves processed IMAGES from the local filesystem store —
  * development fallback when no public Blob store is configured (in blob mode
  * these URLs point straight at the blob CDN and this route is never
  * referenced). It only ever serves public-asset keys.
