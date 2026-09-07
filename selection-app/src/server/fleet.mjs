@@ -308,12 +308,12 @@ export async function getYachtDetail(yfId, { forceRefresh = false, debug = false
     if (url) used.add(url);
     return url ?? "";
   };
-  const randomFrom = (urls) => {
-    const fresh = urls.filter((u) => !used.has(u));
-    const pool = fresh.length ? fresh : urls;
-    return pool.length ? pool[Math.floor(Math.random() * pool.length)] : undefined;
-  };
-  const pick = (own, others) => take(own.find((u) => !used.has(u)) ?? randomFrom(others));
+  const randomFrom = (urls) => (urls.length ? urls[Math.floor(Math.random() * urls.length)] : undefined);
+  const unused = (urls) => urls.filter((u) => !used.has(u));
+  // Own category first (an image not used in another slot), then an unused
+  // image from the other categories, then reuse an own image, then anything.
+  const pick = (own, others) =>
+    take(unused(own)[0] ?? randomFrom(unused(others)) ?? randomFrom(own) ?? randomFrom(others));
   const leadImageUrl = pick(exterior, [...lifestyle, ...interior]);
   const interiorImageUrl = pick(interior, [...exterior, ...lifestyle]);
   const exteriorImageUrl = pick(exterior, [...lifestyle, ...interior]);
