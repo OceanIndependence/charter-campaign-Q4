@@ -301,11 +301,13 @@
   padding: 11px 13px;
 }
 
-.fetchNote {
-  grid-column: 1 / -1;
+/* Progress note beside the yacht name in the card header while fetching. */
+.headerNote {
   font-size: 10px;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.1em;
+  font-weight: 300;
   color: #99999a;
+  text-transform: none;
 }
 
 .fetchWarning {

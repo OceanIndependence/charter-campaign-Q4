@@ -576,6 +576,15 @@ export default function PortalForm() {
                           </span>
                         </>
                       )}
+                      {fetching && (
+                        <>
+                          {" "}
+                          <span className={styles.headerNote} aria-live="polite">
+                            Fetching {y.name.trim() ? y.name.trim().toUpperCase() : "this yacht"}
+                            &rsquo;s details and preparing images…
+                          </span>
+                        </>
+                      )}
                     </span>
                     <span
                       role="button"
@@ -830,12 +839,6 @@ export default function PortalForm() {
                           onChange={(e) => editAutoField(y.uid, "brochureUrl", e.target.value)}
                         />
                       </label>
-                      {fetching && (
-                        <span className={styles.fetchNote}>
-                          Fetching {y.name.trim() ? y.name.trim().toUpperCase() : "this yacht"}
-                          &rsquo;s details and preparing images…
-                        </span>
-                      )}
                       {card.error && !fetching && (
                         <span className={styles.fetchWarning}>
                           {card.error}{" "}
