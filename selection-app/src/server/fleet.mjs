@@ -37,10 +37,10 @@ const DETAIL_FRESH_MS = 6 * 60 * 60 * 1000; // rates change; don't serve stale f
 // Download the whole gallery (capped per category) so the consultant can pick
 // which image fills each page slot; the default slot assignment below still
 // uses the first one or two of each category.
-const GALLERY_MAX_PER_CATEGORY = 8;
+const GALLERY_MAX_PER_CATEGORY = 5;
 // Bump to invalidate cached detail JSON and versioned asset keys after a
 // normalisation change (e.g. brochure PDF validation) — old caches re-fetch.
-const DETAIL_SCHEMA_VERSION = 3;
+const DETAIL_SCHEMA_VERSION = 4;
 
 async function passkeyOrThrow() {
   const passkey = await loadPasskey([process.cwd()]);

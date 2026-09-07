@@ -1,6 +1,7 @@
 import type { Yacht } from "@/lib/types";
 import { fmtLength, fmtMoney, fmtStaterooms, fmtWeeklyRate } from "@/lib/format";
 import { SmallChevronIcon } from "./icons";
+import EnlargeableImage from "./EnlargeableImage";
 import styles from "./SpecPanel.module.css";
 
 interface SpecPanelProps {
@@ -58,17 +59,15 @@ export default function SpecPanel({
       <h2 className={styles.name}>{yacht.name}</h2>
 
       <div className={styles.thumbs}>
-        {/* eslint-disable @next/next/no-img-element */}
         <div className={styles.thumb}>
-          <img src={yacht.interiorImageUrl} alt={`${yacht.name} — interior`} loading="lazy" />
+          <EnlargeableImage src={yacht.interiorImageUrl} alt={`${yacht.name} — interior`} />
         </div>
         <div className={styles.thumb}>
-          <img src={yacht.deckImageUrl} alt={`${yacht.name} — deck spaces`} loading="lazy" />
+          <EnlargeableImage src={yacht.deckImageUrl} alt={`${yacht.name} — deck spaces`} />
         </div>
         <div className={styles.thumb}>
-          <img src={yacht.watertoysImageUrl} alt={`${yacht.name} — watertoys`} loading="lazy" />
+          <EnlargeableImage src={yacht.watertoysImageUrl} alt={`${yacht.name} — watertoys`} />
         </div>
-        {/* eslint-enable @next/next/no-img-element */}
       </div>
 
       <div>
