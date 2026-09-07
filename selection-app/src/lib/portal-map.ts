@@ -63,6 +63,7 @@ export function mapDraftYacht(y: DraftYacht): Yacht | null {
     lengthM: num(y.lengthM),
     yearRefit: str(y.yearRefit),
     guests: num(y.guests) ? Math.round(num(y.guests) as number) : undefined,
+    crew: num(y.crew) ? Math.round(num(y.crew) as number) : undefined,
     staterooms: mapStaterooms(y.staterooms),
     cruisingArea: str(y.cruisingArea)?.toUpperCase(),
     availability: str(y.availability),

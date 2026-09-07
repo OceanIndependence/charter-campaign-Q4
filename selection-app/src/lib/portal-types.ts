@@ -25,6 +25,7 @@ export interface DraftYacht {
   lengthM: string;
   yearRefit: string;
   guests: string;
+  crew: string;
   /** e.g. "6 (5 double, 1 twin)" */
   staterooms: string;
   cruisingArea: string;
@@ -179,6 +180,7 @@ export interface FleetDetail {
   lengthM: number | null;
   yearRefit: string;
   guests: number | null;
+  crew: number | null;
   builder: string;
   staterooms: string;
   cruisingArea: string;
@@ -210,6 +212,7 @@ export function emptyDraftYacht(uid: string): DraftYacht {
     lengthM: "",
     yearRefit: "",
     guests: "",
+    crew: "",
     staterooms: "",
     cruisingArea: "",
     availability: "",

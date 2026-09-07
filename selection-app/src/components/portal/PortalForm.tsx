@@ -23,6 +23,7 @@ const AUTO_FIELDS = [
   "lengthM",
   "yearRefit",
   "guests",
+  "crew",
   "staterooms",
   "cruisingArea",
   "currency",
@@ -138,6 +139,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
             ...y,
             uid: y.uid || crypto.randomUUID(),
             gallery: y.gallery ?? [],
+            crew: y.crew ?? "",
             exteriorImageUrl: y.exteriorImageUrl ?? y.deckImageUrl ?? "",
             lifestyleImageUrl: y.lifestyleImageUrl ?? y.watertoysImageUrl ?? "",
           };
@@ -333,6 +335,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
         apply("lengthM", detail.lengthM != null ? String(detail.lengthM) : "");
         apply("yearRefit", detail.yearRefit);
         apply("guests", detail.guests != null ? String(detail.guests) : "");
+        apply("crew", detail.crew != null ? String(detail.crew) : "");
         apply("staterooms", detail.staterooms);
         apply("cruisingArea", detail.cruisingArea);
         apply("currency", detail.currency || "EUR");
@@ -677,6 +680,16 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
                           placeholder="Auto-filled"
                           value={y.guests}
                           onChange={(e) => editAutoField(y.uid, "guests", e.target.value)}
+                        />
+                      </label>
+                      <label className={styles.field}>
+                        <span className={styles.fieldLabel}>CREW</span>
+                        <input
+                          type="number"
+                          className={styles.input}
+                          placeholder="Auto-filled"
+                          value={y.crew}
+                          onChange={(e) => editAutoField(y.uid, "crew", e.target.value)}
                         />
                       </label>
                       <label className={styles.field}>

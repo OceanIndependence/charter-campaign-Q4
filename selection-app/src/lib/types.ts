@@ -25,6 +25,7 @@ export interface Yacht {
   /** e.g. "2019 / 2024" or "2023" */
   yearRefit?: string;
   guests?: number;
+  crew?: number;
   staterooms?: Staterooms;
   cruisingArea?: string;
   availability?: string;
