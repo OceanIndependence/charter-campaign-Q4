@@ -1,19 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
-import { describeFleetFailure, getYachtDetail } from "@/server/fleet.mjs";
+import { describeFleetFailure, getYachtImages } from "@/server/fleet.mjs";
 import { requirePortalSession } from "@/server/auth";
 import { clientIp, rateLimit } from "@/server/rate-limit";
 
 export const runtime = "nodejs";
-// Facts only (brochure + basic record); images come from ./images.
-export const maxDuration = 30;
+// Downloads and crops this yacht's gallery on first pick — allow time for it.
+export const maxDuration = 60;
 
+/** The prepared gallery and default slot images for one yacht (the slow half). */
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ yfId: string }> }
 ) {
   const session = requirePortalSession(request);
   if (!session.ok) return session.response;
-  if (!rateLimit("fleet-detail", clientIp(request), 12, 60_000)) {
+  if (!rateLimit("fleet-images", clientIp(request), 12, 60_000)) {
     return NextResponse.json({ error: "Too many requests." }, { status: 429 });
   }
   const { yfId: raw } = await params;
@@ -22,16 +23,11 @@ export async function GET(
     return NextResponse.json({ error: "Invalid yacht id." }, { status: 400 });
   }
   try {
-    // ?debug=1 forces a fresh fetch and appends passkey-redacted raw-shape
-    // diagnostics (top-level keys, yachtfolio links) for locating fields the
-    // 2023 documentation does not describe. Session-gated like everything else.
-    const debug = request.nextUrl.searchParams.get("debug") === "1";
-    const detail = await getYachtDetail(yfId, { debug });
-    return NextResponse.json(detail);
+    return NextResponse.json(await getYachtImages(yfId));
   } catch (err) {
-    console.error(`[api/fleet/${yfId}]`, err);
+    console.error(`[api/fleet/${yfId}/images]`, err);
     return NextResponse.json(
-      { error: `This yacht's details are unavailable. ${describeFleetFailure(err)}` },
+      { error: `This yacht's images are unavailable. ${describeFleetFailure(err)}` },
       { status: 502 }
     );
   }

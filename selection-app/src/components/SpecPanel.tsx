@@ -9,7 +9,6 @@ interface SpecPanelProps {
   position: number;
   count: number;
   fading: boolean;
-  consultantName: string;
   onPrev: () => void;
   onNext: () => void;
 }
@@ -19,7 +18,6 @@ export default function SpecPanel({
   position,
   count,
   fading,
-  consultantName,
   onPrev,
   onNext,
 }: SpecPanelProps) {
@@ -58,9 +56,7 @@ export default function SpecPanel({
 
       <h2 className={styles.name}>{yacht.name}</h2>
       {yacht.notes && (
-        <p className={styles.note}>
-          {yacht.notes} — {consultantName}
-        </p>
+        <p className={styles.note}>{yacht.notes}</p>
       )}
 
 

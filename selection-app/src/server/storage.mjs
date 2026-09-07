@@ -160,6 +160,31 @@ export async function putFile(key, buffer, contentType) {
   return `/api/store/${key}`;
 }
 
+/** Every file under a prefix in the IMAGES store, as [{ key, url }] — one call. */
+export async function listImageFiles(prefix) {
+  const token = imagesToken();
+  if (token) {
+    const { list } = await blob();
+    const out = [];
+    let cursor;
+    do {
+      const page = await list({ prefix, cursor, limit: 1000, token });
+      out.push(...page.blobs.map((b) => ({ key: b.pathname, url: b.url })));
+      cursor = page.hasMore ? page.cursor : undefined;
+    } while (cursor);
+    return out;
+  }
+  const dir = path.join(FS_ROOT, prefix);
+  if (!existsSync(dir)) return [];
+  const names = await readdir(dir, { recursive: true, withFileTypes: true });
+  return names
+    .filter((d) => d.isFile())
+    .map((d) => {
+      const key = path.join(prefix, path.relative(dir, path.join(d.parentPath ?? d.path, d.name)));
+      return { key, url: `/api/store/${key}` };
+    });
+}
+
 /** True when an image already exists at `key` (used to skip reprocessing). */
 export async function fileExists(key) {
   const token = imagesToken();

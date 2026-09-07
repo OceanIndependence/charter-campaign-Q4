@@ -15,9 +15,18 @@ export function fmtWeeklyRate(yacht: Yacht): string | undefined {
 }
 
 /** Ring-card price, upper-case "FROM EUR 250,000". */
+/**
+ * Ring-card rate line: "EUR 245,000 + 35% APA + VAT" — exactly the rate the
+ * consultant chose in the form (no "from"), with the VAT amount appended
+ * when it is known and just "VAT" when it is not.
+ */
 export function fmtCardRate(yacht: Yacht): string | undefined {
   if (yacht.weeklyRate == null) return undefined;
-  return (yacht.weeklyRateIsFrom ? "FROM " : "") + fmtMoney(yacht.currency, yacht.weeklyRate);
+  const cur = yacht.currency;
+  const parts = [fmtMoney(cur, yacht.weeklyRate)];
+  if (yacht.apaPct != null) parts.push(`${yacht.apaPct}% APA`);
+  parts.push(yacht.vatAmount != null ? `VAT ${fmtMoney(cur, yacht.vatAmount)}` : "VAT");
+  return parts.join(" + ");
 }
 
 /** "47.00 metres" for the spec panel */
