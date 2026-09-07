@@ -925,17 +925,6 @@
   letter-spacing: 0.04em;
 }
 
-.rowTitle {
-  display: block;
-}
-
-.rowSlug {
-  display: block;
-  margin-top: 3px;
-  font-size: 10px;
-  color: #99999a;
-}
-
 .status {
   display: inline-block;
   font-size: 9px;

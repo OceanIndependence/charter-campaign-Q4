@@ -16,9 +16,9 @@ const STATUS_LABEL: Record<SelectionStatus, string> = {
   unpublished: "Unpublished",
 };
 
-/** House style: one–nine as words, 10 and above as numerals. */
-const WORDS = ["none", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
-const yachtCountLabel = (n: number) => (n < WORDS.length ? WORDS[n] : String(n));
+/** In prose (version history), one–nine as words, 10 and above as numerals. */
+const WORDS = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+const yachtCountWord = (n: number) => (n < WORDS.length ? WORDS[n] : String(n));
 
 /** Version count in words: "second version" up to ninth, then "10th version". */
 const ORDINALS = ["", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth"];
@@ -265,9 +265,8 @@ export default function Dashboard() {
                 <thead>
                   <tr>
                     <th>CLIENT</th>
-                    <th>PAGE</th>
                     {scope === "all" && <th>CONSULTANT</th>}
-                    <th>YACHTS</th>
+                    <th>YACHTS SELECTED</th>
                     <th>STATUS</th>
                     <th>CREATED</th>
                     <th>LAST EDITED</th>
@@ -332,19 +331,15 @@ function RowGroup(p: RowProps) {
   const { m } = p;
   const title = selectionTitle(m);
   const previewHref = m.status === "published" && m.slug ? `/selection/${m.slug}` : `/portal/preview?id=${m.id}`;
-  const cols = p.showOwner ? 7 : 6;
+  const cols = p.showOwner ? 7 : 6; // table columns, for the full-width rows
   return (
     <>
       <tr className={p.isBusy ? styles.rowBusy : undefined} data-id={m.id}>
         <td className={styles.tdWrap}>
-          <span className={styles.rowClient}>{m.clientNames.trim() || "—"}</span>
-        </td>
-        <td className={styles.tdWrap}>
-          <span className={styles.rowTitle}>{title}</span>
-          {m.slug && <span className={styles.rowSlug}>/selection/{m.slug}</span>}
+          <span className={styles.rowClient}>{m.clientNames.trim() || title}</span>
         </td>
         {p.showOwner && <td>{m.owner?.name || m.owner?.email || "—"}</td>}
-        <td>{yachtCountLabel(m.yachtCount)}</td>
+        <td>{m.yachtCount}</td>
         <td>
           <span className={`${styles.status} ${styles[`status_${m.status}`]}`}>{STATUS_LABEL[m.status]}</span>
           {m.version > 1 && (
@@ -364,7 +359,7 @@ function RowGroup(p: RowProps) {
         <td>{m.publishedAt ? fmtDateLong(m.publishedAt) : "—"}</td>
       </tr>
       <tr className={styles.actionsRow} data-actions-for={m.id}>
-        <td colSpan={cols + 1}>
+        <td colSpan={cols}>
           {p.mine ? (
             <div className={styles.rowActions}>
               <button type="button" className={styles.actionBtn} onClick={p.onOpen} disabled={p.isBusy}>
@@ -405,7 +400,7 @@ function RowGroup(p: RowProps) {
       </tr>
       {p.versionsOpen && (
         <tr className={styles.versionsRow}>
-          <td colSpan={cols + 1}>
+          <td colSpan={cols}>
             {p.versions === null ? (
               <span className={styles.dashEmptyFilter}>Loading versions…</span>
             ) : p.versions.length === 0 ? (
@@ -422,7 +417,7 @@ function RowGroup(p: RowProps) {
                       )}
                     </span>
                     <span className={styles.versionMeta}>
-                      {fmtDateLong(v.publishedAt)} · {yachtCountLabel(v.yachtCount)} {v.yachtCount === 1 ? "yacht" : "yachts"}
+                      {fmtDateLong(v.publishedAt)} · {yachtCountWord(v.yachtCount)} {v.yachtCount === 1 ? "yacht" : "yachts"}
                       {v.clientNames ? ` · ${v.clientNames}` : ""}
                     </span>
                     {p.mine && !v.isCurrent && (
