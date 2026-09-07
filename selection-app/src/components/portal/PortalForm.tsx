@@ -8,28 +8,6 @@ import styles from "./PortalForm.module.css";
 
 const MAX_YACHTS = 10;
 const AUTOSAVE_MS = 900;
-const DRAFT_KEY = "oi-portal-draft-id";
-
-function newDraft(id: string): PortalDraft {
-  return {
-    id,
-    updatedAt: new Date().toISOString(),
-    clientNames: "",
-    season: "",
-    region: "",
-    headline: "",
-    yachts: [emptyDraftYacht(crypto.randomUUID())],
-    sections: { costs: true, itinerary: true, itineraryUrl: "", compare: true },
-    consultant: {
-      name: "Lucy",
-      title: "Charter Consultant, Ocean Independence",
-      phone: "+41 44 000 00 00",
-      email: "lucy@ocyachts.com",
-      whatsapp: "https://wa.me/41440000000",
-      photoUrl: "/assets/drops/lucy-photo.webp",
-    },
-  };
-}
 
 type SaveState = "idle" | "saving" | "saved" | "error";
 
@@ -86,28 +64,29 @@ export default function PortalForm() {
   /* ------------------------------------------------ draft load / restore */
 
   useEffect(() => {
-    let draftId = localStorage.getItem(DRAFT_KEY);
-    if (!draftId) {
-      draftId = crypto.randomUUID();
-      localStorage.setItem(DRAFT_KEY, draftId);
-    }
     (async () => {
       try {
-        const res = await fetch(`/api/drafts/${draftId}`);
+        // The signed-in consultant's own working draft (server creates one
+        // if none exists); ownership is enforced server-side by identity.
+        const res = await fetch("/api/drafts/current");
         if (res.status === 401) {
-          window.location.href = "/portal/login";
+          window.location.href = "/portal/sign-in";
           return;
         }
         const body = await res.json();
-        const restored: PortalDraft | null = body?.draft ?? null;
-        const next = restored ?? newDraft(draftId as string);
+        const next: PortalDraft = body?.draft ?? null;
+        if (!next) return;
+        // Ensure each yacht has a stable client key for React lists; seed one
+        // empty entry so a fresh draft opens with a card ready to fill.
+        next.yachts = (next.yachts ?? []).map((y) => ({ ...y, uid: y.uid || crypto.randomUUID() }));
+        if (next.yachts.length === 0) next.yachts = [emptyDraftYacht(crypto.randomUUID())];
         setDraft(next);
-        if (restored?.publishedSlug) {
-          setPublished({ slug: restored.publishedSlug, url: `/selection/${restored.publishedSlug}` });
+        if (next.publishedSlug) {
+          setPublished({ slug: next.publishedSlug, url: `/selection/${next.publishedSlug}` });
         }
         setOpenIds(new Set(next.yachts.slice(0, 1).map((y) => y.uid)));
       } catch {
-        setDraft(newDraft(draftId as string));
+        setFleetError("Could not load your working draft — check the connection and reload.");
       }
     })();
   }, []);
@@ -119,7 +98,7 @@ export default function PortalForm() {
       try {
         const res = await fetch("/api/fleet");
         if (res.status === 401) {
-          window.location.href = "/portal/login";
+          window.location.href = "/portal/sign-in";
           return;
         }
         if (!res.ok) {
@@ -140,7 +119,7 @@ export default function PortalForm() {
 
   const putDraft = useCallback(async (d: PortalDraft): Promise<boolean> => {
     try {
-      const res = await fetch(`/api/drafts/${d.id}`, {
+      const res = await fetch("/api/drafts/current", {
         method: "PUT",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(d),
@@ -313,8 +292,7 @@ export default function PortalForm() {
 
   const openPreview = useCallback(async () => {
     const ok = await flushSave();
-    const d = draftRef.current;
-    if (ok && d) window.open(`/portal/preview/${d.id}`, "_blank", "noopener");
+    if (ok) window.open("/portal/preview", "_blank", "noopener");
   }, [flushSave]);
 
   const publish = useCallback(async () => {
@@ -327,7 +305,7 @@ export default function PortalForm() {
       const res = await fetch("/api/pages", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ draftId: d.id }),
+        body: JSON.stringify({}),
       });
       const body = await res.json().catch(() => null);
       if (!res.ok) throw new Error(body?.error ?? "publish failed");

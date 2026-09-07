@@ -316,6 +316,23 @@
   color: #8a5a2b;
 }
 
+.signOutBtn {
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  font-weight: 500;
+  color: #555759;
+  background: none;
+  border: 1px solid #c9c9c7;
+  padding: 7px 12px 7px calc(12px + 0.24em);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.signOutBtn:hover {
+  border-color: #1d1d1d;
+  color: #1d1d1d;
+}
+
 .retryBtn {
   font-size: 9px;
   letter-spacing: 0.24em;

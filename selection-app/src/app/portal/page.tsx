@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import PortalForm from "@/components/portal/PortalForm";
 import PortalHeader from "@/components/portal/PortalHeader";
 import styles from "@/components/portal/PortalForm.module.css";
-import { isPortalAuthedServer } from "@/server/portal-auth";
+import { getPortalPageState } from "@/server/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -12,10 +12,16 @@ export const metadata: Metadata = {
 };
 
 export default async function PortalPage() {
-  if (!(await isPortalAuthedServer())) redirect("/portal/login");
+  const state = await getPortalPageState();
+  if ("redirect" in state) redirect(state.redirect === "login" ? "/portal/login" : "/portal/sign-in");
+  const { identity } = state;
   return (
     <div className={styles.page}>
-      <PortalHeader />
+      <PortalHeader
+        consultant={`${identity.name.toUpperCase()}`}
+        initial={(identity.name || identity.email || "?").slice(0, 1).toUpperCase()}
+        showSignOut
+      />
       <PortalForm />
     </div>
   );

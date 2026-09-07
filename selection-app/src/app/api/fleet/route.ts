@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { describeFleetFailure, getFleet } from "@/server/fleet.mjs";
-import { requirePortalAuth } from "@/server/portal-auth";
+import { requirePortalSession } from "@/server/auth";
 import { clientIp, rateLimit } from "@/server/rate-limit";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
 export async function GET(request: NextRequest) {
-  const denied = requirePortalAuth(request);
-  if (denied) return denied;
+  const session = requirePortalSession(request);
+  if (!session.ok) return session.response;
   if (!rateLimit("fleet-list", clientIp(request), 30, 60_000)) {
     return NextResponse.json({ error: "Too many requests." }, { status: 429 });
   }

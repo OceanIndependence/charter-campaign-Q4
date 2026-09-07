@@ -29,8 +29,17 @@ export interface DraftYacht {
   brochureUrl: string;
 }
 
+export interface PageOwner {
+  /** Durable owner key — Microsoft object ID once live, a stub id for now */
+  id: string;
+  email: string;
+  name: string;
+}
+
 export interface PortalDraft {
   id: string;
+  /** Consultant identity that owns this draft (stamped server-side) */
+  owner?: PageOwner;
   updatedAt: string;
   clientNames: string;
   season: string;
