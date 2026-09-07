@@ -28,7 +28,6 @@ export interface Yacht {
   crew?: number;
   staterooms?: Staterooms;
   cruisingArea?: string;
-  availability?: string;
   /** ISO currency code for this yacht's rate (EUR, USD, GBP, …) */
   currency?: string;
   weeklyRate?: number;

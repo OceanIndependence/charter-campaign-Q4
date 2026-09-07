@@ -29,7 +29,6 @@ export interface DraftYacht {
   /** e.g. "6 (5 double, 1 twin)" */
   staterooms: string;
   cruisingArea: string;
-  availability: string;
   /** ISO currency code for the rate (auto-filled, editable, default EUR) */
   currency: string;
   weeklyRate: string;
@@ -184,7 +183,6 @@ export interface FleetDetail {
   builder: string;
   staterooms: string;
   cruisingArea: string;
-  availability: string;
   currency: string;
   weeklyRate: number | null;
   weeklyRateIsFrom: boolean;
@@ -215,7 +213,6 @@ export function emptyDraftYacht(uid: string): DraftYacht {
     crew: "",
     staterooms: "",
     cruisingArea: "",
-    availability: "",
     currency: "EUR",
     weeklyRate: "",
     weeklyRateIsFrom: false,

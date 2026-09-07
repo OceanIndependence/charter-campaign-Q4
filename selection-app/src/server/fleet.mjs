@@ -318,9 +318,7 @@ export async function getYachtDetail(yfId, { forceRefresh = false, debug = false
         : String(facts.staterooms.count)
       : "",
     cruisingArea: facts.cruisingArea ?? "",
-    // Consultant-voice field: never auto-filled. facts.notes carries the
-    // seasons_unavailable warning for the form to surface instead.
-    availability: "",
+    // facts.notes carries the seasons_unavailable warning for the form to surface.
     // Currency carried through as-is; APA/VAT are the consultant's, not fetched.
     // Default auto-fill is summer 2027 low; the form can switch season/tier
     // from rateOptions without re-fetching.

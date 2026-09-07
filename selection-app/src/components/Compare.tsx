@@ -40,7 +40,6 @@ export function CompareOverlay({ yachts, onClose }: { yachts: Yacht[]; onClose: 
       ["CREW", (y) => (y.crew != null ? String(y.crew) : undefined)],
       ["STATEROOMS", fmtStaterooms],
       ["CRUISING AREA", (y) => y.cruisingArea],
-      ["AVAILABILITY", (y) => y.availability],
       ["WEEKLY RATE", fmtWeeklyRate],
       [
         "VAT",
