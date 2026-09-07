@@ -276,6 +276,27 @@ export function extractEbrochureUrl(...sources) {
   return found ? stripSecretParams(found) : null;
 }
 
+/**
+ * Raw-shape diagnostics: the top-level keys of the brochure and basic
+ * responses (plus the brochure's general/broker sub-keys) and every string
+ * value pointing at yachtfolio.com. Used to locate fields the 2023 doc does
+ * not describe. Links are returned unredacted — the caller must redact the
+ * passkey before anything leaves the server.
+ */
+export function describeRawShape(brochure, basic) {
+  const yachtfolioLinks = [];
+  forEachString({ brochure, basic }, (s) => {
+    if (/yachtfolio\.com/i.test(s) && !/\/media\//i.test(s)) yachtfolioLinks.push(s);
+  });
+  return {
+    brochureKeys: Object.keys(brochure ?? {}),
+    generalKeys: Object.keys(brochure?.general ?? {}),
+    brokerKeys: Object.keys(brochure?.broker ?? {}),
+    basicKeys: Object.keys(basic ?? {}),
+    yachtfolioLinks: [...new Set(yachtfolioLinks)].slice(0, 20),
+  };
+}
+
 /** True when a filename/url points at a PDF (ignoring any query string). */
 function looksLikePdfName(name) {
   if (!name) return false;

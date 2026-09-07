@@ -20,6 +20,8 @@ import {
 import {
   TARGET_SEASON,
   buildReference,
+  checkBrochureShape,
+  describeRawShape,
   extractBrochureFile,
   extractEbrochureUrl,
   extractRateOptions,
@@ -182,10 +184,11 @@ async function getReference(passkey) {
  * storage (immutable keys — reprocessing is skipped when the same source
  * file was already done). Cached for a few hours.
  */
-export async function getYachtDetail(yfId, { forceRefresh = false } = {}) {
+export async function getYachtDetail(yfId, { forceRefresh = false, debug = false } = {}) {
   const cached = await readStoredJson(detailKey(yfId));
   if (
     !forceRefresh &&
+    !debug &&
     cached &&
     cached.schemaVersion === DETAIL_SCHEMA_VERSION &&
     Date.now() - Date.parse(cached.fetchedAt ?? 0) < DETAIL_FRESH_MS
@@ -341,5 +344,19 @@ export async function getYachtDetail(yfId, { forceRefresh = false } = {}) {
   };
 
   await writeStoredJson(detailKey(yfId), detail);
+  if (debug) {
+    // Raw-shape diagnostics for locating fields the 2023 doc does not
+    // describe (e.g. the e-brochure link). Response-only, never cached;
+    // every string is passkey-redacted before it leaves the server.
+    const shape = describeRawShape(brochure, basic);
+    return {
+      ...detail,
+      _debug: {
+        ...shape,
+        yachtfolioLinks: shape.yachtfolioLinks.map((s) => redact(s, passkey)),
+        shapeNotes: checkBrochureShape(brochure),
+      },
+    };
+  }
   return detail;
 }

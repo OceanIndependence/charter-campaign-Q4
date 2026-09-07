@@ -22,7 +22,11 @@ export async function GET(
     return NextResponse.json({ error: "Invalid yacht id." }, { status: 400 });
   }
   try {
-    const detail = await getYachtDetail(yfId);
+    // ?debug=1 forces a fresh fetch and appends passkey-redacted raw-shape
+    // diagnostics (top-level keys, yachtfolio links) for locating fields the
+    // 2023 documentation does not describe. Session-gated like everything else.
+    const debug = request.nextUrl.searchParams.get("debug") === "1";
+    const detail = await getYachtDetail(yfId, { debug });
     return NextResponse.json(detail);
   } catch (err) {
     console.error(`[api/fleet/${yfId}]`, err);
