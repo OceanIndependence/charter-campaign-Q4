@@ -35,6 +35,9 @@ const detailKey = (yfId) => `yachtfolio/details/${yfId}.json`;
 const FLEET_STALE_MS = 36 * 60 * 60 * 1000; // lazy re-sync if the cron hasn't run
 const DETAIL_FRESH_MS = 6 * 60 * 60 * 1000; // rates change; don't serve stale for long
 const IMAGES_PER_CATEGORY = 2; // lead/deck from EXTERIOR, watertoys from LIFESTYLE, interior from INTERIOR
+// Bump to invalidate cached detail JSON and versioned asset keys after a
+// normalisation change (e.g. brochure PDF validation) — old caches re-fetch.
+const DETAIL_SCHEMA_VERSION = 2;
 
 async function passkeyOrThrow() {
   const passkey = await loadPasskey([process.cwd()]);
@@ -180,6 +183,7 @@ export async function getYachtDetail(yfId, { forceRefresh = false } = {}) {
   if (
     !forceRefresh &&
     cached &&
+    cached.schemaVersion === DETAIL_SCHEMA_VERSION &&
     Date.now() - Date.parse(cached.fetchedAt ?? 0) < DETAIL_FRESH_MS
   ) {
     return cached;
@@ -204,19 +208,32 @@ export async function getYachtDetail(yfId, { forceRefresh = false } = {}) {
 
   // Brochure PDF: the Yachtfolio media URL embeds the passkey, so download it
   // to the public store and hand back a clean URL (same rule as images).
+  // Only auto-fill when the downloaded file is genuinely a PDF — Yachtfolio's
+  // "PDF" gallery can hold image renders or an error page, and linking those
+  // gives the client a "failed to load PDF". Anything else leaves the field
+  // blank for the consultant to paste a link, with a note in the report.
   let brochureUrl = "";
   const brochureFile = extractBrochureFile(brochure);
   if (brochureFile) {
-    const key = `yachtfolio/brochures/${yfId}/${brochureFile.id_file}.pdf`;
+    const key = `yachtfolio/brochures/${yfId}/v${DETAIL_SCHEMA_VERSION}-${brochureFile.id_file}.pdf`;
     try {
       if (await fileExists(key)) {
         brochureUrl = (await fileUrl(key)) ?? "";
       } else {
         const res = await fetch(brochureFile.url);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const contentType = (res.headers.get("content-type") ?? "").toLowerCase();
         const buf = Buffer.from(await res.arrayBuffer());
-        brochureUrl = await putFile(key, buf, "application/pdf");
-        await sleep(REQUEST_DELAY_MS);
+        const looksPdf = buf.subarray(0, 5).toString("latin1") === "%PDF-";
+        if (!looksPdf) {
+          facts.notes.push(
+            `brochure link skipped — Yachtfolio returned ${contentType || "non-PDF data"} for ` +
+              `${redact(String(brochureFile.filename ?? brochureFile.id_file), passkey)}, not a PDF.`
+          );
+        } else {
+          brochureUrl = await putFile(key, buf, "application/pdf");
+          await sleep(REQUEST_DELAY_MS);
+        }
       }
     } catch (err) {
       facts.notes.push(
@@ -266,6 +283,7 @@ export async function getYachtDetail(yfId, { forceRefresh = false } = {}) {
 
   const detail = {
     yfId,
+    schemaVersion: DETAIL_SCHEMA_VERSION,
     fetchedAt: new Date().toISOString(),
     targetSeason: TARGET_SEASON.label,
     name: (facts.name ?? "").toUpperCase(),
