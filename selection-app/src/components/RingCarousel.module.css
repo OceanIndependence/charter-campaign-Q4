@@ -148,7 +148,7 @@
 }
 
 .cardName {
-  font-size: 15px;
+  font-size: 18px;
   letter-spacing: 0.28em;
   font-weight: 500;
 }
@@ -174,7 +174,7 @@
 }
 
 .statLabel {
-  font-size: 7.5px;
+  font-size: 8.5px;
   letter-spacing: 0.3em;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.45);
@@ -186,7 +186,7 @@
 }
 
 .price {
-  font-size: 11.5px;
+  font-size: 12px;
   letter-spacing: 0.14em;
   font-weight: 500;
   color: var(--mint);
