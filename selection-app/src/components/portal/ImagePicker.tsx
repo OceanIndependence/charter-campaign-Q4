@@ -5,8 +5,9 @@ import styles from "./PortalForm.module.css";
 
 /**
  * The four page image slots the consultant fills from the yacht's gallery.
- * Each slot offers only its own gallery category: the lead and deck shots
- * come from EXTERIOR, the interior from INTERIOR, watertoys from LIFESTYLE.
+ * Each slot offers its own gallery category (lead and exterior from
+ * EXTERIOR, interior from INTERIOR, lifestyle from LIFESTYLE); when that
+ * category is empty it offers the other two instead.
  */
 export const IMAGE_SLOTS = [
   { key: "leadImageUrl", label: "LEAD IMAGE", hint: "hero — 2000 × 1250", category: "EXTERIOR" },
@@ -55,9 +56,14 @@ export default function ImagePicker({ gallery, values, onPick, onExpand }: Props
     <div className={styles.pickerGroup}>
       {IMAGE_SLOTS.map((slot) => {
         const chosen = values[slot.key] ?? "";
-        const options = gallery
-          .filter((img) => img.category === slot.category)
-          .slice(0, MAX_PER_CATEGORY);
+        const capped = (cat: string) => gallery.filter((img) => img.category === cat).slice(0, MAX_PER_CATEGORY);
+        const own = capped(slot.category);
+        // No images in this slot's own category: offer the other categories
+        // instead (the server will have picked one of them at random).
+        const fallback = own.length === 0;
+        const options = fallback
+          ? ["EXTERIOR", "LIFESTYLE", "INTERIOR"].filter((c) => c !== slot.category).flatMap(capped)
+          : own;
         const categoryWord = slot.category.toLowerCase();
         return (
           <div key={slot.key} className={styles.slotBlock}>
@@ -66,6 +72,12 @@ export default function ImagePicker({ gallery, values, onPick, onExpand }: Props
               {slot.hint && <span className={styles.fieldLabelHint}> — {slot.hint}</span>}
             </span>
 
+            {fallback && options.length > 0 && (
+              <p className={styles.pickerEmpty}>
+                Yachtfolio has no {categoryWord} images for this yacht — one of the other images was chosen; pick a
+                different one below if you prefer.
+              </p>
+            )}
             {options.length > 0 ? (
               <div className={styles.thumbStrip}>
                 {options.map((img) => {
@@ -106,7 +118,7 @@ export default function ImagePicker({ gallery, values, onPick, onExpand }: Props
             ) : (
               <p className={styles.pickerEmpty}>
                 {gallery.length > 0
-                  ? `Yachtfolio has no ${categoryWord} images for this yacht — paste an image URL below.`
+                  ? "Yachtfolio has no images for this yacht — paste an image URL below."
                   : "Pick a yacht from the fleet to choose from its gallery, or paste an image URL below."}
               </p>
             )}
