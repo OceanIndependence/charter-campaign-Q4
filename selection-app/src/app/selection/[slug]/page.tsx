@@ -29,5 +29,16 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
   const published = (await getPublishedPage(slug)) as { config?: PageConfig } | null;
   if (!published?.config || published.config.yachts.length === 0) notFound();
-  return <SelectionPage config={published.config} />;
+  // Pages published before the slots were renamed (deck → exterior,
+  // watertoys → lifestyle) froze the old keys; carry them across.
+  type LegacyYacht = PageConfig["yachts"][number] & { deckImageUrl?: string; watertoysImageUrl?: string };
+  const config: PageConfig = {
+    ...published.config,
+    yachts: (published.config.yachts as LegacyYacht[]).map((y) => ({
+      ...y,
+      exteriorImageUrl: y.exteriorImageUrl ?? y.deckImageUrl ?? "",
+      lifestyleImageUrl: y.lifestyleImageUrl ?? y.watertoysImageUrl ?? "",
+    })),
+  };
+  return <SelectionPage config={config} />;
 }

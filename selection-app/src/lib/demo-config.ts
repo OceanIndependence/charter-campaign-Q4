@@ -9,8 +9,8 @@ import generatedData from "../../data/yachts.json";
 
 const DEMO_THUMBS = {
   interior: "/assets/demo-interior.jpg",
-  deck: "/assets/demo-deck.jpg",
-  watertoys: "/assets/demo-lifestyle.jpg",
+  exterior: "/assets/demo-deck.jpg",
+  lifestyle: "/assets/demo-lifestyle.jpg",
 };
 
 /**
@@ -27,11 +27,11 @@ function demoYacht(
     | "totalAmount"
     | "leadImageUrl"
     | "interiorImageUrl"
-    | "deckImageUrl"
-    | "watertoysImageUrl"
+    | "exteriorImageUrl"
+    | "lifestyleImageUrl"
     | "brochureUrl"
   > &
-    Partial<Pick<Yacht, "interiorImageUrl" | "deckImageUrl" | "watertoysImageUrl">>
+    Partial<Pick<Yacht, "interiorImageUrl" | "exteriorImageUrl" | "lifestyleImageUrl">>
 ): Yacht {
   const currency = y.currency ?? "EUR";
   const apaPct = y.apaPct ?? 35;
@@ -40,8 +40,8 @@ function demoYacht(
   return {
     leadImageUrl: `/assets/drops/ys-${y.id}-lead.webp`,
     interiorImageUrl: DEMO_THUMBS.interior,
-    deckImageUrl: DEMO_THUMBS.deck,
-    watertoysImageUrl: DEMO_THUMBS.watertoys,
+    exteriorImageUrl: DEMO_THUMBS.exterior,
+    lifestyleImageUrl: DEMO_THUMBS.lifestyle,
     brochureUrl: "#",
     ...y,
     currency,
@@ -65,8 +65,8 @@ const yachts: Yacht[] = [
     weeklyRate: 245000,
     notes: "The yacht you know. I would expect her July weeks to be committed before Christmas.",
     interiorImageUrl: "/assets/drops/ys-serenity-t1.webp",
-    deckImageUrl: "/assets/drops/ys-serenity-t2.webp",
-    watertoysImageUrl: "/assets/drops/ys-serenity-t3.webp",
+    exteriorImageUrl: "/assets/drops/ys-serenity-t2.webp",
+    lifestyleImageUrl: "/assets/drops/ys-serenity-t3.webp",
   }),
   demoYacht({
     id: "eternal-spark",
@@ -81,8 +81,8 @@ const yachts: Yacht[] = [
     weeklyRate: 334800,
     notes: "Worth stretching for — a wellness-focused flagship with a vast beach club.",
     interiorImageUrl: "/assets/drops/ys-eternal-spark-t1.webp",
-    deckImageUrl: "/assets/drops/ys-eternal-spark-t2.webp",
-    watertoysImageUrl: "/assets/drops/ys-eternal-spark-t3.webp",
+    exteriorImageUrl: "/assets/drops/ys-eternal-spark-t2.webp",
+    lifestyleImageUrl: "/assets/drops/ys-eternal-spark-t3.webp",
   }),
   demoYacht({
     id: "lafayette",

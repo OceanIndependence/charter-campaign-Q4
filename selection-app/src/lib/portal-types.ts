@@ -54,8 +54,8 @@ export interface DraftYacht {
   /** The four page slots — each holds the chosen image's 2000×1250 URL */
   leadImageUrl: string;
   interiorImageUrl: string;
-  deckImageUrl: string;
-  watertoysImageUrl: string;
+  exteriorImageUrl: string;
+  lifestyleImageUrl: string;
   brochureUrl: string;
 }
 
@@ -145,8 +145,8 @@ export interface FleetDetail {
   rateOptions: RateOptions;
   leadImageUrl: string;
   interiorImageUrl: string;
-  deckImageUrl: string;
-  watertoysImageUrl: string;
+  exteriorImageUrl: string;
+  lifestyleImageUrl: string;
   brochureUrl: string;
   description: string;
   keyFeatures: string[];
@@ -179,8 +179,8 @@ export function emptyDraftYacht(uid: string): DraftYacht {
     gallery: [],
     leadImageUrl: "",
     interiorImageUrl: "",
-    deckImageUrl: "",
-    watertoysImageUrl: "",
+    exteriorImageUrl: "",
+    lifestyleImageUrl: "",
     brochureUrl: "",
   };
 }

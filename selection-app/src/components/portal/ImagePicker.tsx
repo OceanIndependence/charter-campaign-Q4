@@ -11,8 +11,8 @@ import styles from "./PortalForm.module.css";
 export const IMAGE_SLOTS = [
   { key: "leadImageUrl", label: "LEAD IMAGE", hint: "hero — 2000 × 1250", category: "EXTERIOR" },
   { key: "interiorImageUrl", label: "INTERIOR IMAGE", hint: "", category: "INTERIOR" },
-  { key: "deckImageUrl", label: "DECK IMAGE", hint: "", category: "EXTERIOR" },
-  { key: "watertoysImageUrl", label: "WATERTOYS IMAGE", hint: "", category: "LIFESTYLE" },
+  { key: "exteriorImageUrl", label: "EXTERIOR IMAGE", hint: "", category: "EXTERIOR" },
+  { key: "lifestyleImageUrl", label: "LIFESTYLE IMAGE", hint: "", category: "LIFESTYLE" },
 ] as const;
 
 export type SlotKey = (typeof IMAGE_SLOTS)[number]["key"];

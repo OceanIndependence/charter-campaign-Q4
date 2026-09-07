@@ -77,8 +77,8 @@ export function mapDraftYacht(y: DraftYacht): Yacht | null {
     keyFeatures: mapKeyFeatures(y.keyFeatures),
     leadImageUrl: str(y.leadImageUrl) ?? "",
     interiorImageUrl: str(y.interiorImageUrl) ?? str(y.leadImageUrl) ?? "",
-    deckImageUrl: str(y.deckImageUrl) ?? str(y.leadImageUrl) ?? "",
-    watertoysImageUrl: str(y.watertoysImageUrl) ?? str(y.leadImageUrl) ?? "",
+    exteriorImageUrl: str(y.exteriorImageUrl) ?? str(y.leadImageUrl) ?? "",
+    lifestyleImageUrl: str(y.lifestyleImageUrl) ?? str(y.leadImageUrl) ?? "",
     brochureUrl: str(y.brochureUrl) ?? "#",
   };
 }

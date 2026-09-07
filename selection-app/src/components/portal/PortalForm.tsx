@@ -29,8 +29,8 @@ const AUTO_FIELDS = [
   "keyFeatures",
   "leadImageUrl",
   "interiorImageUrl",
-  "deckImageUrl",
-  "watertoysImageUrl",
+  "exteriorImageUrl",
+  "lifestyleImageUrl",
   "brochureUrl",
 ] as const;
 type AutoField = (typeof AUTO_FIELDS)[number];
@@ -122,11 +122,18 @@ export default function PortalForm() {
         next.welcome ??= "";
         // Ensure each yacht has a stable client key for React lists; seed one
         // empty entry so a fresh draft opens with a card ready to fill.
-        next.yachts = (next.yachts ?? []).map((y) => ({
-          ...y,
-          uid: y.uid || crypto.randomUUID(),
-          gallery: y.gallery ?? [],
-        }));
+        // Drafts saved before the slots were renamed (deck → exterior,
+        // watertoys → lifestyle) carry the old keys; carry them across.
+        next.yachts = (next.yachts ?? []).map((raw) => {
+          const y = raw as typeof raw & { deckImageUrl?: string; watertoysImageUrl?: string };
+          return {
+            ...y,
+            uid: y.uid || crypto.randomUUID(),
+            gallery: y.gallery ?? [],
+            exteriorImageUrl: y.exteriorImageUrl ?? y.deckImageUrl ?? "",
+            lifestyleImageUrl: y.lifestyleImageUrl ?? y.watertoysImageUrl ?? "",
+          };
+        });
         if (next.yachts.length === 0) next.yachts = [emptyDraftYacht(crypto.randomUUID())];
         setDraft(next);
         if (next.publishedSlug) {
@@ -336,8 +343,8 @@ export default function PortalForm() {
         patch.gallery = detail.gallery ?? [];
         apply("leadImageUrl", detail.leadImageUrl);
         apply("interiorImageUrl", detail.interiorImageUrl);
-        apply("deckImageUrl", detail.deckImageUrl);
-        apply("watertoysImageUrl", detail.watertoysImageUrl);
+        apply("exteriorImageUrl", detail.exteriorImageUrl);
+        apply("lifestyleImageUrl", detail.lifestyleImageUrl);
         apply("brochureUrl", detail.brochureUrl);
         setYacht(uid, patch);
         setCard(uid, { fetching: false, error: null, warnings: detail.warnings ?? [] });
@@ -806,8 +813,8 @@ export default function PortalForm() {
                           values={{
                             leadImageUrl: y.leadImageUrl,
                             interiorImageUrl: y.interiorImageUrl,
-                            deckImageUrl: y.deckImageUrl,
-                            watertoysImageUrl: y.watertoysImageUrl,
+                            exteriorImageUrl: y.exteriorImageUrl,
+                            lifestyleImageUrl: y.lifestyleImageUrl,
                           }}
                           onPick={(slot, url) => editAutoField(y.uid, slot, url)}
                           onExpand={(url, label) => setLightbox({ url, label })}
