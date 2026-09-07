@@ -22,8 +22,6 @@ import {
   buildReference,
   checkBrochureShape,
   describeRawShape,
-  extractBrochureFile,
-  extractEbrochureUrl,
   extractRateOptions,
   extractYachtFacts,
   pickSeason,
@@ -41,9 +39,9 @@ const DETAIL_FRESH_MS = 6 * 60 * 60 * 1000; // rates change; don't serve stale f
 // which image fills each page slot; the default slot assignment below takes
 // the first of each category, falling back to another category at random.
 const GALLERY_MAX_PER_CATEGORY = 5;
-// Bump to invalidate cached detail JSON and versioned asset keys after a
-// normalisation change (e.g. brochure PDF validation) — old caches re-fetch.
-const DETAIL_SCHEMA_VERSION = 7;
+// Bump to invalidate cached detail JSON after a normalisation change — old
+// caches re-fetch.
+const DETAIL_SCHEMA_VERSION = 8;
 
 async function passkeyOrThrow() {
   const passkey = await loadPasskey([process.cwd()]);
@@ -213,56 +211,6 @@ export async function getYachtDetail(yfId, { forceRefresh = false, debug = false
   const facts = extractYachtFacts({ brochure, basic, reference, targetSeason });
   const rateOptions = extractRateOptions({ brochure, basic, reference });
 
-  // Brochure link. A yacht's brochure is a hosted e-brochure page, not a
-  // downloadable file — e.g. https://www.yachtfolio.com/e-brochure/NAME/TOKEN.
-  // Prefer that link straight from the live response (used as-is, no download).
-  let brochureUrl = extractEbrochureUrl(brochure, basic) ?? "";
-
-  // Fallback for yachts that expose only a PDF in the gallery: the Yachtfolio
-  // media URL embeds the passkey, so download it to the public store and hand
-  // back a clean URL (same rule as images). Only auto-fill when the download
-  // is genuinely a PDF — the "PDF" gallery can hold image renders or an error
-  // page, and linking those gives the client a "failed to load PDF". Anything
-  // else leaves the field blank for the consultant to paste a link.
-  const brochureFile = brochureUrl ? null : extractBrochureFile(brochure);
-  if (brochureFile?.url) {
-    const key = `yachtfolio/brochures/${yfId}/v${DETAIL_SCHEMA_VERSION}-${brochureFile.id_file}.pdf`;
-    try {
-      if (await fileExists(key)) {
-        brochureUrl = (await fileUrl(key)) ?? "";
-      } else {
-        const res = await fetch(brochureFile.url);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const contentType = (res.headers.get("content-type") ?? "").toLowerCase();
-        const buf = Buffer.from(await res.arrayBuffer());
-        const looksPdf = buf.subarray(0, 5).toString("latin1") === "%PDF-";
-        if (!looksPdf) {
-          facts.notes.push(
-            `brochure link skipped — Yachtfolio returned ${contentType || "non-PDF data"} for ` +
-              `${redact(String(brochureFile.filename ?? brochureFile.id_file), passkey)}, not a PDF.`
-          );
-        } else {
-          brochureUrl = await putFile(key, buf, "application/pdf");
-          await sleep(REQUEST_DELAY_MS);
-        }
-      }
-    } catch (err) {
-      facts.notes.push(
-        `brochure PDF (${redact(String(brochureFile.filename ?? brochureFile.id_file), passkey)}) failed: ` +
-          redact(String(err?.message ?? err), passkey)
-      );
-    }
-  }
-  if (!brochureUrl) {
-    // Confirmed against live responses (2026-09): neither api_brochure.cgi nor
-    // api_basic.cgi carries the e-brochure link or its token, so it cannot be
-    // auto-filled. The consultant pastes it.
-    facts.notes.push(
-      "brochure link not provided by Yachtfolio's API — paste the yacht's e-brochure link " +
-        "(https://www.yachtfolio.com/e-brochure/…) into BROCHURE LINK."
-    );
-  }
-
   // Process only this yacht's images, only the slots the page needs.
   const selected = selectGalleryImages(brochure?.galleries, GALLERY_MAX_PER_CATEGORY);
   const files = [];
@@ -295,11 +243,14 @@ export async function getYachtDetail(yfId, { forceRefresh = false, debug = false
     }
   }
 
-  // Default slot assignment. Each slot takes the first unused image of its
-  // own category; when Yachtfolio has none in that category, an image from
-  // the other categories is picked at random (unused first). The consultant
-  // can change any of these in the form's picker.
+  // Default slot assignment. The lead is always the yacht's profile shot from
+  // Yachtfolio (the FULL gallery, else the first exterior) — never another
+  // category. Each other slot takes the first unused image of its own
+  // category; when Yachtfolio has none in that category, an image from the
+  // other categories is picked at random (unused first). The consultant can
+  // change any of these in the form's picker.
   const byCategory = (cat) => files.filter((f) => f.category === cat).map((f) => f.url);
+  const full = byCategory("FULL");
   const exterior = byCategory("EXTERIOR");
   const lifestyle = byCategory("LIFESTYLE");
   const interior = byCategory("INTERIOR");
@@ -314,7 +265,10 @@ export async function getYachtDetail(yfId, { forceRefresh = false, debug = false
   // image from the other categories, then reuse an own image, then anything.
   const pick = (own, others) =>
     take(unused(own)[0] ?? randomFrom(unused(others)) ?? randomFrom(own) ?? randomFrom(others));
-  const leadImageUrl = pick(exterior, [...lifestyle, ...interior]);
+  const leadImageUrl = take(full[0] ?? exterior[0]);
+  if (files.length && !leadImageUrl) {
+    facts.notes.push("no profile or exterior image in Yachtfolio — paste a lead image URL in the form.");
+  }
   const interiorImageUrl = pick(interior, [...exterior, ...lifestyle]);
   const exteriorImageUrl = pick(exterior, [...lifestyle, ...interior]);
   const lifestyleImageUrl = pick(lifestyle, [...exterior, ...interior]);
@@ -355,7 +309,6 @@ export async function getYachtDetail(yfId, { forceRefresh = false, debug = false
     interiorImageUrl,
     exteriorImageUrl,
     lifestyleImageUrl,
-    brochureUrl,
     description: facts.description ?? "",
     keyFeatures: facts.keyFeatures,
     gallery: files,

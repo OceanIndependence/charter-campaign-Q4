@@ -56,6 +56,7 @@ export interface DraftYacht {
   interiorImageUrl: string;
   exteriorImageUrl: string;
   lifestyleImageUrl: string;
+  /** The yacht's Yachtfolio e-brochure link, pasted by the consultant */
   brochureUrl: string;
 }
 
@@ -193,7 +194,6 @@ export interface FleetDetail {
   interiorImageUrl: string;
   exteriorImageUrl: string;
   lifestyleImageUrl: string;
-  brochureUrl: string;
   description: string;
   keyFeatures: string[];
   gallery: GalleryImage[];

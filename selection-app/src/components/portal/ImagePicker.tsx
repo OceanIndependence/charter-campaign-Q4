@@ -5,15 +5,15 @@ import styles from "./PortalForm.module.css";
 
 /**
  * The four page image slots the consultant fills from the yacht's gallery.
- * Each slot offers its own gallery category (lead and exterior from
- * EXTERIOR, interior from INTERIOR, lifestyle from LIFESTYLE); when that
- * category is empty it offers the other two instead.
+ * The lead is the yacht's profile shot: Yachtfolio's FULL gallery, then
+ * exteriors, never another category. Each other slot offers its own
+ * category and, when that is empty, the remaining categories instead.
  */
 export const IMAGE_SLOTS = [
-  { key: "leadImageUrl", label: "LEAD IMAGE", hint: "hero — 2000 × 1250", category: "EXTERIOR" },
-  { key: "interiorImageUrl", label: "INTERIOR IMAGE", hint: "", category: "INTERIOR" },
-  { key: "exteriorImageUrl", label: "EXTERIOR IMAGE", hint: "", category: "EXTERIOR" },
-  { key: "lifestyleImageUrl", label: "LIFESTYLE IMAGE", hint: "", category: "LIFESTYLE" },
+  { key: "leadImageUrl", label: "LEAD IMAGE", hint: "profile shot — 2000 × 1250", categories: ["FULL", "EXTERIOR"], fallback: false, word: "profile or exterior" },
+  { key: "interiorImageUrl", label: "INTERIOR IMAGE", hint: "", categories: ["INTERIOR"], fallback: true, word: "interior" },
+  { key: "exteriorImageUrl", label: "EXTERIOR IMAGE", hint: "", categories: ["EXTERIOR"], fallback: true, word: "exterior" },
+  { key: "lifestyleImageUrl", label: "LIFESTYLE IMAGE", hint: "", categories: ["LIFESTYLE"], fallback: true, word: "lifestyle" },
 ] as const;
 
 export type SlotKey = (typeof IMAGE_SLOTS)[number]["key"];
@@ -57,14 +57,14 @@ export default function ImagePicker({ gallery, values, onPick, onExpand }: Props
       {IMAGE_SLOTS.map((slot) => {
         const chosen = values[slot.key] ?? "";
         const capped = (cat: string) => gallery.filter((img) => img.category === cat).slice(0, MAX_PER_CATEGORY);
-        const own = capped(slot.category);
+        const own = slot.categories.flatMap(capped);
         // No images in this slot's own category: offer the other categories
-        // instead (the server will have picked one of them at random).
-        const fallback = own.length === 0;
-        const options = fallback
-          ? ["EXTERIOR", "LIFESTYLE", "INTERIOR"].filter((c) => c !== slot.category).flatMap(capped)
-          : own;
-        const categoryWord = slot.category.toLowerCase();
+        // instead (the server will have picked one of them at random). The
+        // lead never falls back — it is always a profile/exterior shot.
+        const fallback = slot.fallback && own.length === 0;
+        const others = ["EXTERIOR", "LIFESTYLE", "INTERIOR"].filter((c) => !(slot.categories as readonly string[]).includes(c));
+        const options = fallback ? others.flatMap(capped) : own;
+        const categoryWord = slot.word;
         return (
           <div key={slot.key} className={styles.slotBlock}>
             <span className={styles.fieldLabel}>
@@ -118,7 +118,7 @@ export default function ImagePicker({ gallery, values, onPick, onExpand }: Props
             ) : (
               <p className={styles.pickerEmpty}>
                 {gallery.length > 0
-                  ? "Yachtfolio has no images for this yacht — paste an image URL below."
+                  ? `Yachtfolio has no ${categoryWord} images for this yacht — paste an image URL below.`
                   : "Pick a yacht from the fleet to choose from its gallery, or paste an image URL below."}
               </p>
             )}
