@@ -10,6 +10,7 @@ import { getPublishedPage } from "@/server/pages.mjs";
  * version); unpublished or unknown slugs are 404s.
  */
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 // Client selection pages are private links — never index them.
 export const metadata: Metadata = {

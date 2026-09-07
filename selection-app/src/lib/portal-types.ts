@@ -14,6 +14,8 @@ export interface GalleryImage {
   url: string;
   /** Cropped 1000×625 URL used as the picker thumbnail */
   smallUrl: string;
+  /** Yachtfolio source filename — used to spot the same photo in two galleries */
+  filename?: string | null;
 }
 
 export interface DraftYacht {

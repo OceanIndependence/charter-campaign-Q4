@@ -1125,3 +1125,49 @@
     gap: 10px;
   }
 }
+
+/* ---------------------------------------------------------- reordering */
+
+.dragHandle {
+  font-size: 12px;
+  letter-spacing: -0.2em;
+  color: #c9c9c7;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  padding: 6px 6px 6px 0;
+}
+
+.dragHandle:active {
+  cursor: grabbing;
+}
+
+.dragging {
+  opacity: 0.45;
+}
+
+.dropTarget {
+  box-shadow: inset 0 3px 0 #1d1d1d;
+}
+
+.orderBtns {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.orderBtn {
+  font-size: 9px;
+  color: #99999a;
+  padding: 4px 6px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.orderBtn:hover {
+  color: #1d1d1d;
+}
+
+.orderBtn[aria-disabled="true"] {
+  opacity: 0.3;
+  pointer-events: none;
+}

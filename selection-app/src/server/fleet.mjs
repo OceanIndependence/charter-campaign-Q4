@@ -47,7 +47,7 @@ const IMAGE_START_DELAY_MS = 150;
 // Bump to invalidate cached facts / image manifests after a normalisation
 // change — old caches re-fetch.
 const DETAIL_SCHEMA_VERSION = 9;
-const IMAGES_SCHEMA_VERSION = 1;
+const IMAGES_SCHEMA_VERSION = 2;
 // The facts request fetches the brochure; the images request that follows a
 // moment later reuses it from here instead of calling Yachtfolio again.
 const BROCHURE_MEMO_MS = 5 * 60 * 1000;
@@ -331,7 +331,7 @@ export async function getYachtImages(yfId, { forceRefresh = false } = {}) {
     const keys = { large: `${keyBase}.jpg`, small: `${keyBase}-sm.jpg` };
     try {
       if (existing.has(keys.large) && existing.has(keys.small)) {
-        return { id: image.id_file, category, url: existing.get(keys.large), smallUrl: existing.get(keys.small) };
+        return { id: image.id_file, category, url: existing.get(keys.large), smallUrl: existing.get(keys.small), filename: image.filename ?? null };
       }
       await sleep(IMAGE_START_DELAY_MS * (i % IMAGE_CONCURRENCY));
       const res = await fetch(image.url);
@@ -345,7 +345,7 @@ export async function getYachtImages(yfId, { forceRefresh = false } = {}) {
           urls[size.suffix === "-sm" ? "small" : "large"] = await putFile(key, size.buffer, "image/jpeg");
         })
       );
-      return { id: image.id_file, category, url: urls.large, smallUrl: urls.small };
+      return { id: image.id_file, category, url: urls.large, smallUrl: urls.small, filename: image.filename ?? null };
     } catch (err) {
       notes.push(
         `image ${redact(String(image.filename ?? image.id_file), passkey)} (${category}) failed: ` +
@@ -380,8 +380,24 @@ export async function getYachtImages(yfId, { forceRefresh = false } = {}) {
   if (files.length && !leadImageUrl) {
     notes.push("no profile or exterior image in Yachtfolio — paste a lead image URL in the form.");
   }
-  const interiorImageUrl = pick(interior, [...exterior, ...lifestyle]);
-  const exteriorImageUrl = pick(exterior, [...lifestyle, ...interior]);
+  // The exterior slot must show a different picture from the lead. The
+  // profile shot in FULL is usually the same photo as the first exterior
+  // (uploaded to both), so exclude any exterior sharing the lead's source
+  // filename and, when the lead is the profile shot, prefer the second
+  // exterior over the first.
+  const leadFile = files.find((f) => f.url === leadImageUrl);
+  const notLeadPhoto = (f) =>
+    f.url !== leadImageUrl && !(leadFile?.filename && f.filename && f.filename === leadFile.filename);
+  const exteriorFiles = files.filter((f) => f.category === "EXTERIOR" && notLeadPhoto(f));
+  const ranked =
+    full.length && exteriorFiles.length > 1
+      ? [...exteriorFiles.slice(1), exteriorFiles[0]].map((f) => f.url)
+      : exteriorFiles.map((f) => f.url);
+  // A yacht with a single exterior has nothing else: reuse it rather than
+  // leaving the slot blank.
+  const exteriorForSlot = ranked.length ? ranked : exterior;
+  const interiorImageUrl = pick(interior, [...exteriorForSlot, ...lifestyle]);
+  const exteriorImageUrl = pick(exteriorForSlot, [...lifestyle, ...interior]);
   const lifestyleImageUrl = pick(lifestyle, [...exterior, ...interior]);
   if (files.length) {
     for (const [cat, list] of [["interior", interior], ["exterior", exterior], ["lifestyle", lifestyle]]) {

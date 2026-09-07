@@ -103,6 +103,9 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
   const [publishing, setPublishing] = useState(false);
   /** Full-size image shown in the lightbox popup, or null when closed. */
   const [lightbox, setLightbox] = useState<{ url: string; label: string } | null>(null);
+  /** Yacht card being dragged, and the card it is currently over. */
+  const [dragUid, setDragUid] = useState<string | null>(null);
+  const [overUid, setOverUid] = useState<string | null>(null);
 
   const saveTimer = useRef<number | undefined>(undefined);
   const draftRef = useRef<PortalDraft | null>(null);
@@ -441,6 +444,33 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
     [update]
   );
 
+  /** Reorder: move `fromUid` to the position of `toUid` (ring order follows). */
+  const moveYacht = useCallback(
+    (fromUid: string, toUid: string) => {
+      if (fromUid === toUid) return;
+      update((d) => {
+        const list = [...d.yachts];
+        const from = list.findIndex((y) => y.uid === fromUid);
+        const to = list.findIndex((y) => y.uid === toUid);
+        if (from === -1 || to === -1) return d;
+        const [moved] = list.splice(from, 1);
+        list.splice(to, 0, moved);
+        return { ...d, yachts: list };
+      });
+    },
+    [update]
+  );
+
+  const moveBy = useCallback(
+    (uid: string, delta: -1 | 1) => {
+      const list = draftRef.current?.yachts ?? [];
+      const i = list.findIndex((y) => y.uid === uid);
+      const target = list[i + delta];
+      if (i !== -1 && target) moveYacht(uid, target.uid);
+    },
+    [moveYacht]
+  );
+
   const toggleOpen = useCallback((uid: string) => {
     setOpenIds((s) => {
       const next = new Set(s);
@@ -617,7 +647,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
             </span>
           </div>
           <p className={styles.sectionNote}>
-            Yachts appear on the ring in this order. Images are prepared automatically at
+            Yachts appear on the ring in this order — drag a yacht’s grey bar (or use the arrows) to reorder. Images are prepared automatically at
             2000 x 1250 px (16:10) when a yacht is selected from the fleet.
           </p>
           {fleetError && <p className={styles.fetchWarning}>{fleetError}</p>}
@@ -643,8 +673,59 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
               const gone = y.yfId != null && fleet.length > 0 && !fleet.some((f) => f.id === y.yfId);
               const removedRecord = y.yfId != null && removedIds.has(y.yfId);
               return (
-                <div key={y.uid} className={styles.yachtEntry}>
-                  <button type="button" className={styles.yachtHeader} onClick={() => toggleOpen(y.uid)}>
+                <div
+                  key={y.uid}
+                  data-yacht-uid={y.uid}
+                  className={`${styles.yachtEntry} ${dragUid === y.uid ? styles.dragging : ""} ${
+                    overUid === y.uid && dragUid && dragUid !== y.uid ? styles.dropTarget : ""
+                  }`}
+                >
+                  <button
+                    type="button"
+                    className={styles.yachtHeader}
+                    onClick={(e) => {
+                      // A press on the drag handle is not a toggle.
+                      if ((e.target as HTMLElement).closest("[data-drag-handle]")) return;
+                      toggleOpen(y.uid);
+                    }}
+                  >
+                    {/* Pointer-based reorder (mouse and touch): press the handle,
+                        move over another card, release. */}
+                    <span
+                      className={styles.dragHandle}
+                      data-drag-handle
+                      role="button"
+                      aria-label="Drag to change the order on the ring"
+                      title="Drag to change the order on the ring"
+                      onPointerDown={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        e.currentTarget.setPointerCapture(e.pointerId);
+                        setDragUid(y.uid);
+                        setOverUid(null);
+                      }}
+                      onPointerMove={(e) => {
+                        if (!e.currentTarget.hasPointerCapture(e.pointerId)) return;
+                        const uid = (document.elementFromPoint(e.clientX, e.clientY) as HTMLElement | null)
+                          ?.closest<HTMLElement>("[data-yacht-uid]")?.dataset.yachtUid ?? null;
+                        setOverUid((cur) => (cur === uid ? cur : uid));
+                      }}
+                      onPointerUp={(e) => {
+                        if (!e.currentTarget.hasPointerCapture(e.pointerId)) return;
+                        e.currentTarget.releasePointerCapture(e.pointerId);
+                        const uid = (document.elementFromPoint(e.clientX, e.clientY) as HTMLElement | null)
+                          ?.closest<HTMLElement>("[data-yacht-uid]")?.dataset.yachtUid;
+                        if (uid && uid !== y.uid) moveYacht(y.uid, uid);
+                        setDragUid(null);
+                        setOverUid(null);
+                      }}
+                      onPointerCancel={() => {
+                        setDragUid(null);
+                        setOverUid(null);
+                      }}
+                    >
+                      ⋮⋮
+                    </span>
                     <span className={styles.yachtNum}>{String(i + 1).padStart(2, "0")}</span>
                     <span className={styles.yachtTitle}>
                       {y.name.trim() ? y.name.trim().toUpperCase() : "UNTITLED YACHT"}
@@ -666,6 +747,50 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
                           </span>
                         </>
                       )}
+                    </span>
+                    <span className={styles.orderBtns}>
+                      <span
+                        role="button"
+                        tabIndex={0}
+                        className={styles.orderBtn}
+                        aria-label="Move up"
+                        title="Move up"
+                        aria-disabled={i === 0}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          moveBy(y.uid, -1);
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            moveBy(y.uid, -1);
+                          }
+                        }}
+                      >
+                        ▲
+                      </span>
+                      <span
+                        role="button"
+                        tabIndex={0}
+                        className={styles.orderBtn}
+                        aria-label="Move down"
+                        title="Move down"
+                        aria-disabled={i === draft.yachts.length - 1}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          moveBy(y.uid, 1);
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            moveBy(y.uid, 1);
+                          }
+                        }}
+                      >
+                        ▼
+                      </span>
                     </span>
                     <span
                       role="button"
