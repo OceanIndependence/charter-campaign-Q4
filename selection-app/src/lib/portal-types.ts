@@ -4,6 +4,18 @@
  * typed PageConfig happens in portal-map.ts.
  */
 
+/** One prepared image in a yacht's gallery, shared by fleet detail and drafts. */
+export interface GalleryImage {
+  /** Yachtfolio id_file — stable identity for React keys and selection */
+  id: number;
+  /** EXTERIOR | LIFESTYLE | INTERIOR */
+  category: string;
+  /** Cropped 2000×1250 URL used on the page */
+  url: string;
+  /** Cropped 1000×625 URL used as the picker thumbnail */
+  smallUrl: string;
+}
+
 export interface DraftYacht {
   /** Stable local key for React lists */
   uid: string;
@@ -32,6 +44,14 @@ export interface DraftYacht {
   notes: string;
   /** One key feature per line (auto-filled from Yachtfolio, editable) */
   keyFeatures: string;
+  /**
+   * The prepared gallery for this yacht (all categories, capped), refreshed
+   * on each fleet pick. Held in the draft so the thumbnail picker survives a
+   * reload without re-fetching; dropped at publish — only the four chosen
+   * slot URLs below are frozen into the page.
+   */
+  gallery: GalleryImage[];
+  /** The four page slots — each holds the chosen image's 2000×1250 URL */
   leadImageUrl: string;
   interiorImageUrl: string;
   deckImageUrl: string;
@@ -130,7 +150,7 @@ export interface FleetDetail {
   brochureUrl: string;
   description: string;
   keyFeatures: string[];
-  gallery: Array<{ category: string; url: string; smallUrl: string }>;
+  gallery: GalleryImage[];
   dataSource: string | null;
   missing: string[];
   warnings: string[];
@@ -156,6 +176,7 @@ export function emptyDraftYacht(uid: string): DraftYacht {
     vatPct: "",
     notes: "",
     keyFeatures: "",
+    gallery: [],
     leadImageUrl: "",
     interiorImageUrl: "",
     deckImageUrl: "",

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { FleetCache, FleetDetail, FleetEntry, PortalDraft } from "@/lib/portal-types";
 import { emptyDraftYacht } from "@/lib/portal-types";
 import FleetSelect from "./FleetSelect";
+import ImagePicker from "./ImagePicker";
 import styles from "./PortalForm.module.css";
 
 const MAX_YACHTS = 10;
@@ -94,6 +95,8 @@ export default function PortalForm() {
   const [published, setPublished] = useState<{ slug: string; url: string } | null>(null);
   const [publishFlash, setPublishFlash] = useState(false);
   const [publishing, setPublishing] = useState(false);
+  /** Full-size image shown in the lightbox popup, or null when closed. */
+  const [lightbox, setLightbox] = useState<{ url: string; label: string } | null>(null);
 
   const saveTimer = useRef<number | undefined>(undefined);
   const draftRef = useRef<PortalDraft | null>(null);
@@ -119,7 +122,11 @@ export default function PortalForm() {
         next.welcome ??= "";
         // Ensure each yacht has a stable client key for React lists; seed one
         // empty entry so a fresh draft opens with a card ready to fill.
-        next.yachts = (next.yachts ?? []).map((y) => ({ ...y, uid: y.uid || crypto.randomUUID() }));
+        next.yachts = (next.yachts ?? []).map((y) => ({
+          ...y,
+          uid: y.uid || crypto.randomUUID(),
+          gallery: y.gallery ?? [],
+        }));
         if (next.yachts.length === 0) next.yachts = [emptyDraftYacht(crypto.randomUUID())];
         setDraft(next);
         if (next.publishedSlug) {
@@ -189,6 +196,16 @@ export default function PortalForm() {
   );
 
   useEffect(() => () => window.clearTimeout(saveTimer.current), []);
+
+  // Close the image lightbox on Escape while it is open.
+  useEffect(() => {
+    if (!lightbox) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setLightbox(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightbox]);
 
   /** Immediate save (before preview/publish). */
   const flushSave = useCallback(async (): Promise<boolean> => {
@@ -313,6 +330,10 @@ export default function PortalForm() {
           patch.weeklyRate = detail.weeklyRate != null ? String(detail.weeklyRate) : "";
           patch.weeklyRateIsFrom = detail.weeklyRateIsFrom;
         }
+        // The gallery itself is auto data — always refresh it on a pick so the
+        // picker shows the current library; the four slot selections below are
+        // dirty-tracked so a consultant's choices survive a re-fetch.
+        patch.gallery = detail.gallery ?? [];
         apply("leadImageUrl", detail.leadImageUrl);
         apply("interiorImageUrl", detail.interiorImageUrl);
         apply("deckImageUrl", detail.deckImageUrl);
@@ -773,46 +794,25 @@ export default function PortalForm() {
                           onChange={(e) => editAutoField(y.uid, "keyFeatures", e.target.value)}
                         />
                       </label>
-                      <label className={`${styles.field} ${styles.fieldFull}`}>
-                        <span className={styles.fieldLabel}>LEAD IMAGE URL — 2000 x 1250</span>
-                        <input
-                          type="url"
-                          className={styles.input}
-                          placeholder="Auto-filled from the fleet library — replace to override"
-                          value={y.leadImageUrl}
-                          onChange={(e) => editAutoField(y.uid, "leadImageUrl", e.target.value)}
+                      <div className={`${styles.field} ${styles.fieldFull}`}>
+                        <span className={styles.fieldLabel}>
+                          PAGE IMAGES
+                          <span className={styles.fieldLabelHint}>
+                            {" "}— click a thumbnail to fill each slot; use the ⛶ icon to enlarge
+                          </span>
+                        </span>
+                        <ImagePicker
+                          gallery={y.gallery ?? []}
+                          values={{
+                            leadImageUrl: y.leadImageUrl,
+                            interiorImageUrl: y.interiorImageUrl,
+                            deckImageUrl: y.deckImageUrl,
+                            watertoysImageUrl: y.watertoysImageUrl,
+                          }}
+                          onPick={(slot, url) => editAutoField(y.uid, slot, url)}
+                          onExpand={(url, label) => setLightbox({ url, label })}
                         />
-                      </label>
-                      <label className={styles.field}>
-                        <span className={styles.fieldLabel}>INTERIOR IMAGE URL</span>
-                        <input
-                          type="url"
-                          className={styles.input}
-                          placeholder="https://..."
-                          value={y.interiorImageUrl}
-                          onChange={(e) => editAutoField(y.uid, "interiorImageUrl", e.target.value)}
-                        />
-                      </label>
-                      <label className={styles.field}>
-                        <span className={styles.fieldLabel}>DECK IMAGE URL</span>
-                        <input
-                          type="url"
-                          className={styles.input}
-                          placeholder="https://..."
-                          value={y.deckImageUrl}
-                          onChange={(e) => editAutoField(y.uid, "deckImageUrl", e.target.value)}
-                        />
-                      </label>
-                      <label className={styles.field}>
-                        <span className={styles.fieldLabel}>WATERTOYS IMAGE URL</span>
-                        <input
-                          type="url"
-                          className={styles.input}
-                          placeholder="https://..."
-                          value={y.watertoysImageUrl}
-                          onChange={(e) => editAutoField(y.uid, "watertoysImageUrl", e.target.value)}
-                        />
-                      </label>
+                      </div>
                       <label className={styles.field}>
                         <span className={styles.fieldLabel}>BROCHURE LINK</span>
                         <input
@@ -978,6 +978,32 @@ export default function PortalForm() {
           </button>
         </div>
       </div>
+
+      {lightbox && (
+        <div
+          className={styles.lightbox}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Image preview"
+          onClick={() => setLightbox(null)}
+        >
+          <button
+            type="button"
+            className={styles.lightboxClose}
+            onClick={() => setLightbox(null)}
+            aria-label="Close preview"
+          >
+            ✕
+          </button>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className={styles.lightboxImg}
+            src={lightbox.url}
+            alt={lightbox.label}
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </>
   );
 }
