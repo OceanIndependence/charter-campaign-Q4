@@ -63,10 +63,10 @@ export default function SpecPanel({
           <EnlargeableImage src={yacht.interiorImageUrl} alt={`${yacht.name} — interior`} />
         </div>
         <div className={styles.thumb}>
-          <EnlargeableImage src={yacht.deckImageUrl} alt={`${yacht.name} — deck spaces`} />
+          <EnlargeableImage src={yacht.exteriorImageUrl} alt={`${yacht.name} — exterior`} />
         </div>
         <div className={styles.thumb}>
-          <EnlargeableImage src={yacht.watertoysImageUrl} alt={`${yacht.name} — watertoys`} />
+          <EnlargeableImage src={yacht.lifestyleImageUrl} alt={`${yacht.name} — lifestyle`} />
         </div>
       </div>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import type { FleetCache, FleetDetail, FleetEntry, PortalDraft } from "@/lib/portal-types";
 import { emptyDraftYacht } from "@/lib/portal-types";
 import FleetSelect from "./FleetSelect";
@@ -29,8 +30,8 @@ const AUTO_FIELDS = [
   "keyFeatures",
   "leadImageUrl",
   "interiorImageUrl",
-  "deckImageUrl",
-  "watertoysImageUrl",
+  "exteriorImageUrl",
+  "lifestyleImageUrl",
   "brochureUrl",
 ] as const;
 type AutoField = (typeof AUTO_FIELDS)[number];
@@ -80,8 +81,11 @@ interface CardFetchState {
   lastEntry: FleetEntry | null;
 }
 
-export default function PortalForm() {
+export default function PortalForm({ selectionId }: { selectionId: string }) {
+  const router = useRouter();
+  const api = `/api/selections/${encodeURIComponent(selectionId)}`;
   const [draft, setDraft] = useState<PortalDraft | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [fleet, setFleet] = useState<FleetEntry[]>([]);
   const [removedIds, setRemovedIds] = useState<Set<number>>(new Set());
   const [fleetError, setFleetError] = useState<string | null>(null);
@@ -108,25 +112,36 @@ export default function PortalForm() {
   useEffect(() => {
     (async () => {
       try {
-        // The signed-in consultant's own working draft (server creates one
-        // if none exists); ownership is enforced server-side by identity.
-        const res = await fetch("/api/drafts/current");
+        // One of the signed-in consultant's selections; ownership is
+        // enforced server-side by identity (404 for anyone else's).
+        const res = await fetch(api);
         if (res.status === 401) {
           window.location.href = "/portal/sign-in";
           return;
         }
-        const body = await res.json();
+        const body = await res.json().catch(() => null);
+        if (!res.ok) {
+          setLoadError(body?.error ?? "This selection could not be loaded.");
+          return;
+        }
         const next: PortalDraft = body?.draft ?? null;
         if (!next) return;
         next.subHeadline ??= "";
         next.welcome ??= "";
         // Ensure each yacht has a stable client key for React lists; seed one
         // empty entry so a fresh draft opens with a card ready to fill.
-        next.yachts = (next.yachts ?? []).map((y) => ({
-          ...y,
-          uid: y.uid || crypto.randomUUID(),
-          gallery: y.gallery ?? [],
-        }));
+        // Drafts saved before the slots were renamed (deck → exterior,
+        // watertoys → lifestyle) carry the old keys; carry them across.
+        next.yachts = (next.yachts ?? []).map((raw) => {
+          const y = raw as typeof raw & { deckImageUrl?: string; watertoysImageUrl?: string };
+          return {
+            ...y,
+            uid: y.uid || crypto.randomUUID(),
+            gallery: y.gallery ?? [],
+            exteriorImageUrl: y.exteriorImageUrl ?? y.deckImageUrl ?? "",
+            lifestyleImageUrl: y.lifestyleImageUrl ?? y.watertoysImageUrl ?? "",
+          };
+        });
         if (next.yachts.length === 0) next.yachts = [emptyDraftYacht(crypto.randomUUID())];
         setDraft(next);
         if (next.publishedSlug) {
@@ -134,10 +149,10 @@ export default function PortalForm() {
         }
         setOpenIds(new Set(next.yachts.slice(0, 1).map((y) => y.uid)));
       } catch {
-        setFleetError("Could not load your working draft — check the connection and reload.");
+        setLoadError("Could not load this selection — check the connection and reload.");
       }
     })();
-  }, []);
+  }, [api]);
 
   /* ------------------------------------------------------- fleet list */
 
@@ -167,7 +182,7 @@ export default function PortalForm() {
 
   const putDraft = useCallback(async (d: PortalDraft): Promise<boolean> => {
     try {
-      const res = await fetch("/api/drafts/current", {
+      const res = await fetch(api, {
         method: "PUT",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(d),
@@ -176,7 +191,7 @@ export default function PortalForm() {
     } catch {
       return false;
     }
-  }, []);
+  }, [api]);
 
   const update = useCallback(
     (mutate: (d: PortalDraft) => PortalDraft) => {
@@ -336,8 +351,8 @@ export default function PortalForm() {
         patch.gallery = detail.gallery ?? [];
         apply("leadImageUrl", detail.leadImageUrl);
         apply("interiorImageUrl", detail.interiorImageUrl);
-        apply("deckImageUrl", detail.deckImageUrl);
-        apply("watertoysImageUrl", detail.watertoysImageUrl);
+        apply("exteriorImageUrl", detail.exteriorImageUrl);
+        apply("lifestyleImageUrl", detail.lifestyleImageUrl);
         apply("brochureUrl", detail.brochureUrl);
         setYacht(uid, patch);
         setCard(uid, { fetching: false, error: null, warnings: detail.warnings ?? [] });
@@ -387,8 +402,14 @@ export default function PortalForm() {
 
   const openPreview = useCallback(async () => {
     const ok = await flushSave();
-    if (ok) window.open("/portal/preview", "_blank", "noopener");
-  }, [flushSave]);
+    if (ok) window.open(`/portal/preview?id=${encodeURIComponent(selectionId)}`, "_blank", "noopener");
+  }, [flushSave, selectionId]);
+
+  /** Save now and return to the dashboard, where the row is listed. */
+  const saveAndClose = useCallback(async () => {
+    const ok = await flushSave();
+    if (ok) router.push("/portal");
+  }, [flushSave, router]);
 
   const publish = useCallback(async () => {
     const d = draftRef.current;
@@ -397,7 +418,7 @@ export default function PortalForm() {
     try {
       const saved = await flushSave();
       if (!saved) throw new Error("save failed");
-      const res = await fetch("/api/pages", {
+      const res = await fetch(`${api}/publish`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({}),
@@ -414,7 +435,7 @@ export default function PortalForm() {
     } finally {
       setPublishing(false);
     }
-  }, [flushSave, publishing, update]);
+  }, [api, flushSave, publishing, update]);
 
   useEffect(() => () => window.clearTimeout(flashTimer.current), []);
 
@@ -427,6 +448,19 @@ export default function PortalForm() {
     return "Draft — changes are saved as you type.";
   }, [publishFlash, saveState]);
 
+  if (loadError) {
+    return (
+      <main className={styles.main}>
+        <div className={styles.eyebrow}>CHARTER PORTAL</div>
+        <p className={styles.intro}>{loadError}</p>
+        <p className={styles.intro}>
+          <a className={styles.statusLink} href="/portal">
+            Back to your selections
+          </a>
+        </p>
+      </main>
+    );
+  }
   if (!draft) {
     return (
       <main className={styles.main}>
@@ -442,7 +476,7 @@ export default function PortalForm() {
     <>
       <main className={styles.main}>
         <div>
-          <div className={styles.eyebrow}>NEW CLIENT PRESENTATION</div>
+          <div className={styles.eyebrow}>CLIENT PRESENTATION</div>
           <h1 className={styles.title}>Yacht Selection</h1>
           <p className={styles.intro}>
             Complete the fields below to build the client&rsquo;s landing page. Every field maps to
@@ -566,6 +600,15 @@ export default function PortalForm() {
                           {" "}
                           <span className={styles.yachtWarning}>
                             NO LONGER LISTED IN YACHTFOLIO
+                          </span>
+                        </>
+                      )}
+                      {fetching && (
+                        <>
+                          {" "}
+                          <span className={styles.headerNote} aria-live="polite">
+                            Fetching {y.name.trim() ? y.name.trim().toUpperCase() : "this yacht"}
+                            &rsquo;s details and preparing images…
                           </span>
                         </>
                       )}
@@ -798,7 +841,7 @@ export default function PortalForm() {
                         <span className={styles.fieldLabel}>
                           PAGE IMAGES
                           <span className={styles.fieldLabelHint}>
-                            {" "}— click a thumbnail to fill each slot; use the ⛶ icon to enlarge
+                            {" "}— each slot offers its own gallery category; click a thumbnail to choose, ⛶ to enlarge
                           </span>
                         </span>
                         <ImagePicker
@@ -806,8 +849,8 @@ export default function PortalForm() {
                           values={{
                             leadImageUrl: y.leadImageUrl,
                             interiorImageUrl: y.interiorImageUrl,
-                            deckImageUrl: y.deckImageUrl,
-                            watertoysImageUrl: y.watertoysImageUrl,
+                            exteriorImageUrl: y.exteriorImageUrl,
+                            lifestyleImageUrl: y.lifestyleImageUrl,
                           }}
                           onPick={(slot, url) => editAutoField(y.uid, slot, url)}
                           onExpand={(url, label) => setLightbox({ url, label })}
@@ -823,12 +866,6 @@ export default function PortalForm() {
                           onChange={(e) => editAutoField(y.uid, "brochureUrl", e.target.value)}
                         />
                       </label>
-                      {fetching && (
-                        <span className={styles.fetchNote}>
-                          Fetching {y.name.trim() ? y.name.trim().toUpperCase() : "this yacht"}
-                          &rsquo;s details and preparing images…
-                        </span>
-                      )}
                       {card.error && !fetching && (
                         <span className={styles.fetchWarning}>
                           {card.error}{" "}
@@ -970,6 +1007,9 @@ export default function PortalForm() {
           )}
         </span>
         <div className={styles.barButtons}>
+          <button type="button" className={styles.previewBtn} onClick={saveAndClose}>
+            SAVE &amp; CLOSE
+          </button>
           <button type="button" className={styles.previewBtn} onClick={openPreview}>
             PREVIEW CLIENT PAGE
           </button>

@@ -54,8 +54,8 @@ export interface DraftYacht {
   /** The four page slots — each holds the chosen image's 2000×1250 URL */
   leadImageUrl: string;
   interiorImageUrl: string;
-  deckImageUrl: string;
-  watertoysImageUrl: string;
+  exteriorImageUrl: string;
+  lifestyleImageUrl: string;
   brochureUrl: string;
 }
 
@@ -108,6 +108,52 @@ export interface PortalDraft {
   };
   /** Set after first publish so republishing keeps the same client URL */
   publishedSlug?: string;
+  /** Set server-side on creation */
+  createdAt?: string;
+  /** Publish state, maintained server-side on publish/unpublish/rollback */
+  published?: PublishState;
+}
+
+export interface PublishState {
+  version: number;
+  publishedAt: string;
+  /** false once unpublished — the record and its versions are kept */
+  live: boolean;
+  unpublishedAt: string | null;
+}
+
+export type SelectionStatus = "draft" | "published" | "unpublished";
+
+/** Dashboard row — stored in the per-consultant index at save time. */
+export interface SelectionMeta {
+  id: string;
+  owner: PageOwner;
+  clientNames: string;
+  headline: string;
+  slug: string | null;
+  yachtCount: number;
+  status: SelectionStatus;
+  version: number;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string | null;
+  unpublishedAt: string | null;
+}
+
+/** One entry in a published selection's version history. */
+export interface VersionInfo {
+  version: number;
+  publishedAt: string;
+  yachtCount: number;
+  clientNames: string;
+  headline: string;
+  rolledBackFrom: number | null;
+  isCurrent: boolean;
+}
+
+/** Dashboard heading for a selection: page title, else client name. */
+export function selectionTitle(m: { headline?: string; clientNames?: string }): string {
+  return (m.headline ?? "").trim() || (m.clientNames ?? "").trim() || "Untitled selection";
 }
 
 export interface FleetEntry {
@@ -145,8 +191,8 @@ export interface FleetDetail {
   rateOptions: RateOptions;
   leadImageUrl: string;
   interiorImageUrl: string;
-  deckImageUrl: string;
-  watertoysImageUrl: string;
+  exteriorImageUrl: string;
+  lifestyleImageUrl: string;
   brochureUrl: string;
   description: string;
   keyFeatures: string[];
@@ -179,8 +225,8 @@ export function emptyDraftYacht(uid: string): DraftYacht {
     gallery: [],
     leadImageUrl: "",
     interiorImageUrl: "",
-    deckImageUrl: "",
-    watertoysImageUrl: "",
+    exteriorImageUrl: "",
+    lifestyleImageUrl: "",
     brochureUrl: "",
   };
 }

@@ -24,7 +24,7 @@
  */
 
 import { existsSync } from "node:fs";
-import { mkdir, readFile, writeFile, readdir } from "node:fs/promises";
+import { mkdir, readFile, writeFile, readdir, unlink } from "node:fs/promises";
 import path from "node:path";
 
 const FS_ROOT = process.env.PORTAL_STORE_DIR ?? path.join(process.cwd(), ".portal-store");
@@ -97,6 +97,18 @@ export async function getJson(key) {
   } catch {
     return null;
   }
+}
+
+/** Delete a JSON document from the DATA store (no-op when absent). */
+export async function deleteJson(key) {
+  const token = dataToken();
+  if (token) {
+    const { del } = await blob();
+    await del(key, { token });
+    return;
+  }
+  const file = path.join(FS_ROOT, key);
+  if (existsSync(file)) await unlink(file);
 }
 
 /** List keys under a prefix in the DATA store. */

@@ -48,8 +48,8 @@ export interface Yacht {
   /** All yacht imagery is 16:10, source 2000×1250 (Yachtfolio, cropped at build time) */
   leadImageUrl: string;
   interiorImageUrl: string;
-  deckImageUrl: string;
-  watertoysImageUrl: string;
+  exteriorImageUrl: string;
+  lifestyleImageUrl: string;
   brochureUrl: string;
   /** Plain-text description from the Yachtfolio brochure (HTML stripped) */
   description?: string;

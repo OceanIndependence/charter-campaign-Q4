@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
-import { demoConfig } from "@/lib/demo-config";
 
+/** The site root is the Charter Portal; client pages live under /selection/<slug>. */
 export default function Home() {
-  redirect(`/selection/${demoConfig.slug}`);
+  redirect("/portal");
 }
