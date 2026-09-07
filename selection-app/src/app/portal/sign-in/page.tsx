@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import PortalHeader from "@/components/portal/PortalHeader";
 import SignInPicker from "@/components/portal/SignInPicker";
 import styles from "@/components/portal/PortalForm.module.css";
-import { authProvider } from "@/server/auth";
+import { authProvider, getIdentityServer } from "@/server/auth";
 import { isPortalAuthedServer } from "@/server/portal-auth";
 
 export const dynamic = "force-dynamic";
@@ -16,6 +16,9 @@ export const metadata: Metadata = {
 export default async function SignInPage() {
   // Staging gate first; identity second.
   if (!(await isPortalAuthedServer())) redirect("/portal/login");
+  // Providers that sign in automatically (single consultant) have nothing to
+  // choose — go straight to the form.
+  if (await getIdentityServer()) redirect("/portal");
   const provider = authProvider();
   const identities = provider.selectableIdentities();
 

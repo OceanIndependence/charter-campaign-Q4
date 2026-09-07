@@ -1,15 +1,14 @@
 /**
  * Consultant-session gate for the Charter Portal and its API routes.
  *
- * Staging model: a single shared access key (PORTAL_ACCESS_KEY, server-only
- * env var). /portal/login exchanges the key for an httpOnly cookie holding
- * its SHA-256 digest; every portal API route calls requirePortalAuth().
- * Real per-consultant auth replaces this at sign-off — the gate is a single
- * choke point so the swap is one file.
+ * Optional coarse staging gate: a single shared access key
+ * (PORTAL_ACCESS_KEY, server-only env var). /portal/login exchanges the key
+ * for an httpOnly cookie holding its SHA-256 digest.
  *
- * In production the gate DENIES when PORTAL_ACCESS_KEY is unset (a deployed
- * open proxy onto Yachtfolio is worse than a broken form). In development it
- * allows, so local work needs no env.
+ * The gate is OPT-IN: when PORTAL_ACCESS_KEY is unset it is disabled and
+ * every request passes it (identity, from the auth provider, is then the
+ * only gate). When the key IS set, it is enforced in every environment.
+ * This sits in front of, not instead of, the identity layer.
  */
 
 import { createHash, timingSafeEqual } from "node:crypto";
@@ -40,7 +39,7 @@ export function checkAccessKey(candidate: string): boolean {
 
 export function isPortalAuthed(request: NextRequest): boolean {
   const expected = expectedCookieValue();
-  if (!expected) return process.env.NODE_ENV !== "production";
+  if (!expected) return true; // gate disabled — no access key configured
   const cookie = request.cookies.get(PORTAL_COOKIE)?.value;
   if (cookie && safeEqual(cookie, expected)) return true;
   const bearer = request.headers.get("authorization");
@@ -51,7 +50,7 @@ export function isPortalAuthed(request: NextRequest): boolean {
 /** Same check for server components (reads the request cookies). */
 export async function isPortalAuthedServer(): Promise<boolean> {
   const expected = expectedCookieValue();
-  if (!expected) return process.env.NODE_ENV !== "production";
+  if (!expected) return true; // gate disabled — no access key configured
   const store = await cookies();
   const value = store.get(PORTAL_COOKIE)?.value;
   return Boolean(value && safeEqual(value, expected));

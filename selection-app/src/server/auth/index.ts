@@ -21,6 +21,7 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import type { AuthProvider, ConsultantIdentity } from "./types";
 import { stubProvider } from "./stub";
+import { soloProvider } from "./solo";
 import { microsoftProvider } from "./microsoft";
 import { isPortalAuthed, isPortalAuthedServer } from "../portal-auth";
 
@@ -44,6 +45,12 @@ function resolveProvider(): AuthProvider {
 
   if (choice === "microsoft") {
     return microsoftProvider() ?? lockedProvider("Microsoft sign-in is selected but not configured.");
+  }
+
+  // Single fixed consultant — a deliberate staging/internal choice, allowed
+  // in production because it is one real person, not the fake dev stub.
+  if (choice === "solo") {
+    return soloProvider;
   }
 
   if (choice === "stub") {
@@ -70,7 +77,13 @@ export function authProvider(): AuthProvider {
 /** Provider status for /api/health and the sign-in UI (no secrets). */
 export function authProviderInfo() {
   const p = authProvider();
-  return { provider: p.name, isStub: p.isStub, locked: Boolean(p.lockedReason), lockedReason: p.lockedReason };
+  return {
+    provider: p.name,
+    isStub: p.isStub,
+    singleConsultant: p.name === "solo",
+    locked: Boolean(p.lockedReason),
+    lockedReason: p.lockedReason,
+  };
 }
 
 export function selectableIdentities(): ConsultantIdentity[] {
