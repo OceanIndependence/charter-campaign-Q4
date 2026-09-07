@@ -872,6 +872,10 @@
   color: #99999a;
 }
 
+.dashMain {
+  max-width: 1160px;
+}
+
 .tableWrap {
   overflow-x: auto;
 }
@@ -896,19 +900,20 @@
 }
 
 .table td {
-  padding: 14px 12px;
-  border-bottom: 1px solid #ececea;
+  padding: 16px 12px 6px;
   vertical-align: top;
   white-space: nowrap;
 }
 
-.table tbody tr:hover td {
-  background: #fafaf8;
+.tdWrap {
+  white-space: normal !important;
+  min-width: 140px;
+  max-width: 260px;
 }
 
-.thActions,
-.tdActions {
-  text-align: right;
+.actionsRow td {
+  padding: 2px 8px 12px;
+  border-bottom: 1px solid #ececea;
 }
 
 .rowBusy td {
@@ -974,10 +979,9 @@
 }
 
 .rowActions {
-  display: inline-flex;
+  display: flex;
   gap: 4px;
   flex-wrap: wrap;
-  justify-content: flex-end;
 }
 
 .actionBtn {
@@ -1013,6 +1017,7 @@
   background: #fafaf8;
   white-space: normal;
   padding: 16px 20px 18px;
+  border-bottom: 1px solid #ececea;
 }
 
 .versionList {

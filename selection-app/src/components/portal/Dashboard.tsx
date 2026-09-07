@@ -186,7 +186,7 @@ export default function Dashboard() {
   const nothingYet = items.length === 0 && scope === "mine";
 
   return (
-    <main className={styles.main}>
+    <main className={`${styles.main} ${styles.dashMain}`}>
       <div className={styles.dashHead}>
         <div>
           <div className={styles.eyebrow}>CHARTER PORTAL</div>
@@ -272,7 +272,6 @@ export default function Dashboard() {
                     <th>CREATED</th>
                     <th>LAST EDITED</th>
                     <th>PUBLISHED</th>
-                    <th className={styles.thActions} aria-label="Actions" />
                   </tr>
                 </thead>
                 <tbody>
@@ -333,14 +332,14 @@ function RowGroup(p: RowProps) {
   const { m } = p;
   const title = selectionTitle(m);
   const previewHref = m.status === "published" && m.slug ? `/selection/${m.slug}` : `/portal/preview?id=${m.id}`;
-  const cols = p.showOwner ? 9 : 8;
+  const cols = p.showOwner ? 7 : 6;
   return (
     <>
-      <tr className={p.isBusy ? styles.rowBusy : undefined}>
-        <td>
+      <tr className={p.isBusy ? styles.rowBusy : undefined} data-id={m.id}>
+        <td className={styles.tdWrap}>
           <span className={styles.rowClient}>{m.clientNames.trim() || "—"}</span>
         </td>
-        <td>
+        <td className={styles.tdWrap}>
           <span className={styles.rowTitle}>{title}</span>
           {m.slug && <span className={styles.rowSlug}>/selection/{m.slug}</span>}
         </td>
@@ -363,7 +362,9 @@ function RowGroup(p: RowProps) {
         <td>{fmtDateLong(m.createdAt)}</td>
         <td>{fmtDateLong(m.updatedAt)}</td>
         <td>{m.publishedAt ? fmtDateLong(m.publishedAt) : "—"}</td>
-        <td className={styles.tdActions}>
+      </tr>
+      <tr className={styles.actionsRow} data-actions-for={m.id}>
+        <td colSpan={cols + 1}>
           {p.mine ? (
             <div className={styles.rowActions}>
               <button type="button" className={styles.actionBtn} onClick={p.onOpen} disabled={p.isBusy}>
@@ -404,7 +405,7 @@ function RowGroup(p: RowProps) {
       </tr>
       {p.versionsOpen && (
         <tr className={styles.versionsRow}>
-          <td colSpan={cols}>
+          <td colSpan={cols + 1}>
             {p.versions === null ? (
               <span className={styles.dashEmptyFilter}>Loading versions…</span>
             ) : p.versions.length === 0 ? (
