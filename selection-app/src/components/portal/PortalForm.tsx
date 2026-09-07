@@ -798,7 +798,7 @@ export default function PortalForm() {
                         <span className={styles.fieldLabel}>
                           PAGE IMAGES
                           <span className={styles.fieldLabelHint}>
-                            {" "}— click a thumbnail to fill each slot; use the ⛶ icon to enlarge
+                            {" "}— each slot offers its own gallery category; click a thumbnail to choose, ⛶ to enlarge
                           </span>
                         </span>
                         <ImagePicker

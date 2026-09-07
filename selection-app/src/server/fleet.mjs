@@ -225,17 +225,7 @@ export async function getYachtDetail(yfId, { forceRefresh = false, debug = false
   // page, and linking those gives the client a "failed to load PDF". Anything
   // else leaves the field blank for the consultant to paste a link.
   const brochureFile = brochureUrl ? null : extractBrochureFile(brochure);
-  if (brochureFile && !brochureFile.url) {
-    // No PDF-typed entry in the gallery — some yachts hold only a JPEG cover
-    // in the PDF slot. Leave the link blank and say so, rather than serving a
-    // non-PDF that the client viewer would reject.
-    if (brochureFile.pdfEntries > 0) {
-      facts.notes.push(
-        `no PDF brochure — Yachtfolio's PDF gallery holds ${brochureFile.pdfEntries} ` +
-          `non-PDF file(s) (e.g. an image cover), not a brochure PDF.`
-      );
-    }
-  } else if (brochureFile?.url) {
+  if (brochureFile?.url) {
     const key = `yachtfolio/brochures/${yfId}/v${DETAIL_SCHEMA_VERSION}-${brochureFile.id_file}.pdf`;
     try {
       if (await fileExists(key)) {
@@ -262,6 +252,15 @@ export async function getYachtDetail(yfId, { forceRefresh = false, debug = false
           redact(String(err?.message ?? err), passkey)
       );
     }
+  }
+  if (!brochureUrl) {
+    // Confirmed against live responses (2026-09): neither api_brochure.cgi nor
+    // api_basic.cgi carries the e-brochure link or its token, so it cannot be
+    // auto-filled. The consultant pastes it.
+    facts.notes.push(
+      "brochure link not provided by Yachtfolio's API — paste the yacht's e-brochure link " +
+        "(https://www.yachtfolio.com/e-brochure/…) into BROCHURE LINK."
+    );
   }
 
   // Process only this yacht's images, only the slots the page needs.

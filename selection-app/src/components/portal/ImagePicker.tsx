@@ -3,17 +3,26 @@
 import type { GalleryImage } from "@/lib/portal-types";
 import styles from "./PortalForm.module.css";
 
-/** The four page image slots the consultant fills from the yacht's gallery. */
+/**
+ * The four page image slots the consultant fills from the yacht's gallery.
+ * Each slot offers only its own gallery category: the lead and deck shots
+ * come from EXTERIOR, the interior from INTERIOR, watertoys from LIFESTYLE.
+ */
 export const IMAGE_SLOTS = [
-  { key: "leadImageUrl", label: "LEAD IMAGE", hint: "hero — 2000 × 1250", order: ["EXTERIOR", "LIFESTYLE", "INTERIOR"] },
-  { key: "interiorImageUrl", label: "INTERIOR IMAGE", hint: "", order: ["INTERIOR", "LIFESTYLE", "EXTERIOR"] },
-  { key: "deckImageUrl", label: "DECK IMAGE", hint: "", order: ["EXTERIOR", "LIFESTYLE", "INTERIOR"] },
-  { key: "watertoysImageUrl", label: "WATERTOYS IMAGE", hint: "", order: ["LIFESTYLE", "EXTERIOR", "INTERIOR"] },
+  { key: "leadImageUrl", label: "LEAD IMAGE", hint: "hero — 2000 × 1250", category: "EXTERIOR" },
+  { key: "interiorImageUrl", label: "INTERIOR IMAGE", hint: "", category: "INTERIOR" },
+  { key: "deckImageUrl", label: "DECK IMAGE", hint: "", category: "EXTERIOR" },
+  { key: "watertoysImageUrl", label: "WATERTOYS IMAGE", hint: "", category: "LIFESTYLE" },
 ] as const;
 
 export type SlotKey = (typeof IMAGE_SLOTS)[number]["key"];
 
-const CAT_TAG: Record<string, string> = { EXTERIOR: "EXT", LIFESTYLE: "LIFE", INTERIOR: "INT" };
+/**
+ * Most images shown per slot. Mirrors the server download cap; applied again
+ * here so a draft saved before the cap changed (its gallery is only refreshed
+ * on a re-pick) still shows the capped set.
+ */
+const MAX_PER_CATEGORY = 5;
 
 /** Corner-brackets "expand" glyph — opens the image in the lightbox. */
 function ExpandIcon() {
@@ -31,34 +40,6 @@ function ExpandIcon() {
   );
 }
 
-/**
- * Most images shown per category. Mirrors the server download cap; applied
- * again here so a draft saved before the cap changed (its gallery is only
- * refreshed on a re-pick) still shows the capped set.
- */
-const MAX_PER_CATEGORY = 5;
-
-/**
- * Order a gallery for a slot: its natural categories first, position
- * preserved within each, and at most MAX_PER_CATEGORY of each category.
- */
-function orderFor(gallery: GalleryImage[], order: readonly string[]): GalleryImage[] {
-  const rank = (c: string) => {
-    const i = order.indexOf(c);
-    return i === -1 ? order.length : i;
-  };
-  const perCategory = new Map<string, number>();
-  return gallery
-    .filter((img) => {
-      const n = (perCategory.get(img.category) ?? 0) + 1;
-      perCategory.set(img.category, n);
-      return n <= MAX_PER_CATEGORY;
-    })
-    .map((img, i) => ({ img, i }))
-    .sort((a, b) => rank(a.img.category) - rank(b.img.category) || a.i - b.i)
-    .map((x) => x.img);
-}
-
 interface Props {
   gallery: GalleryImage[];
   /** Current slot values on the draft yacht, keyed by slot key. */
@@ -74,7 +55,10 @@ export default function ImagePicker({ gallery, values, onPick, onExpand }: Props
     <div className={styles.pickerGroup}>
       {IMAGE_SLOTS.map((slot) => {
         const chosen = values[slot.key] ?? "";
-        const ordered = orderFor(gallery, slot.order);
+        const options = gallery
+          .filter((img) => img.category === slot.category)
+          .slice(0, MAX_PER_CATEGORY);
+        const categoryWord = slot.category.toLowerCase();
         return (
           <div key={slot.key} className={styles.slotBlock}>
             <span className={styles.fieldLabel}>
@@ -82,9 +66,9 @@ export default function ImagePicker({ gallery, values, onPick, onExpand }: Props
               {slot.hint && <span className={styles.fieldLabelHint}> — {slot.hint}</span>}
             </span>
 
-            {gallery.length > 0 ? (
+            {options.length > 0 ? (
               <div className={styles.thumbStrip}>
-                {ordered.map((img) => {
+                {options.map((img) => {
                   const selected = chosen === img.url;
                   return (
                     <div
@@ -96,12 +80,11 @@ export default function ImagePicker({ gallery, values, onPick, onExpand }: Props
                         className={styles.thumbPick}
                         onClick={() => onPick(slot.key, img.url)}
                         aria-pressed={selected}
-                        aria-label={`Use this ${img.category.toLowerCase()} image for ${slot.label.toLowerCase()}`}
+                        aria-label={`Use this ${categoryWord} image for ${slot.label.toLowerCase()}`}
                         title={`Use for ${slot.label.toLowerCase()}`}
                       >
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={img.smallUrl} alt="" loading="lazy" />
-                        <span className={styles.thumbTag}>{CAT_TAG[img.category] ?? img.category}</span>
                         {selected && <span className={styles.thumbCheck} aria-hidden="true">✓</span>}
                       </button>
                       <button
@@ -109,7 +92,7 @@ export default function ImagePicker({ gallery, values, onPick, onExpand }: Props
                         className={styles.thumbExpand}
                         onClick={(e) => {
                           e.stopPropagation();
-                          onExpand(img.url, `${CAT_TAG[img.category] ?? img.category}`);
+                          onExpand(img.url, `${slot.label} option`);
                         }}
                         aria-label="View this image larger"
                         title="View larger"
@@ -122,7 +105,9 @@ export default function ImagePicker({ gallery, values, onPick, onExpand }: Props
               </div>
             ) : (
               <p className={styles.pickerEmpty}>
-                Pick a yacht from the fleet to choose from its gallery, or paste an image URL below.
+                {gallery.length > 0
+                  ? `Yachtfolio has no ${categoryWord} images for this yacht — paste an image URL below.`
+                  : "Pick a yacht from the fleet to choose from its gallery, or paste an image URL below."}
               </p>
             )}
 
