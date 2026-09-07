@@ -45,3 +45,13 @@ const WORDS = ["ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "E
 export function countWord(n: number): string {
   return n < 10 ? WORDS[n] : String(n);
 }
+
+/** House-style long date: "07 September 2026" (no comma). */
+export function fmtDateLong(iso: string | null | undefined): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = d.toLocaleDateString("en-GB", { month: "long" });
+  return `${day} ${month} ${d.getFullYear()}`;
+}
