@@ -221,6 +221,61 @@ export function extractYachtFacts({ brochure, basic, reference, targetSeason }) 
   };
 }
 
+/** Walk every string value in a nested object/array, calling fn(str). */
+function forEachString(value, fn, seen = new Set()) {
+  if (value == null || fn.done) return;
+  if (typeof value === "string") return void fn(value);
+  if (typeof value !== "object" || seen.has(value)) return;
+  seen.add(value);
+  if (Array.isArray(value)) {
+    for (const v of value) forEachString(v, fn, seen);
+  } else {
+    for (const v of Object.values(value)) forEachString(v, fn, seen);
+  }
+}
+
+const EBROCHURE_RE = /https?:\/\/[^\s"'<>]*\/e-brochure\/[^\s"'<>]+/i;
+
+/** Strip any passkey/api query param from a URL — never expose the passkey. */
+function stripSecretParams(url) {
+  try {
+    const u = new URL(url);
+    u.searchParams.delete("passkey");
+    u.searchParams.delete("api");
+    return u.toString();
+  } catch {
+    return url.replace(/([?&])(passkey|api)=[^&]*/gi, "$1").replace(/[?&]+$/, "");
+  }
+}
+
+/**
+ * The yacht's hosted e-brochure page link — e.g.
+ * https://www.yachtfolio.com/e-brochure/AQUA_MARE/ZFgftYj0CwY7 — if it appears
+ * anywhere in the live brochure/basic responses. The 2023 v1.2 documentation
+ * does not document this link on any endpoint, but the live API shape drifts
+ * from the doc (undocumented keys have already been observed), so we scan
+ * every string value defensively rather than assume a key. The brochure is a
+ * hosted page, not a downloadable PDF, so the link is used as-is. Returns the
+ * passkey-stripped URL, or null when the response carries no such link.
+ */
+export function extractEbrochureUrl(...sources) {
+  let found = null;
+  const visit = (s) => {
+    if (found) return;
+    const m = s.match(EBROCHURE_RE);
+    if (m) {
+      found = m[0];
+      visit.done = true;
+    }
+  };
+  for (const src of sources) {
+    visit.done = false;
+    forEachString(src, visit);
+    if (found) break;
+  }
+  return found ? stripSecretParams(found) : null;
+}
+
 /** True when a filename/url points at a PDF (ignoring any query string). */
 function looksLikePdfName(name) {
   if (!name) return false;
