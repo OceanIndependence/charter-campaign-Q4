@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import type { Yacht } from "@/lib/types";
-import { fmtEUR, fmtLengthShort } from "@/lib/format";
+import { fmtCardRate, fmtLengthShort } from "@/lib/format";
 import {
   ChevronIcon,
   CompareToggleIcon,
@@ -199,8 +199,8 @@ export default function RingCarousel(props: RingCarouselProps) {
                       )}
                     </div>
                     <div className={styles.priceBlock}>
-                      {yacht.weeklyRateEUR != null && (
-                        <div className={styles.price}>FROM {fmtEUR(yacht.weeklyRateEUR)}</div>
+                      {yacht.weeklyRate != null && (
+                        <div className={styles.price}>{fmtCardRate(yacht)}</div>
                       )}
                       {yacht.cruisingArea && (
                         <div className={styles.area}>CRUISING AREA · {yacht.cruisingArea}</div>

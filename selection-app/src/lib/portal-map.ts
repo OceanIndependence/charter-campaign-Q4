@@ -8,6 +8,9 @@ import type { PageConfig, Yacht } from "./types";
 import type { DraftYacht, PortalDraft } from "./portal-types";
 import { slugify } from "@/server/yachtfolio/normalise.mjs";
 
+/** Campaign-wide "Explore all destinations" atlas link (Tier 1). */
+export const CAMPAIGN_ATLAS_URL = "https://www.oceanindependence.com/yacht-charter/destinations/";
+
 const str = (v: string | undefined): string | undefined => {
   const t = (v ?? "").trim();
   return t || undefined;
@@ -28,9 +31,31 @@ function mapStaterooms(v: string): Yacht["staterooms"] {
   return { count: Number(m[1]), breakdown: (m[2] ?? "").trim() };
 }
 
+function mapKeyFeatures(v: string | undefined): string[] | undefined {
+  const items = (v ?? "")
+    .split("\n")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  return items.length ? items : undefined;
+}
+
 export function mapDraftYacht(y: DraftYacht): Yacht | null {
   const name = (y.name ?? "").trim();
   if (!name) return null;
+
+  const weeklyRate = num(y.weeklyRate);
+  const currency = (str(y.currency) ?? "EUR").toUpperCase();
+  const apaPct = num(y.apaPct);
+  const vatPct = num(y.vatPct);
+
+  // Compute price components in the yacht's own currency and freeze them, so
+  // the published page never recalculates. A component exists only when both
+  // the rate and its percentage are present.
+  const apaAmount = weeklyRate != null && apaPct != null ? Math.round((weeklyRate * apaPct) / 100) : undefined;
+  const vatAmount = weeklyRate != null && vatPct != null ? Math.round((weeklyRate * vatPct) / 100) : undefined;
+  const totalAmount =
+    weeklyRate != null ? weeklyRate + (apaAmount ?? 0) + (vatAmount ?? 0) : undefined;
+
   return {
     id: slugify(name) || y.uid,
     ...(y.yfId ? { yachtfolioId: y.yfId } : {}),
@@ -39,13 +64,17 @@ export function mapDraftYacht(y: DraftYacht): Yacht | null {
     yearRefit: str(y.yearRefit),
     guests: num(y.guests) ? Math.round(num(y.guests) as number) : undefined,
     staterooms: mapStaterooms(y.staterooms),
-    location: str(y.location),
     cruisingArea: str(y.cruisingArea)?.toUpperCase(),
     availability: str(y.availability),
-    weeklyRateEUR: num(y.weeklyRateEUR),
+    ...(weeklyRate != null ? { currency, weeklyRate } : {}),
     weeklyRateIsFrom: y.weeklyRateIsFrom || undefined,
-    apaPct: num(y.apaPct) ?? 35,
+    ...(apaPct != null ? { apaPct } : {}),
+    ...(apaAmount != null ? { apaAmount } : {}),
+    ...(vatPct != null ? { vatPct } : {}),
+    ...(vatAmount != null ? { vatAmount } : {}),
+    ...(totalAmount != null ? { totalAmount } : {}),
     notes: str(y.notes),
+    keyFeatures: mapKeyFeatures(y.keyFeatures),
     leadImageUrl: str(y.leadImageUrl) ?? "",
     interiorImageUrl: str(y.interiorImageUrl) ?? str(y.leadImageUrl) ?? "",
     deckImageUrl: str(y.deckImageUrl) ?? str(y.leadImageUrl) ?? "",
@@ -61,6 +90,7 @@ export function draftToPageConfig(draft: PortalDraft, slug: string): PageConfig 
     season: str(draft.season) ?? "",
     region: str(draft.region) ?? "",
     headline: str(draft.headline) ?? "Yacht Charter Selection",
+    welcome: str(draft.welcome),
     yachts: draft.yachts.map(mapDraftYacht).filter((y): y is Yacht => y !== null),
     sections: {
       costs: draft.sections.costs,
@@ -76,6 +106,7 @@ export function draftToPageConfig(draft: PortalDraft, slug: string): PageConfig 
       whatsapp: str(draft.consultant.whatsapp) ?? "",
       photoUrl: str(draft.consultant.photoUrl) ?? "",
     },
+    atlasUrl: CAMPAIGN_ATLAS_URL,
   };
 }
 

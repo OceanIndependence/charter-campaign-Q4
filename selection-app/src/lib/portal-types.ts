@@ -15,13 +15,18 @@ export interface DraftYacht {
   guests: string;
   /** e.g. "6 (5 double, 1 twin)" */
   staterooms: string;
-  location: string;
   cruisingArea: string;
   availability: string;
-  weeklyRateEUR: string;
+  /** ISO currency code for the rate (auto-filled, editable, default EUR) */
+  currency: string;
+  weeklyRate: string;
   weeklyRateIsFrom: boolean;
   apaPct: string;
+  /** VAT percentage; blank shows "TBC" and drops out of the total */
+  vatPct: string;
   notes: string;
+  /** One key feature per line (auto-filled from Yachtfolio, editable) */
+  keyFeatures: string;
   leadImageUrl: string;
   interiorImageUrl: string;
   deckImageUrl: string;
@@ -45,6 +50,8 @@ export interface PortalDraft {
   season: string;
   region: string;
   headline: string;
+  /** Optional consultant welcome greeting (cover falls back to a generated line) */
+  welcome: string;
   yachts: DraftYacht[];
   sections: {
     costs: boolean;
@@ -89,12 +96,11 @@ export interface FleetDetail {
   guests: number | null;
   builder: string;
   staterooms: string;
-  location: string;
   cruisingArea: string;
   availability: string;
-  weeklyRateEUR: number | null;
+  currency: string;
+  weeklyRate: number | null;
   weeklyRateIsFrom: boolean;
-  apaPct: number;
   leadImageUrl: string;
   interiorImageUrl: string;
   deckImageUrl: string;
@@ -117,13 +123,15 @@ export function emptyDraftYacht(uid: string): DraftYacht {
     yearRefit: "",
     guests: "",
     staterooms: "",
-    location: "",
     cruisingArea: "",
     availability: "",
-    weeklyRateEUR: "",
+    currency: "EUR",
+    weeklyRate: "",
     weeklyRateIsFrom: false,
     apaPct: "35",
+    vatPct: "",
     notes: "",
+    keyFeatures: "",
     leadImageUrl: "",
     interiorImageUrl: "",
     deckImageUrl: "",

@@ -251,14 +251,14 @@ export async function getYachtDetail(yfId, { forceRefresh = false } = {}) {
         ? `${facts.staterooms.count} (${facts.staterooms.breakdown})`
         : String(facts.staterooms.count)
       : "",
-    location: facts.location ?? "",
     cruisingArea: facts.cruisingArea ?? "",
     // Consultant-voice field: never auto-filled. facts.notes carries the
     // seasons_unavailable warning for the form to surface instead.
     availability: "",
-    weeklyRateEUR: facts.weeklyRateEUR ?? null,
+    // Currency carried through as-is; APA/VAT are the consultant's, not fetched.
+    currency: facts.currency ?? "EUR",
+    weeklyRate: facts.weeklyRate ?? null,
     weeklyRateIsFrom: facts.weeklyRateIsFrom,
-    apaPct: 35,
     leadImageUrl,
     interiorImageUrl: interior[0] ?? "",
     deckImageUrl: exterior[1] ?? lifestyle[1] ?? "",

@@ -22,9 +22,10 @@ const AUTO_FIELDS = [
   "yearRefit",
   "guests",
   "staterooms",
-  "location",
   "cruisingArea",
-  "weeklyRateEUR",
+  "currency",
+  "weeklyRate",
+  "keyFeatures",
   "leadImageUrl",
   "interiorImageUrl",
   "deckImageUrl",
@@ -32,6 +33,27 @@ const AUTO_FIELDS = [
   "brochureUrl",
 ] as const;
 type AutoField = (typeof AUTO_FIELDS)[number];
+
+const CURRENCIES = ["EUR", "USD", "GBP", "CAD", "AUD", "NZD"];
+
+/** Live price maths for the form readout (mirrors portal-map at publish). */
+function computePrice(y: { weeklyRate: string; apaPct: string; vatPct: string }) {
+  const n = (v: string) => {
+    const t = (v ?? "").replace(/[^\d.]/g, "");
+    const x = t ? Number(t) : NaN;
+    return Number.isFinite(x) && x > 0 ? x : undefined;
+  };
+  const rate = n(y.weeklyRate);
+  const apaPct = n(y.apaPct);
+  const vatPct = n(y.vatPct);
+  const apaAmount = rate != null && apaPct != null ? Math.round((rate * apaPct) / 100) : undefined;
+  const vatAmount = rate != null && vatPct != null ? Math.round((rate * vatPct) / 100) : undefined;
+  const total = rate != null ? rate + (apaAmount ?? 0) + (vatAmount ?? 0) : undefined;
+  return { rate, apaPct, vatPct, apaAmount, vatAmount, total };
+}
+
+const fmtMoneyForm = (currency: string, amount: number) =>
+  `${(currency || "EUR").toUpperCase()} ${Math.round(amount).toLocaleString("en-GB")}`;
 
 interface CardFetchState {
   fetching: boolean;
@@ -179,7 +201,7 @@ export default function PortalForm() {
       set.add(field);
       dirtyFields.current.set(uid, set);
       if (field === "name") setYacht(uid, { name: value, yfId: null });
-      else if (field === "weeklyRateEUR") setYacht(uid, { weeklyRateEUR: value, weeklyRateIsFrom: false });
+      else if (field === "weeklyRate") setYacht(uid, { weeklyRate: value, weeklyRateIsFrom: false });
       else setYacht(uid, { [field]: value });
     },
     [setYacht]
@@ -233,10 +255,11 @@ export default function PortalForm() {
         apply("yearRefit", detail.yearRefit);
         apply("guests", detail.guests != null ? String(detail.guests) : "");
         apply("staterooms", detail.staterooms);
-        apply("location", detail.location);
         apply("cruisingArea", detail.cruisingArea);
-        if (!dirtyNow.has("weeklyRateEUR")) {
-          patch.weeklyRateEUR = detail.weeklyRateEUR != null ? String(detail.weeklyRateEUR) : "";
+        apply("currency", detail.currency || "EUR");
+        apply("keyFeatures", (detail.keyFeatures ?? []).join("\n"));
+        if (!dirtyNow.has("weeklyRate")) {
+          patch.weeklyRate = detail.weeklyRate != null ? String(detail.weeklyRate) : "";
           patch.weeklyRateIsFrom = detail.weeklyRateIsFrom;
         }
         apply("leadImageUrl", detail.leadImageUrl);
@@ -400,6 +423,18 @@ export default function PortalForm() {
                 onChange={(e) => update((d) => ({ ...d, headline: e.target.value }))}
               />
             </label>
+            <label className={`${styles.field} ${styles.fieldFull}`}>
+              <span className={styles.fieldLabel}>
+                WELCOME GREETING <span className={styles.fieldLabelHint}>— optional</span>
+              </span>
+              <textarea
+                rows={2}
+                className={styles.textarea}
+                placeholder={`Optional. Defaults to “Prepared for ${draft.clientNames || "the client"} by ${draft.consultant.name || "you"}${draft.season ? ` — ${draft.season}` : ""}”.`}
+                value={draft.welcome}
+                onChange={(e) => update((d) => ({ ...d, welcome: e.target.value }))}
+              />
+            </label>
           </div>
         </section>
 
@@ -416,6 +451,19 @@ export default function PortalForm() {
             2000 x 1250 px (16:10) when a yacht is selected from the fleet.
           </p>
           {fleetError && <p className={styles.fetchWarning}>{fleetError}</p>}
+          {(() => {
+            const currencies = new Set(
+              draft.yachts
+                .filter((y) => (y.weeklyRate ?? "").trim())
+                .map((y) => (y.currency || "EUR").toUpperCase())
+            );
+            return currencies.size > 1 ? (
+              <p className={styles.fetchWarning}>
+                This selection mixes currencies ({[...currencies].join(", ")}). Each yacht shows its
+                own; they are not converted or combined.
+              </p>
+            ) : null;
+          })()}
           <div className={styles.yachtList}>
             {draft.yachts.map((y, i) => {
               const open = openIds.has(y.uid);
@@ -515,16 +563,6 @@ export default function PortalForm() {
                         />
                       </label>
                       <label className={styles.field}>
-                        <span className={styles.fieldLabel}>LOCATION</span>
-                        <input
-                          type="text"
-                          className={styles.input}
-                          placeholder="Auto-filled"
-                          value={y.location}
-                          onChange={(e) => editAutoField(y.uid, "location", e.target.value)}
-                        />
-                      </label>
-                      <label className={styles.field}>
                         <span className={styles.fieldLabel}>CRUISING AREA</span>
                         <input
                           type="text"
@@ -545,14 +583,28 @@ export default function PortalForm() {
                         />
                       </label>
                       <label className={styles.field}>
-                        <span className={styles.fieldLabel}>WEEKLY RATE (EUR)</span>
-                        <input
-                          type="text"
-                          className={styles.input}
-                          placeholder="Auto-filled — editable"
-                          value={y.weeklyRateEUR}
-                          onChange={(e) => editAutoField(y.uid, "weeklyRateEUR", e.target.value)}
-                        />
+                        <span className={styles.fieldLabel}>WEEKLY RATE</span>
+                        <div className={styles.rateRow}>
+                          <select
+                            className={styles.currencySelect}
+                            aria-label="Currency"
+                            value={y.currency || "EUR"}
+                            onChange={(e) => editAutoField(y.uid, "currency", e.target.value)}
+                          >
+                            {CURRENCIES.map((c) => (
+                              <option key={c} value={c}>
+                                {c}
+                              </option>
+                            ))}
+                          </select>
+                          <input
+                            type="text"
+                            className={styles.input}
+                            placeholder="Auto-filled — editable"
+                            value={y.weeklyRate}
+                            onChange={(e) => editAutoField(y.uid, "weeklyRate", e.target.value)}
+                          />
+                        </div>
                       </label>
                       <label className={styles.field}>
                         <span className={styles.fieldLabel}>APA %</span>
@@ -564,6 +616,42 @@ export default function PortalForm() {
                           onChange={(e) => setYacht(y.uid, { apaPct: e.target.value })}
                         />
                       </label>
+                      <label className={styles.field}>
+                        <span className={styles.fieldLabel}>VAT %</span>
+                        <input
+                          type="number"
+                          className={styles.input}
+                          placeholder="TBC"
+                          value={y.vatPct}
+                          onChange={(e) => setYacht(y.uid, { vatPct: e.target.value })}
+                        />
+                      </label>
+                      {(() => {
+                        const p = computePrice(y);
+                        if (p.rate == null) return null;
+                        const cur = y.currency || "EUR";
+                        const pre = y.weeklyRateIsFrom ? "from " : "";
+                        return (
+                          <div className={`${styles.priceReadout} ${styles.fieldFull}`}>
+                            <span>
+                              VAT{" "}
+                              {p.vatAmount != null ? `${pre}${fmtMoneyForm(cur, p.vatAmount)} (${p.vatPct}%)` : "TBC"}
+                            </span>
+                            {p.apaAmount != null && (
+                              <span>
+                                APA {pre}
+                                {fmtMoneyForm(cur, p.apaAmount)} ({p.apaPct}%)
+                              </span>
+                            )}
+                            {p.total != null && (
+                              <span className={styles.priceTotal}>
+                                TOTAL {pre}
+                                {fmtMoneyForm(cur, p.total)}
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })()}
                       <label className={`${styles.field} ${styles.fieldFull}`}>
                         <span className={styles.fieldLabel}>YOUR NOTE TO THE CLIENT</span>
                         <textarea
@@ -572,6 +660,18 @@ export default function PortalForm() {
                           placeholder="The yacht you know. I would expect her July weeks to be committed before Christmas."
                           value={y.notes}
                           onChange={(e) => setYacht(y.uid, { notes: e.target.value })}
+                        />
+                      </label>
+                      <label className={`${styles.field} ${styles.fieldFull}`}>
+                        <span className={styles.fieldLabel}>
+                          KEY FEATURES <span className={styles.fieldLabelHint}>— one per line</span>
+                        </span>
+                        <textarea
+                          rows={3}
+                          className={styles.textarea}
+                          placeholder="Auto-filled from Yachtfolio — one feature per line, editable"
+                          value={y.keyFeatures}
+                          onChange={(e) => editAutoField(y.uid, "keyFeatures", e.target.value)}
                         />
                       </label>
                       <label className={`${styles.field} ${styles.fieldFull}`}>

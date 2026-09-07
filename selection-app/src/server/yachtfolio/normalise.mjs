@@ -152,24 +152,23 @@ export function extractYachtFacts({ brochure, basic, reference, targetSeason }) 
   }
   if (!cruisingArea) missing.push("cruisingArea");
 
-  let weeklyRateEUR;
+  // Currency is reported per rate row (keyed by season); for the season we
+  // quote this is one currency per yacht. Carry it through as-is — never
+  // convert, never hide a non-EUR rate.
+  let weeklyRate;
+  let currency;
   let weeklyRateIsFrom = false;
   if (targetSeason) {
     const priceRow =
       brochure?.prices?.[String(targetSeason.id)]?.[0] ??
       basic?.rates?.find((r) => r.season_id === targetSeason.id);
     if (priceRow && priceRow.min_rate != null) {
-      if ((priceRow.currency ?? "EUR") === "EUR") {
-        weeklyRateEUR = priceRow.min_rate;
-        weeklyRateIsFrom = priceRow.max_rate != null && priceRow.max_rate !== priceRow.min_rate;
-      } else {
-        notes.push(
-          `rate for ${TARGET_SEASON.label} is in ${priceRow.currency}, not EUR — left blank until converted`
-        );
-      }
+      weeklyRate = priceRow.min_rate;
+      currency = (priceRow.currency ?? "EUR").toUpperCase();
+      weeklyRateIsFrom = priceRow.max_rate != null && priceRow.max_rate !== priceRow.min_rate;
     }
   }
-  if (weeklyRateEUR == null) missing.push(`weeklyRate (${TARGET_SEASON.label})`);
+  if (weeklyRate == null) missing.push(`weeklyRate (${TARGET_SEASON.label})`);
 
   const nullRateSeasons = [];
   for (const [seasonId, rows] of Object.entries(brochure?.prices ?? {})) {
@@ -202,7 +201,8 @@ export function extractYachtFacts({ brochure, basic, reference, targetSeason }) 
     staterooms,
     location,
     cruisingArea,
-    weeklyRateEUR,
+    currency,
+    weeklyRate,
     weeklyRateIsFrom,
     description,
     keyFeatures,

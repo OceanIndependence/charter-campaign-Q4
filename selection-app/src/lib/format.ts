@@ -1,25 +1,23 @@
 import type { Yacht } from "./types";
 
-/** House style: currency code, space, comma-grouped — "EUR 245,000" */
-export function fmtEUR(amount: number): string {
-  return "EUR " + Math.round(amount).toLocaleString("en-GB");
+/**
+ * House style for every currency: ISO code, space, comma-grouped amount, no
+ * symbol — "EUR 250,000", "USD 275,000", "GBP 210,000". Never €, $ or £.
+ */
+export function fmtMoney(currency: string | undefined, amount: number): string {
+  return `${(currency || "EUR").toUpperCase()} ${Math.round(amount).toLocaleString("en-GB")}`;
 }
 
-export function apaEUR(yacht: Yacht): number | undefined {
-  if (yacht.weeklyRateEUR == null) return undefined;
-  return Math.round((yacht.weeklyRateEUR * yacht.apaPct) / 100);
-}
-
-export function totalEUR(yacht: Yacht): number | undefined {
-  const apa = apaEUR(yacht);
-  if (yacht.weeklyRateEUR == null || apa == null) return undefined;
-  return yacht.weeklyRateEUR + apa;
-}
-
-/** "EUR 245,000", or "FROM EUR 245,000" when the season rate is a range */
+/** Weekly rate, "From EUR 250,000" when the season rate is a range. */
 export function fmtWeeklyRate(yacht: Yacht): string | undefined {
-  if (yacht.weeklyRateEUR == null) return undefined;
-  return (yacht.weeklyRateIsFrom ? "FROM " : "") + fmtEUR(yacht.weeklyRateEUR);
+  if (yacht.weeklyRate == null) return undefined;
+  return (yacht.weeklyRateIsFrom ? "From " : "") + fmtMoney(yacht.currency, yacht.weeklyRate);
+}
+
+/** Ring-card price, upper-case "FROM EUR 250,000". */
+export function fmtCardRate(yacht: Yacht): string | undefined {
+  if (yacht.weeklyRate == null) return undefined;
+  return (yacht.weeklyRateIsFrom ? "FROM " : "") + fmtMoney(yacht.currency, yacht.weeklyRate);
 }
 
 /** "47.00 metres" for the spec panel */

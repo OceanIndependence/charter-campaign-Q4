@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllSlugs, getPageConfig } from "@/lib/demo-config";
 import type { PageConfig } from "@/lib/types";
@@ -10,6 +11,11 @@ import { getPublishedPage } from "@/server/pages.mjs";
  * route revalidates the path on each new version).
  */
 export const dynamicParams = true;
+
+// Client selection pages are private links — never index them.
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 export function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }));
