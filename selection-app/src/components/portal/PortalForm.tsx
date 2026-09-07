@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { FleetCache, FleetDetail, FleetEntry, PortalDraft } from "@/lib/portal-types";
+import type { DraftYacht, FleetCache, FleetDetail, FleetEntry, FleetImages, PortalDraft } from "@/lib/portal-types";
 import { emptyDraftYacht } from "@/lib/portal-types";
 import FleetSelect from "./FleetSelect";
 import ImagePicker from "./ImagePicker";
@@ -76,6 +76,8 @@ function rateFromOptions(
 
 interface CardFetchState {
   fetching: boolean;
+  /** Facts have arrived; the gallery is still being prepared. */
+  preparingImages: boolean;
   error: string | null;
   warnings: string[];
   lastEntry: FleetEntry | null;
@@ -289,10 +291,48 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
 
   const setCard = useCallback((uid: string, patch: Partial<CardFetchState>) => {
     setCardState((s) => {
-      const base: CardFetchState = s[uid] ?? { fetching: false, error: null, warnings: [], lastEntry: null };
+      const base: CardFetchState = s[uid] ?? { fetching: false, preparingImages: false, error: null, warnings: [], lastEntry: null };
       return { ...s, [uid]: { ...base, ...patch } };
     });
   }, []);
+
+  const IMAGE_SLOT_KEYS = ["leadImageUrl", "interiorImageUrl", "exteriorImageUrl", "lifestyleImageUrl"] as const;
+
+  /**
+   * Second, slower half of a pick: the prepared gallery and default slot
+   * images. Slots the consultant has edited are left alone; with onlyEmpty
+   * (healing a draft saved before its images arrived) filled slots are too.
+   */
+  const loadImages = useCallback(
+    async (uid: string, yfId: number, seq: number, onlyEmpty = false) => {
+      try {
+        const res = await fetch(`/api/fleet/${yfId}/images`);
+        const body = await res.json().catch(() => null);
+        if (fetchSeq.current.get(uid) !== seq) return;
+        if (!res.ok) throw new Error(body?.error ?? "Yachtfolio did not return this yacht's images.");
+        const imgs: FleetImages = body;
+        const dirtyNow = dirtyFields.current.get(uid) ?? new Set<AutoField>();
+        const current = draftRef.current?.yachts.find((y) => y.uid === uid);
+        const patch: Partial<DraftYacht> = { gallery: imgs.gallery ?? [] };
+        for (const key of IMAGE_SLOT_KEYS) {
+          const keep = dirtyNow.has(key) || (onlyEmpty && (current?.[key] ?? "").trim() !== "");
+          if (!keep) patch[key] = imgs[key] ?? "";
+        }
+        setYacht(uid, patch);
+        setCardState((s) => {
+          const base = s[uid] ?? { fetching: false, preparingImages: false, error: null, warnings: [], lastEntry: null };
+          return { ...s, [uid]: { ...base, preparingImages: false, warnings: [...base.warnings, ...(imgs.warnings ?? [])] } };
+        });
+      } catch (err) {
+        if (fetchSeq.current.get(uid) !== seq) return;
+        setCard(uid, {
+          preparingImages: false,
+          error: err instanceof Error && err.message ? err.message : "Yachtfolio did not return this yacht's images.",
+        });
+      }
+    },
+    [setCard, setYacht]
+  );
 
   const pickYacht = useCallback(
     async (uid: string, entry: FleetEntry) => {
@@ -312,7 +352,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
       fetchSeq.current.set(uid, seq);
 
       setYacht(uid, { yfId: entry.id, name: entry.name.toUpperCase() });
-      setCard(uid, { fetching: true, error: null, warnings: [], lastEntry: entry });
+      setCard(uid, { fetching: true, preparingImages: false, error: null, warnings: [], lastEntry: entry });
       try {
         const res = await fetch(`/api/fleet/${entry.id}`);
         const body = await res.json().catch(() => null);
@@ -347,16 +387,11 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
           patch.weeklyRate = detail.weeklyRate != null ? String(detail.weeklyRate) : "";
           patch.weeklyRateIsFrom = detail.weeklyRateIsFrom;
         }
-        // The gallery itself is auto data — always refresh it on a pick so the
-        // picker shows the current library; the four slot selections below are
-        // dirty-tracked so a consultant's choices survive a re-fetch.
-        patch.gallery = detail.gallery ?? [];
-        apply("leadImageUrl", detail.leadImageUrl);
-        apply("interiorImageUrl", detail.interiorImageUrl);
-        apply("exteriorImageUrl", detail.exteriorImageUrl);
-        apply("lifestyleImageUrl", detail.lifestyleImageUrl);
+        // Facts first — the form fills now; the gallery follows in a second
+        // request while the card header says so.
         setYacht(uid, patch);
-        setCard(uid, { fetching: false, error: null, warnings: detail.warnings ?? [] });
+        setCard(uid, { fetching: false, preparingImages: true, error: null, warnings: detail.warnings ?? [] });
+        await loadImages(uid, entry.id, seq);
       } catch (err) {
         if (fetchSeq.current.get(uid) !== seq) return;
         setCard(uid, {
@@ -368,8 +403,24 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
         });
       }
     },
-    [setCard, setYacht]
+    [loadImages, setCard, setYacht]
   );
+
+  // Heal yachts saved before their images arrived (or from older drafts):
+  // fetch the gallery once the draft is loaded, filling only empty slots.
+  const healed = useRef(false);
+  useEffect(() => {
+    if (!draft || healed.current) return;
+    healed.current = true;
+    for (const y of draft.yachts) {
+      if (y.yfId != null && (!(y.gallery?.length) || !y.leadImageUrl.trim())) {
+        const seq = (fetchSeq.current.get(y.uid) ?? 0) + 1;
+        fetchSeq.current.set(y.uid, seq);
+        setCard(y.uid, { preparingImages: true });
+        void loadImages(y.uid, y.yfId, seq, true);
+      }
+    }
+  }, [draft, loadImages, setCard]);
 
   const addYacht = useCallback(() => {
     const uid = crypto.randomUUID();
@@ -588,6 +639,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
               const open = openIds.has(y.uid);
               const card = cardState[y.uid] ?? { fetching: false, error: null, warnings: [], lastEntry: null };
               const fetching = card.fetching;
+              const preparing = !fetching && card.preparingImages;
               const gone = y.yfId != null && fleet.length > 0 && !fleet.some((f) => f.id === y.yfId);
               const removedRecord = y.yfId != null && removedIds.has(y.yfId);
               return (
@@ -604,12 +656,13 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
                           </span>
                         </>
                       )}
-                      {fetching && (
+                      {(fetching || preparing) && (
                         <>
                           {" "}
                           <span className={styles.headerNote} aria-live="polite">
-                            Fetching {y.name.trim() ? y.name.trim().toUpperCase() : "this yacht"}
-                            &rsquo;s details and preparing images…
+                            {fetching ? "Fetching" : "Preparing"}{" "}
+                            {y.name.trim() ? y.name.trim().toUpperCase() : "this yacht"}
+                            &rsquo;s {fetching ? "details…" : "images…"}
                           </span>
                         </>
                       )}

@@ -27,21 +27,31 @@ import {
   pickSeason,
 } from "./yachtfolio/normalise.mjs";
 import { cropToSizes, selectGalleryImages } from "./yachtfolio/images.mjs";
-import { fileExists, fileUrl, getJson, putFile, putJson } from "./storage.mjs";
+import { getJson, listImageFiles, putFile, putJson } from "./storage.mjs";
 
 const FLEET_KEY = "yachtfolio/fleet.json";
 const REFERENCE_KEY = "yachtfolio/reference.json";
 const detailKey = (yfId) => `yachtfolio/details/${yfId}.json`;
+const imagesKey = (yfId) => `yachtfolio/images/${yfId}/manifest.json`;
 
 const FLEET_STALE_MS = 36 * 60 * 60 * 1000; // lazy re-sync if the cron hasn't run
 const DETAIL_FRESH_MS = 6 * 60 * 60 * 1000; // rates change; don't serve stale for long
 // Download the whole gallery (capped per category) so the consultant can pick
-// which image fills each page slot; the default slot assignment below takes
-// the first of each category, falling back to another category at random.
+// which image fills each page slot; the default slot assignment takes the
+// first of each category, falling back to another category at random.
 const GALLERY_MAX_PER_CATEGORY = 5;
-// Bump to invalidate cached detail JSON after a normalisation change — old
-// caches re-fetch.
-const DETAIL_SCHEMA_VERSION = 8;
+// Images are processed a few at a time with a short stagger — well inside
+// Yachtfolio's 800 calls per five minutes.
+const IMAGE_CONCURRENCY = 4;
+const IMAGE_START_DELAY_MS = 150;
+// Bump to invalidate cached facts / image manifests after a normalisation
+// change — old caches re-fetch.
+const DETAIL_SCHEMA_VERSION = 9;
+const IMAGES_SCHEMA_VERSION = 1;
+// The facts request fetches the brochure; the images request that follows a
+// moment later reuses it from here instead of calling Yachtfolio again.
+const BROCHURE_MEMO_MS = 5 * 60 * 1000;
+const brochureMemo = new Map();
 
 async function passkeyOrThrow() {
   const passkey = await loadPasskey([process.cwd()]);
@@ -177,10 +187,10 @@ async function getReference(passkey) {
 }
 
 /**
- * On-demand detail for one yacht: brochure + basic record, normalised to the
- * form's fields, with its images pulled through the crop pipeline into
- * storage (immutable keys — reprocessing is skipped when the same source
- * file was already done). Cached for a few hours.
+ * On-demand facts for one yacht: brochure + basic record, normalised to the
+ * form's fields — text and numbers only, so the form fills within a couple
+ * of seconds. Images are a separate, slower call (getYachtImages). Cached
+ * for a few hours.
  */
 export async function getYachtDetail(yfId, { forceRefresh = false, debug = false } = {}) {
   const cached = await readStoredJson(detailKey(yfId));
@@ -200,6 +210,7 @@ export async function getYachtDetail(yfId, { forceRefresh = false, debug = false
   const targetSeason = pickSeason(reference.seasons);
 
   const { json: brochure } = await fetchBrochure(passkey, yfId);
+  brochureMemo.set(yfId, { brochure, at: Date.now() });
   await sleep(REQUEST_DELAY_MS);
   let basic = null;
   try {
@@ -210,73 +221,6 @@ export async function getYachtDetail(yfId, { forceRefresh = false, debug = false
 
   const facts = extractYachtFacts({ brochure, basic, reference, targetSeason });
   const rateOptions = extractRateOptions({ brochure, basic, reference });
-
-  // Process only this yacht's images, only the slots the page needs.
-  const selected = selectGalleryImages(brochure?.galleries, GALLERY_MAX_PER_CATEGORY);
-  const files = [];
-  for (const { category, image, baseName } of selected) {
-    const keyBase = `yachtfolio/images/${yfId}/${baseName}-${image.id_file}`;
-    const keys = { large: `${keyBase}.jpg`, small: `${keyBase}-sm.jpg` };
-    try {
-      let urls;
-      if ((await fileExists(keys.large)) && (await fileExists(keys.small))) {
-        urls = { large: await fileUrl(keys.large), small: await fileUrl(keys.small) };
-      } else {
-        const res = await fetch(image.url);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const source = Buffer.from(await res.arrayBuffer());
-        const sizes = await cropToSizes(source);
-        urls = {};
-        for (const size of sizes) {
-          const key = size.suffix === "-sm" ? keys.small : keys.large;
-          const url = await putFile(key, size.buffer, "image/jpeg");
-          urls[size.suffix === "-sm" ? "small" : "large"] = url;
-        }
-        await sleep(REQUEST_DELAY_MS);
-      }
-      files.push({ id: image.id_file, category, url: urls.large, smallUrl: urls.small });
-    } catch (err) {
-      facts.notes.push(
-        `image ${redact(String(image.filename ?? image.id_file), passkey)} (${category}) failed: ` +
-          redact(String(err?.message ?? err), passkey)
-      );
-    }
-  }
-
-  // Default slot assignment. The lead is always the yacht's profile shot from
-  // Yachtfolio (the FULL gallery, else the first exterior) — never another
-  // category. Each other slot takes the first unused image of its own
-  // category; when Yachtfolio has none in that category, an image from the
-  // other categories is picked at random (unused first). The consultant can
-  // change any of these in the form's picker.
-  const byCategory = (cat) => files.filter((f) => f.category === cat).map((f) => f.url);
-  const full = byCategory("FULL");
-  const exterior = byCategory("EXTERIOR");
-  const lifestyle = byCategory("LIFESTYLE");
-  const interior = byCategory("INTERIOR");
-  const used = new Set();
-  const take = (url) => {
-    if (url) used.add(url);
-    return url ?? "";
-  };
-  const randomFrom = (urls) => (urls.length ? urls[Math.floor(Math.random() * urls.length)] : undefined);
-  const unused = (urls) => urls.filter((u) => !used.has(u));
-  // Own category first (an image not used in another slot), then an unused
-  // image from the other categories, then reuse an own image, then anything.
-  const pick = (own, others) =>
-    take(unused(own)[0] ?? randomFrom(unused(others)) ?? randomFrom(own) ?? randomFrom(others));
-  const leadImageUrl = take(full[0] ?? exterior[0]);
-  if (files.length && !leadImageUrl) {
-    facts.notes.push("no profile or exterior image in Yachtfolio — paste a lead image URL in the form.");
-  }
-  const interiorImageUrl = pick(interior, [...exterior, ...lifestyle]);
-  const exteriorImageUrl = pick(exterior, [...lifestyle, ...interior]);
-  const lifestyleImageUrl = pick(lifestyle, [...exterior, ...interior]);
-  if (files.length) {
-    for (const [cat, list] of [["interior", interior], ["exterior", exterior], ["lifestyle", lifestyle]]) {
-      if (!list.length) facts.notes.push(`no ${cat} images in Yachtfolio — another image was chosen for that slot; change it in the picker if needed.`);
-    }
-  }
 
   const detail = {
     yfId,
@@ -305,13 +249,8 @@ export async function getYachtDetail(yfId, { forceRefresh = false, debug = false
     rateSeason: "summer",
     rateTier: "low",
     rateOptions,
-    leadImageUrl,
-    interiorImageUrl,
-    exteriorImageUrl,
-    lifestyleImageUrl,
     description: facts.description ?? "",
     keyFeatures: facts.keyFeatures,
-    gallery: files,
     dataSource: facts.dataSource ?? null,
     missing: facts.missing,
     warnings: facts.notes,
@@ -333,4 +272,134 @@ export async function getYachtDetail(yfId, { forceRefresh = false, debug = false
     };
   }
   return detail;
+}
+
+/** Run fn over items with at most `limit` in flight; results keep item order. */
+async function mapLimit(items, limit, fn) {
+  const results = new Array(items.length);
+  let next = 0;
+  const workers = Array.from({ length: Math.min(limit, items.length) }, async () => {
+    while (next < items.length) {
+      const i = next++;
+      results[i] = await fn(items[i], i);
+    }
+  });
+  await Promise.all(workers);
+  return results;
+}
+
+async function brochureFor(passkey, yfId) {
+  const memo = brochureMemo.get(yfId);
+  if (memo && Date.now() - memo.at < BROCHURE_MEMO_MS) return memo.brochure;
+  const { json: brochure } = await fetchBrochure(passkey, yfId);
+  brochureMemo.set(yfId, { brochure, at: Date.now() });
+  return brochure;
+}
+
+/**
+ * The prepared gallery and default slot images for one yacht. Images are
+ * pulled through the crop pipeline into the public store under immutable
+ * keys; what already exists is found with one listing call and reused.
+ * Cached alongside the facts.
+ */
+export async function getYachtImages(yfId, { forceRefresh = false } = {}) {
+  const cached = await readStoredJson(imagesKey(yfId));
+  if (
+    !forceRefresh &&
+    cached &&
+    cached.schemaVersion === IMAGES_SCHEMA_VERSION &&
+    Date.now() - Date.parse(cached.fetchedAt ?? 0) < DETAIL_FRESH_MS
+  ) {
+    return cached;
+  }
+
+  const passkey = await passkeyOrThrow();
+  const brochure = await brochureFor(passkey, yfId);
+  const selected = selectGalleryImages(brochure?.galleries, GALLERY_MAX_PER_CATEGORY);
+  const notes = [];
+
+  const prefix = `yachtfolio/images/${yfId}/`;
+  const existing = new Map();
+  try {
+    for (const f of await listImageFiles(prefix)) existing.set(f.key, f.url);
+  } catch (err) {
+    console.warn(`[fleet] image listing failed for ${yfId}: ${String(err?.message ?? err)}`);
+  }
+
+  const processed = await mapLimit(selected, IMAGE_CONCURRENCY, async ({ category, image, baseName }, i) => {
+    const keyBase = `${prefix}${baseName}-${image.id_file}`;
+    const keys = { large: `${keyBase}.jpg`, small: `${keyBase}-sm.jpg` };
+    try {
+      if (existing.has(keys.large) && existing.has(keys.small)) {
+        return { id: image.id_file, category, url: existing.get(keys.large), smallUrl: existing.get(keys.small) };
+      }
+      await sleep(IMAGE_START_DELAY_MS * (i % IMAGE_CONCURRENCY));
+      const res = await fetch(image.url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const source = Buffer.from(await res.arrayBuffer());
+      const sizes = await cropToSizes(source);
+      const urls = {};
+      await Promise.all(
+        sizes.map(async (size) => {
+          const key = size.suffix === "-sm" ? keys.small : keys.large;
+          urls[size.suffix === "-sm" ? "small" : "large"] = await putFile(key, size.buffer, "image/jpeg");
+        })
+      );
+      return { id: image.id_file, category, url: urls.large, smallUrl: urls.small };
+    } catch (err) {
+      notes.push(
+        `image ${redact(String(image.filename ?? image.id_file), passkey)} (${category}) failed: ` +
+          redact(String(err?.message ?? err), passkey)
+      );
+      return null;
+    }
+  });
+  const files = processed.filter(Boolean);
+
+  // Default slot assignment. The lead is always the yacht's profile shot from
+  // Yachtfolio (the FULL gallery, else the first exterior) — never another
+  // category. Each other slot takes the first unused image of its own
+  // category; when Yachtfolio has none in that category, an image from the
+  // other categories is picked at random (unused first). The consultant can
+  // change any of these in the form's picker.
+  const byCategory = (cat) => files.filter((f) => f.category === cat).map((f) => f.url);
+  const full = byCategory("FULL");
+  const exterior = byCategory("EXTERIOR");
+  const lifestyle = byCategory("LIFESTYLE");
+  const interior = byCategory("INTERIOR");
+  const used = new Set();
+  const take = (url) => {
+    if (url) used.add(url);
+    return url ?? "";
+  };
+  const randomFrom = (urls) => (urls.length ? urls[Math.floor(Math.random() * urls.length)] : undefined);
+  const unused = (urls) => urls.filter((u) => !used.has(u));
+  const pick = (own, others) =>
+    take(unused(own)[0] ?? randomFrom(unused(others)) ?? randomFrom(own) ?? randomFrom(others));
+  const leadImageUrl = take(full[0] ?? exterior[0]);
+  if (files.length && !leadImageUrl) {
+    notes.push("no profile or exterior image in Yachtfolio — paste a lead image URL in the form.");
+  }
+  const interiorImageUrl = pick(interior, [...exterior, ...lifestyle]);
+  const exteriorImageUrl = pick(exterior, [...lifestyle, ...interior]);
+  const lifestyleImageUrl = pick(lifestyle, [...exterior, ...interior]);
+  if (files.length) {
+    for (const [cat, list] of [["interior", interior], ["exterior", exterior], ["lifestyle", lifestyle]]) {
+      if (!list.length) notes.push(`no ${cat} images in Yachtfolio — another image was chosen for that slot; change it in the picker if needed.`);
+    }
+  }
+
+  const result = {
+    yfId,
+    schemaVersion: IMAGES_SCHEMA_VERSION,
+    fetchedAt: new Date().toISOString(),
+    gallery: files,
+    leadImageUrl,
+    interiorImageUrl,
+    exteriorImageUrl,
+    lifestyleImageUrl,
+    warnings: notes,
+  };
+  await writeStoredJson(imagesKey(yfId), result);
+  return result;
 }

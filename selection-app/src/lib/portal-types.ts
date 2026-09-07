@@ -171,7 +171,19 @@ export interface FleetCache {
   removed: Record<string, { name: string; removedAt: string }>;
 }
 
-/** Response of GET /api/fleet/:yfId — auto-fill values for the form. */
+/** Response of GET /api/fleet/:yfId/images — the gallery and default slots. */
+export interface FleetImages {
+  yfId: number;
+  fetchedAt: string;
+  gallery: GalleryImage[];
+  leadImageUrl: string;
+  interiorImageUrl: string;
+  exteriorImageUrl: string;
+  lifestyleImageUrl: string;
+  warnings: string[];
+}
+
+/** Response of GET /api/fleet/:yfId — auto-fill facts for the form (no images). */
 export interface FleetDetail {
   yfId: number;
   fetchedAt: string;
@@ -190,13 +202,8 @@ export interface FleetDetail {
   rateSeason: "summer" | "winter";
   rateTier: "low" | "high";
   rateOptions: RateOptions;
-  leadImageUrl: string;
-  interiorImageUrl: string;
-  exteriorImageUrl: string;
-  lifestyleImageUrl: string;
   description: string;
   keyFeatures: string[];
-  gallery: GalleryImage[];
   dataSource: string | null;
   missing: string[];
   warnings: string[];
