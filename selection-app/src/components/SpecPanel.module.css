@@ -171,7 +171,7 @@
 .featureNum {
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: 13px;
+  font-size: 15px;
   letter-spacing: 0.04em;
   color: var(--mint);
   flex: 0 0 auto;

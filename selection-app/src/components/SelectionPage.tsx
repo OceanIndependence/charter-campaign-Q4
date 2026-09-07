@@ -122,7 +122,6 @@ export default function SelectionPage({ config }: { config: PageConfig }) {
           position={shown}
           count={n}
           fading={fading}
-          consultantName={config.consultant.name}
           onPrev={() => nav(-1)}
           onNext={() => nav(1)}
         />
