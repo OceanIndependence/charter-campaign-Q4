@@ -55,6 +55,23 @@ function computePrice(y: { weeklyRate: string; apaPct: string; vatPct: string })
 const fmtMoneyForm = (currency: string, amount: number) =>
   `${(currency || "EUR").toUpperCase()} ${Math.round(amount).toLocaleString("en-GB")}`;
 
+/** Resolve the weekly rate from the Yachtfolio rate matrix for a season/tier. */
+function rateFromOptions(
+  options: import("@/lib/portal-types").RateOptions | undefined,
+  season: "summer" | "winter",
+  tier: "low" | "high"
+): { weeklyRate: string; currency?: string; weeklyRateIsFrom: boolean } | null {
+  const o = options?.[season];
+  if (!o) return null;
+  const val = tier === "high" ? o.high : o.low;
+  const isFrom = tier === "low" && o.high != null && o.low != null && o.high !== o.low;
+  return {
+    weeklyRate: val != null ? String(val) : "",
+    currency: o.currency || undefined,
+    weeklyRateIsFrom: val != null ? isFrom : false,
+  };
+}
+
 interface CardFetchState {
   fetching: boolean;
   error: string | null;
@@ -98,6 +115,8 @@ export default function PortalForm() {
         const body = await res.json();
         const next: PortalDraft = body?.draft ?? null;
         if (!next) return;
+        next.subHeadline ??= "";
+        next.welcome ??= "";
         // Ensure each yacht has a stable client key for React lists; seed one
         // empty entry so a fresh draft opens with a card ready to fill.
         next.yachts = (next.yachts ?? []).map((y) => ({ ...y, uid: y.uid || crypto.randomUUID() }));
@@ -207,6 +226,34 @@ export default function PortalForm() {
     [setYacht]
   );
 
+  /**
+   * Changing the season or rate tier re-fills the weekly rate from the stored
+   * Yachtfolio matrix and makes it authoritative again (clears the edited
+   * flag) — the rate stays editable afterwards.
+   */
+  const setRateSelector = useCallback(
+    (uid: string, key: "rateSeason" | "rateTier", value: string) => {
+      update((d) => ({
+        ...d,
+        yachts: d.yachts.map((y) => {
+          if (y.uid !== uid) return y;
+          const next = { ...y, [key]: value } as typeof y;
+          const r = rateFromOptions(next.rateOptions, next.rateSeason, next.rateTier);
+          if (r) {
+            next.weeklyRate = r.weeklyRate;
+            next.weeklyRateIsFrom = r.weeklyRateIsFrom;
+            if (r.currency) next.currency = r.currency;
+            const dirty = dirtyFields.current.get(uid);
+            dirty?.delete("weeklyRate");
+            dirty?.delete("currency");
+          }
+          return next;
+        }),
+      }));
+    },
+    [update]
+  );
+
   const setCard = useCallback((uid: string, patch: Partial<CardFetchState>) => {
     setCardState((s) => {
       const base: CardFetchState = s[uid] ?? { fetching: false, error: null, warnings: [], lastEntry: null };
@@ -258,6 +305,10 @@ export default function PortalForm() {
         apply("cruisingArea", detail.cruisingArea);
         apply("currency", detail.currency || "EUR");
         apply("keyFeatures", (detail.keyFeatures ?? []).join("\n"));
+        // Rate matrix + selection reset to the default (summer / low) on a pick.
+        patch.rateOptions = detail.rateOptions;
+        patch.rateSeason = detail.rateSeason ?? "summer";
+        patch.rateTier = detail.rateTier ?? "low";
         if (!dirtyNow.has("weeklyRate")) {
           patch.weeklyRate = detail.weeklyRate != null ? String(detail.weeklyRate) : "";
           patch.weeklyRateIsFrom = detail.weeklyRateIsFrom;
@@ -425,6 +476,18 @@ export default function PortalForm() {
             </label>
             <label className={`${styles.field} ${styles.fieldFull}`}>
               <span className={styles.fieldLabel}>
+                SUB-HEADLINE <span className={styles.fieldLabelHint}>— optional, above the title</span>
+              </span>
+              <input
+                type="text"
+                className={styles.input}
+                placeholder={`Defaults to “${draft.yachts.length === 1 ? "ONE YACHT" : "N YACHTS"}, HELD FOR YOUR REVIEW”.`}
+                value={draft.subHeadline}
+                onChange={(e) => update((d) => ({ ...d, subHeadline: e.target.value }))}
+              />
+            </label>
+            <label className={`${styles.field} ${styles.fieldFull}`}>
+              <span className={styles.fieldLabel}>
                 WELCOME GREETING <span className={styles.fieldLabelHint}>— optional</span>
               </span>
               <textarea
@@ -582,6 +645,42 @@ export default function PortalForm() {
                           onChange={(e) => setYacht(y.uid, { availability: e.target.value })}
                         />
                       </label>
+                      {y.rateOptions && (
+                        <>
+                          <label className={styles.field}>
+                            <span className={styles.fieldLabel}>RATE SEASON</span>
+                            <select
+                              className={styles.input}
+                              value={y.rateSeason}
+                              onChange={(e) => setRateSelector(y.uid, "rateSeason", e.target.value)}
+                            >
+                              <option value="summer">
+                                Summer 2027
+                                {y.rateOptions.summer.low == null && y.rateOptions.summer.high == null
+                                  ? " — no rate"
+                                  : ""}
+                              </option>
+                              <option value="winter">
+                                Winter 2027
+                                {y.rateOptions.winter.low == null && y.rateOptions.winter.high == null
+                                  ? " — no rate"
+                                  : ""}
+                              </option>
+                            </select>
+                          </label>
+                          <label className={styles.field}>
+                            <span className={styles.fieldLabel}>RATE</span>
+                            <select
+                              className={styles.input}
+                              value={y.rateTier}
+                              onChange={(e) => setRateSelector(y.uid, "rateTier", e.target.value)}
+                            >
+                              <option value="low">Low rate</option>
+                              <option value="high">High rate</option>
+                            </select>
+                          </label>
+                        </>
+                      )}
                       <label className={styles.field}>
                         <span className={styles.fieldLabel}>WEEKLY RATE</span>
                         <div className={styles.rateRow}>

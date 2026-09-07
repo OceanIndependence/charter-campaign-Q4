@@ -114,13 +114,17 @@ export default function SpecPanel({
       )}
 
       {yacht.keyFeatures && yacht.keyFeatures.length > 0 && (
-        <ul className={styles.features}>
-          {yacht.keyFeatures.map((f, i) => (
-            <li key={i} className={styles.feature}>
-              {f}
-            </li>
-          ))}
-        </ul>
+        <div className={styles.highlights}>
+          <div className={styles.highlightsHeading}>HIGHLIGHTS</div>
+          <ol className={styles.features}>
+            {yacht.keyFeatures.map((f, i) => (
+              <li key={i} className={styles.feature}>
+                <span className={styles.featureNum}>{String(i + 1).padStart(2, "0")}</span>
+                <span className={styles.featureText}>{f}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
       )}
 
       {yacht.notes && (

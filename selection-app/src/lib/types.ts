@@ -81,6 +81,8 @@ export interface PageConfig {
   season: string;
   region: string;
   headline: string;
+  /** Cover eyebrow; falls back to "{N} YACHT(S), HELD FOR YOUR REVIEW" */
+  subHeadline?: string;
   /** Optional consultant welcome; falls back to a generated line on the cover */
   welcome?: string;
   /** Up to 10 shortlisted yachts */
