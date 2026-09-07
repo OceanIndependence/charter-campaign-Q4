@@ -593,3 +593,173 @@
   letter-spacing: 0.08em;
   color: #8a5a2b;
 }
+
+/* --------------------------------------------------------- image picker */
+
+.pickerGroup {
+  display: grid;
+  gap: 18px;
+}
+
+.slotBlock {
+  display: grid;
+  gap: 8px;
+}
+
+.thumbStrip {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+}
+
+.thumb {
+  position: relative;
+  flex: 0 0 auto;
+  width: 104px;
+  height: 65px;
+  border: 1px solid #d8d8d6;
+  background: #f2f2f0;
+}
+
+.thumbSelected {
+  border: 2px solid #1d1d1d;
+}
+
+.thumbPick {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.thumbPick img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.thumbTag {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: 2px 5px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #ffffff;
+  font-size: 8px;
+  letter-spacing: 0.16em;
+  pointer-events: none;
+}
+
+.thumbCheck {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #1d1d1d;
+  color: #ffffff;
+  font-size: 11px;
+  pointer-events: none;
+}
+
+.thumbExpand {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.thumbExpand:hover {
+  background: rgba(0, 0, 0, 0.82);
+}
+
+.pickerEmpty {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 300;
+  color: #99999a;
+}
+
+.slotCustom {
+  font-size: 11px;
+}
+
+.slotCustom summary {
+  cursor: pointer;
+  list-style: none;
+  letter-spacing: 0.08em;
+  color: #77787a;
+}
+
+.slotCustom summary::-webkit-details-marker {
+  display: none;
+}
+
+.slotCustom summary::before {
+  content: "+ ";
+}
+
+.slotCustom[open] summary::before {
+  content: "\2013 ";
+}
+
+.slotCustom .input {
+  margin-top: 8px;
+}
+
+/* ------------------------------------------------------------- lightbox */
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 40px;
+  background: rgba(20, 20, 20, 0.82);
+  cursor: zoom-out;
+}
+
+.lightboxImg {
+  max-width: 92vw;
+  max-height: 88vh;
+  object-fit: contain;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+  cursor: default;
+}
+
+.lightboxClose {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.lightboxClose:hover {
+  background: rgba(255, 255, 255, 0.24);
+}

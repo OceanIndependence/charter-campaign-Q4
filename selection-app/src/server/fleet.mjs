@@ -34,10 +34,13 @@ const detailKey = (yfId) => `yachtfolio/details/${yfId}.json`;
 
 const FLEET_STALE_MS = 36 * 60 * 60 * 1000; // lazy re-sync if the cron hasn't run
 const DETAIL_FRESH_MS = 6 * 60 * 60 * 1000; // rates change; don't serve stale for long
-const IMAGES_PER_CATEGORY = 2; // lead/deck from EXTERIOR, watertoys from LIFESTYLE, interior from INTERIOR
+// Download the whole gallery (capped per category) so the consultant can pick
+// which image fills each page slot; the default slot assignment below still
+// uses the first one or two of each category.
+const GALLERY_MAX_PER_CATEGORY = 8;
 // Bump to invalidate cached detail JSON and versioned asset keys after a
 // normalisation change (e.g. brochure PDF validation) — old caches re-fetch.
-const DETAIL_SCHEMA_VERSION = 2;
+const DETAIL_SCHEMA_VERSION = 3;
 
 async function passkeyOrThrow() {
   const passkey = await loadPasskey([process.cwd()]);
@@ -214,7 +217,17 @@ export async function getYachtDetail(yfId, { forceRefresh = false } = {}) {
   // blank for the consultant to paste a link, with a note in the report.
   let brochureUrl = "";
   const brochureFile = extractBrochureFile(brochure);
-  if (brochureFile) {
+  if (brochureFile && !brochureFile.url) {
+    // No PDF-typed entry in the gallery — some yachts hold only a JPEG cover
+    // in the PDF slot. Leave the link blank and say so, rather than serving a
+    // non-PDF that the client viewer would reject.
+    if (brochureFile.pdfEntries > 0) {
+      facts.notes.push(
+        `no PDF brochure — Yachtfolio's PDF gallery holds ${brochureFile.pdfEntries} ` +
+          `non-PDF file(s) (e.g. an image cover), not a brochure PDF.`
+      );
+    }
+  } else if (brochureFile?.url) {
     const key = `yachtfolio/brochures/${yfId}/v${DETAIL_SCHEMA_VERSION}-${brochureFile.id_file}.pdf`;
     try {
       if (await fileExists(key)) {
@@ -244,7 +257,7 @@ export async function getYachtDetail(yfId, { forceRefresh = false } = {}) {
   }
 
   // Process only this yacht's images, only the slots the page needs.
-  const selected = selectGalleryImages(brochure?.galleries, IMAGES_PER_CATEGORY);
+  const selected = selectGalleryImages(brochure?.galleries, GALLERY_MAX_PER_CATEGORY);
   const files = [];
   for (const { category, image, baseName } of selected) {
     const keyBase = `yachtfolio/images/${yfId}/${baseName}-${image.id_file}`;
@@ -266,7 +279,7 @@ export async function getYachtDetail(yfId, { forceRefresh = false } = {}) {
         }
         await sleep(REQUEST_DELAY_MS);
       }
-      files.push({ category, url: urls.large, smallUrl: urls.small });
+      files.push({ id: image.id_file, category, url: urls.large, smallUrl: urls.small });
     } catch (err) {
       facts.notes.push(
         `image ${redact(String(image.filename ?? image.id_file), passkey)} (${category}) failed: ` +
