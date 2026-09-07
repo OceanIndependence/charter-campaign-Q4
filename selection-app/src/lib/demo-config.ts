@@ -13,21 +13,41 @@ const DEMO_THUMBS = {
   watertoys: "/assets/demo-lifestyle.jpg",
 };
 
+/**
+ * Demo builder: fills image defaults and computes the frozen price
+ * components (APA at the given percentage, TOTAL = rate + APA; VAT stays TBC)
+ * exactly as the publish mapping does, so demo pages render via the same
+ * stored-amount path as real ones.
+ */
 function demoYacht(
   y: Omit<
     Yacht,
-    "apaPct" | "leadImageUrl" | "interiorImageUrl" | "deckImageUrl" | "watertoysImageUrl" | "brochureUrl"
+    | "apaAmount"
+    | "vatAmount"
+    | "totalAmount"
+    | "leadImageUrl"
+    | "interiorImageUrl"
+    | "deckImageUrl"
+    | "watertoysImageUrl"
+    | "brochureUrl"
   > &
     Partial<Pick<Yacht, "interiorImageUrl" | "deckImageUrl" | "watertoysImageUrl">>
 ): Yacht {
+  const currency = y.currency ?? "EUR";
+  const apaPct = y.apaPct ?? 35;
+  const apaAmount = y.weeklyRate != null ? Math.round((y.weeklyRate * apaPct) / 100) : undefined;
+  const totalAmount = y.weeklyRate != null ? y.weeklyRate + (apaAmount ?? 0) : undefined;
   return {
-    apaPct: 35,
     leadImageUrl: `/assets/drops/ys-${y.id}-lead.webp`,
     interiorImageUrl: DEMO_THUMBS.interior,
     deckImageUrl: DEMO_THUMBS.deck,
     watertoysImageUrl: DEMO_THUMBS.watertoys,
     brochureUrl: "#",
     ...y,
+    currency,
+    apaPct,
+    ...(apaAmount != null ? { apaAmount } : {}),
+    ...(totalAmount != null ? { totalAmount } : {}),
   };
 }
 
@@ -40,10 +60,9 @@ const yachts: Yacht[] = [
     yearRefit: "2019 / 2024",
     guests: 12,
     staterooms: { count: 6, breakdown: "5 double, 1 twin" },
-    location: "Naples, Italy",
     cruisingArea: "AMALFI COAST",
     availability: "July on request, August open",
-    weeklyRateEUR: 245000,
+    weeklyRate: 245000,
     notes: "The yacht you know. I would expect her July weeks to be committed before Christmas.",
     interiorImageUrl: "/assets/drops/ys-serenity-t1.webp",
     deckImageUrl: "/assets/drops/ys-serenity-t2.webp",
@@ -57,10 +76,9 @@ const yachts: Yacht[] = [
     yearRefit: "2023",
     guests: 12,
     staterooms: { count: 6, breakdown: "5 double, 1 twin" },
-    location: "Bodrum, Turkey",
     cruisingArea: "TURKISH RIVIERA",
     availability: "Open for summer 2027",
-    weeklyRateEUR: 334800,
+    weeklyRate: 334800,
     notes: "Worth stretching for — a wellness-focused flagship with a vast beach club.",
     interiorImageUrl: "/assets/drops/ys-eternal-spark-t1.webp",
     deckImageUrl: "/assets/drops/ys-eternal-spark-t2.webp",
@@ -74,10 +92,9 @@ const yachts: Yacht[] = [
     yearRefit: "2024",
     guests: 10,
     staterooms: { count: 5, breakdown: "4 double, 1 twin" },
-    location: "Cannes, France",
     cruisingArea: "FRENCH RIVIERA",
     availability: "Open except the second week of August",
-    weeklyRateEUR: 130000,
+    weeklyRate: 130000,
     notes: "A sleek 2024 delivery, ideal if you fancy coastal hopping at pace.",
   }),
   demoYacht({
@@ -88,10 +105,9 @@ const yachts: Yacht[] = [
     yearRefit: "2018 / 2023",
     guests: 10,
     staterooms: { count: 5, breakdown: "3 double, 2 twin" },
-    location: "Athens, Greece",
     cruisingArea: "SARONIC & CYCLADES",
     availability: "Open for summer 2027",
-    weeklyRateEUR: 79000,
+    weeklyRate: 79000,
     notes: "Effortless and warm, with a devoted crew — my clients’ family favourite.",
   }),
   demoYacht({
@@ -102,10 +118,9 @@ const yachts: Yacht[] = [
     yearRefit: "2021",
     guests: 12,
     staterooms: { count: 6, breakdown: "4 double, 2 twin" },
-    location: "Palma, Spain",
     cruisingArea: "THE BALEARICS",
     availability: "Open for summer 2027",
-    weeklyRateEUR: 195000,
+    weeklyRate: 195000,
     notes: "A proven Balearics performer — her crew know every cala worth anchoring in.",
   }),
   demoYacht({
@@ -116,10 +131,9 @@ const yachts: Yacht[] = [
     yearRefit: "2017 / 2025",
     guests: 11,
     staterooms: { count: 5, breakdown: "4 double, 1 convertible" },
-    location: "Split, Croatia",
     cruisingArea: "THE ADRIATIC",
     availability: "Open except the final week of July",
-    weeklyRateEUR: 120000,
+    weeklyRate: 120000,
     notes: "Fresh from her 2025 refit — the Adriatic option if you fancy somewhere new.",
   }),
   demoYacht({
@@ -130,10 +144,9 @@ const yachts: Yacht[] = [
     yearRefit: "2020",
     guests: 10,
     staterooms: { count: 5, breakdown: "3 double, 2 twin" },
-    location: "Corfu, Greece",
     cruisingArea: "IONIAN ISLANDS",
     availability: "Open for summer 2027",
-    weeklyRateEUR: 105000,
+    weeklyRate: 105000,
     notes: "The Ionian at an easy pace — quiet anchorages and long lunches.",
   }),
   demoYacht({
@@ -144,10 +157,9 @@ const yachts: Yacht[] = [
     yearRefit: "2019",
     guests: 8,
     staterooms: { count: 4, breakdown: "2 double, 2 twin" },
-    location: "Saint-Tropez, France",
     cruisingArea: "FRENCH RIVIERA",
     availability: "July on request",
-    weeklyRateEUR: 88000,
+    weeklyRate: 88000,
     notes: "Compact, quick and glamorous — made for the Riviera’s short hops.",
   }),
   demoYacht({
@@ -158,10 +170,9 @@ const yachts: Yacht[] = [
     yearRefit: "2022",
     guests: 8,
     staterooms: { count: 4, breakdown: "3 double, 1 twin" },
-    location: "Olbia, Sardinia",
     cruisingArea: "SARDINIA & CORSICA",
     availability: "Open for summer 2027",
-    weeklyRateEUR: 92000,
+    weeklyRate: 92000,
     notes: "A young boat with an easy charm — the Costa Smeralda suits her.",
   }),
   demoYacht({
@@ -172,10 +183,9 @@ const yachts: Yacht[] = [
     yearRefit: "2016 / 2024",
     guests: 12,
     staterooms: { count: 6, breakdown: "5 double, 1 twin" },
-    location: "Mykonos, Greece",
     cruisingArea: "THE CYCLADES",
     availability: "Open for summer 2027",
-    weeklyRateEUR: 150000,
+    weeklyRate: 150000,
     notes: "The Cyclades done properly — she carries every watertoy your family could ask for.",
   }),
 ];

@@ -85,8 +85,8 @@ async function main() {
         lines.push(`- Operating areas (${detail.targetSeason}): ${detail.cruisingArea || "missing"}`);
         lines.push(
           `- Weekly rate (${detail.targetSeason}): ${
-            detail.weeklyRateEUR != null
-              ? `EUR ${Math.round(detail.weeklyRateEUR).toLocaleString("en-GB")}${detail.weeklyRateIsFrom ? " (from — season rate is a range)" : ""}`
+            detail.weeklyRate != null
+              ? `${detail.currency} ${Math.round(detail.weeklyRate).toLocaleString("en-GB")}${detail.weeklyRateIsFrom ? " (from — season rate is a range)" : ""}`
               : "missing"
           }`
         );

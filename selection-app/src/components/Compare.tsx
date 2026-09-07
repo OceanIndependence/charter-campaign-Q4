@@ -1,5 +1,5 @@
 import type { Yacht } from "@/lib/types";
-import { apaEUR, fmtEUR, fmtLength, fmtStaterooms, fmtWeeklyRate, totalEUR } from "@/lib/format";
+import { fmtLength, fmtMoney, fmtStaterooms, fmtWeeklyRate } from "@/lib/format";
 import styles from "./Compare.module.css";
 
 export function CompareBar({
@@ -38,22 +38,29 @@ export function CompareOverlay({ yachts, onClose }: { yachts: Yacht[]; onClose: 
       ["YEAR / REFIT", (y) => y.yearRefit],
       ["GUESTS", (y) => (y.guests != null ? String(y.guests) : undefined)],
       ["STATEROOMS", fmtStaterooms],
-      ["LOCATION", (y) => y.location],
+      ["CRUISING AREA", (y) => y.cruisingArea],
       ["AVAILABILITY", (y) => y.availability],
       ["WEEKLY RATE", fmtWeeklyRate],
       [
-        yachts.every((y) => y.apaPct === yachts[0].apaPct) ? `APA (${yachts[0].apaPct}%)` : "APA",
-        (y) => {
-          const apa = apaEUR(y);
-          return apa != null ? fmtEUR(apa) : undefined;
-        },
+        "VAT",
+        (y) =>
+          y.vatAmount != null && y.vatPct != null
+            ? `${y.weeklyRateIsFrom ? "from " : ""}${fmtMoney(y.currency, y.vatAmount)} (${y.vatPct}%)`
+            : undefined,
+      ],
+      [
+        "APA",
+        (y) =>
+          y.apaAmount != null && y.apaPct != null
+            ? `${y.weeklyRateIsFrom ? "from " : ""}${fmtMoney(y.currency, y.apaAmount)} (${y.apaPct}%)`
+            : undefined,
       ],
       [
         "TOTAL",
-        (y) => {
-          const total = totalEUR(y);
-          return total != null ? fmtEUR(total) : undefined;
-        },
+        (y) =>
+          y.totalAmount != null
+            ? `${y.weeklyRateIsFrom ? "from " : ""}${fmtMoney(y.currency, y.totalAmount)}`
+            : undefined,
       ],
     ] as Array<[string, (y: Yacht) => string | undefined]>
   ).filter(([, value]) => yachts.some((y) => value(y)));

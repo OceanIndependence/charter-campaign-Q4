@@ -26,14 +26,23 @@ export interface Yacht {
   yearRefit?: string;
   guests?: number;
   staterooms?: Staterooms;
-  location?: string;
   cruisingArea?: string;
   availability?: string;
-  weeklyRateEUR?: number;
+  /** ISO currency code for this yacht's rate (EUR, USD, GBP, …) */
+  currency?: string;
+  weeklyRate?: number;
   /** True when the Yachtfolio season rate is a range — render as "from" */
   weeklyRateIsFrom?: boolean;
-  /** APA percentage of the charter fee; default 35 */
-  apaPct: number;
+  /**
+   * Price components, all in `currency` and computed at publish time so the
+   * published page never recalculates. A component is present only when the
+   * consultant supplied its input; missing components hide their row.
+   */
+  apaPct?: number;
+  apaAmount?: number;
+  vatPct?: number;
+  vatAmount?: number;
+  totalAmount?: number;
   /** Consultant's personal note, rendered signed with the consultant name */
   notes?: string;
   /** All yacht imagery is 16:10, source 2000×1250 (Yachtfolio, cropped at build time) */
@@ -72,6 +81,8 @@ export interface PageConfig {
   season: string;
   region: string;
   headline: string;
+  /** Optional consultant welcome; falls back to a generated line on the cover */
+  welcome?: string;
   /** Up to 10 shortlisted yachts */
   yachts: Yacht[];
   sections: PageSections;

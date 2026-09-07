@@ -316,6 +316,61 @@
   color: #8a5a2b;
 }
 
+.signOutBtn {
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  font-weight: 500;
+  color: #555759;
+  background: none;
+  border: 1px solid #c9c9c7;
+  padding: 7px 12px 7px calc(12px + 0.24em);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.signOutBtn:hover {
+  border-color: #1d1d1d;
+  color: #1d1d1d;
+}
+
+.rateRow {
+  display: flex;
+  gap: 8px;
+}
+
+.currencySelect {
+  border: 1px solid #d8d8d6;
+  background: #ffffff;
+  padding: 11px 10px;
+  font-size: 13px;
+  font-weight: 300;
+  color: #1d1d1d;
+  border-radius: 0;
+  font-family: inherit;
+  flex: 0 0 auto;
+}
+
+.currencySelect:focus {
+  outline: none;
+  border-color: #1d1d1d;
+}
+
+.priceReadout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: #555759;
+  border-top: 1px solid #ececea;
+  padding-top: 14px;
+}
+
+.priceTotal {
+  color: #1d1d1d;
+  font-weight: 500;
+}
+
 .retryBtn {
   font-size: 9px;
   letter-spacing: 0.24em;

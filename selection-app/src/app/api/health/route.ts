@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fleetDiagnostics, getFleet } from "@/server/fleet.mjs";
-import { requirePortalAuth } from "@/server/portal-auth";
+import { requirePortalSession } from "@/server/auth";
+import { authProviderInfo } from "@/server/auth";
 import { storageMode } from "@/server/storage.mjs";
 
 export const runtime = "nodejs";
@@ -13,8 +14,8 @@ export const maxDuration = 60;
  * whether the fleet cache can be served right now.
  */
 export async function GET(request: NextRequest) {
-  const denied = requirePortalAuth(request);
-  if (denied) return denied;
+  const session = requirePortalSession(request);
+  if (!session.ok) return session.response;
 
   const imagesConfigured = Boolean(
     process.env.YFIMAGES_READ_WRITE_TOKEN || process.env.BLOB_READ_WRITE_TOKEN
@@ -25,6 +26,7 @@ export async function GET(request: NextRequest) {
 
   const checks: Record<string, unknown> = {
     storage: storageMode(),
+    auth: authProviderInfo(),
     imagesStoreConfigured: imagesConfigured,
     dataStoreConfigured: dataConfigured,
     cronSecretConfigured: Boolean(process.env.CRON_SECRET),

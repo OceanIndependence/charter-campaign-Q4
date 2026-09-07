@@ -1,5 +1,5 @@
 import type { Yacht } from "@/lib/types";
-import { apaEUR, fmtEUR, fmtLength, fmtStaterooms, fmtWeeklyRate, totalEUR } from "@/lib/format";
+import { fmtLength, fmtMoney, fmtStaterooms, fmtWeeklyRate } from "@/lib/format";
 import { SmallChevronIcon } from "./icons";
 import styles from "./SpecPanel.module.css";
 
@@ -29,13 +29,15 @@ export default function SpecPanel({
       ["YEAR / REFIT", yacht.yearRefit],
       ["GUESTS", yacht.guests != null ? String(yacht.guests) : undefined],
       ["STATEROOMS", fmtStaterooms(yacht)],
-      ["LOCATION", yacht.location],
+      ["CRUISING AREA", yacht.cruisingArea],
       ["AVAILABILITY", yacht.availability],
     ] as Array<[string, string | undefined]>
   ).filter((row): row is [string, string] => Boolean(row[1]));
 
-  const apa = apaEUR(yacht);
-  const total = totalEUR(yacht);
+  // Price components are precomputed and frozen at publish; render as stored.
+  const cur = yacht.currency;
+  const hasVat = yacht.vatAmount != null && yacht.vatPct != null;
+  const fromPrefix = yacht.weeklyRateIsFrom ? "from " : "";
 
   return (
     <div id="ys-specs" className={styles.panel} style={{ opacity: fading ? 0 : 1 }}>
@@ -78,29 +80,47 @@ export default function SpecPanel({
         ))}
       </div>
 
-      {yacht.weeklyRateEUR != null && (
+      {yacht.weeklyRate != null && (
         <div className={styles.priceBlock}>
           <div className={styles.priceRow}>
             <span className={styles.specLabel}>WEEKLY RATE</span>
             <span className={styles.rateValue}>{fmtWeeklyRate(yacht)}</span>
           </div>
           <div className={styles.priceRow}>
-            <span className={styles.specLabel}>VAT</span>
-            <span className={styles.dimValue}>TBC</span>
+            <span className={styles.specLabel}>VAT{hasVat ? ` (${yacht.vatPct}%)` : ""}</span>
+            <span className={styles.dimValue}>
+              {hasVat ? `${fromPrefix}${fmtMoney(cur, yacht.vatAmount as number)}` : "TBC"}
+            </span>
           </div>
-          {apa != null && (
+          {yacht.apaAmount != null && yacht.apaPct != null && (
             <div className={styles.priceRow}>
               <span className={styles.specLabel}>APA ({yacht.apaPct}%)</span>
-              <span className={styles.dimValue}>{fmtEUR(apa)}</span>
+              <span className={styles.dimValue}>
+                {fromPrefix}
+                {fmtMoney(cur, yacht.apaAmount)}
+              </span>
             </div>
           )}
-          {total != null && (
+          {yacht.totalAmount != null && (
             <div className={styles.totalRow}>
               <span className={styles.totalLabel}>TOTAL</span>
-              <span className={styles.totalValue}>{fmtEUR(total)}</span>
+              <span className={styles.totalValue}>
+                {fromPrefix}
+                {fmtMoney(cur, yacht.totalAmount)}
+              </span>
             </div>
           )}
         </div>
+      )}
+
+      {yacht.keyFeatures && yacht.keyFeatures.length > 0 && (
+        <ul className={styles.features}>
+          {yacht.keyFeatures.map((f, i) => (
+            <li key={i} className={styles.feature}>
+              {f}
+            </li>
+          ))}
+        </ul>
       )}
 
       {yacht.notes && (

@@ -1,15 +1,15 @@
 import styles from "./PortalForm.module.css";
+import SignOutButton from "./SignOutButton";
 
-/**
- * Sticky portal header. Auth/login is out of scope for this build — the
- * consultant identity is the demo profile until the real session exists.
- */
+/** Sticky portal header, showing the signed-in consultant identity. */
 export default function PortalHeader({
-  consultant = "LUCY · LONDON",
-  initial = "L",
+  consultant = "CHARTER PORTAL",
+  initial = "OI",
+  showSignOut = false,
 }: {
   consultant?: string;
   initial?: string;
+  showSignOut?: boolean;
 }) {
   return (
     <header className={styles.header}>
@@ -21,6 +21,7 @@ export default function PortalHeader({
       <div className={styles.headerRight}>
         <span className={styles.consultantTag}>{consultant}</span>
         <span className={styles.avatar}>{initial}</span>
+        {showSignOut && <SignOutButton />}
       </div>
     </header>
   );
