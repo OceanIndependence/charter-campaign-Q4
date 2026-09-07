@@ -21,6 +21,7 @@ import {
   TARGET_SEASON,
   buildReference,
   extractBrochureFile,
+  extractEbrochureUrl,
   extractRateOptions,
   extractYachtFacts,
   pickSeason,
@@ -37,10 +38,10 @@ const DETAIL_FRESH_MS = 6 * 60 * 60 * 1000; // rates change; don't serve stale f
 // Download the whole gallery (capped per category) so the consultant can pick
 // which image fills each page slot; the default slot assignment below still
 // uses the first one or two of each category.
-const GALLERY_MAX_PER_CATEGORY = 8;
+const GALLERY_MAX_PER_CATEGORY = 5;
 // Bump to invalidate cached detail JSON and versioned asset keys after a
 // normalisation change (e.g. brochure PDF validation) — old caches re-fetch.
-const DETAIL_SCHEMA_VERSION = 3;
+const DETAIL_SCHEMA_VERSION = 5;
 
 async function passkeyOrThrow() {
   const passkey = await loadPasskey([process.cwd()]);
@@ -209,14 +210,18 @@ export async function getYachtDetail(yfId, { forceRefresh = false } = {}) {
   const facts = extractYachtFacts({ brochure, basic, reference, targetSeason });
   const rateOptions = extractRateOptions({ brochure, basic, reference });
 
-  // Brochure PDF: the Yachtfolio media URL embeds the passkey, so download it
-  // to the public store and hand back a clean URL (same rule as images).
-  // Only auto-fill when the downloaded file is genuinely a PDF — Yachtfolio's
-  // "PDF" gallery can hold image renders or an error page, and linking those
-  // gives the client a "failed to load PDF". Anything else leaves the field
-  // blank for the consultant to paste a link, with a note in the report.
-  let brochureUrl = "";
-  const brochureFile = extractBrochureFile(brochure);
+  // Brochure link. A yacht's brochure is a hosted e-brochure page, not a
+  // downloadable file — e.g. https://www.yachtfolio.com/e-brochure/NAME/TOKEN.
+  // Prefer that link straight from the live response (used as-is, no download).
+  let brochureUrl = extractEbrochureUrl(brochure, basic) ?? "";
+
+  // Fallback for yachts that expose only a PDF in the gallery: the Yachtfolio
+  // media URL embeds the passkey, so download it to the public store and hand
+  // back a clean URL (same rule as images). Only auto-fill when the download
+  // is genuinely a PDF — the "PDF" gallery can hold image renders or an error
+  // page, and linking those gives the client a "failed to load PDF". Anything
+  // else leaves the field blank for the consultant to paste a link.
+  const brochureFile = brochureUrl ? null : extractBrochureFile(brochure);
   if (brochureFile && !brochureFile.url) {
     // No PDF-typed entry in the gallery — some yachts hold only a JPEG cover
     // in the PDF slot. Leave the link blank and say so, rather than serving a
