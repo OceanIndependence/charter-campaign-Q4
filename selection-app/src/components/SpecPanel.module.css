@@ -138,32 +138,49 @@
   color: var(--mint);
 }
 
+.highlights {
+  margin-top: 30px;
+}
+
+/* Same treatment as the cover eyebrow ("ONE YACHT, HELD FOR YOUR REVIEW"). */
+.highlightsHeading {
+  font-size: 10px;
+  letter-spacing: 0.36em;
+  font-weight: 500;
+  color: var(--mint);
+  margin-bottom: 16px;
+}
+
 .features {
   list-style: none;
-  margin: 26px 0 0;
+  margin: 0;
   padding: 0;
   display: grid;
-  gap: 9px;
+  gap: 11px;
 }
 
 .feature {
-  position: relative;
+  display: flex;
+  gap: 12px;
   font-size: 12.5px;
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.72);
-  padding-left: 18px;
   text-wrap: pretty;
 }
 
-.feature::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.6em;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--mint);
+.featureNum {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--mint);
+  flex: 0 0 auto;
+  min-width: 20px;
+  line-height: 1.5;
+}
+
+.featureText {
+  flex: 1;
 }
 
 .note {

@@ -10,14 +10,21 @@ const TYPES: Record<string, string> = {
   ".jpeg": "image/jpeg",
   ".png": "image/png",
   ".webp": "image/webp",
+  ".pdf": "application/pdf",
 };
 
+// Only these public-asset prefixes/extensions are servable — never the
+// private DATA store (drafts, page configs).
+const SERVABLE = [
+  { prefix: "yachtfolio/images/", ext: /\.(jpe?g|png|webp)$/i },
+  { prefix: "yachtfolio/brochures/", ext: /\.pdf$/i },
+];
+
 /**
- * Serves processed IMAGES from the local filesystem store — development
- * fallback when no public images Blob store is configured (in blob mode
- * image URLs point straight at the blob CDN and this route is never
- * referenced). It only ever serves image keys: the private DATA store
- * (drafts, page configs) is never reachable here, even in dev.
+ * Serves processed IMAGES and brochure PDFs from the local filesystem store —
+ * development fallback when no public Blob store is configured (in blob mode
+ * these URLs point straight at the blob CDN and this route is never
+ * referenced). It only ever serves public-asset keys.
  */
 export async function GET(
   _request: NextRequest,
@@ -28,12 +35,9 @@ export async function GET(
   }
   const { key } = await params;
   const rel = key.join("/");
-  // Only image keys are servable; reject traversal and any non-image path.
-  if (
-    !rel.startsWith("yachtfolio/images/") ||
-    rel.split("/").some((part) => part === ".." || part === "") ||
-    !/\.(jpe?g|png|webp)$/i.test(rel)
-  ) {
+  const traversal = rel.split("/").some((part) => part === ".." || part === "");
+  const allowed = SERVABLE.some((s) => rel.startsWith(s.prefix) && s.ext.test(rel));
+  if (traversal || !allowed) {
     return NextResponse.json({ error: "Not found." }, { status: 404 });
   }
   const file = localPath(rel);

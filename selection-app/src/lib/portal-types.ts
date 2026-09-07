@@ -21,6 +21,11 @@ export interface DraftYacht {
   currency: string;
   weeklyRate: string;
   weeklyRateIsFrom: boolean;
+  /** Which Yachtfolio season/tier the auto-filled rate came from */
+  rateSeason: "summer" | "winter";
+  rateTier: "low" | "high";
+  /** Summer/winter 2027 rate matrix from Yachtfolio, for switching offline */
+  rateOptions?: RateOptions;
   apaPct: string;
   /** VAT percentage; blank shows "TBC" and drops out of the total */
   vatPct: string;
@@ -32,6 +37,18 @@ export interface DraftYacht {
   deckImageUrl: string;
   watertoysImageUrl: string;
   brochureUrl: string;
+}
+
+export interface RateSeasonOption {
+  low: number | null;
+  high: number | null;
+  currency: string | null;
+  label: string;
+}
+
+export interface RateOptions {
+  summer: RateSeasonOption;
+  winter: RateSeasonOption;
 }
 
 export interface PageOwner {
@@ -50,6 +67,8 @@ export interface PortalDraft {
   season: string;
   region: string;
   headline: string;
+  /** Cover eyebrow override (falls back to "{N} YACHT(S), HELD FOR YOUR REVIEW") */
+  subHeadline: string;
   /** Optional consultant welcome greeting (cover falls back to a generated line) */
   welcome: string;
   yachts: DraftYacht[];
@@ -101,6 +120,9 @@ export interface FleetDetail {
   currency: string;
   weeklyRate: number | null;
   weeklyRateIsFrom: boolean;
+  rateSeason: "summer" | "winter";
+  rateTier: "low" | "high";
+  rateOptions: RateOptions;
   leadImageUrl: string;
   interiorImageUrl: string;
   deckImageUrl: string;
@@ -128,6 +150,8 @@ export function emptyDraftYacht(uid: string): DraftYacht {
     currency: "EUR",
     weeklyRate: "",
     weeklyRateIsFrom: false,
+    rateSeason: "summer",
+    rateTier: "low",
     apaPct: "35",
     vatPct: "",
     notes: "",

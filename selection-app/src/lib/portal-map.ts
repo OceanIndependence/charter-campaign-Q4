@@ -90,6 +90,7 @@ export function draftToPageConfig(draft: PortalDraft, slug: string): PageConfig 
     season: str(draft.season) ?? "",
     region: str(draft.region) ?? "",
     headline: str(draft.headline) ?? "Yacht Charter Selection",
+    subHeadline: str(draft.subHeadline),
     welcome: str(draft.welcome),
     yachts: draft.yachts.map(mapDraftYacht).filter((y): y is Yacht => y !== null),
     sections: {

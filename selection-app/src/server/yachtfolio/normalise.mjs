@@ -6,8 +6,14 @@
  * "cabins", EUR amounts as plain numbers formatted by the UI.
  */
 
-/** Charter season the campaign quotes rates for. */
+/** Charter season the campaign quotes rates for (default auto-fill). */
 export const TARGET_SEASON = { name: "summer", year: "2027", label: "summer 2027" };
+
+/** Seasons the consultant can pick a rate from, this campaign. */
+export const RATE_SEASONS = [
+  { key: "summer", name: "summer", year: "2027", label: "Summer 2027" },
+  { key: "winter", name: "winter", year: "2027", label: "Winter 2027" },
+];
 
 export function slugify(name) {
   return String(name)
@@ -213,6 +219,49 @@ export function extractYachtFacts({ brochure, basic, reference, targetSeason }) 
     missing,
     notes,
   };
+}
+
+/**
+ * The brochure PDF file, if the yacht has one. Yachtfolio exposes it in the
+ * PDF gallery (falling back to the sample menu); the returned url embeds the
+ * passkey, so callers must download it server-side, never hand it to a
+ * browser. Returns { id_file, filename, url } or null.
+ */
+export function extractBrochureFile(brochure) {
+  const pdf = brochure?.galleries?.PDF?.find((f) => f?.url);
+  if (pdf) return { id_file: pdf.id_file, filename: pdf.filename ?? `${pdf.id_file}.pdf`, url: pdf.url };
+  const menu = brochure?.sample_menu;
+  if (menu?.url) return { id_file: menu.id_file, filename: `${menu.id_file}.pdf`, url: menu.url };
+  return null;
+}
+
+/**
+ * Rate matrix for the pickable seasons: for each of summer/winter 2027, the
+ * low (min_rate) and high (max_rate) figures and the currency, taken from
+ * that season's rate row (brochure prices, or the basic record's rates).
+ * Currency is carried through as-is, never converted.
+ */
+export function extractRateOptions({ brochure, basic, reference }) {
+  const out = {};
+  for (const s of RATE_SEASONS) {
+    const season = pickSeason(reference.seasons, s);
+    let row = null;
+    if (season) {
+      row =
+        brochure?.prices?.[String(season.id)]?.[0] ??
+        basic?.rates?.find((r) => r.season_id === season.id) ??
+        null;
+    }
+    out[s.key] = row
+      ? {
+          low: row.min_rate ?? null,
+          high: row.max_rate ?? null,
+          currency: (row.currency ?? "EUR").toUpperCase(),
+          label: s.label,
+        }
+      : { low: null, high: null, currency: null, label: s.label };
+  }
+  return out;
 }
 
 /**

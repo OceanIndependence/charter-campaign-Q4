@@ -58,6 +58,8 @@ function emptyDraft(identity) {
     season: "",
     region: "",
     headline: "",
+    subHeadline: "",
+    welcome: "",
     yachts: [],
     sections: { costs: true, itinerary: true, itineraryUrl: "", compare: true },
     consultant: {

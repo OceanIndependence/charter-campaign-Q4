@@ -20,6 +20,8 @@ import {
 import {
   TARGET_SEASON,
   buildReference,
+  extractBrochureFile,
+  extractRateOptions,
   extractYachtFacts,
   pickSeason,
 } from "./yachtfolio/normalise.mjs";
@@ -198,6 +200,31 @@ export async function getYachtDetail(yfId, { forceRefresh = false } = {}) {
   }
 
   const facts = extractYachtFacts({ brochure, basic, reference, targetSeason });
+  const rateOptions = extractRateOptions({ brochure, basic, reference });
+
+  // Brochure PDF: the Yachtfolio media URL embeds the passkey, so download it
+  // to the public store and hand back a clean URL (same rule as images).
+  let brochureUrl = "";
+  const brochureFile = extractBrochureFile(brochure);
+  if (brochureFile) {
+    const key = `yachtfolio/brochures/${yfId}/${brochureFile.id_file}.pdf`;
+    try {
+      if (await fileExists(key)) {
+        brochureUrl = (await fileUrl(key)) ?? "";
+      } else {
+        const res = await fetch(brochureFile.url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const buf = Buffer.from(await res.arrayBuffer());
+        brochureUrl = await putFile(key, buf, "application/pdf");
+        await sleep(REQUEST_DELAY_MS);
+      }
+    } catch (err) {
+      facts.notes.push(
+        `brochure PDF (${redact(String(brochureFile.filename ?? brochureFile.id_file), passkey)}) failed: ` +
+          redact(String(err?.message ?? err), passkey)
+      );
+    }
+  }
 
   // Process only this yacht's images, only the slots the page needs.
   const selected = selectGalleryImages(brochure?.galleries, IMAGES_PER_CATEGORY);
@@ -256,14 +283,19 @@ export async function getYachtDetail(yfId, { forceRefresh = false } = {}) {
     // seasons_unavailable warning for the form to surface instead.
     availability: "",
     // Currency carried through as-is; APA/VAT are the consultant's, not fetched.
+    // Default auto-fill is summer 2027 low; the form can switch season/tier
+    // from rateOptions without re-fetching.
     currency: facts.currency ?? "EUR",
     weeklyRate: facts.weeklyRate ?? null,
     weeklyRateIsFrom: facts.weeklyRateIsFrom,
+    rateSeason: "summer",
+    rateTier: "low",
+    rateOptions,
     leadImageUrl,
     interiorImageUrl: interior[0] ?? "",
     deckImageUrl: exterior[1] ?? lifestyle[1] ?? "",
     watertoysImageUrl: lifestyle[0] ?? "",
-    brochureUrl: "",
+    brochureUrl,
     description: facts.description ?? "",
     keyFeatures: facts.keyFeatures,
     gallery: files,
