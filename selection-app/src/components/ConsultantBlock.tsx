@@ -13,7 +13,9 @@ export default function ConsultantBlock({
     <section className={styles.section}>
       <div className={styles.inner}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={consultant.photoUrl} alt={consultant.name} className={styles.photo} />
+        {consultant.photoUrl ? (
+          <img src={consultant.photoUrl} alt={consultant.name} className={styles.photo} />
+        ) : null}
         <div className={styles.details}>
           <div className={styles.name}>{consultant.name.toUpperCase()}</div>
           <div className={styles.title}>{consultant.title}</div>
