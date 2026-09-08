@@ -161,7 +161,7 @@ export default function SelectionPage({ config }: { config: PageConfig }) {
       <footer className={styles.footer}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={theme === "light" ? "/assets/logo-black.png" : "/assets/logo-white.png"} alt="Ocean Independence" className={styles.footerLogo} />
-        <span className={styles.footerTagline}>SHAPING THE FUTURE OF YACHTING</span>
+        <span className={styles.footerTagline}>EXPLORE A WORLD OF POSSIBILITY</span>
       </footer>
     </div>
   );
