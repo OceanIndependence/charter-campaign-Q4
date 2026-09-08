@@ -56,8 +56,9 @@ const AtlasGlobe = forwardRef<GlobeHandle, Props>(function AtlasGlobe({ pins, on
         onDeselect: () => callbacks.current.onDeselect(),
       });
       engine.setPins(pinsRef.current);
-      const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-      engine.setOptions({ ...(reduce ? { drift: false } : {}), ...(optionsRef.current ?? {}) });
+      // Idle drift stays on, as in the design reference; pass options.drift
+      // to override.
+      if (optionsRef.current) engine.setOptions(optionsRef.current);
       const p = pending.current;
       if (p.subPins.length) engine.setSubPins(p.subPins);
       if (p.focus) engine.setFocus(p.focus);

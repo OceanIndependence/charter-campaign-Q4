@@ -19,8 +19,8 @@
 import * as THREE from "three";
 import { geoEquirectangular, geoGraticule10, geoPath } from "d3-geo";
 import { merge } from "topojson-client";
-import type { Topology, GeometryCollection } from "topojson-specification";
-import type { MultiPolygon } from "geojson";
+import type { Topology, GeometryCollection, Polygon, MultiPolygon } from "topojson-specification";
+import type { MultiPolygon as GeoMultiPolygon } from "geojson";
 
 export interface GlobePin {
   id: string;
@@ -102,7 +102,7 @@ export class AtlasGlobe {
   private detailKey: string | null = null;
   private detailBuiltAt = 0;
   private topo: CountriesTopology | null = null;
-  private landMerged: MultiPolygon | null = null;
+  private landMerged: GeoMultiPolygon | null = null;
   private texW = 2048;
   private texGrat = true;
 
@@ -243,8 +243,9 @@ export class AtlasGlobe {
       this.topo = hi;
       this.texW = 6144;
       this.buildTexture();
-    } catch {
-      /* the globe still renders as a plain sphere */
+    } catch (err) {
+      // The globe still renders as a plain sphere; say why the land is missing.
+      console.warn("AtlasGlobe: land data failed to load", err);
     }
   }
 
@@ -281,14 +282,17 @@ export class AtlasGlobe {
     const ctx = cv.getContext("2d")!;
     ctx.fillStyle = OCEAN;
     ctx.fillRect(0, 0, w, h);
-    this.landMerged = merge(this.topo, this.topo.objects.countries);
+    // topojson merge() takes the geometry array, not the collection.
+    this.landMerged = merge(this.topo, this.topo.objects.countries.geometries as Array<Polygon | MultiPolygon>);
     const proj = geoEquirectangular()
       .scale(w / (2 * Math.PI))
       .translate([w / 2, h / 2]);
     this.paintLand(ctx, proj, k);
+    // The canvas is left in three's default (linear) colour space on purpose:
+    // the renderer's sRGB output then lifts the mid-tones, which is what
+    // gives the prototype globe its shaded, lit look against the black page.
     const tex = new THREE.CanvasTexture(cv);
     tex.anisotropy = this.renderer.capabilities.getMaxAnisotropy();
-    tex.colorSpace = THREE.SRGBColorSpace;
     this.sphereMat.map?.dispose();
     this.sphereMat.map = tex;
     this.sphereMat.color.set(0xffffff);
@@ -345,7 +349,6 @@ export class AtlasGlobe {
     const geo = new THREE.SphereGeometry(1.0015, 64, 64, (lonW + 180) * d2r, (lonE - lonW) * d2r, (90 - latN) * d2r, (latN - latS) * d2r);
     const tex = new THREE.CanvasTexture(cv);
     tex.anisotropy = this.renderer.capabilities.getMaxAnisotropy();
-    tex.colorSpace = THREE.SRGBColorSpace;
     if (this.detail) {
       this.detail.geometry.dispose();
       this.detail.material.map?.dispose();
