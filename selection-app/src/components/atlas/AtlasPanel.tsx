@@ -53,8 +53,8 @@ export function IntroPanel({ index, onSelect }: { index: AtlasIndex | null; onSe
       {index && (
         <>
           <div className={styles.sectionHead}>
-            <div className={styles.sectionTitle}>THE MEDITERRANEAN</div>
-            <div className={styles.sectionSub}>The most requested waters of the summer. Select a country to see its cruising grounds</div>
+            <div className={styles.sectionTitle}>MOST POPULAR CHARTER DESTINATIONS</div>
+            <div className={styles.sectionSub}>The Mediterranean in summer 2027. Select a country to see its cruising grounds</div>
           </div>
           <ul className={styles.regionList}>
             {POPULAR_IDS.map((id) => index.byId.get(id))
