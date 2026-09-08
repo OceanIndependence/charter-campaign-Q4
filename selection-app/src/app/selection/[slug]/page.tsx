@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import type { PageConfig } from "@/lib/types";
 import SelectionPage from "@/components/SelectionPage";
 import { getPublishedPage } from "@/server/pages.mjs";
+import { CAMPAIGN_ATLAS_URL } from "@/lib/portal-map";
 
 /**
  * Client pages published from the Charter Portal render on demand from the
@@ -27,6 +28,9 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   type LegacyYacht = PageConfig["yachts"][number] & { deckImageUrl?: string; watertoysImageUrl?: string };
   const config: PageConfig = {
     ...published.config,
+    // The atlas link is campaign-wide, not part of the client's selection, so
+    // pages published before it changed follow the current target.
+    atlasUrl: CAMPAIGN_ATLAS_URL,
     yachts: (published.config.yachts as LegacyYacht[]).map((y) => ({
       ...y,
       exteriorImageUrl: y.exteriorImageUrl ?? y.deckImageUrl ?? "",
