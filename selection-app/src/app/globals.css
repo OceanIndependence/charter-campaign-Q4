@@ -41,6 +41,8 @@
      surface/ink tokens under [data-theme="light"]; mint is #A7E6D7 in both. */
   --ink: #04080a;
   --ink-lift: #0a1214;
+  /* Tier 1 atlas page ground (the globe sits on a slightly lifted black) */
+  --atlas-ink: #060809;
   --panel: #0b0e10;
   --mint: #a7e6d7;
   --hairline: rgba(255, 255, 255, 0.1);

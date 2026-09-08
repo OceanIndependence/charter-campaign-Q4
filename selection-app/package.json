@@ -6,19 +6,27 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "yachts:fetch": "node scripts/fetch-yachtfolio.mjs"
+    "yachts:fetch": "node scripts/fetch-yachtfolio.mjs",
+    "import:destinations": "node scripts/import-destinations.mjs"
   },
   "dependencies": {
     "@vercel/blob": "^2.8.0",
+    "d3-geo": "^3.1.1",
     "next": "^15.5.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "sharp": "^0.34.3"
+    "sharp": "^0.34.3",
+    "three": "^0.185.1",
+    "topojson-client": "^3.1.0"
   },
   "devDependencies": {
+    "@types/d3-geo": "^3.1.1",
     "@types/node": "^22.10.0",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
+    "@types/three": "^0.185.4",
+    "@types/topojson-client": "^3.1.5",
+    "node-html-parser": "^9.0.4",
     "typescript": "^5.7.0"
   }
 }
