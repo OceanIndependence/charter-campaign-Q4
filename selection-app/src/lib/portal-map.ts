@@ -8,8 +8,11 @@ import type { PageConfig, Yacht } from "./types";
 import type { DraftYacht, PortalDraft } from "./portal-types";
 import { slugify } from "@/server/yachtfolio/normalise.mjs";
 
-/** Campaign-wide "Explore all destinations" atlas link (Tier 1). */
-export const CAMPAIGN_ATLAS_URL = "https://www.oceanindependence.com/yacht-charter/destinations/";
+/**
+ * Campaign-wide "Explore all 2027 destinations" link — the Tier 1 atlas page
+ * served by this app at /2027-charter-season (same deployment, so relative).
+ */
+export const CAMPAIGN_ATLAS_URL = "/2027-charter-season";
 
 const str = (v: string | undefined): string | undefined => {
   const t = (v ?? "").trim();
