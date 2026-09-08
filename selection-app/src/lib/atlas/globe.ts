@@ -37,7 +37,7 @@ export interface GlobePin {
 }
 
 /** Label positions around the dot; the "2" variants use a taller stem. */
-type Placement = "up" | "right" | "left" | "down" | "up2" | "down2";
+type Placement = "up" | "right" | "left" | "down" | "up2" | "down2" | "right2" | "left2";
 interface Box {
   x0: number;
   x1: number;
@@ -76,6 +76,8 @@ interface PinState extends GlobePin {
   /** Screen box of the visible label and stem, so the label is clickable too */
   _labelBox?: Box | null;
   _place?: Placement;
+  /** Measured label width in px (the estimate is only a fallback) */
+  _labelW?: number;
 }
 
 type CountriesTopology = Topology<{ countries: GeometryCollection }>;
@@ -249,6 +251,10 @@ export class AtlasGlobe {
 
     this.resize();
     if (!this.destroyed) this.startLoop();
+    // Label widths change when Gotham arrives; re-measure then.
+    document.fonts?.ready.then(() => {
+      if (!this.destroyed) this.restyleAll();
+    });
 
     const geoUrl = this.cfg.geoUrl ?? "/atlas/countries-110m.json";
     const geoHiUrl = this.cfg.geoHiUrl ?? "/atlas/countries-50m.json";
@@ -542,8 +548,8 @@ export class AtlasGlobe {
     const t = p.sub
       ? { fontSize: 9, tracking: 0.2, weight: "400", stem: 9, dot: 3.5, gap: 4 }
       : p.featured
-        ? { fontSize: 12.5, tracking: 0.34, weight: "500", stem: 20, dot: 5.5, gap: 6 }
-        : { fontSize: 11.5, tracking: 0.3, weight: "500", stem: 14, dot: 4, gap: 6 };
+        ? { fontSize: 11, tracking: 0.28, weight: "500", stem: 18, dot: 5.5, gap: 6 }
+        : { fontSize: 10.5, tracking: 0.26, weight: "500", stem: 12, dot: 4, gap: 6 };
     const fontSize = t.fontSize * k;
     return {
       ...t,
@@ -552,7 +558,7 @@ export class AtlasGlobe {
       /** rendered label line height */
       lineH: fontSize * 1.3,
       /** estimated label width (caps, tracked) */
-      labelW: p.name.length * fontSize * (0.72 + t.tracking) + 4,
+      labelW: p._labelW ?? p.name.length * fontSize * (0.72 + t.tracking) + 4,
       /** half of the dot's hit-area box (dot + 8px transparent border each side) */
       half: (t.dot + 16) / 2,
     };
@@ -600,6 +606,14 @@ export class AtlasGlobe {
       boxShadow: glow,
     });
     this.applyPlacement(p, p._place ?? "up", true);
+    // Measure the real rendered width once per style pass (fonts, scale).
+    const w = label.getBoundingClientRect().width;
+    if (w > 0) p._labelW = w;
+  }
+
+  /** Re-measure every label; called when the web fonts finish loading. */
+  private restyleAll() {
+    for (const p of this.pins.concat(this.subPins)) if (p._el) this.stylePin(p);
   }
 
   /** Arrange label, stem and dot for a placement; the dot always anchors at the pin. */
@@ -609,9 +623,9 @@ export class AtlasGlobe {
     p._place = place;
     const { label, stem, dot } = p._parts;
     const tier = this.pinTier(p);
-    const row = place === "left" || place === "right";
+    const row = place === "left" || place === "right" || place === "left2" || place === "right2";
     p._el.style.flexDirection = row ? "row" : "column";
-    const labelFirst = place === "up" || place === "up2" || place === "left";
+    const labelFirst = place === "up" || place === "up2" || place === "left" || place === "left2";
     label.style.order = labelFirst ? "0" : "2";
     stem.style.order = "1";
     dot.style.order = labelFirst ? "2" : "0";
@@ -624,7 +638,7 @@ export class AtlasGlobe {
   }
 
   private stemLength(place: Placement, base: number) {
-    return place === "up2" || place === "down2" ? Math.round(base * 2.4) : base;
+    return place.endsWith("2") ? Math.round(base * 2.4) : base;
   }
 
   /** Screen transform that puts the dot centre on (x, y) for a placement. */
@@ -637,8 +651,10 @@ export class AtlasGlobe {
       case "down2":
         return `translate(${x}px,${y}px) translate(-50%,0) translate(0,${-half}px)`;
       case "right":
+      case "right2":
         return `translate(${x}px,${y}px) translate(0,-50%) translate(${-half}px,0)`;
       case "left":
+      case "left2":
         return `translate(${x}px,${y}px) translate(-100%,-50%) translate(${half}px,0)`;
     }
   }
@@ -669,11 +685,13 @@ export class AtlasGlobe {
           hit: { x0: x - lw / 2 - px, x1: x + lw / 2 + px, y0: y - h, y1: y + reach + lh + py },
         };
       case "right":
+      case "right2":
         return {
           text: { x0: x + reach - px, x1: x + reach + lw + px, y0: y - lh / 2 - py, y1: y + lh / 2 + py },
           hit: { x0: x - h, x1: x + reach + lw + px, y0: y - lh / 2 - py, y1: y + lh / 2 + py },
         };
       case "left":
+      case "left2":
         return {
           text: { x0: x - reach - lw - px, x1: x - reach + px, y0: y - lh / 2 - py, y1: y + lh / 2 + py },
           hit: { x0: x - reach - lw - px, x1: x + h, y0: y - lh / 2 - py, y1: y + lh / 2 + py },
@@ -850,19 +868,37 @@ export class AtlasGlobe {
 
     // At rest only priority pins are labelled; zooming in reveals the rest.
     const zoomedIn = this.zoom > this.homeZoom() * 1.5;
-    const ORDER: Placement[] = ["up", "right", "left", "down", "up2", "down2"];
+    const ORDER: Placement[] = ["up", "right", "left", "down", "up2", "right2", "left2", "down2"];
     // Labels must not cover other labels, nor any visible dot.
     const placed: Box[] = visible.filter((p) => !p._dimmed).map((p) => ({ x0: p._xy![0] - 6, x1: p._xy![0] + 6, y0: p._xy![1] - 6, y1: p._xy![1] + 6 }));
     const hits = (a: Box) => placed.some((b) => a.x0 < b.x1 && a.x1 > b.x0 && a.y0 < b.y1 && a.y1 > b.y0);
+    const isActive = (p: PinState) => p.id === this.selected || !!p._hover;
+    const eligible = (p: PinState) => !p._dimmed && (isActive(p) || !!p.priority || !!p.sub || zoomedIn);
+    // Place the resting (priority) labels most-constrained first so the
+    // cramped ones in a cluster take their only free slot before a neighbour
+    // with several options steals it.
+    const options = new Map<PinState, number>();
     for (const p of visible) {
+      if (!eligible(p) || !p.priority) continue;
+      const tier = this.pinTier(p);
+      const [x, y] = p._xy!;
+      options.set(p, ORDER.filter((o) => !hits(this.placementBox(o, x, y, tier).text)).length);
+    }
+    const order = [...visible].sort((a, b) => {
+      const pa = isActive(a) ? 2 : a.priority ? 1 : 0;
+      const pb = isActive(b) ? 2 : b.priority ? 1 : 0;
+      if (pa !== pb) return pb - pa;
+      if (pa === 1) return (options.get(a) ?? 9) - (options.get(b) ?? 9);
+      return 0;
+    });
+    for (const p of order) {
       const tier = this.pinTier(p);
       const [x, y] = p._xy!;
       const el = p._el!;
-      const active = p.id === this.selected || !!p._hover;
-      const eligible = !p._dimmed && (active || p.priority || p.sub || zoomedIn);
+      const active = isActive(p);
       let place: Placement = p._place ?? "up";
       let box: Box | null = null;
-      if (eligible) {
+      if (eligible(p)) {
         // Keep the current placement if it still fits, otherwise try the others.
         const tryOrder = [place, ...ORDER.filter((o) => o !== place)];
         for (const o of tryOrder) {
@@ -874,8 +910,9 @@ export class AtlasGlobe {
             break;
           }
         }
-        // Selected, hovered and priority labels are never culled.
-        if (!box && (active || p.priority)) {
+        // Labels never overlap. Only the selected or hovered pin, which the
+        // visitor asked for, is drawn regardless.
+        if (!box && active) {
           place = "up";
           const b = this.placementBox(place, x, y, tier);
           box = b.hit;
