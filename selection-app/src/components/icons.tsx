@@ -51,7 +51,7 @@ export function SmallChevronIcon({ dir }: { dir: "left" | "right" }) {
     <svg width="7" height="14" viewBox="0 0 7 14" fill="none" aria-hidden="true">
       <path
         d={dir === "left" ? "M6 1L1 7L6 13" : "M1 1L6 7L1 13"}
-        stroke="rgba(255,255,255,0.75)"
+        style={{ stroke: "var(--fg-75)" }}
         strokeWidth="1"
       />
     </svg>
@@ -63,7 +63,7 @@ export function CompareToggleIcon({ selected }: { selected: boolean }) {
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
       <path
         d={selected ? "M2.5 7.5L5.5 10.5L11.5 3.5" : "M7 2V12M2 7H12"}
-        stroke={selected ? "#A7E6D7" : "rgba(255,255,255,0.75)"}
+        style={{ stroke: selected ? "#A7E6D7" : "var(--fg-75)" }}
         strokeWidth="1.2"
       />
     </svg>
@@ -71,10 +71,10 @@ export function CompareToggleIcon({ selected }: { selected: boolean }) {
 }
 
 export function SpeakerIcon({ on }: { on: boolean }) {
-  const ink = on ? "#A7E6D7" : "rgba(255,255,255,0.45)";
+  const ink = on ? "#A7E6D7" : "var(--fg-45)";
   return (
     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-      <path d="M1 4H3.5L7 1V11L3.5 8H1V4Z" stroke={ink} strokeWidth="1" fill="none" />
+      <path d="M1 4H3.5L7 1V11L3.5 8H1V4Z" style={{ stroke: ink }} strokeWidth="1" fill="none" />
       <path d="M9 4C9.8 4.9 9.8 7.1 9 8" stroke={on ? "#A7E6D7" : "transparent"} strokeWidth="1" />
     </svg>
   );

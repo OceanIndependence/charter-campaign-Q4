@@ -22,7 +22,7 @@
   font-size: 9.5px;
   letter-spacing: 0.4em;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--fg-5);
 }
 
 .stage {
@@ -74,22 +74,11 @@
   margin-left: calc(var(--card-w) / -2);
   margin-top: calc(var(--card-h) / -2);
   border-radius: 16px;
-  border: 1px solid var(--mint-hairline-strong);
-  /* Mint tint over a near-opaque dark base, so the floor ring behind the
-     cards does not read through them. */
-  background:
-    linear-gradient(
-      180deg,
-      rgba(167, 230, 215, 0.07) 0%,
-      rgba(255, 255, 255, 0.02) 55%,
-      rgba(167, 230, 215, 0.04) 100%
-    ),
-    rgba(6, 10, 12, 0.94);
-  box-shadow:
-    0 0 18px rgba(167, 230, 215, 0.28),
-    0 0 60px rgba(167, 230, 215, 0.14),
-    inset 0 0 24px rgba(167, 230, 215, 0.08),
-    0 30px 60px rgba(0, 0, 0, 0.55);
+  border: 1px solid var(--card-border);
+  /* Dark: mint tint over a near-opaque dark base (so the floor ring never
+     reads through). Light: flat white with soft shadows, no glow. */
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
   transition:
     opacity 1100ms var(--ease-settle),
     filter 1100ms var(--ease-settle);
@@ -107,8 +96,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  background: rgba(4, 8, 10, 0.55);
+  border: 1px solid var(--cmp-border);
+  background: var(--cmp-bg);
   user-select: none;
 }
 .cmpBtn:hover {
@@ -130,7 +119,7 @@
 .cardImage {
   position: relative;
   aspect-ratio: 2000 / 1250;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--fg-03);
 }
 
 .cardImg {
@@ -157,6 +146,29 @@
   font-weight: 500;
 }
 
+/* Light theme: no scrim — the image dissolves into the white card and the
+   yacht name sits in normal flow below the fade, in ink. */
+.cardNameRow {
+  display: none;
+  padding: 2px 16px 0;
+  text-align: center;
+  color: var(--fg);
+}
+
+[data-theme="light"] .cardImage {
+  background: transparent;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 72%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 72%, transparent 100%);
+}
+
+[data-theme="light"] .cardScrim {
+  display: none;
+}
+
+[data-theme="light"] .cardNameRow {
+  display: block;
+}
+
 .statRow {
   flex: 1;
   display: flex;
@@ -181,7 +193,7 @@
   font-size: 8.5px;
   letter-spacing: 0.3em;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--fg-45);
 }
 
 .priceBlock {
@@ -200,7 +212,7 @@
   font-size: 8.5px;
   letter-spacing: 0.28em;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--fg-5);
   margin-top: 8px;
 }
 
@@ -252,7 +264,7 @@
   user-select: none;
 }
 .soundToggle:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--fg-05);
 }
 
 .soundLabel,
@@ -260,7 +272,7 @@
   font-size: 8.5px;
   letter-spacing: 0.34em;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--fg-45);
 }
 .soundLabelOn {
   color: var(--mint);
@@ -286,12 +298,12 @@
   display: block;
   width: 22px;
   height: 2px;
-  background: rgba(255, 255, 255, 0.25);
+  background: var(--fg-25);
   transition: background 240ms ease;
 }
 .dotBarActive {
   background: var(--mint);
 }
 .dot:hover .dotBar {
-  background: rgba(255, 255, 255, 0.5);
+  background: var(--fg-5);
 }

@@ -25,7 +25,7 @@
   font-size: 10px;
   letter-spacing: 0.36em;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--fg-6);
 }
 
 .centre {
@@ -59,7 +59,7 @@
   font-size: 13px;
   letter-spacing: 0.08em;
   line-height: 1.9;
-  color: #ffffff;
+  color: var(--fg);
   margin: 0 auto;
   max-width: 60%;
   text-wrap: pretty;

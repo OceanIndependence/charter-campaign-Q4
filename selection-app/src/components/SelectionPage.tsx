@@ -15,6 +15,16 @@ const FADE_SWAP_MS = 480;
 
 export default function SelectionPage({ config }: { config: PageConfig }) {
   const { yachts } = config;
+  const theme = config.theme === "light" ? "light" : "dark";
+
+  // The page root carries the theme for its own tokens; the document root
+  // carries it too so html/body background and scrollbars follow.
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    return () => {
+      delete document.documentElement.dataset.theme;
+    };
+  }, [theme]);
   const n = yachts.length;
 
   /* Ring rotation state is a single unbounded integer index (mod n for
@@ -100,11 +110,12 @@ export default function SelectionPage({ config }: { config: PageConfig }) {
     .filter((y): y is NonNullable<typeof y> => Boolean(y));
 
   return (
-    <div className={styles.page}>
+    <div className={styles.page} data-theme={theme}>
       <Cover config={config} />
 
       <section className={styles.showcase}>
         <RingCarousel
+          theme={theme}
           yachts={yachts}
           idx={idx}
           mod={mod}
@@ -149,7 +160,7 @@ export default function SelectionPage({ config }: { config: PageConfig }) {
 
       <footer className={styles.footer}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/assets/logo-white.png" alt="Ocean Independence" className={styles.footerLogo} />
+        <img src={theme === "light" ? "/assets/logo-black.png" : "/assets/logo-white.png"} alt="Ocean Independence" className={styles.footerLogo} />
         <span className={styles.footerTagline}>SHAPING THE FUTURE OF YACHTING</span>
       </footer>
     </div>

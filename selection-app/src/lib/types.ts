@@ -75,6 +75,9 @@ export interface PageSections {
   compare: boolean;
 }
 
+/** Client page colour theme; dark is the default and the historical look. */
+export type PageTheme = "dark" | "light";
+
 export interface PageConfig {
   slug: string;
   clientNames: string;
@@ -91,4 +94,6 @@ export interface PageConfig {
   consultant: Consultant;
   /** "Explore all destinations" link target (Tier 1 atlas) */
   atlasUrl?: string;
+  /** Colour theme; absent means dark */
+  theme?: PageTheme;
 }

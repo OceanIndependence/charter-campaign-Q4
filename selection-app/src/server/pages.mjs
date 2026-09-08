@@ -138,6 +138,7 @@ function emptyDraft(identity) {
     headline: "",
     subHeadline: "",
     welcome: "",
+    theme: "dark",
     yachts: [],
     sections: { costs: true, itinerary: true, itineraryUrl: "", compare: true },
     consultant: {

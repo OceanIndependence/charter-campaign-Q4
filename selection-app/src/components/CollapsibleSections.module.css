@@ -12,7 +12,7 @@
   user-select: none;
 }
 .toggle:hover {
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--fg-02);
 }
 
 .title {
@@ -26,7 +26,7 @@
 .toggleIcon {
   font-size: 20px;
   font-weight: 300;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--fg-6);
   line-height: 1;
 }
 
@@ -70,7 +70,7 @@
 .costCopy {
   font-size: 13px;
   line-height: 1.8;
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--fg-72);
   margin: 0;
   text-wrap: pretty;
 }
@@ -91,7 +91,7 @@
   font-size: 15px;
   line-height: 1.9;
   font-weight: 300;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--fg-8);
   margin: 0 0 28px;
   text-wrap: pretty;
 }
@@ -100,9 +100,9 @@
   font-size: 10px;
   letter-spacing: 0.3em;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--fg-6);
   text-decoration: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  border-bottom: 1px solid var(--fg-3);
   padding-bottom: 3px;
 }
 .itinLink:hover {

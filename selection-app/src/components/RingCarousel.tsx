@@ -25,6 +25,8 @@ const WHEEL_PX = 18;
 const WHEEL_COOLDOWN_MS = 1000;
 
 interface RingCarouselProps {
+  /** Colour theme — changes card depth treatment (darken vs desaturate) */
+  theme?: "dark" | "light";
   yachts: Yacht[];
   idx: number;
   mod: (v: number) => number;
@@ -39,6 +41,7 @@ interface RingCarouselProps {
 }
 
 export default function RingCarousel(props: RingCarouselProps) {
+  const light = props.theme === "light";
   const { yachts, idx, mod, onNav, onGo, onFrontPick, compare, compareEnabled, soundOn } = props;
   const n = yachts.length;
   const step = 360 / n;
@@ -140,13 +143,21 @@ export default function RingCarousel(props: RingCarouselProps) {
                   style={{
                     transform: `rotateY(${i * step}deg) translateZ(var(--ring-r))`,
                     opacity: isFront ? 1 : far ? 0.3 : abs === 2 ? 0.55 : 0.8,
+                    // Depth: dark cards darken as they recede; light cards
+                    // desaturate instead and never darken.
                     filter: isFront
                       ? "none"
-                      : far
-                        ? "blur(3px) brightness(0.45)"
-                        : abs === 2
-                          ? "brightness(0.55)"
-                          : "brightness(0.65)",
+                      : light
+                        ? far
+                          ? "blur(3px) grayscale(0.4)"
+                          : abs === 2
+                            ? "grayscale(0.3)"
+                            : "grayscale(0.15)"
+                        : far
+                          ? "blur(3px) brightness(0.45)"
+                          : abs === 2
+                            ? "brightness(0.55)"
+                            : "brightness(0.65)",
                   }}
                   onClick={() => (isFront ? onFrontPick() : onGo(i))}
                   role="button"
@@ -174,6 +185,10 @@ export default function RingCarousel(props: RingCarouselProps) {
                       <div className={styles.cardScrim}>
                         <div className={styles.cardName}>{yacht.name}</div>
                       </div>
+                    </div>
+                    {/* Light theme only (CSS): the name below the image fade. */}
+                    <div className={styles.cardNameRow}>
+                      <div className={styles.cardName}>{yacht.name}</div>
                     </div>
                     <div className={styles.statRow}>
                       {yacht.guests != null && (
