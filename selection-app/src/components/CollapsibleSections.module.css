@@ -109,3 +109,8 @@
   color: var(--mint);
   border-color: var(--mint);
 }
+
+/* Light theme: cost labels in ink rather than mint. */
+[data-theme="light"] .costLabel {
+  color: var(--fg);
+}

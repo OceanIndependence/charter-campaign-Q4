@@ -209,3 +209,10 @@
 .brochureLink:hover {
   color: var(--mint);
 }
+
+/* Light theme: note, total and highlight text in ink rather than mint/dim. */
+[data-theme="light"] .note,
+[data-theme="light"] .totalValue,
+[data-theme="light"] .featureText {
+  color: var(--fg);
+}

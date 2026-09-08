@@ -307,3 +307,8 @@
 .dot:hover .dotBar {
   background: var(--fg-5);
 }
+
+/* Light theme: the card rate in ink rather than mint. */
+[data-theme="light"] .price {
+  color: var(--fg);
+}

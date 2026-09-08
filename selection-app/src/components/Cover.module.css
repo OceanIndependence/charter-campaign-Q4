@@ -70,3 +70,8 @@
     max-width: 100%;
   }
 }
+
+/* Light theme: eyebrow in grey rather than mint. */
+[data-theme="light"] .eyebrow {
+  color: var(--fg-6);
+}
