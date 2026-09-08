@@ -47,11 +47,17 @@ export function descendants(d: AtlasDestination, index: AtlasIndex): AtlasDestin
   return out;
 }
 
+/** The Mediterranean destinations the intro panel leads with, in this order. */
+export const POPULAR_IDS = ["mediterranean/croatia", "mediterranean/italy", "mediterranean/france", "mediterranean/greece", "mediterranean/turkey"];
+
+/** Pins labelled on the resting globe; everything else is a dot until zoomed. */
+export const RESTING_LABEL_IDS = new Set([...POPULAR_IDS, "mediterranean/spain"]);
+
 const hasCoords = (d: AtlasDestination): d is AtlasDestination & { lat: number; lon: number } => d.lat != null && d.lon != null;
 
 export function toPin(d: AtlasDestination): GlobePin | null {
   if (!hasCoords(d)) return null;
-  return { id: d.id, name: d.name, lat: d.lat, lon: d.lon, featured: d.featured };
+  return { id: d.id, name: d.name, lat: d.lat, lon: d.lon, featured: d.featured, priority: RESTING_LABEL_IDS.has(d.id) };
 }
 
 /**

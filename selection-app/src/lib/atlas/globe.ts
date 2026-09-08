@@ -29,6 +29,20 @@ export interface GlobePin {
   lon: number;
   /** Mint pin with a full label; otherwise a quiet grey dot. */
   featured: boolean;
+  /**
+   * Labelled at rest. Other resting pins show as dots until the globe is
+   * zoomed in or they are hovered or selected.
+   */
+  priority?: boolean;
+}
+
+/** Label positions around the dot; the "2" variants use a taller stem. */
+type Placement = "up" | "right" | "left" | "down" | "up2" | "down2";
+interface Box {
+  x0: number;
+  x1: number;
+  y0: number;
+  y1: number;
 }
 
 export interface GlobeOptions {
@@ -59,6 +73,9 @@ interface PinState extends GlobePin {
   _limb?: number;
   _fade?: number;
   _born?: number;
+  /** Screen box of the visible label and stem, so the label is clickable too */
+  _labelBox?: Box | null;
+  _place?: Placement;
 }
 
 type CountriesTopology = Topology<{ countries: GeometryCollection }>;
@@ -108,6 +125,9 @@ export class AtlasGlobe {
 
   private w = 0;
   private h = 0;
+  /** Type and stems shrink a little on narrow stages */
+  private uiScale = 1;
+  private sized = false;
   private raf = 0;
   private lastFrameAt = 0;
   private ro: ResizeObserver | null = null;
@@ -365,6 +385,11 @@ export class AtlasGlobe {
     if (!w || !h || !this.renderer) return;
     this.w = w;
     this.h = h;
+    this.uiScale = Math.min(w, h) < 560 ? 0.85 : 1;
+    if (!this.sized) {
+      this.sized = true;
+      this.zoom = this.homeZoom();
+    }
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     this.renderer.setSize(w, h);
     this.camera.aspect = w / h;
@@ -452,8 +477,18 @@ export class AtlasGlobe {
     requestAnimationFrame(step);
   }
 
+  /**
+   * Resting zoom: the design's 1.0 on a full-size stage; on a small stage the
+   * globe is enlarged so the Mediterranean is still legible at rest.
+   */
+  private homeZoom() {
+    const r0 = Math.min(this.w, this.h) / 2 - 24;
+    if (r0 <= 0) return this.home.zoom;
+    return Math.max(this.home.zoom, Math.min(2.2, 330 / r0));
+  }
+
   reset() {
-    this.flyTo(this.home.lat, this.home.lon, this.home.zoom, 1600);
+    this.flyTo(this.home.lat, this.home.lon, this.homeZoom(), 1600);
     this.setSelected(null);
   }
 
@@ -482,6 +517,7 @@ export class AtlasGlobe {
       fontFamily: FONT,
       opacity: "0",
     });
+    p._place = "up";
     const label = document.createElement("div");
     label.textContent = p.name.toUpperCase();
     const stem = document.createElement("div");
@@ -502,10 +538,24 @@ export class AtlasGlobe {
    * get a small, light label on a short stem so they read as detail.
    */
   private pinTier(p: PinState) {
-    if (p.sub) return { fontSize: 9, tracking: 0.2, weight: "400", stem: 9, dot: 3.5, labelH: 26 };
-    return p.featured
-      ? { fontSize: 12.5, tracking: 0.34, weight: "500", stem: 20, dot: 5.5, labelH: 46 }
-      : { fontSize: 11.5, tracking: 0.3, weight: "500", stem: 14, dot: 4, labelH: 38 };
+    const k = this.uiScale;
+    const t = p.sub
+      ? { fontSize: 9, tracking: 0.2, weight: "400", stem: 9, dot: 3.5, gap: 4 }
+      : p.featured
+        ? { fontSize: 12.5, tracking: 0.34, weight: "500", stem: 20, dot: 5.5, gap: 6 }
+        : { fontSize: 11.5, tracking: 0.3, weight: "500", stem: 14, dot: 4, gap: 6 };
+    const fontSize = t.fontSize * k;
+    return {
+      ...t,
+      fontSize,
+      stem: Math.round(t.stem * k),
+      /** rendered label line height */
+      lineH: fontSize * 1.3,
+      /** estimated label width (caps, tracked) */
+      labelW: p.name.length * fontSize * (0.72 + t.tracking) + 4,
+      /** half of the dot's hit-area box (dot + 8px transparent border each side) */
+      half: (t.dot + 16) / 2,
+    };
   }
 
   private stylePin(p: PinState) {
@@ -523,20 +573,19 @@ export class AtlasGlobe {
         : p.featured
           ? "0 0 4px rgba(167,230,215,0.4)"
           : "0 0 3px rgba(255,255,255,0.25)";
+    p._el!.style.gap = `${tier.gap}px`;
     Object.assign(label.style, {
       fontSize: `${tier.fontSize}px`,
+      lineHeight: "1.3",
       letterSpacing: `${tier.tracking}em`,
       fontWeight: tier.weight,
       color: ink,
       whiteSpace: "nowrap",
-      paddingLeft: `${tier.tracking}em`,
-      marginBottom: p.sub ? "4px" : "6px",
       textShadow: p.sub ? "none" : "0 1px 6px rgba(6,8,9,0.8)",
     });
     Object.assign(stem.style, {
-      width: "1px",
-      height: `${tier.stem}px`,
       background: sel ? "rgba(167,230,215,0.8)" : p.sub ? "rgba(255,255,255,0.35)" : p.featured ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.3)",
+      flex: "none",
     });
     Object.assign(dot.style, {
       width: `${tier.dot}px`,
@@ -545,10 +594,91 @@ export class AtlasGlobe {
       border: "8px solid transparent",
       backgroundClip: "padding-box",
       boxSizing: "content-box",
-      margin: "-5px -8px -8px",
+      margin: "0",
+      flex: "none",
       backgroundColor: dotInk,
       boxShadow: glow,
     });
+    this.applyPlacement(p, p._place ?? "up", true);
+  }
+
+  /** Arrange label, stem and dot for a placement; the dot always anchors at the pin. */
+  private applyPlacement(p: PinState, place: Placement, force = false) {
+    if (!p._parts || !p._el) return;
+    if (!force && p._place === place) return;
+    p._place = place;
+    const { label, stem, dot } = p._parts;
+    const tier = this.pinTier(p);
+    const row = place === "left" || place === "right";
+    p._el.style.flexDirection = row ? "row" : "column";
+    const labelFirst = place === "up" || place === "up2" || place === "left";
+    label.style.order = labelFirst ? "0" : "2";
+    stem.style.order = "1";
+    dot.style.order = labelFirst ? "2" : "0";
+    const stemLen = this.stemLength(place, tier.stem);
+    stem.style.width = row ? `${stemLen}px` : "1px";
+    stem.style.height = row ? "1px" : `${stemLen}px`;
+    // Centre the text over the dot for vertical placements; the tracking
+    // adds trailing space, so pad the leading edge to match.
+    label.style.paddingLeft = row ? "0" : `${tier.tracking}em`;
+  }
+
+  private stemLength(place: Placement, base: number) {
+    return place === "up2" || place === "down2" ? Math.round(base * 2.4) : base;
+  }
+
+  /** Screen transform that puts the dot centre on (x, y) for a placement. */
+  private placementTransform(place: Placement, x: number, y: number, half: number) {
+    switch (place) {
+      case "up":
+      case "up2":
+        return `translate(${x}px,${y}px) translate(-50%,-100%) translate(0,${half}px)`;
+      case "down":
+      case "down2":
+        return `translate(${x}px,${y}px) translate(-50%,0) translate(0,${-half}px)`;
+      case "right":
+        return `translate(${x}px,${y}px) translate(0,-50%) translate(${-half}px,0)`;
+      case "left":
+        return `translate(${x}px,${y}px) translate(-100%,-50%) translate(${half}px,0)`;
+    }
+  }
+
+  /**
+   * Geometry of a placement: `text` is the label rectangle used for collision
+   * (padded so neighbours breathe); `hit` spans dot, stem and label for
+   * pointer picking.
+   */
+  private placementBox(place: Placement, x: number, y: number, tier: ReturnType<AtlasGlobe["pinTier"]>): { text: Box; hit: Box } {
+    const px = 6;
+    const py = 3;
+    const reach = tier.half + this.stemLength(place, tier.stem) + tier.gap; // dot centre → label edge
+    const lw = tier.labelW;
+    const lh = tier.lineH;
+    const h = tier.half;
+    switch (place) {
+      case "up":
+      case "up2":
+        return {
+          text: { x0: x - lw / 2 - px, x1: x + lw / 2 + px, y0: y - reach - lh - py, y1: y - reach + py },
+          hit: { x0: x - lw / 2 - px, x1: x + lw / 2 + px, y0: y - reach - lh - py, y1: y + h },
+        };
+      case "down":
+      case "down2":
+        return {
+          text: { x0: x - lw / 2 - px, x1: x + lw / 2 + px, y0: y + reach - py, y1: y + reach + lh + py },
+          hit: { x0: x - lw / 2 - px, x1: x + lw / 2 + px, y0: y - h, y1: y + reach + lh + py },
+        };
+      case "right":
+        return {
+          text: { x0: x + reach - px, x1: x + reach + lw + px, y0: y - lh / 2 - py, y1: y + lh / 2 + py },
+          hit: { x0: x - h, x1: x + reach + lw + px, y0: y - lh / 2 - py, y1: y + lh / 2 + py },
+        };
+      case "left":
+        return {
+          text: { x0: x - reach - lw - px, x1: x - reach + px, y0: y - lh / 2 - py, y1: y + lh / 2 + py },
+          hit: { x0: x - reach - lw - px, x1: x + h, y0: y - lh / 2 - py, y1: y + lh / 2 + py },
+        };
+    }
   }
 
   /* ---------------------------------------------------------- interaction */
@@ -557,18 +687,30 @@ export class AtlasGlobe {
     const rect = this.host.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    let best: PinState | null = null;
-    let bestD = 20;
-    for (const p of this.pins.concat(this.subPins)) {
-      if (!p._pickable || !p._xy) continue;
-      const d = Math.hypot(x - p._xy[0], y - p._xy[1]);
-      const score = p._dimmed ? d + 4 : d; // undimmed pins win ties in clusters
-      if (score < bestD) {
-        bestD = score;
-        best = p;
+    const all = this.pins.concat(this.subPins).filter((p) => p._pickable && p._xy);
+    const nearest = (radius: number) => {
+      let best: PinState | null = null;
+      let bestD = radius;
+      for (const p of all) {
+        const d = Math.hypot(x - p._xy![0], y - p._xy![1]);
+        const score = p._dimmed ? d + 4 : d; // undimmed pins win ties in clusters
+        if (score < bestD) {
+          bestD = score;
+          best = p;
+        }
       }
-    }
-    return best;
+      return best;
+    };
+    // A dot right under the pointer wins over a neighbour's label passing
+    // over it; then the label and stem are part of the target; then the
+    // usual proximity to the dot.
+    const onDot = nearest(11);
+    if (onDot) return onDot;
+    const onLabel = all.find((p) => {
+      const b = p._labelBox;
+      return b && x >= b.x0 && x <= b.x1 && y >= b.y0 && y <= b.y1;
+    });
+    return onLabel ?? nearest(20);
   }
 
   private bindPointer() {
@@ -683,6 +825,7 @@ export class AtlasGlobe {
       let fade = Math.max(0, Math.min(1, (V.z * camD - 1) * 5)); // horizon: P.z·D > R² (= 1)
       if (fade <= 0) {
         p._pickable = false;
+        p._labelBox = null;
         p._el.style.opacity = "0";
         continue;
       }
@@ -697,35 +840,59 @@ export class AtlasGlobe {
     }
 
     const weight = (p: PinState) =>
-      (p.id === this.selected ? 6 : 0) + (p.sub ? 5 : 0) + (p._hover ? 3 : 0) + (p.featured ? 1 : 0) - (p._dimmed ? 10 : 0);
+      (p.id === this.selected ? 9 : 0) +
+      (p.priority ? 8 : 0) +
+      (p.sub ? 5 : 0) +
+      (p._hover ? 3 : 0) +
+      (p.featured ? 1 : 0) -
+      (p._dimmed ? 10 : 0);
     visible.sort((a, b) => weight(b) - weight(a) || (b._fade ?? 0) - (a._fade ?? 0));
 
-    const placed: Array<{ x0: number; x1: number; y0: number; y1: number }> = [];
+    // At rest only priority pins are labelled; zooming in reveals the rest.
+    const zoomedIn = this.zoom > this.homeZoom() * 1.5;
+    const ORDER: Placement[] = ["up", "right", "left", "down", "up2", "down2"];
+    // Labels must not cover other labels, nor any visible dot.
+    const placed: Box[] = visible.filter((p) => !p._dimmed).map((p) => ({ x0: p._xy![0] - 6, x1: p._xy![0] + 6, y0: p._xy![1] - 6, y1: p._xy![1] + 6 }));
+    const hits = (a: Box) => placed.some((b) => a.x0 < b.x1 && a.x1 > b.x0 && a.y0 < b.y1 && a.y1 > b.y0);
     for (const p of visible) {
       const tier = this.pinTier(p);
-      const lw = p.name.length * tier.fontSize * (0.68 + tier.tracking);
-      const lh = tier.labelH;
       const [x, y] = p._xy!;
-      const box = { x0: x - lw / 2 - 5, x1: x + lw / 2 + 5, y0: y - lh - 4, y1: y };
-      let collides = false;
-      for (const b of placed) {
-        if (box.x0 < b.x1 && box.x1 > b.x0 && box.y0 < b.y1 && box.y1 > b.y0) {
-          collides = true;
-          break;
+      const el = p._el!;
+      const active = p.id === this.selected || !!p._hover;
+      const eligible = !p._dimmed && (active || p.priority || p.sub || zoomedIn);
+      let place: Placement = p._place ?? "up";
+      let box: Box | null = null;
+      if (eligible) {
+        // Keep the current placement if it still fits, otherwise try the others.
+        const tryOrder = [place, ...ORDER.filter((o) => o !== place)];
+        for (const o of tryOrder) {
+          const b = this.placementBox(o, x, y, tier);
+          if (!hits(b.text)) {
+            place = o;
+            box = b.hit;
+            placed.push(b.text);
+            break;
+          }
+        }
+        // Selected, hovered and priority labels are never culled.
+        if (!box && (active || p.priority)) {
+          place = "up";
+          const b = this.placementBox(place, x, y, tier);
+          box = b.hit;
+          placed.push(b.text);
         }
       }
-      const el = p._el!;
-      el.style.zIndex = p.id === this.selected || p._hover ? "3000" : String(2000 - placed.length);
-      const forced = (p.id === this.selected || p._hover) && !p._dimmed;
-      const showLabel = forced || (!collides && !p._dimmed);
-      if (showLabel) placed.push(box);
+      const showLabel = !!box;
+      p._labelBox = box;
+      this.applyPlacement(p, place);
+      el.style.zIndex = active ? "3000" : p.priority ? "2500" : String(2000 - placed.length);
       const parts = p._parts!;
       parts.label.style.visibility = showLabel ? "visible" : "hidden";
       parts.stem.style.visibility = showLabel ? "visible" : "hidden";
       el.style.filter = p._dimmed ? "grayscale(1)" : "";
       el.style.opacity = String(p._fade);
       p._pickable = (p._limb ?? 0) > 0.4;
-      el.style.transform = `translate(${x}px,${y}px) translate(-50%,-100%)`;
+      el.style.transform = this.placementTransform(place, x, y, tier.half);
     }
     this.renderer.render(this.scene, this.camera);
   }

@@ -10,6 +10,7 @@ import {
   fmtYachtRate,
   parentOf,
   placesLine,
+  POPULAR_IDS,
   shortIntro,
   sirv,
   sirvSrcSet,
@@ -19,8 +20,6 @@ import styles from "./Atlas.module.css";
 
 export const ENQUIRE_URL = "https://www.oceanindependence.com/contact-us/#enquiry-form";
 const MAX_YACHTS = 8;
-/** The Mediterranean destinations the intro leads with, in this order. */
-const POPULAR_IDS = ["mediterranean/croatia", "mediterranean/italy", "mediterranean/france", "mediterranean/greece", "mediterranean/turkey"];
 
 function Enquire({ className }: { className?: string }) {
   return (
