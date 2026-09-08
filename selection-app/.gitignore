@@ -8,3 +8,6 @@ next-env.d.ts
 .vercel
 .DS_Store
 .portal-store/
+data/yachtfolio/samples/*
+!data/yachtfolio/samples/.gitkeep
+data/yachtfolio/fetch-report.md
