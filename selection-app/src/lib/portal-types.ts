@@ -185,6 +185,8 @@ export interface FleetImages {
   exteriorImageUrl: string;
   lifestyleImageUrl: string;
   warnings: string[];
+  /** Blob-operation accounting for this request (diagnostic) */
+  blob?: Record<string, unknown>;
 }
 
 /** Response of GET /api/fleet/:yfId — auto-fill facts for the form (no images). */

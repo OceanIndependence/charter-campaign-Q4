@@ -27,12 +27,19 @@ import {
   pickSeason,
 } from "./yachtfolio/normalise.mjs";
 import { cropToSizes, selectGalleryImages } from "./yachtfolio/images.mjs";
-import { getJson, listImageFiles, putFile, putJson } from "./storage.mjs";
+import { blobOps, getJson, hashBytes, hashJson, isDryRun, putFile, putJson, putJsonIfChanged } from "./storage.mjs";
 
 const FLEET_KEY = "yachtfolio/fleet.json";
 const REFERENCE_KEY = "yachtfolio/reference.json";
 const detailKey = (yfId) => `yachtfolio/details/${yfId}.json`;
-const imagesKey = (yfId) => `yachtfolio/images/${yfId}/manifest.json`;
+/**
+ * The single source of truth for what the refresh has written to Blob:
+ * per yacht, a hash of its normalised facts and, per gallery image, the
+ * passkey-stripped source URL, the hash of the processed bytes and the
+ * public URLs written. Read once per run, written once if it changed.
+ */
+const MANIFEST_KEY = "private/fleet-manifest.json";
+const MANIFEST_VERSION = 1;
 
 const FLEET_STALE_MS = 36 * 60 * 60 * 1000; // lazy re-sync if the cron hasn't run
 const DETAIL_FRESH_MS = 6 * 60 * 60 * 1000; // rates change; don't serve stale for long
@@ -47,7 +54,6 @@ const IMAGE_START_DELAY_MS = 150;
 // Bump to invalidate cached facts / image manifests after a normalisation
 // change — old caches re-fetch.
 const DETAIL_SCHEMA_VERSION = 9;
-const IMAGES_SCHEMA_VERSION = 2;
 // The facts request fetches the brochure; the images request that follows a
 // moment later reuses it from here instead of calling Yachtfolio again.
 const BROCHURE_MEMO_MS = 5 * 60 * 1000;
@@ -122,8 +128,118 @@ async function writeStoredJson(key, value) {
   }
 }
 
+/* -------------------------------------------------------------- manifest */
+
+function emptyManifest() {
+  return { version: MANIFEST_VERSION, updatedAt: null, fleetHash: null, referenceHash: null, fleetCheckedAt: null, yachts: {} };
+}
+
+/**
+ * Start a refresh run: load the manifest once. A missing or unreadable
+ * manifest is reported loudly and treated as empty — every item is then
+ * "new", the run still succeeds, and the manifest is rebuilt at the end.
+ */
+async function startRun(label) {
+  const stats = {
+    label,
+    dryRun: isDryRun(),
+    manifest: "loaded",
+    yachtsChecked: 0,
+    yachtsWritten: 0,
+    yachtsSkipped: 0,
+    imagesChecked: 0,
+    imagesWritten: 0,
+    imagesSkipped: 0,
+    imagesRemoved: [],
+    notes: [],
+  };
+  let manifest = null;
+  try {
+    manifest = await getJson(MANIFEST_KEY);
+  } catch (err) {
+    stats.notes.push(`manifest unreadable (${String(err?.message ?? err)}) — treating every item as new and rebuilding it.`);
+  }
+  if (!manifest || manifest.version !== MANIFEST_VERSION || typeof manifest.yachts !== "object") {
+    if (manifest) stats.notes.push("manifest present but not in the expected shape — rebuilding it.");
+    else if (!stats.notes.length) stats.notes.push("no manifest yet (first run) — treating every item as new and building it.");
+    stats.manifest = "rebuilt";
+    manifest = emptyManifest();
+  }
+  if (stats.dryRun) stats.notes.push("FLEET_REFRESH_DRY_RUN=true — comparisons made, no Blob writes.");
+  for (const n of stats.notes) console.log(`[fleet:${label}] ${n}`);
+  return { manifest, stats, dirty: false, touched: new Set(), opsAt: blobOps() };
+}
+
+/**
+ * End a run: write the manifest once, only if something changed. To limit
+ * lost updates between concurrent on-demand requests, the stored copy is
+ * re-read and only the entries this run touched are merged into it.
+ */
+async function finishRun(run) {
+  if (run.dirty) {
+    let base = null;
+    try {
+      base = await getJson(MANIFEST_KEY);
+    } catch {
+      base = null;
+    }
+    const merged =
+      base && base.version === MANIFEST_VERSION && typeof base.yachts === "object" ? base : emptyManifest();
+    for (const k of ["fleetHash", "referenceHash", "fleetCheckedAt"]) {
+      if (run.touched.has(k)) merged[k] = run.manifest[k];
+    }
+    for (const id of run.touched) {
+      if (run.manifest.yachts[id]) merged.yachts[id] = run.manifest.yachts[id];
+    }
+    merged.updatedAt = new Date().toISOString();
+    await writeStoredJson(MANIFEST_KEY, merged);
+  }
+  // This run's own operations (the module counters are process-wide).
+  const now = blobOps();
+  const d = (k) => now[k] - run.opsAt[k];
+  run.stats.blob = { puts: d("puts"), dels: d("dels"), lists: d("lists"), advanced: d("advanced"), skippedUnchanged: d("skippedUnchanged"), dryRunWrites: d("dryRunWrites") };
+  console.log(`[fleet:${run.stats.label}] Blob advanced operations this run: ${run.stats.blob.advanced} (put ${run.stats.blob.puts}, list ${run.stats.blob.lists})${run.stats.dryRun ? ` — dry run suppressed ${run.stats.blob.dryRunWrites} write(s)` : ""}`);
+  return run.stats;
+}
+
+/** A yacht's manifest entry, created on first sight. */
+function manifestYacht(run, yfId) {
+  const id = String(yfId);
+  run.manifest.yachts[id] ??= { detailHash: null, images: {} };
+  return run.manifest.yachts[id];
+}
+
+/** Yachtfolio media URLs embed the passkey — strip it before storing or logging. */
+function stripSecret(url) {
+  try {
+    const u = new URL(url);
+    u.searchParams.delete("api");
+    u.searchParams.delete("passkey");
+    return u.toString();
+  } catch {
+    return String(url).replace(/([?&])(api|passkey)=[^&]*/gi, "$1").replace(/[?&]+$/, "");
+  }
+}
+
+/** Write a JSON document if its hash differs from the recorded one; record the new hash. */
+async function writeIfChanged(run, key, value, recordedHash, record) {
+  try {
+    const { written, hash } = await putJsonIfChanged(key, value, recordedHash);
+    if (written) {
+      record(hash);
+      run.dirty = true;
+    }
+    return written;
+  } catch (err) {
+    lastStorageError = String(err?.message ?? err);
+    console.warn(`[fleet] storage write failed for ${key}: ${lastStorageError}`);
+    return false;
+  }
+}
+
 export async function syncFleet() {
   const passkey = await passkeyOrThrow();
+  const run = await startRun("sync");
   const previous = (await readStoredJson(FLEET_KEY)) ?? memoryFleet;
 
   const list = await fetchFleetList(passkey);
@@ -149,21 +265,55 @@ export async function syncFleet() {
   };
   memoryFleet = fleet;
   memoryReference = reference;
-  // Persist best-effort: a broken store must not take down a list we already hold.
-  const persisted =
-    (await writeStoredJson(FLEET_KEY, fleet)) && (await writeStoredJson(REFERENCE_KEY, reference));
+
+  // Persist only what changed. The hash excludes syncedAt so an unchanged
+  // fleet costs no write; the check time is recorded in the manifest so the
+  // cached list still counts as fresh.
+  const { syncedAt: _syncedAt, ...fleetContent } = fleet;
+  const fleetContentHash = hashJson(fleetContent);
+  let fleetWritten = false;
+  if (fleetContentHash !== run.manifest.fleetHash) {
+    fleetWritten = await writeStoredJson(FLEET_KEY, fleet);
+    if (fleetWritten) {
+      run.manifest.fleetHash = fleetContentHash;
+      run.touched.add("fleetHash");
+    }
+  }
+  const referenceWritten = await writeIfChanged(run, REFERENCE_KEY, reference, run.manifest.referenceHash, (h) => {
+    run.manifest.referenceHash = h;
+    run.touched.add("referenceHash");
+  });
+  run.manifest.fleetCheckedAt = fleet.syncedAt;
+  run.touched.add("fleetCheckedAt");
+  run.dirty = true;
+  const stats = await finishRun(run);
   return {
     count: fleet.count,
     removedCount: Object.keys(removed).length,
     syncedAt: fleet.syncedAt,
-    persisted,
+    persisted: !stats.dryRun,
+    fleetWritten,
+    referenceWritten,
+    blob: stats.blob,
+    dryRun: stats.dryRun,
+    manifest: stats.manifest,
+    notes: stats.notes,
   };
 }
 
 /** The cached fleet list; bootstraps from the live API when missing/stale. */
 export async function getFleet() {
   let fleet = (await readStoredJson(FLEET_KEY)) ?? memoryFleet;
-  const stale = !fleet || Date.now() - Date.parse(fleet.syncedAt ?? 0) > FLEET_STALE_MS;
+  // An unchanged list is not rewritten, so its syncedAt can be old; the
+  // manifest records when it was last checked against Yachtfolio.
+  let checkedAt = fleet?.syncedAt ?? 0;
+  try {
+    const m = await getJson(MANIFEST_KEY);
+    if (m?.fleetCheckedAt && Date.parse(m.fleetCheckedAt) > Date.parse(checkedAt)) checkedAt = m.fleetCheckedAt;
+  } catch {
+    /* manifest unavailable — fall back to the stored syncedAt */
+  }
+  const stale = !fleet || Date.now() - Date.parse(checkedAt) > FLEET_STALE_MS;
   if (stale) {
     try {
       await syncFleet();
@@ -256,7 +406,23 @@ export async function getYachtDetail(yfId, { forceRefresh = false, debug = false
     warnings: facts.notes,
   };
 
-  await writeStoredJson(detailKey(yfId), detail);
+  // Write only when the normalised facts changed (fetchedAt excluded).
+  const run = await startRun("detail");
+  const entry = manifestYacht(run, yfId);
+  const { fetchedAt: _fetchedAt, ...content } = detail;
+  const contentHash = hashJson(content);
+  run.stats.yachtsChecked = 1;
+  if (contentHash !== entry.detailHash) {
+    if (await writeStoredJson(detailKey(yfId), detail)) {
+      entry.detailHash = contentHash;
+      run.touched.add(String(yfId));
+      run.dirty = true;
+      run.stats.yachtsWritten = 1;
+    }
+  } else {
+    run.stats.yachtsSkipped = 1;
+  }
+  detail.blob = await finishRun(run);
   if (debug) {
     // Raw-shape diagnostics for locating fields the 2023 doc does not
     // describe (e.g. the e-brochure link). Response-only, never cached;
@@ -297,54 +463,53 @@ async function brochureFor(passkey, yfId) {
 }
 
 /**
- * The prepared gallery and default slot images for one yacht. Images are
- * pulled through the crop pipeline into the public store under immutable
- * keys; what already exists is found with one listing call and reused.
- * Cached alongside the facts.
+ * The prepared gallery and default slot images for one yacht, driven by the
+ * manifest: a gallery image whose passkey-stripped source URL is already
+ * recorded is reused without downloading, processing or writing; only
+ * unseen URLs are cropped and written (two sizes each). Nothing is listed
+ * and nothing is deleted — images that have left the Yachtfolio gallery are
+ * reported so they can be dealt with separately.
  */
-export async function getYachtImages(yfId, { forceRefresh = false } = {}) {
-  const cached = await readStoredJson(imagesKey(yfId));
-  if (
-    !forceRefresh &&
-    cached &&
-    cached.schemaVersion === IMAGES_SCHEMA_VERSION &&
-    Date.now() - Date.parse(cached.fetchedAt ?? 0) < DETAIL_FRESH_MS
-  ) {
-    return cached;
-  }
-
+export async function getYachtImages(yfId) {
   const passkey = await passkeyOrThrow();
+  const run = await startRun("images");
+  const entry = manifestYacht(run, yfId);
   const brochure = await brochureFor(passkey, yfId);
   const selected = selectGalleryImages(brochure?.galleries, GALLERY_MAX_PER_CATEGORY);
   const notes = [];
-
   const prefix = `yachtfolio/images/${yfId}/`;
-  const existing = new Map();
-  try {
-    for (const f of await listImageFiles(prefix)) existing.set(f.key, f.url);
-  } catch (err) {
-    console.warn(`[fleet] image listing failed for ${yfId}: ${String(err?.message ?? err)}`);
-  }
+  const seen = new Set();
 
   const processed = await mapLimit(selected, IMAGE_CONCURRENCY, async ({ category, image, baseName }, i) => {
+    const source = stripSecret(image.url);
+    seen.add(source);
+    run.stats.imagesChecked += 1;
+    const known = entry.images[source];
+    if (known?.url && known?.smallUrl) {
+      run.stats.imagesSkipped += 1;
+      return { id: image.id_file, category, url: known.url, smallUrl: known.smallUrl, filename: image.filename ?? null };
+    }
     const keyBase = `${prefix}${baseName}-${image.id_file}`;
     const keys = { large: `${keyBase}.jpg`, small: `${keyBase}-sm.jpg` };
     try {
-      if (existing.has(keys.large) && existing.has(keys.small)) {
-        return { id: image.id_file, category, url: existing.get(keys.large), smallUrl: existing.get(keys.small), filename: image.filename ?? null };
-      }
       await sleep(IMAGE_START_DELAY_MS * (i % IMAGE_CONCURRENCY));
       const res = await fetch(image.url);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const source = Buffer.from(await res.arrayBuffer());
-      const sizes = await cropToSizes(source);
+      const bytes = Buffer.from(await res.arrayBuffer());
+      const sizes = await cropToSizes(bytes);
       const urls = {};
+      let hash = null;
       await Promise.all(
         sizes.map(async (size) => {
           const key = size.suffix === "-sm" ? keys.small : keys.large;
+          if (size.suffix === "") hash = hashBytes(size.buffer);
           urls[size.suffix === "-sm" ? "small" : "large"] = await putFile(key, size.buffer, "image/jpeg");
         })
       );
+      entry.images[source] = { hash, url: urls.large, smallUrl: urls.small, key: keys.large, category, id: image.id_file };
+      run.touched.add(String(yfId));
+      run.dirty = true;
+      run.stats.imagesWritten += 1;
       return { id: image.id_file, category, url: urls.large, smallUrl: urls.small, filename: image.filename ?? null };
     } catch (err) {
       notes.push(
@@ -356,12 +521,22 @@ export async function getYachtImages(yfId, { forceRefresh = false } = {}) {
   });
   const files = processed.filter(Boolean);
 
+  // Images recorded earlier that Yachtfolio no longer returns: keep them,
+  // report them (the decision to delete is taken separately).
+  for (const [source, rec] of Object.entries(entry.images)) {
+    if (!seen.has(source)) run.stats.imagesRemoved.push(rec.key ?? source);
+  }
+  if (run.stats.imagesRemoved.length) {
+    notes.push(`${run.stats.imagesRemoved.length} image(s) no longer in the Yachtfolio gallery are still stored: ${run.stats.imagesRemoved.join(", ")}`);
+  }
+
   // Default slot assignment. The lead is always the yacht's profile shot from
   // Yachtfolio (the FULL gallery, else the first exterior) — never another
   // category. Each other slot takes the first unused image of its own
   // category; when Yachtfolio has none in that category, an image from the
-  // other categories is picked at random (unused first). The consultant can
-  // change any of these in the form's picker.
+  // other categories is chosen (unused first) by a pick that is stable for
+  // this yacht, so repeated runs never differ. The consultant can change any
+  // of these in the form's picker.
   const byCategory = (cat) => files.filter((f) => f.category === cat).map((f) => f.url);
   const full = byCategory("FULL");
   const exterior = byCategory("EXTERIOR");
@@ -372,10 +547,16 @@ export async function getYachtImages(yfId, { forceRefresh = false } = {}) {
     if (url) used.add(url);
     return url ?? "";
   };
-  const randomFrom = (urls) => (urls.length ? urls[Math.floor(Math.random() * urls.length)] : undefined);
+  let salt = 0;
+  const stableFrom = (urls) => {
+    if (!urls.length) return undefined;
+    salt += 1;
+    const seed = parseInt(hashJson(`${yfId}:${salt}`).slice(0, 8), 16);
+    return urls[seed % urls.length];
+  };
   const unused = (urls) => urls.filter((u) => !used.has(u));
   const pick = (own, others) =>
-    take(unused(own)[0] ?? randomFrom(unused(others)) ?? randomFrom(own) ?? randomFrom(others));
+    take(unused(own)[0] ?? stableFrom(unused(others)) ?? stableFrom(own) ?? stableFrom(others));
   const leadImageUrl = take(full[0] ?? exterior[0]);
   if (files.length && !leadImageUrl) {
     notes.push("no profile or exterior image in Yachtfolio — paste a lead image URL in the form.");
@@ -393,8 +574,6 @@ export async function getYachtImages(yfId, { forceRefresh = false } = {}) {
     full.length && exteriorFiles.length > 1
       ? [...exteriorFiles.slice(1), exteriorFiles[0]].map((f) => f.url)
       : exteriorFiles.map((f) => f.url);
-  // A yacht with a single exterior has nothing else: reuse it rather than
-  // leaving the slot blank.
   const exteriorForSlot = ranked.length ? ranked : exterior;
   const interiorImageUrl = pick(interior, [...exteriorForSlot, ...lifestyle]);
   const exteriorImageUrl = pick(exteriorForSlot, [...lifestyle, ...interior]);
@@ -405,9 +584,9 @@ export async function getYachtImages(yfId, { forceRefresh = false } = {}) {
     }
   }
 
-  const result = {
+  const stats = await finishRun(run);
+  return {
     yfId,
-    schemaVersion: IMAGES_SCHEMA_VERSION,
     fetchedAt: new Date().toISOString(),
     gallery: files,
     leadImageUrl,
@@ -415,7 +594,6 @@ export async function getYachtImages(yfId, { forceRefresh = false } = {}) {
     exteriorImageUrl,
     lifestyleImageUrl,
     warnings: notes,
+    blob: stats,
   };
-  await writeStoredJson(imagesKey(yfId), result);
-  return result;
 }

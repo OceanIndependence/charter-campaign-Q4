@@ -10,9 +10,11 @@
  *                                   a passkey-redacted brochure sample and a
  *                                   per-yacht report section
  *
- * Writes data/yachtfolio/fetch-report.md and data/yachtfolio/samples/.
- * Requires YACHTFOLIO_PASSKEY (env or .env.local). Never returns a non-zero
- * exit code; failures land in the report instead.
+ * Writes data/yachtfolio/fetch-report.md (including a "Blob operations"
+ * section) and data/yachtfolio/samples/. Requires YACHTFOLIO_PASSKEY (env or
+ * .env.local). FLEET_REFRESH_DRY_RUN=true makes every comparison but writes
+ * nothing to Blob. Never returns a non-zero exit code; failures land in the
+ * report instead.
  */
 
 import { mkdir, writeFile } from "node:fs/promises";
@@ -20,8 +22,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { fetchBrochure, loadPasskey, redact } from "../src/server/yachtfolio/client.mjs";
 import { checkBrochureShape } from "../src/server/yachtfolio/normalise.mjs";
-import { getYachtDetail, syncFleet } from "../src/server/fleet.mjs";
-import { getJson } from "../src/server/storage.mjs";
+import { getYachtDetail, getYachtImages, syncFleet } from "../src/server/fleet.mjs";
+import { blobOps, getJson, isDryRun } from "../src/server/storage.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const YF_DIR = path.join(ROOT, "data", "yachtfolio");
@@ -36,6 +38,14 @@ async function main() {
 
   const lines = ["# Yachtfolio fetch report", "", `Generated: ${new Date().toISOString()}`, ""];
   const passkey = await loadPasskey([ROOT, path.join(ROOT, "..")]);
+  const totals = { yachtsChecked: 0, yachtsWritten: 0, yachtsSkipped: 0, imagesChecked: 0, imagesWritten: 0, imagesSkipped: 0, imagesRemoved: [], manifest: null, notes: [] };
+  const absorb = (b) => {
+    if (!b) return;
+    for (const k of ["yachtsChecked", "yachtsWritten", "yachtsSkipped", "imagesChecked", "imagesWritten", "imagesSkipped"]) totals[k] += b[k] ?? 0;
+    totals.imagesRemoved.push(...(b.imagesRemoved ?? []));
+    totals.manifest ??= b.manifest;
+    for (const n of b.notes ?? []) if (!totals.notes.includes(n)) totals.notes.push(n);
+  };
 
   if (!passkey) {
     lines.push(
@@ -47,9 +57,12 @@ async function main() {
     process.env.YACHTFOLIO_PASSKEY ??= passkey;
     try {
       const sync = await syncFleet();
+      totals.manifest = sync.manifest;
+      for (const n of sync.notes ?? []) totals.notes.push(n);
       lines.push("## Fleet sync", "", `- Yachts in the public list: ${sync.count}`);
       lines.push(`- Recorded removals (no longer listed): ${sync.removedCount}`);
-      lines.push(`- Synced at: ${sync.syncedAt}`, "");
+      lines.push(`- Synced at: ${sync.syncedAt}`);
+      lines.push(`- Fleet list: ${sync.fleetWritten ? "changed — written" : "unchanged — not written"}; reference data: ${sync.referenceWritten ? "changed — written" : "unchanged — not written"}`, "");
       const fleet = await getJson("yachtfolio/fleet.json");
       const removed = Object.entries(fleet?.removed ?? {});
       if (removed.length) {
@@ -65,6 +78,9 @@ async function main() {
       lines.push(`## Yacht YF-${yfId}`, "");
       try {
         const detail = await getYachtDetail(yfId, { forceRefresh: true });
+        absorb(detail.blob);
+        const images = await getYachtImages(yfId);
+        absorb(images.blob);
         if (index === 0) {
           const { raw } = await fetchBrochure(passkey, yfId);
           await mkdir(SAMPLES_DIR, { recursive: true });
@@ -91,15 +107,29 @@ async function main() {
           }`
         );
         lines.push(`- Data source: ${detail.dataSource ?? "missing"}`);
-        lines.push(`- Images prepared: ${detail.gallery.length}`);
+        lines.push(`- Images prepared: ${images.gallery.length} (${images.blob?.imagesWritten ?? 0} newly written, ${images.blob?.imagesSkipped ?? 0} reused)`);
         lines.push(`- Missing fields: ${detail.missing.length ? detail.missing.join(", ") : "none"}`);
-        for (const w of detail.warnings) lines.push(`- Note: ${w}`);
+        for (const w of [...detail.warnings, ...images.warnings]) lines.push(`- Note: ${w}`);
       } catch (err) {
         lines.push(`- ERROR: ${redact(String(err?.message ?? err), passkey)}`);
       }
       lines.push("");
     }
   }
+
+  // Blob operations — what this run cost in Vercel "advanced operations"
+  // (put/copy/del/list; reads are free).
+  const ops = blobOps();
+  lines.push("## Blob operations", "");
+  if (isDryRun()) lines.push("- DRY RUN (FLEET_REFRESH_DRY_RUN=true): comparisons made, nothing written.");
+  lines.push(`- Manifest: ${totals.manifest ?? "not loaded"}`);
+  lines.push(`- Yachts checked: ${totals.yachtsChecked}; written: ${totals.yachtsWritten}; skipped (unchanged): ${totals.yachtsSkipped}`);
+  lines.push(`- Images checked: ${totals.imagesChecked}; written: ${totals.imagesWritten}; skipped (already stored): ${totals.imagesSkipped}`);
+  lines.push(`- Images no longer in Yachtfolio (kept, not deleted): ${totals.imagesRemoved.length ? totals.imagesRemoved.join(", ") : "none"}`);
+  lines.push(`- Advanced operations used: ${ops.advanced} (put ${ops.puts}, delete ${ops.dels}, list ${ops.lists})`);
+  if (ops.dryRunWrites) lines.push(`- Writes suppressed by dry run: ${ops.dryRunWrites}`);
+  for (const n of totals.notes) lines.push(`- ${n}`);
+  lines.push("");
 
   await mkdir(SAMPLES_DIR, { recursive: true });
   await writeFile(REPORT_PATH, lines.join("\n") + "\n", "utf8");

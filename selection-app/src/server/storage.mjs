@@ -25,6 +25,7 @@
 
 import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile, readdir, unlink } from "node:fs/promises";
+import { createHash } from "node:crypto";
 import path from "node:path";
 
 const FS_ROOT = process.env.PORTAL_STORE_DIR ?? path.join(process.cwd(), ".portal-store");
@@ -51,11 +52,84 @@ async function blob() {
   return import("@vercel/blob");
 }
 
+/* ------------------------------------------- operations accounting / dry run */
+
+/**
+ * Vercel Blob bills put/copy/del/list as "advanced operations". Every one
+ * made through this module is counted here so a run can report exactly what
+ * it cost; reads are free and are not counted.
+ */
+const ops = { puts: 0, dels: 0, lists: 0, skippedUnchanged: 0, dryRunWrites: 0 };
+
+/** Snapshot of the advanced-operation counters for this process. */
+export function blobOps() {
+  return { ...ops, advanced: ops.puts + ops.dels + ops.lists, dryRun: isDryRun() };
+}
+
+export function resetBlobOps() {
+  for (const k of Object.keys(ops)) ops[k] = 0;
+}
+
+/**
+ * FLEET_REFRESH_DRY_RUN=true: perform every comparison but make no Blob
+ * writes or deletes. Each suppressed write is counted and logged.
+ */
+export function isDryRun() {
+  return String(process.env.FLEET_REFRESH_DRY_RUN ?? "").toLowerCase() === "true";
+}
+
+/** Deterministic JSON (sorted keys) so equal content always hashes equal. */
+export function stableStringify(value) {
+  const seen = new WeakSet();
+  const walk = (v) => {
+    if (v === null || typeof v !== "object") return v;
+    if (seen.has(v)) return null;
+    seen.add(v);
+    if (Array.isArray(v)) return v.map(walk);
+    return Object.fromEntries(
+      Object.keys(v)
+        .sort()
+        .filter((k) => v[k] !== undefined)
+        .map((k) => [k, walk(v[k])])
+    );
+  };
+  return JSON.stringify(walk(value));
+}
+
+export function hashJson(value) {
+  return createHash("sha1").update(stableStringify(value)).digest("hex");
+}
+
+export function hashBytes(buffer) {
+  return createHash("sha1").update(buffer).digest("hex");
+}
+
+/**
+ * Write a JSON document only when its content hash differs from the hash
+ * recorded for it. Returns { written, hash }. The shared "put if changed"
+ * used by the fleet refresh and the portal index.
+ */
+export async function putJsonIfChanged(key, value, previousHash) {
+  const hash = hashJson(value);
+  if (previousHash && previousHash === hash) {
+    ops.skippedUnchanged += 1;
+    return { written: false, hash };
+  }
+  await putJson(key, value);
+  return { written: true, hash };
+}
+
 /* --------------------------------------------------- DATA (private JSON) */
 
 /** Store a JSON document at `key` (e.g. "portal/drafts/abc.json"). */
 export async function putJson(key, value) {
   const body = JSON.stringify(value, null, 2);
+  if (isDryRun()) {
+    ops.dryRunWrites += 1;
+    console.log(`[blob] dry run — would write ${key} (${body.length} bytes)`);
+    return;
+  }
+  ops.puts += 1;
   const token = dataToken();
   if (token) {
     const { put } = await blob();
@@ -101,6 +175,12 @@ export async function getJson(key) {
 
 /** Delete a JSON document from the DATA store (no-op when absent). */
 export async function deleteJson(key) {
+  if (isDryRun()) {
+    ops.dryRunWrites += 1;
+    console.log(`[blob] dry run — would delete ${key}`);
+    return;
+  }
+  ops.dels += 1;
   const token = dataToken();
   if (token) {
     const { del } = await blob();
@@ -113,6 +193,7 @@ export async function deleteJson(key) {
 
 /** List keys under a prefix in the DATA store. */
 export async function listKeys(prefix) {
+  ops.lists += 1;
   const token = dataToken();
   if (token) {
     const { list } = await blob();
@@ -141,6 +222,12 @@ export async function listKeys(prefix) {
  * are cached for a year.
  */
 export async function putFile(key, buffer, contentType) {
+  if (isDryRun()) {
+    ops.dryRunWrites += 1;
+    console.log(`[blob] dry run — would write ${key} (${buffer.length} bytes)`);
+    return `dry-run://${key}`;
+  }
+  ops.puts += 1;
   const token = imagesToken();
   if (token) {
     const { put } = await blob();
@@ -162,6 +249,7 @@ export async function putFile(key, buffer, contentType) {
 
 /** Every file under a prefix in the IMAGES store, as [{ key, url }] — one call. */
 export async function listImageFiles(prefix) {
+  ops.lists += 1;
   const token = imagesToken();
   if (token) {
     const { list } = await blob();
