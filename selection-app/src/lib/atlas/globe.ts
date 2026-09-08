@@ -496,36 +496,51 @@ export class AtlasGlobe {
     this.stylePin(p);
   }
 
+  /**
+   * Two clearly different tiers: countries (the resting globe) carry a large,
+   * widely tracked label on a tall stem; places within a country (sub-pins)
+   * get a small, light label on a short stem so they read as detail.
+   */
+  private pinTier(p: PinState) {
+    if (p.sub) return { fontSize: 9, tracking: 0.2, weight: "400", stem: 9, dot: 3.5, labelH: 26 };
+    return p.featured
+      ? { fontSize: 12.5, tracking: 0.34, weight: "500", stem: 20, dot: 5.5, labelH: 46 }
+      : { fontSize: 11.5, tracking: 0.3, weight: "500", stem: 14, dot: 4, labelH: 38 };
+  }
+
   private stylePin(p: PinState) {
     if (!p._parts) return;
     const { label, stem, dot } = p._parts;
     const sel = this.selected === p.id;
-    const strong = p.featured || !!p.sub;
-    const ink = sel ? MINT : strong ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.5)";
+    const tier = this.pinTier(p);
+    const ink = sel ? MINT : p.sub ? "rgba(255,255,255,0.72)" : p.featured ? "rgba(255,255,255,0.95)" : "rgba(255,255,255,0.55)";
     // Mint dot for featured destinations, grey for the rest.
-    const dotInk = sel ? MINT : p.featured ? "rgba(167,230,215,0.95)" : "rgba(255,255,255,0.45)";
+    const dotInk = sel ? MINT : p.featured ? (p.sub ? "rgba(167,230,215,0.8)" : "rgba(167,230,215,0.95)") : "rgba(255,255,255,0.45)";
     const glow = sel
       ? "0 0 8px rgba(167,230,215,0.9)"
-      : p.featured
+      : p.featured && !p.sub
         ? "0 0 6px rgba(167,230,215,0.55)"
-        : "0 0 3px rgba(255,255,255,0.25)";
+        : p.featured
+          ? "0 0 4px rgba(167,230,215,0.4)"
+          : "0 0 3px rgba(255,255,255,0.25)";
     Object.assign(label.style, {
-      fontSize: p.sub ? "10px" : "11px",
-      letterSpacing: "0.28em",
-      fontWeight: "500",
+      fontSize: `${tier.fontSize}px`,
+      letterSpacing: `${tier.tracking}em`,
+      fontWeight: tier.weight,
       color: ink,
       whiteSpace: "nowrap",
-      paddingLeft: "0.28em",
-      marginBottom: "5px",
+      paddingLeft: `${tier.tracking}em`,
+      marginBottom: p.sub ? "4px" : "6px",
+      textShadow: p.sub ? "none" : "0 1px 6px rgba(6,8,9,0.8)",
     });
     Object.assign(stem.style, {
       width: "1px",
-      height: strong ? "16px" : "10px",
-      background: sel ? "rgba(167,230,215,0.8)" : strong ? "rgba(255,255,255,0.55)" : "rgba(255,255,255,0.3)",
+      height: `${tier.stem}px`,
+      background: sel ? "rgba(167,230,215,0.8)" : p.sub ? "rgba(255,255,255,0.35)" : p.featured ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.3)",
     });
     Object.assign(dot.style, {
-      width: strong ? "5px" : "3px",
-      height: strong ? "5px" : "3px",
+      width: `${tier.dot}px`,
+      height: `${tier.dot}px`,
       borderRadius: "50%",
       border: "8px solid transparent",
       backgroundClip: "padding-box",
@@ -687,10 +702,9 @@ export class AtlasGlobe {
 
     const placed: Array<{ x0: number; x1: number; y0: number; y1: number }> = [];
     for (const p of visible) {
-      const strong = p.featured || !!p.sub;
-      const fs = p.sub ? 10 : 11;
-      const lw = p.name.length * fs * 0.68 + p.name.length * fs * 0.28;
-      const lh = strong ? 40 : 30;
+      const tier = this.pinTier(p);
+      const lw = p.name.length * tier.fontSize * (0.68 + tier.tracking);
+      const lh = tier.labelH;
       const [x, y] = p._xy!;
       const box = { x0: x - lw / 2 - 5, x1: x + lw / 2 + 5, y0: y - lh - 4, y1: y };
       let collides = false;

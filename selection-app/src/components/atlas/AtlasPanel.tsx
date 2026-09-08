@@ -214,7 +214,7 @@ export function DestinationPanel({ dest, index, onSelect, onBack }: DestinationP
           </div>
           {yachts.length > shownYachts.length && (
             <a className={styles.moreLink} href={`${dest.url}#yachts-in-the-area`} target="_blank" rel="noopener">
-              VIEW ALL {yachts.length} YACHTS IN {dest.name.toUpperCase()}
+              VIEW MORE YACHTS IN {dest.name.toUpperCase()}
             </a>
           )}
         </>
