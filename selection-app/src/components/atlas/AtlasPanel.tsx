@@ -5,12 +5,12 @@ import {
   children,
   childrenLabel,
   countWords,
-  descendants,
   eyebrowFor,
   fmtYachtMeta,
   fmtYachtRate,
   parentOf,
   placesLine,
+  shortIntro,
   sirv,
   sirvSrcSet,
   type AtlasIndex,
@@ -19,7 +19,8 @@ import styles from "./Atlas.module.css";
 
 export const ENQUIRE_URL = "https://www.oceanindependence.com/contact-us/#enquiry-form";
 const MAX_YACHTS = 8;
-const NOTE = "Owners typically confirm their calendars between November and January; the most requested yachts commit their peak weeks first.";
+/** The Mediterranean destinations the intro leads with, in this order. */
+const POPULAR_IDS = ["mediterranean/croatia", "mediterranean/italy", "mediterranean/france", "mediterranean/greece", "mediterranean/turkey"];
 
 function Enquire({ className }: { className?: string }) {
   return (
@@ -50,31 +51,31 @@ export function IntroPanel({ index, onSelect }: { index: AtlasIndex | null; onSe
           DESTINATION GUIDE
         </span>
       </div>
-      <div className={styles.rule} />
-      <p className={styles.footnote}>{NOTE}</p>
-
       {index && (
         <>
           <div className={styles.sectionHead}>
-            <div className={styles.sectionTitle}>{countWords(index.regions.length).toUpperCase()} REGIONS</div>
-            <div className={styles.sectionSub}>Select a region to begin, or turn the globe and choose a pin</div>
+            <div className={styles.sectionTitle}>THE MEDITERRANEAN</div>
+            <div className={styles.sectionSub}>The most requested waters of the summer. Select a country to see its cruising grounds</div>
           </div>
           <ul className={styles.regionList}>
-            {index.regions.map((r) => {
-              const n = descendants(r, index).length;
-              return (
-                <li key={r.id}>
-                  <button type="button" className={styles.regionRow} onClick={() => onSelect(r.id)}>
-                    <span className={styles.regionName}>{r.name}</span>
-                    <span className={styles.regionCount}>{n ? `${n} ${childrenLabel({ ...r, level: 1 }, n).toUpperCase()}` : "GUIDE"}</span>
-                    <span className={styles.arrow} aria-hidden="true">
-                      →
-                    </span>
-                  </button>
-                </li>
-              );
-            })}
+            {POPULAR_IDS.map((id) => index.byId.get(id))
+              .filter((d): d is AtlasDestination => !!d)
+              .map((d) => {
+                const n = d.childIds.length;
+                return (
+                  <li key={d.id}>
+                    <button type="button" className={styles.regionRow} onClick={() => onSelect(d.id)}>
+                      <span className={styles.regionName}>{d.name}</span>
+                      <span className={styles.regionCount}>{n ? `${n} ${childrenLabel(d, n).toUpperCase()}` : "GUIDE"}</span>
+                      <span className={styles.arrow} aria-hidden="true">
+                        →
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
           </ul>
+          <p className={styles.footnote}>Beyond the Mediterranean, turn the globe: every pin is a destination we charter in 2027.</p>
         </>
       )}
     </div>
@@ -134,6 +135,7 @@ export function DestinationPanel({ dest, index, onSelect, onBack }: DestinationP
   const shownYachts = yachts.slice(0, MAX_YACHTS);
   const hero = dest.heroImage ?? dest.cardImage ?? dest.ogImage;
   const facts = dest.keyFacts.filter((f) => !/popular destinations/i.test(f.label));
+  const intro = shortIntro(dest);
   const kidsLabel = childrenLabel(dest, kids.length);
   const kidsSub =
     dest.level <= 1
@@ -155,23 +157,13 @@ export function DestinationPanel({ dest, index, onSelect, onBack }: DestinationP
         </div>
       )}
 
-      {dest.lede && <p className={styles.lede}>{dest.lede}</p>}
-      {dest.paragraphs.map((p, i) => (
-        <p className={styles.body} key={i}>
-          {p}
+      {intro && (
+        <p className={styles.lede}>
+          {intro}{" "}
+          <a className={styles.guideLink} href={dest.url} target="_blank" rel="noopener">
+            Read the full guide
+          </a>
         </p>
-      ))}
-      {!dest.lede && dest.paragraphs.length === 0 && dest.summary && <p className={styles.lede}>{dest.summary}</p>}
-
-      {facts.length > 0 && (
-        <dl className={styles.facts}>
-          {facts.map((f) => (
-            <div className={styles.factRow} key={f.label}>
-              <dt className={styles.factLabel}>{f.label.toUpperCase()}</dt>
-              <dd className={styles.factValue}>{f.value}</dd>
-            </div>
-          ))}
-        </dl>
       )}
 
       {kids.length > 0 && (
@@ -228,24 +220,18 @@ export function DestinationPanel({ dest, index, onSelect, onBack }: DestinationP
         </>
       )}
 
-      {dest.whyVisit.length > 0 && (
-        <>
-          <div className={styles.sectionHead}>
-            <div className={styles.sectionTitle}>HIGHLIGHTS</div>
-          </div>
-          <ol className={styles.highlights}>
-            {dest.whyVisit.map((h, i) => (
-              <li className={styles.highlight} key={h}>
-                <span className={styles.highlightNo}>{String(i + 1).padStart(2, "0")}</span>
-                <span className={styles.highlightText}>{h.toUpperCase()}</span>
-              </li>
-            ))}
-          </ol>
-        </>
+      {facts.length > 0 && (
+        <dl className={styles.facts}>
+          {facts.map((f) => (
+            <div className={styles.factRow} key={f.label}>
+              <dt className={styles.factLabel}>{f.label.toUpperCase()}</dt>
+              <dd className={styles.factValue}>{f.value}</dd>
+            </div>
+          ))}
+        </dl>
       )}
 
       <div className={styles.panelFoot}>
-        <p className={styles.footnote}>{NOTE}</p>
         {yachts.length > 0 && <p className={styles.footBody}>These are a selection. Your consultant can suggest yachts beyond it.</p>}
         <Enquire />
       </div>

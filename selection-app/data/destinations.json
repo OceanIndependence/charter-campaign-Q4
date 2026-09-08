@@ -61,7 +61,6 @@
       "metaDescription": "Expedition superyacht routes to the Antarctic Peninsula, South Georgia, and the Weddell Sea. Ocean Independence arranges Antarctica routes. Enquire today.",
       "lede": "",
       "paragraphs": [],
-      "whyVisit": [],
       "keyFacts": [],
       "childIds": [
         "antarctica/antarctica"
@@ -103,7 +102,6 @@
       "metaDescription": "Superyacht routes to Svalbard, East Greenland, and the Lofoten Islands. Ocean Independence arranges Arctic itineraries for the polar season. Enquire today.",
       "lede": "",
       "paragraphs": [],
-      "whyVisit": [],
       "keyFacts": [],
       "childIds": [
         "arctic/east-greenland",
@@ -149,7 +147,6 @@
       "metaDescription": "Superyacht routes along the Kimberley Coast and New Zealand's Marlborough Sounds. Ocean Independence arranges Australia and NZ itineraries. Enquire today.",
       "lede": "",
       "paragraphs": [],
-      "whyVisit": [],
       "keyFacts": [],
       "childIds": [
         "australia-and-new-zealand/australia",
@@ -202,41 +199,6 @@
         "Enjoy exhilarating watersports courtesy of your yacht’s garage of watertoys, or head ashore and discover a superb selection of sites and attractions, from world-class restaurants to thrill-seeking experiences and a dazzling mixture of flora and fauna.",
         "On a crewed Caribbean yacht charter, you can escape the winter blues and head for palm-fringed shores surrounded by some of the world’s finest waters for sailing and island-hopping.",
         "With over 7,000 islands to explore in the Caribbean, there’s an island to suit any desired experience, whether you are in search of peace and solitude or the world’s most exclusive beach clubs and party hotspots. A luxury yacht charter vacation in the Caribbean promises unparalleled luxury, captivating landscapes, and unforgettable experiences."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Casinos",
-        "Wreck diving",
-        "Big game fishing",
-        "Chic boutiques",
-        "Stunning views",
-        "Culinary delights",
-        "World class restaurants",
-        "Vibrant nightlife",
-        "Luis Muñoz Marin International Airport (San Juan, Puerto Rico)",
-        "Princess Juliana International Airport (St. Maarten)",
-        "Cyril E. King Airport (St. Thomas, US Virgin Islands)",
-        "Fernando Luis Ribas Dominicci Airport (San Juan, Puerto Rico)",
-        "Henry E. Rohlsen Airport (St. Croix, US Virgin Islands)",
-        "Terrance B. Lettsome International Airport (Beef Island, British Virgin Islands)",
-        "Clayton J. Lloyd International Airport (Anguilla)",
-        "V. C. Bird International Airport (Antigua & Barbuda)",
-        "Gustaf III Airport (St. Barts)",
-        "Grantley Adams International Airport (Barbados)",
-        "Robert L. Bradshaw International Airport (St. Kitts)",
-        "Lynden Pindling International Airport (Nassau)",
-        "American Airlines",
-        "Delta",
-        "Jet Blue",
-        "British Airways",
-        "Virgin Airlines",
-        "SWISS",
-        "Air France",
-        "Lufthansa",
-        "KLM Royal Dutch Airlines",
-        "Qatar Airways",
-        "Emirates",
-        "Tropic Ocean Airways"
       ],
       "keyFacts": [
         {
@@ -303,17 +265,6 @@
         "Central America consists of an array of colourful destinations: Mexico, Belize, Costa Rica, El Salvador, Guatemala, Honduras, Nicaragua, and Panama. This biodiverse hotspot includes off-the-beaten-track beach destinations such as the San Blas Islands near Panama or ecotourism adventures in Costa Rica.",
         "The bridging point between continents and oceans, Central America is a blend of incredible culture and fascinating history. Wonders from the natural world are ubiquitous, from rainforests inhabited by tribal natives to cascading waterfalls tripping over mountainous peaks to lush valleys below. Exquisite beaches run their sandy paths down the cerulean sea, which bursts with marine life."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Big game fishing",
-        "Great surf spots",
-        "History and culture",
-        "Stunning views",
-        "Vibrant nightlife",
-        "Wildlife",
-        "World class restaurants",
-        "Wreck diving"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -377,7 +328,6 @@
       "metaDescription": "Seychelles, Maldives, and Sri Lanka superyacht routes, curated by Ocean Independence. Enquire for Indian Ocean charter itineraries and crew availability.",
       "lede": "",
       "paragraphs": [],
-      "whyVisit": [],
       "keyFacts": [],
       "childIds": [
         "indian-ocean/seychelles",
@@ -425,35 +375,6 @@
       "paragraphs": [
         "From the sparkling blue waters surrounding the islands of Greece to the iconic Amalfi Coast, a Mediterranean yacht charter provides an opportunity to savour Michelin-starred cuisine, discover ancient ruins, and encounter the vibrant cultures that have shaped the region for millennia.",
         "Where the world’s most discerning travellers go to seek beauty, relaxation, and adventure. Experience the Mediterranean’s legendary allure first-hand on a superyacht charter with Ocean Independence and discover why the region earned its name as the “centre of the world” in ancient Rome."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Palaces",
-        "Chic boutiques",
-        "Stunning views",
-        "History and culture",
-        "Vibrant nightlife",
-        "Wreck Diving",
-        "Culinary delights",
-        "World class restaurants",
-        "Nice Cote D'Azur Airport",
-        "Salerno Costa d'Amalfi Airport",
-        "Palma de Mallorca Airport",
-        "Ibiza Airport",
-        "Cannes Mandelieu Airport",
-        "Olbia Costa Smeralda Airport",
-        "Dubrovnik Airport",
-        "Catania Fontanarossa International Airport",
-        "Venice Marco Polo International Airport",
-        "Mykonos International Airport",
-        "Santorini National Airport",
-        "British Airways",
-        "SWISS",
-        "Air France",
-        "Lufthansa",
-        "KLM Royal Dutch Airlines",
-        "Qatar Airways",
-        "Emirates"
       ],
       "keyFacts": [
         {
@@ -572,7 +493,6 @@
       "metaDescription": "Superyacht routes through Dubai, Abu Dhabi, and the Arabian Gulf. Ocean Independence arranges Middle East charters with expert crew. Enquire today.",
       "lede": "",
       "paragraphs": [],
-      "whyVisit": [],
       "keyFacts": [],
       "childIds": [
         "middle-east/the-red-sea"
@@ -621,7 +541,6 @@
       "metaDescription": "Superyacht routes from Alaska and Pacific Northwest to the Florida Keys and New England. Ocean Independence arranges North America routes. Enquire today.",
       "lede": "",
       "paragraphs": [],
-      "whyVisit": [],
       "keyFacts": [],
       "childIds": [
         "north-america/alaska",
@@ -673,7 +592,6 @@
       "metaDescription": "Superyacht routes through Norwegian fjords, the Baltic Sea, and the Scottish Highlands. Ocean Independence arranges Northern Europe routes. Enquire today.",
       "lede": "",
       "paragraphs": [],
-      "whyVisit": [],
       "keyFacts": [],
       "childIds": [
         "northern-europe/norway"
@@ -722,7 +640,6 @@
       "metaDescription": "Superyacht routes through Patagonia, the Chilean fjords, and the Galápagos. Ocean Independence arranges South America itineraries. Enquire for routes.",
       "lede": "",
       "paragraphs": [],
-      "whyVisit": [],
       "keyFacts": [],
       "childIds": [
         "south-america/chile",
@@ -768,7 +685,6 @@
       "metaDescription": "Thailand, Langkawi, and Indonesian archipelago superyacht routes arranged by Ocean Independence. Enquire for South East Asia itineraries and availability.",
       "lede": "",
       "paragraphs": [],
-      "whyVisit": [],
       "keyFacts": [],
       "childIds": [
         "south-east-asia/indonesia",
@@ -819,7 +735,6 @@
       "metaDescription": "Fiji, French Polynesia, and Tonga superyacht routes arranged by Ocean Independence. Enquire for South Pacific itineraries, seasons, and availability.",
       "lede": "",
       "paragraphs": [],
-      "whyVisit": [],
       "keyFacts": [],
       "childIds": [
         "south-pacific/fiji",
@@ -872,11 +787,6 @@
         "Enjoy an expedition in comfort, luxury and safety whilst discovering the spectacular Antarctic environment. As well as watching the incredible wildlife (seals, whales, penguins and more), at certain times of year you can also dive, fish and climb.",
         "The southern lights or Aurora Australis are visible in the night sky, diamond dust clouds can be seen under clear skies and sun dogs are an optical phenomenon viewed beside the sun. Embrace the magic of the Antarctic landscape from on board your own private yacht, on your terms."
       ],
-      "whyVisit": [
-        "Stunning views",
-        "History and culture",
-        "Wildlife"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -924,14 +834,6 @@
         "With only 5% of Greenland’s population residing on the east coast, East Greenland offers unparalleled privacy. The isolation of this region means that the landscape remains unspoiled, and the air is incredibly clear—making it the perfect place to experience the Northern Lights. Sunrises and sunsets here are nothing short of breathtaking, especially when enjoyed from the water.",
         "At the heart of East Greenland lies Scoresbysund, the largest fjord system in the world. This intricate network of fjords is roamed by local wildlife and it’s likely that you’ll catch a glimpse of some of Greenland’s iconic animals, including musk ox, seals, polar bears, and humpback whales. The undisturbed nature of this region makes it an extraordinary place for wildlife watching, providing a rare opportunity to witness these magnificent creatures in their natural habitat.",
         "The settlement of Ittoqqortoormiit is one of the most remote communities in the world, home to multi-coloured houses making this area instantly recognisable. With a population of just 400, it offers a rare glimpse into what life is like in one of the world’s most secluded corners. For those looking to immerse themselves even further into the local culture, a guided tour by one of the friendly locals is available, providing a unique insight into the history and daily life of this Arctic community."
-      ],
-      "whyVisit": [
-        "Remote wilderness",
-        "Natural wonders",
-        "Glacial landscapes",
-        "Stunning views",
-        "World-class excursions",
-        "Unique wildlife"
       ],
       "keyFacts": [
         {
@@ -989,14 +891,6 @@
         "For those seeking seclusion and natural beauty, the uninhabited island of Prins Karls Forland is a must-see. This pristine island is teeming with wildlife, including reindeer, Arctic foxes, walruses, and even polar bears. Its untouched landscapes offer an unparalleled sense of tranquillity, making it a rare and peaceful retreat within the Norwegian Fjords.",
         "Isfjorden is another highlight, perfect for those wishing to immerse themselves in the area’s stunning natural surroundings. With a variety of scenic look out points and numerous hiking trails, this region offers panoramic views of the surrounding mountains, best experienced at sunrise."
       ],
-      "whyVisit": [
-        "Natural wonders",
-        "Stunning views",
-        "Unique wildlife",
-        "Glacial landscapes",
-        "Remote wilderness",
-        "Pristine fjords"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -1052,16 +946,6 @@
         "With its picture postcard views of the city, best savoured from the deck of a luxury superyacht, Sydney Harbour is probably one of the most stunning landscapes in the world. The city itself boasts a multitude of attractions, ranging from buzzing nightlife and excellent restaurants to widespread cultural opportunities.",
         "Taking your Australian superyacht charter further along the coast, a visit to the famous Great Barrier Reef is essential. Home to some of the most exotic and rare marine creatures on the planet, discovering the hidden world beneath the crystal clear blue waters is an exceptional experience.",
         "Trips inland are also recommended; Australia’s unique climatic zones and fascinating landscapes offer a melange of diverse entertainment and bewildering beauty. On the northern side, the continent is dominated by lush rainforests, with great opportunities to observe a range of fascinating, indigenous wildlife, flourishing in their natural habitat. Further to the south, deserts with far-reaching vistas dominate the landscape. Visit traditional Aborigine villages and explore first hand one of the most intriguing cultures on the planet."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Great surf spots",
-        "Wreck diving",
-        "Vibrant nightlife",
-        "Big game fishing",
-        "Stunning views",
-        "Chic boutiques",
-        "Vibrant nightlife"
       ],
       "keyFacts": [
         {
@@ -1124,17 +1008,6 @@
       "paragraphs": [
         "Complete with some of the planets’ finest wines and foods, New Zealand is a veritable paradise for the senses. The north and south island both offer incredibly diverse and beautiful cruising grounds, with contrasting landscapes laden with tranquillity and unspoiled beauty. The northern island is notably a calmer destination where yachting has a deep roots. On the other hand, the southern island is astonishingly striking, being more mountainous, with the ragged Alps running along the entire landmass.",
         "New Zealand’s yachting epicentre lies northward where the famed Bay of Islands allows a secluded escape, ideal for meandering with your luxury superyacht around the hundreds of fascinating islands found in its calm waters. Wine connoisseurs will enjoy anchoring in the Marlborough Sound, where you can savour some of the finest Sauvignon Blanc back on board. The breath-taking beauty that awaits those who venture into the clear waters of New Zealand is boundless in this yachting haven packed with delights."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Great surf spots",
-        "Vibrant nightlife",
-        "Big game fishing",
-        "History and culture",
-        "World class restaurants",
-        "Chic boutiques",
-        "Stunning views",
-        "Wreck diving"
       ],
       "keyFacts": [
         {
@@ -1212,14 +1085,6 @@
         "St. Barts, the ‘it’ island with red-tiled roofs, French cuisine, and high-end boutiques, offers the most luxurious experience of all the isles. With every amenity expected of exclusive resorts, including excellent restaurants and designer boutiques, this unique and sophisticated island exudes a South-of-France feel with a tropical backdrop.",
         "A short cruise south, berth in the fully serviced Christophe Harbour in St. Kitts. Perfectly positioned to the south of the island for access to the capital Basse Terre and an abundance of historical sites. Step ashore and discover rolling sugarcane fields, plantation ruins, and merchant houses now home to boutique hotel properties for a fascinating insight into this stunning island’s colonial past.",
         "A Leeward Islands yacht charter is an unforgettable experience, offering a unique blend of luxury and adventure in one of the world’s most beautiful destinations. Whether you’re seeking relaxation, adventure, or a little bit of both, the Leeward Islands truly have it all."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Big game fishing",
-        "Chic boutiques",
-        "Vibrant nightlife",
-        "World class restaurants",
-        "Wreck diving"
       ],
       "keyFacts": [
         {
@@ -1361,13 +1226,6 @@
       "paragraphs": [
         "Head to The Exumas for kiteboarding, superb diving and iguana-laden sands, or for a more relaxed experience visit the laid-back harbourfront at Eleuthera. If pirate trails excite you, then Nassau is the place to go, whilst foodies should head to Smiths Point in Grand Bahama on a Wednesday night for the traditional ‘Fry Fish’ on the beach.",
         "The vibrant underwater world across this coral-based archipelago hosts a myriad of amazing opportunities for inspired scuba diving and snorkelling, not to mention other aqua-based pursuits. Whether looking to explore the blue depths or enjoy the ‘catch of the day’ at a local beach café, this island-strewn archipelago will captivate you. History enthusiasts, party-goers or those in a quest for complete relaxation can be sure to find what they seek. Life is simply better when you are on island time."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Casinos",
-        "Wreck diving",
-        "Big game fishing",
-        "Chic boutiques"
       ],
       "keyFacts": [
         {
@@ -1523,14 +1381,6 @@
         "Volcanic and rugged, adorned with lush scenery and surrounded by whimsical reefs and cays, this intoxicating yachting destination benefits from the close proximity the islands. Those seeking secluded anchorages, incredible dive sites and sublime island beauty will not be disappointed with this little slice of paradise.",
         "Experience chic French Martinique, where the capital Fort-de-France has excellent restaurants paired with luxurious shopping. For nature enthusiasts, Dominica is one of the prime destinations in the region. A UNESCO World Heritage site, its lush rainforest and soaring peaks are great for outdoor pursuits including diving, whale and bird-watching, hiking and snorkelling. Barbados is a bustling and sophisticated island and a great entry point from which to explore the more remote Windward Islands."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Big game fishing",
-        "Great surf spots",
-        "Stunning views",
-        "World class restaurants",
-        "Wreck diving"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -1666,16 +1516,6 @@
         "For superyacht charters, the Virgin Islands offer an unmatched blend of natural beauty and exclusivity. Itineraries might include snorkelling or diving in gin-clear waters teeming with marine life around the famous Baths of Virgin Gorda or the underwater national parks of St. John. Guests can enjoy glorious isolation at uninhabited islands and quiet gems like Anegada, famous for its coral reefs and flamingos, or sip a cocktail at one of the chic beach bars on Jost Van Dyke.",
         "Always a hit for families with young children, the Virgin Islands are renowned for their rich biodiversity, where you can spot sea turtles, stingrays, and dolphins everyday. Sailing between islands is a breeze, with each new stop offering something unique—whether it’s a private beach picnic, world-class watersports, or simply soaking in the incredible Caribbean sunsets. For both relaxation and adventure, the Virgin Islands always deliver."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "History and culture",
-        "Stunning views",
-        "Vibrant nightlife",
-        "Wildlife",
-        "Wreck diving",
-        "Chic boutiques",
-        "World-class restaurants"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -1739,14 +1579,6 @@
         "A former British colony, Belize’s national language is English, spoken with a Caribbean lilt. Packed full of cays, coves and coral, the coastal areas are a divers' paradise just waiting to be explored. Inland, Mayan history is featured in numerous archaeological temples and palaces. To get a fully immersive experience, hike the Maya Mountains - covered with lush sub-tropical forests and home to a vast selection of wildlife, the many trails are also strewn with captivating ancient ruins.",
         "Diving and snorkelling are wildly popular in Belize. The massive barrier reef offers unlimited opportunities to explore the underwater world up close. To the north, Cayes Ambergris, Caulker and Half Moon are highly recommended destinations, along with Turneffe Reef Atoll. The quieter south is highly focused on marine conservation, notably in the Sapodilla Cayes Marine Path, which is on the migratory path for whale sharks. For a digital detox, sea kayaking in the region is the perfect way to skip from cay to cove and indulge in some peaceful fishing. Centrally located in Belize, St Herman's Blue Hole National Park is famed for turquoise waters scattered with ancient Mayan artefacts. This is not to be confused with the world-renowned Great Blue Hole, a giant marine sinkhole off the country’s coast."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "History and culture",
-        "Wildlife",
-        "Big game fishing",
-        "Stunning views",
-        "Wreck diving"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -1804,15 +1636,6 @@
         "Found on the Caribbean coast, the Tortuguero National Park, has been labelled a “little Amazon.” Home to exotic wildlife and indigenous plants, visitors can explore on foot or adventurers may prefer to take a thrilling zip-line ride across the rainforest canopy.",
         "Known for its natural wonders, the national park at Cocos Island is a World Heritage Site on the Pacific side. Once a hideout for pirates, you can spot dolphins, hammerhead sharks, humpback whales and turtles in its coastal waters.",
         "Famed for its “Pura Vida”, meaning “pure life”, Costa Rica is a destination not to be missed."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Big game fishing",
-        "Great surf spots",
-        "History and culture",
-        "Stunning views",
-        "Wildlife",
-        "Wreck diving"
       ],
       "keyFacts": [
         {
@@ -1877,16 +1700,6 @@
         "To the east, the Yucatan Peninsula is proud of its Mayan ancestry. In Quintana Roo you can find fascinating archaeological sites mingled with fine bars and restaurants along 120 miles of scenic coastline. The most famous and coveted stop-over, especially by yacht, is with no doubt Cancun. Located at the edge of Quintana Roo, it is on the Yucatan Channel that separates Mexico from Cuba.",
         "The town of Acapulco, nestled in a natural horseshoe-shaped bay, is one of the main attractions on the western coast of Mexico and is ideal for those who wish to indulge in urban life. The hills and cliffs around the bay are sprinkled with restaurants and bars, all providing fantastic views of Acapulco and the ocean below."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "History and culture",
-        "World class restaurants",
-        "Big game fishing",
-        "Stunning views",
-        "Wreck diving",
-        "Great surf spots",
-        "Vibrant nightlife"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -1936,15 +1749,6 @@
       "paragraphs": [
         "The 26 ring-shaped atolls of the Maldives provide the perfect diving and snorkeling environment, with the crystal-clear water acting as a magnet to those keen to experience life below the waves. Adding to the appeal, the water is so warm there is rarely a need for a wetsuit. Discover glorious caves, dazzling coral walls and schools of brightly coloured tropical fish, with the deeper waters being home to a range of manta rays, turtles and reef sharks.",
         "Several atolls offer ideal conditions for board and kite surfing and are also renown for big-game fishing. For something more low-key, visit the fishermen islands and absorb the Maldivian culture."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "History and culture",
-        "Wreck diving",
-        "Big game fishing",
-        "Stunning views",
-        "Great surf spots",
-        "Wildlife"
       ],
       "keyFacts": [
         {
@@ -2002,16 +1806,6 @@
         "If you are looking for chic sophistication, go to Intendence Bay for luxurious surroundings and exquisite restaurants. Alternatively, those seeking adventure should head inland for incredible mountain walks, cascading waterfalls and rock climbing activities.",
         "From emerald jungles to secret anchorages, idyllic beaches to dramatic shipwrecks, the Seychelles delivers an enchanting superyacht charter destination you will long to return to again and again."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Stunning views",
-        "World class restaurants",
-        "Chic boutiques",
-        "Vibrant nightlife",
-        "Wreck diving",
-        "History and culture",
-        "Wildlife"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -2064,13 +1858,6 @@
         "You can be assured of a warm welcome in this eminent land of safaris, Swahili locals and Maasia warriors. Watch ungainly hippos jostle for space in muddy pools, sagacious elephants amble well-trodden paths and headstrong wildebeest run across the plains. Organised boat safaris down the Rufijji River observe somnolent crocodiles at the Selous Game Reserve and at Ruaha National Park spot graceful giraffes amidst aged baobab trees.",
         "Quiet littoral villages dot the Indian Ocean coastline, whilst remotely serene islands create bygone scenes as wooden dhows with flowing sails glide by on the warm breeze. For exceptional diving and snorkelling, be sure to visit the relatively isolated Island of Pemba with its diverse sea life and vivid coral.",
         "With its flamboyant culture, outstanding dive site and historical UNESCO cities, Tanzania offers a yacht charter experience like no where else."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Stunning views",
-        "Wreck diving",
-        "History and culture",
-        "Wildlife"
       ],
       "keyFacts": [
         {
@@ -2196,39 +1983,6 @@
         "Club Revelin is a Dubrovnik institution, so don’t miss it as you cruise into this World Heritage Site. This one-of-a-kind venue dates back to the 16th century and features both a historical vibe and a contemporary nightlife scene. Those interested in history and a good time will find Revelin’s lineup of world-class DJs, theme nights, and live performances irresistible.",
         "In the heart of the charming city of Split lies Central Club – an exclusive haven for the most discerning of travellers. After a day of cruising on your superyacht, dock in the historic city and immerse yourself in the luxurious ambiance and exclusive clientele that this posh establishment is renowned for. Sip on premium cocktails while indulging in the breathtaking light shows and world-class entertainment, making Central Club the ultimate destination for experiencing the vibrant Croatian nightlife.",
         "Indulge in the lavishness of Noa Beach Club on Pag Island – a magnet for the elite clientele and an epitome of opulent partying. Boasting a picturesque oceanic vista, the VIP cabanas and the floating dance floor set the tone for a splendid soirée. Bask under the sun or sway to the beats of renowned DJs; Noa Beach Club promises an unrivalled extravagance on a yacht charter in Croatia."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "History and culture",
-        "Chic boutiques",
-        "Palaces",
-        "Stunning views",
-        "Vibrant nightlife",
-        "World class restaurants",
-        "With over 1,000 islands and approximately 1,700 miles of coastline, Croatia offers exceptional variety for island-hopping itineraries.",
-        "The sailing season runs from April to October, with light and consistent Maestral winds creating favourable summer sailing conditions.",
-        "Popular southern Dalmatian routes from Split include Vis, Hvar and Brač, allowing for shorter cruising distances between destinations.",
-        "Kornati National Park, made up of 89 islands, is particularly well suited to swimming, snorkelling and scuba diving throughout the summer season.",
-        "Plitvice Lakes National Park can be incorporated into inland excursions before or after a Croatia yacht charter vacation.",
-        "Croatia’s marinas combine modern superyacht facilities with traditional town quays and quieter bays across the Adriatic coastline.",
-        "May, June and September are often preferred for quieter anchorages, milder temperatures and fewer crowds.",
-        "Croatia’s blend of traditional cuisine, Roman heritage and medieval coastal towns adds cultural depth to every itinerary.",
-        "Crystal clear seas and sheltered cruising grounds make Croatia especially popular for relaxed island hopping itineraries.",
-        "The variety of routes and sailing conditions appeals to both experienced sailors and first-time charter clients alike.",
-        "July and August are the warmest and busiest months across Croatia’s marinas and island hotspots.",
-        "May, June and September are often recommended by our charter experts for milder temperatures, excellent visibility and fewer crowds.",
-        "October remains suitable for exploring historic towns and national parks, although some seasonal restaurants and beach clubs begin to close.",
-        "Maestral winds provide consistent and light sailing conditions during summer, particularly along the Dalmatian coast.",
-        "The calmer shoulder months are ideal for clients seeking quieter anchorages and a more relaxed charter itinerary.",
-        "Croatia’s Adriatic coastline stretches for approximately 1,700 miles and includes more than 1,000 islands.",
-        "The official sailing season runs from April to October.",
-        "July and August are the busiest charter months in Croatia, while May, June and September offer fewer crowds and milder conditions.",
-        "Summer sailing conditions in Croatia are shaped by the light and consistent Maestral winds along the Dalmatian coast.",
-        "Croatian VAT on yacht charters is currently set at 13%.",
-        "APA generally ranges between 25 and 40% of the overall charter fee.",
-        "Some of Croatia’s UNESCO World Heritage sites include Dubrovnik Old Town and Split’s Diocletian’s Palace.",
-        "Croatia adopted the Euro as its official currency in 2023.",
-        "Croatian is the official language, although English is widely spoken throughout major marinas and charter hubs."
       ],
       "keyFacts": [
         {
@@ -2401,15 +2155,6 @@
         "With its many bars and clubs, Ayia Napa is a popular choice for the younger generation, while elsewhere the sophisticated dining scene is ubiquitous. Alternatively enjoy a delicious meal on board prepared by your trained chef using fresh local ingredients.",
         "Combining fantastic weather, ancient cultures and modern amenities, Cyprus is an ideal year-round yachting destination."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Palaces",
-        "Wreck diving",
-        "Chic boutiques",
-        "Stunning Views",
-        "History and culture",
-        "Vibrant nightlife"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -2497,14 +2242,6 @@
         "For culture vultures, Provance and the Loire Valley present an opportunity to step into a living storybook. The region is dotted with villages that seem to have leapt from the pages of history, and châteaux that whisper tales of bygone eras.",
         "Wine enthusiasts will find their haven here, with ample opportunities to taste the region's renowned vintages. Meanwhile, the French Alps offer another facet of France's diverse landscape. Resorts like Chamonix provide not just breathtaking vistas but also some of the world’s most coveted ski slopes.",
         "Starting a yacht charter in France opens a gateway to the broader Mediterranean. From this central vantage point, travellers can set off eastward to explore the rugged beauty of Corsica and Sardinia or the dramatic cliffs of the Amalfi Coast. To the west, Spain and the Balearic Islands beckon with their vibrant cultures and stunning coastlines."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Casinos",
-        "Chic boutiques",
-        "Palaces",
-        "Vibrant nightlife",
-        "World class restaurants"
       ],
       "keyFacts": [
         {
@@ -2766,20 +2503,6 @@
         "Greece, a cornerstone of Mediterranean learning, culture, and aesthetics for millennia, has experienced inevitable transformations. Yet, the enduring essence of filoxenia, Greece's unique form of hospitality, deeply ingrained and viewed as a moral duty, remains constant. The country captivates with its spectacular beauty, vibrant hues, and rich historical heritage. However, what distinguishes Greece is the authentic warmth and welcome extended to visitors, making every encounter memorable.",
         "A Greece yacht charter offers more than blue seas and white beaches. You will uncover a mesmerising blend of ancient allure and modern appeal. With its rich historical context, sprawling from the storied mainland to the diverse islands near the Turkish coast, Greece provides an unmatched setting for those seeking to cruise by sea. The nation's waters, home to a myriad of islands grouped into distinct clusters, present a unique cruising experience that is both diverse and captivating."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Chic boutiques",
-        "History and culture",
-        "Palaces",
-        "Stunning views",
-        "Vibrant nightlife",
-        "Wreck diving",
-        "Weekly base rate: From around EUR 25,000 for smaller crewed yachts to over EUR 200,000 for the largest superyachts.",
-        "APA (running costs): 25-40% of the base rate, covering fuel, food and similar running costs.",
-        "Greek VAT: about 5-13% with a Greek charter licence.",
-        "Mooring fees: roughly EUR 5 to EUR 65 a night, depending on the berth.",
-        "Charter length: usually Saturday to Saturday in high season, with shorter charters possible on smaller yachts or in the shoulder months."
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -2957,17 +2680,6 @@
         "Its profound historical and cultural impact has cemented it among the Western world's most influential nations. This rich heritage makes Italy a bucket list destination, with coastal regions that offer a taste of elegant Italian living for those exploring by superyacht.",
         "On an Italy yacht charter you're privy to secluded coves, crystal-clear waters, and panoramic views that frame the nation’s diverse landscapes and picturesque harbours. Luxury yacht charters in Italy are less about extravagance and more about accessing the heart of Italian culture in a way that few other experiences can.",
         "It's the blend of Italy's rich history, from its art and architecture to its fashion and food, with jaw-dropping natural beauty that makes a yacht charter here so compelling. The convenience of docking near major cities or drifting beside rolling vineyards means every stop enriches your experience of Italy's layered heritage."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Casinos",
-        "Chic boutiques",
-        "History and culture",
-        "Palaces",
-        "Stunning views",
-        "Vibrant nightlife",
-        "World class restaurants",
-        "Culinary Delights"
       ],
       "keyFacts": [
         {
@@ -3269,13 +2981,6 @@
         "Paceville is as nocturnal as Barcelona, but without the pretensions. Indulge in excellent dining around Grand Harbour, Europe’s largest natural harbour, which has a spectacular backdrop of limestone fortifications. Make sure to try a fenkata during your private yacht charter in Malta, a traditional stew of rabbit in garlic.",
         "Set sail to escape the heat of the summer and explore deserted beaches and the eerie moonscapes of weather-worn limestone. Anchor offshore and dive fascinating shipwrecks, swim through caves, and fish off the back of the boat on your Malta yacht charter. Alternatively, tuck into Selmun or St Paul’s Bay for some secluded beach walks and a chance to explore the countryside, decorated with wild flowers."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Palaces",
-        "Vibrant nightlife",
-        "History and culture",
-        "Stunning views"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -3366,12 +3071,6 @@
       "paragraphs": [
         "Located in the Balkans on the Adriatic Sea, Montenegro’s interior is punctuated by the most rugged mountains in Europe, whilst the scenic coastline is peppered with historic monuments, walled medieval towns and a stunning riviera. Chartering a luxury yacht is the very best way to discover Montenegro’s remote islands and famed UNESCO World Heritage sites . Drop anchor and go kayaking, diving and snorkelling between the small islands or take a romantic stroll through the cobbled streets of ancient villages.",
         "Enjoy authentic food in small family-owned restaurants; in coastal regions, traditional dishes have a Mediterranean focus with cured meats, breads and priganice (fritters) being distinctly Italian in heritage. For dinner, head to the restaurant at the Conte Hotel – a striking residence on the seafront of Perast in Boka Bay, or eat fresh fish caught that morning and grilled on board by your private chef. Once you have discovered this unique yacht charter destination, you are likely to want to return again and again."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Stunning views",
-        "History and culture",
-        "World class restaurants"
       ],
       "keyFacts": [
         {
@@ -3531,14 +3230,6 @@
         "Adopt a more laissez-faire approach to travel and revel in its open, receptive culture filled with unique activities and natural beauty. Take a hot air balloon ride above La Garrotxa Volcanic Zone Natural Park to marvel at 360-degree views of the 40 volcanic cones and 20 lava flows that make up this incredible landscape, or go back in time while touring the preserved mediaeval town of Besalu. A fascinating site to explore, with its collection of churches and civil buildings, you’ll get a glimpse into this country’s captivating past.",
         "While the peak of the charter season in Spain is during the summer months, autumn is a wonderful time to explore the region while cruising on a sailing yacht. The temperatures are a little cooler, yet still very comfortable, and the sea is still warm. Plus, the crowds are not as large in popular tourist spots, making it easier to secure berths.",
         "Whether you're looking for adventure, relaxation, or a little bit of both, a private superyacht charter in Spain offers a memorable experience. Expect the unexpected at every turn – from the surreal, Art Nouveau creations of Antoni Gaudí to setting sail for the Balearics – on a luxury private yacht charter in Spain you’ll create memories that will last a lifetime."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Chic boutiques",
-        "History and culture",
-        "Great surf spots",
-        "Stunning views",
-        "Vibrant nightlife"
       ],
       "keyFacts": [
         {
@@ -3712,15 +3403,6 @@
         "With an exceptional selection of vessels, and specialist Charter Consultants planning your bespoke Turkish yacht charter itinerary, explore ancient ruins, savour world-renowned cuisine, or simply unwind in privacy on your own luxury superyacht.",
         "Contact us to plan your dream luxury yacht charter in Turkey and unveil the magic of this unforgettable destination."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Chic boutiques",
-        "History and culture",
-        "Palaces",
-        "Stunning views",
-        "Vibrant nightlife",
-        "Wreck diving"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -3833,15 +3515,6 @@
         "Enjoy water sports in the wide, natural bay of Makadi, wander at leisure over the swathes of sandy beach and visit the Souk Makadi for lively night-time entertainment. Golfing enthusiasts will relish the 18 championship holes at Madinat Makadi Resort where the green overlooks the sea. Additionally, a snorkelling trip amongst the rare corals at protected Giftun Island should not be overlooked.",
         "Whether you seek relaxation, sightseeing opportunities or activities, the vast Red Sea region offers a multitude of possibilities. The constant temperate climate, clear, warm seas and fascinating culture add to the enduring appeal."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "History and culture",
-        "Wreck diving",
-        "Big game fishing",
-        "Stunning views",
-        "Great surf spots",
-        "Vibrant nightlife"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -3910,12 +3583,6 @@
         "Beautiful on both land and sea, Alaska is an adventure lover’s paradise just waiting to be explored. Famed for grizzly bears and humpback whales, the incredible array of wildlife is never-ending, with stunning scenery to match.",
         "Discover the town of Juneau, sample delicious local seafood and take in the traditional native totem poles throughout the region. National parks offer a glimpse of the rugged terrain and abundant wildlife of the region, while various hot spring sites offer a chance to relax. Travel the winding fjords past immensely powerful sheer granite walls and cascading waterfalls while fascinating misshapen icebergs drift by. Your captain and crew will be able to assist in a variety of activities including kayaking, trekking through lush forests, and exploring glaciers by air or by foot."
       ],
-      "whyVisit": [
-        "Big game fishing",
-        "Stunning views",
-        "History and culture",
-        "Wildlife"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -3965,13 +3632,6 @@
         "Influenced by a long colonial past, Bermuda’s whitewashed cottages and icing sugar mansions stand out hilltop amidst swaying palms. The island beckons with luxurious resorts and spas sprawl shoreside, ideal for those who’ve chosen the intimate experience of a private yacht charter in Bermuda.",
         "Renowned for a coastline fringed by pink-sand beaches, Bermuda is the ideal place to truly unwind. The unique island culture exudes a relaxed vibe perfect for luxury seekers. The opportunity to enjoy outdoor activities is plentiful. Whether looking to enjoy a round of golf, try your hand at paddle boarding, or simply to bask in the ambiance of this paradise during your Bermuda yacht charter, this is the spot.",
         "Stop at vibrant Hamilton, the beating heart of Bermuda’s culture and economy. As the capital city, it offers more than just scenic beauty to those sailing on a private yacht charter in Bermuda. With picturesque streets strewn with eateries amidst the striking gothic towers of the cathedral, the energy here is enchanting. Snorkelling fans must head to east to Tobacco Bay where the waters are sublime. Moreover, for those on their Bermuda yacht charter journey, the art of relaxation can be achieved to perfection at pink-hued Elbow Beach. A trip to Bermuda isn’t just about the journey, but about the stories you’ll gather and memories you’ll make."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Stunning views",
-        "Wreck diving",
-        "History and culture",
-        "World class restaurants"
       ],
       "keyFacts": [
         {
@@ -4040,16 +3700,6 @@
         "Extending from the south at Marco Island on Cape Romano to Venice Inlet to the north, the beautiful cruising areas of the Gulf Coast offer unspoiled natural beauty and protected anchorages.",
         "With close proximity to the Bahamas and other exciting destinations, Florida can be visited individually or perhaps as part of a wider reaching itinerary."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Stunning views",
-        "World class restaurants",
-        "Chic boutiques",
-        "Vibrant nightlife",
-        "Wreck diving",
-        "History and culture",
-        "Wildlife"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -4108,14 +3758,6 @@
         "With sprawling beaches and chic boutiques, art galleries and fine dining, there is so much to see and do in New England. Take time to explore a port town on Maine’s beautiful coastline, the lively city of Boston, one of Cape Cod’s islands and maybe the popular sailing town of Newport.",
         "The weather is mild, with the nights usually cool and the days warm and sunny – ideal for exploring the rugged eastern coastline."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Big game fishing",
-        "History and culture",
-        "Culinary delights",
-        "Great surf spots",
-        "Stunning views"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -4172,13 +3814,6 @@
         "On the west coast of Norway lies the city of Bergen – one of the most traditional in Norway. Discover unspoiled nature where ancient forests rise from deep fjords and sweeping meadows seem to merge with the horizon.",
         "Further North, Svalbard is a Norwegian archipelago between mainland Norway and the North Pole. As one of the world’s northernmost populated areas, it’s known for its craggy, isolated terrain of glaciers and frozen tundra sheltering polar bears, Svalbard reindeer and Arctic foxes. A yacht charter destination for the true adventurer, Svalbard sees the Northern Lights become visible during winter, while summer brings the “midnight sun” – sunlight 24 hours a day. Explore the Bay of Isfjorden, the second longest fjord in Svalbard, surrounded by staggering mountains and quaint villages."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "History and culture",
-        "World class restaurants",
-        "Chic boutiques",
-        "Stunning views"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -4234,14 +3869,6 @@
         "A cruise through the icy waters to the Strait of Magellan will allow you to see flocks of penguins and the magical gleam of the glaciers. Further north, in the winter months Chile’s coldest destinations transform into luxury ski resorts that attract the international jet-set, lured by fantastic skiing opportunities outside of the regular season. The towns of La Parva and Portillo are popular, exclusive resorts, conveniently located near the capital of Santiago de Chile.",
         "Further north lies the amazing city of Valparaíso that appears to rise directly from the clear waters of the Pacific Ocean. Its breath-taking architecture, excellent restaurants, fascinating museums and fine art galleries make this a thriving cultural hotspot on the South American west coast. The fine seaside resort of Viña del Mar lies close by, tempting visitors with its wide promenades offering exceptional views across to wedding-cake mansions and soft powdery beaches that line the azure blue coast."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "History and culture",
-        "Vibrant nightlife",
-        "Great surf spots",
-        "Stunning views",
-        "Wildlife"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -4293,15 +3920,6 @@
         "The first two UNESCO World Heritage sites ever created were the Galapgos and the city of Quito - Ecuador is certainly filled with spectacular natural variety. To fully experience local culture and history, the bustling cities across 24 provinces will give a true flavour. Capital city Quito, set to a stunning volcanic backdrop, is packed with attractions: Quito Cathedral and Basilica del Voto Nacional are stand-outs, together with many gorgeous parks.",
         "Do not miss the opportunity for an immersive Amazon adventure. Encounter wildlife and indigenous plant life, while tribal communities delight visitors with cultural experiences. Alternatively the Ecuadorian Andes are brimming with exciting activities such as whitewater rafting, horse-riding, hiking and biking, all enjoyed in exquisite surroundings. Head to the small mountain town of Otavalo for retail therapy at the unique craft market or relax in the hot springs at Banos Banos.",
         "Bordered by the South Pacific Ocean, Ecuador's meandering coastline is made up of many beaches and lively shore-side towns. Enjoy long velvet beaches at Puerto Lopez and, when the sun goes down, get lost in the sway of the many salsa clubs' rhythm. Nearby the beautiful Isla de la Plata is easily accessible by yacht for some amazing sight seeing. Nature-activities and eco-tours are found at Pueblo Ecologico Alandaluz, whereas Salango is the perfect beach for snorkelling or scuba diving."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "History and culture",
-        "Wreck diving",
-        "Big game fishing",
-        "Stunning views",
-        "Great surf spots",
-        "Wildlife"
       ],
       "keyFacts": [
         {
@@ -4358,12 +3976,6 @@
         "The Torres del Paine National Park is simply outstanding: experience magnificent forests, ice-topped mountains, picturesque waterfalls and glassy lakes. Soak up stunning views over the Southern Ice Fields, discover the Milodon Cave, sail through the Ultima Esperanza fjord and encounter ethereal glaciers during a superyacht charter in Patagonia . Adventurous visitors may like to choose an itinerary to explore the very southern extremes, navigating through sea fjords, crossing the Straits of Magellan and setting course for Antarctica. Cruising amongst the hundreds of spectacular glaciers you will find an azure playground teeming with dolphins, killer whales and penguins.",
         "Trekking and fly fishing are prevalent in Coyhaique and Puerto Aysen. Challenge yourself to climb the amazing peaks of Mackay or the Castillo. Relax and enjoy the captivating Carretera Austral with verdant forests and exceptional panoramas framing untouched nature. In Coyhaiques main square, the arts and crafts fair offering handmade products is perfect to purchase a special reminder of your luxury yacht charter in this unique destination."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Stunning views",
-        "History and culture",
-        "Wildlife"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -4414,15 +4026,6 @@
         "Throughout Indonesia, diverse native tribes populate the islands, each with a uniquely evolved culture; from the secrecies of the mystical Balinese to the incongruent beliefs of the Asmat people of Papua, all are wholly fascinating.",
         "One of the most popular islands, Bali is perfect for leisurely travels on board a superyacht. The fabled “land of the gods”, Bali is known for for stunning beaches, historic temples and a striking landscape. In Java, explore intricate palaces and sacred wonders before travelling to the captivating slopes of Mount Bromo. For those seeking less-developed shores packing true adventure, head to Lombok for sweeping beaches and lofty Mount Rinjani or venture to the rustic, car-free Gili islands where traditional Bugis schooners can be spotted sail alongside you."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Stunning views",
-        "Wreck diving",
-        "History and culture",
-        "Vibrant nightlife",
-        "Palaces",
-        "World class restaurants"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -4468,16 +4071,6 @@
         "In East Malaysia, the jungles of Borneo host spry orangutans in their dense cover. Home also to remote tribes, these dense forests are set against the backdrop of steep granite mountains. In contrast, the West Malaysian peninsula contains vibrant cities such as Kuala Lumpur and Putraja, bursting with fascinating architecture.",
         "Malaysia is consistently voted as one of the world’s best diving destinations and visitors will be inspired to explore many hidden gems on a superyacht charter in the region. Charter a yacht in the Andaman Sea to visit the beautiful Langkawi archipelago, made up of 99 islands, only two of which are inhabited. Equally impressive Redang is favoured for crystal clear waters and coral reefs that surround this island, playing host to a variety of clownfish, baby sharks and jellyfish.",
         "In addition to the wide array of natural wonders on offer, Malaysia is also a foodie’s paradise. Many yachts cruising in the region employs chefs that are well versed in the local cuisine, but visitors can also head to dry land to enjoy Chinese-Malay “Nonya”, Indian curries, Malaysian street food and Dayak delicacies. Friendly, welcoming and generous, the locals love celebrating and socialising during their hundreds of colourful festivals taking place each year."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "History and culture",
-        "Wildlife",
-        "Culinary delights",
-        "Stunning views",
-        "Wreck diving",
-        "Great surf spots",
-        "Vibrant nightlife"
       ],
       "keyFacts": [
         {
@@ -4531,16 +4124,6 @@
         "The largest and most developed island in Thailand, Phuket is the superyacht hub of Asia. For peace and tranquility, you will find the outer islands just a short cruise away – all of which offer exceptional snorkelling and scuba diving.",
         "Take life at your own pace cruising the clear, turquoise waters set against a backdrop of lush green hills. Explore sheltered lagoons and enjoy the plentiful marine life. Diverse culture and tradition thrive in this enchanting and colourful superyacht haven. Asian tradition melds with western comforts; rows of rice paddies juxtapose serenely with ornate temples and exquisite beaches. The islands of the world’s largest archipelago remain loaded with possibilities for adventure: remote villages, ancient ceremonies, culinary exploration and sheer unadulterated beauty."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Stunning views",
-        "World class restaurants",
-        "Chic boutiques",
-        "Vibrant nightlife",
-        "Wreck diving",
-        "History and culture",
-        "Wildlife"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -4593,13 +4176,6 @@
         "Tranquil beauty thrives in the temperate climate of Fiji, which has a total of 333 islands and is home to the third longest barrier reef in the world – that also serves as a whale sanctuary to protect migratory species.",
         "Located in the heart of the South Pacific and famous for its soft coral diving, white sand beaches and pristine natural environment, Fiji is a leader in eco-tourism. Main islands Viti Levu and Vanua Levu offer luxury hotels and resorts, whilst many islands are uninhabited and home to arboreal expanses interspersed with dramatic volcanic craters, dazzling waterfalls, coastal mangrove forests and majestic rainforests.",
         "Explore the archipelago’s exquisite beaches, swim amongst shoals of gentle shark near Viti Levu and the giant manta rays off the beautiful beaches of Nacula, or snorkel the stunning coral reefs of Ovalau and the Lomaiviti group. When chartering a luxury yacht in this idyllic country, you can be sure of an utterly enchanting experience that you will remember forever."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Great surf spots",
-        "Wreck diving",
-        "Big game fishing",
-        "Stunning views"
       ],
       "keyFacts": [
         {
@@ -4656,14 +4232,6 @@
         "Meander between islands strewn with lush tropical rainforests, lofty volcanoes, deserted beaches and isolated anchorages. Savour delicious local fare or enjoy the vibrant nightlife as the sun sets. The list of superyacht itinerary opportunities is truly endless in this incredible part of the world.",
         "Whales, dolphins and turtles may greet the bow wave as you sail, whilst snorkelling or diving guarantees a discovery of exotic underwater world amongst the coral reefs and shallow inlets. On land, friendly locals are keen to share their rich culture and fascinating traditions. For nature lovers, be sure to take the time to explore the country’s verdant jungles teeming with beguiling and rare inhabitants.",
         "With its turquoise lagoons, warm climate and laid-back vibe, French Polynesia is the perfect place to relax and take it slow during your luxury superyacht charter."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Great surf spots",
-        "Stunning views",
-        "Big game fishing",
-        "History and culture",
-        "Wreck diving"
       ],
       "keyFacts": [
         {
@@ -4724,13 +4292,6 @@
         "Expect colourful French cuisine with a tropical influence when dining ashore – lovingly prepared and beautifully presented. French cheese and wine are readily available together with intensely flavoursome locally grown fruit and vegetables – ideal for your dedicated onboard chef to prepare a wonderful variety of sensational dishes.",
         "Offering a perfect combination of amazing landscapes, exceptional cruising areas and superb hospitality – New Caledonia is the perfect destination for your next yacht charter adventure."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "History and culture",
-        "Wreck diving",
-        "Big game fishing",
-        "Stunning views"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -4779,13 +4340,6 @@
       "paragraphs": [
         "The reef’s greatest attraction lies in its phenomenally diverse underwater world, with snorkelling and scuba diving rated amongst the most spectacular in the world. Even the sheer grandeur of just the corals is enough to make visiting worthwhile. However, this is combined with an amazing variety of marine creatures that populate this azure garden of Eden. Tropical fish, fascinating whales, playful dolphins, sea turtles, sharks and seasnakes make this a wholly vibrant spectacle, totally unmatched elsewhere on this planet.",
         "Seabirds thrive, with a diversity of species beyond your wildest imagination. Michaelmas Cay, a 200m stable coral sand island, is home to 38+ species with some months seeing flocks of 100,000 birds visiting this popular nesting site. Raine Island National Park is the most important seabird rookery in the Great Barrier Reef World Heritage area together with supporting the world’s largest green turtle nesting population. The scale of wildlife in this part of the world can only be described as exceptional."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Great surf spots",
-        "Wreck diving",
-        "Big game fishing",
-        "Stunning views"
       ],
       "keyFacts": [
         {
@@ -4838,13 +4392,6 @@
       "paragraphs": [
         "The reef’s greatest attraction lies in its phenomenally diverse underwater world, with snorkelling and scuba diving rated amongst the most spectacular in the world. Even the sheer grandeur of just the corals is enough to make visiting worthwhile. However, this is combined with an amazing variety of marine creatures that populate this azure garden of Eden. Tropical fish, fascinating whales, playful dolphins, sea turtles, sharks and seasnakes make this a wholly vibrant spectacle, totally unmatched elsewhere on this planet.",
         "Seabirds thrive, with a diversity of species beyond your wildest imagination. Michaelmas Cay, a 200m stable coral sand island, is home to 38+ species with some months seeing flocks of 100,000 birds visiting this popular nesting site. Raine Island National Park is the most important seabird rookery in the Great Barrier Reef World Heritage area together with supporting the world’s largest green turtle nesting population. The scale of wildlife in this part of the world can only be described as exceptional."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Great surf spots",
-        "Wreck diving",
-        "Big game fishing",
-        "Stunning views"
       ],
       "keyFacts": [
         {
@@ -4899,12 +4446,6 @@
       "paragraphs": [
         "With predominantly two seasons – the dry and the wet – it is hot most of the year, with average temperatures generally above 30°C. The stable and generally predictable dry season is from May to September, with clear skies, warm days, the occasional cool night and low chance of rain. From November to April the unpredictable wet season delivers 90% of the regions’ rainfall with monsoons that inundate the region; flooded rivers that replenish the waterfalls and waterways.",
         "The Kimberley experiences some of the highest tides in the world, which can be up to 10m on a single tide in some areas. These vast movements of water create spectacular natural wonders such as the Horizontal Falls and Montgomery Reef – indeed to be there, just at the right time of day, makes for an even more inspiring visit. Yacht charter itineraries here are designed with seasonal and tidal variations at the fore to ensure maximum freedom and flexibility for guests to fully experience the region."
-      ],
-      "whyVisit": [
-        "Big game fishing",
-        "Stunning views",
-        "History and culture",
-        "Wildlife"
       ],
       "keyFacts": [
         {
@@ -4964,14 +4505,6 @@
         "For golf enthusiasts, the Whitsundays are home to the 18-hole, par 71 Hamilton Island Golf Course, said to be among the most challenging in the world. Strung along the spectacular ridges and steep valleys of Dent Island, this course offers both stunning vistas and sporty entertainment for visitors of all ages.",
         "After a day of exploration and activities, indulge in a massage or spa treatment at one of the many luxurious spas and resorts ashore. In the evening, head back to your yacht for a sunset sail around the islands. As the sun dips below the horizon, the water turns a brilliant shade of orange and pink, and the islands are bathed in a warm, golden light. It’s a truly magical experience that you’ll never forget. Enjoy an exquisite al fresco dinner on board your luxury yacht, prepared specially by your chef, and watch the sunset while enjoying artisanal cocktails."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Great surf spots",
-        "Stunning views",
-        "Deep sea exploration",
-        "History and culture",
-        "Wildlife"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -5023,14 +4556,6 @@
       "paragraphs": [
         "A sanctuary for those seeking a slower pace of life, the quintessential swaying palms and icing sugar beaches of Antigua and Barbuda fit the bill. Glamorous Antigua, is a dream for surfers, divers and hopeless romantics. Historic sites, humid rainforests, billowing blowholes and buzzing markets ensure appeal endures.",
         "The vast and protected coral reef has unparalleled snorkelling and diving sites while the beaches, with their bowed palm trees brushing the waters edge, guarantee envy-inducing family portraits. Drop anchor along one of the many beaches and have an impromptu barbecue of line-caught fish and coconut rice."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Chic boutiques",
-        "World class restaurants",
-        "Big game fishing",
-        "Vibrant nightlife",
-        "Wreck diving"
       ],
       "keyFacts": [
         {
@@ -5164,14 +4689,6 @@
       "paragraphs": [
         "This gorgeous cruising ground has immense natural beauty paired with luxurious amenities in a chic, relaxed environment. Gustavia, the island’s capital, lures visitors with its architecture, chic bars and elegant cafés. The modern marina that can accommodate up to 160 yachts, and the obligatory high-end boutiques close to the Rue de la Republique, will delight shopping enthusiasts.",
         "The rolling hills that flank the coastline are a fabulous sight from the water, whilst canyons with cascading waterfalls are worth a trip ashore. The quiet, rural villages and towns that ring the coast all possess their very own individual charm. Unspoilt coral reefs and lagoons offer ideal conditions for snorkelling and diving, bursting with exotic marine life. St. Barts owes its reputation as the Caribbean yachting paradise to the many prestigious events that take place here. The annual St Barth Bucket Regatta that takes place in spring, while the Saint Barth’s Cup and International Regatta bring the world’s finest yachts to the island."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Vibrant nightlife",
-        "Wreck diving",
-        "Stunning views",
-        "World class restaurants",
-        "Great surf spots"
       ],
       "keyFacts": [
         {
@@ -5307,14 +4824,6 @@
         "Strewn with velvet beaches and lush lagoons, luxury resorts and elegant villas, over 300 superb restaurants, not to mention a mountain range, this is why St Maarten is the most popular destination of the Leeward Islands. World-class duty free shopping, vibrant casinos, exciting nightlife and year-round warm climate top off the formula for a veritable holiday utopia. A reliably lively Caribbean atmosphere intermingled with a cosmopolitan twist pervades every inch of the island offering an activity to satisfy every taste.",
         "The experience of a luxury superyacht charter in St Maarten assures sheltered anchorages, fascinating marine life, welcoming locals and immaculate beaches. The biggest small island in the world delivers on every level: breath-taking landscapes, fabulous entertainment and sparkling culture."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Casinos",
-        "World class restaurants",
-        "Big game fishing",
-        "Vibrant nightlife",
-        "Wreck diving"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -5447,13 +4956,6 @@
       "paragraphs": [
         "Starting in Marsh Harbour on Grand Abaco, there is a great marina to meet all your needs and from here head north to Treasure Cay. The stunning beach has great amenities, including a private marina, a golf course and a clutch of hotels. Close by, on the small island of Great Guana Cay. Baker’s Bay Golf & Ocean Club attracts discerning groups looking for peace and quiet.",
         "South of Marsh Harbour lies Little Harbour, home to a small colony of residents artists who have been lured by the inspiring landscape. You can enjoy the same from the deck of your yacht and witness picture-postcard sunsets, guaranteed to make you stop in your tracks. Multiple smaller islands offer excellent snorkelling, diving, surfing and fishing in their azure waters. There are no casinos, shopping malls or amusement parks here, just relaxed bars and restaurants on the fringe of beautiful landscapes – don’t worry to book or plan ahead here. Simply enjoy hopping on your yacht from island to island, visiting quiet villages and appreciating the vast natural beauty."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Great surf spots",
-        "History and culture",
-        "Stunning views",
-        "Wreck diving"
       ],
       "keyFacts": [
         {
@@ -5597,11 +5099,6 @@
       "paragraphs": [
         "Paddleboard or kayak around the cays, thick with mangroves, then jump in the creek at Healing Hole, complete with bubbling mineral-rich waters – reputed to have magically invigorating qualities. Courageous adventurers can take a dip with the local bull sharks in a dockside cage or explore the Sapona shipwreck and Triangle Rocks – just a couple of the extraordinary local dive sites.",
         "The Wild Atlantic Spotted Dolphins resident in the turquoise waters year-round are eager to engage with snorkelers visiting their patch. Whilst, ashore Alice Town hosts the unique Dolphin House which is made entirely from crushed coral and shells, as well as the pink-hued Bimini Museum."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Big game fishing",
-        "Wreck diving"
       ],
       "keyFacts": [
         {
@@ -5747,12 +5244,6 @@
         "Several fantastic world-class golf courses make sure the island makes a golfer’s tick-list. Those keen on water sports will revel in the snorkelling and diving, whilst the sport fishing draws a discerning crowd.",
         "Culturally, Grand Bahama is renowned for its open-air performances on Count Basie Square and the fantastically exotic Junkanoo carnival, where flamboyant costumes and colourful processions fill the streets. The island’s nightlife is among the best in the Caribbean, with a wide array of elegant clubs, luxurious restaurants and lively bars, while the lavish Treasure Bay Casino lures the international jet-set."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Casinos",
-        "Big game fishing",
-        "Vibrant nightlife"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -5895,14 +5386,6 @@
       "paragraphs": [
         "Like most ports in the Bahamas, Nassau is a yachting haven, especially due to its world-class marinas and international airport. A former British Colony, there are well-preserved Victorian homes and grand fortresses. But today’s Nassau is best known for excellent, high-end shopping and exclusive casinos. Here’s a great place for golfers, with some of the world’s finest found in the exclusive resorts. If golf isn’t your thing, try windsurfing, snorkelling or shark-diving here, since the surrounding reefs boast a good population of non-aggressive reef sharks who you can see up close underwater.",
         "Neighbouring Paradise Island is a vibrant hub of upscale boutiques and resort hotels, bursting with life and cultural experiences. Historic sites at Fort Fincastle and the Queens Staircase are well worth a visit, or if water-based activities are more your thing then head to Cable Beach for first-rate diving and up-close dolphin encounters. Whether enjoying the vibrant beach life, exploring the exciting underwater world or having a flutter in the casinos, you are sure to enjoy your time in Nassau."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Casinos",
-        "World class restaurants",
-        "Big game fishing",
-        "Stunning views",
-        "Wreck diving"
       ],
       "keyFacts": [
         {
@@ -6047,13 +5530,6 @@
         "Staniel Cay is perhaps best known as a gathering point for visiting yachts; the Yacht Club is a great lunch spot – order the cracked conch at the grill. Nearby Thunderball Grotto, made famous by James Bond, is an amazing place to snorkel in an intricate, sunlit cave system surrounded by colourful, exotic fish.",
         "Discover iguana-clad shores at the Exuma Cays Land and Sea Park, where diverse marine life thrives, or activity-seekers can catch some wind in this kitesurfing nirvana. Norman’s Cay, a charming coral atoll, offers wide powdery beaches and glittering turquoise water, while nearby Compass Cay is the area to swim with friendly nurse sharks, an entirely alternative experience awaits at Big Major Cay – swimming with the local pigs is a top attraction."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Stunning views",
-        "Wreck diving",
-        "Big game fishing",
-        "Wildlife"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -6196,14 +5672,6 @@
       "paragraphs": [
         "Short sailing distances make it a breeze to visit rainforests or white sand beaches, buzzing ports or relaxed reggae shacks. An endless choice of private anchorages, opportunities to snorkel with marine life and exciting wreck dives all add to the allure of the Grenadines. Hike alongside verdant pathways to bathe under cascading waterfalls, where the scenery and wildlife are so breath-taking that a photograph will never deliver the raw beauty witnessed first hand.",
         "With so many exquisite sailing areas and reef-lined islands to explore, the essential item to bring on board when planning a superyacht charter itinerary in the Grenadines is time. The islands all have their own quintessential exoticism and laid-back culture. Be sure to visit Bequia, with its secluded Margaret Beach, Hegg Turtle Sanctuary and excellent Music Fest in January. In the south west, enjoy the low-key Canouan Island offering the height of relaxation and the coral reefs of Tobago Cays Marine Park with its outstanding underwater discoveries."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Great surf spots",
-        "Stunning views",
-        "Big game fishing",
-        "History and culture",
-        "Wreck diving"
       ],
       "keyFacts": [
         {
@@ -6377,16 +5845,6 @@
         "Little Harbour or Deadman’s Bay: Little Harbour and Deadman’s Bay are two stunning spots on Peter Island that provide excellent options for anchoring and relaxation. Deadman’s Bay is known for its soft sands and calm, sheltered waters, perfect for swimming or enjoying a beachside meal at the Deadman’s Beach Bar & Grill. For a quieter retreat, Little Harbour offers a serene anchorage with excellent snorkelling just off the shore, allowing guests to explore vibrant coral reefs and marine life​.",
         "Dive (or snorkel) the legendary wreck of the RMS Rhone: One of the Caribbean’s most iconic dive sites, the RMS Rhone wreck lies off the coast of Salt Island, near Peter Island. This 310-foot British mail steamer sank in 1867 during a hurricane and has since become a vibrant underwater habitat. Divers can explore the remarkably preserved remains, including the bow and the massive 15-foot propeller, while encountering sea turtles, barracuda, and vibrant coral growth. The site is suitable for both divers and snorkellers; the clear waters often allow for great visibility of the wreck even from the surface​."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "History and culture",
-        "Stunning views",
-        "Vibrant nightlife",
-        "Wildlife",
-        "Wreck-diving",
-        "World-class restaurants",
-        "Chic boutiques"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -6443,16 +5901,6 @@
         "The U.S. Virgin Islands offer endless opportunities for fun on the water. Nestled between Puerto Rico and Anguilla, this beautiful cluster of islands and cays boasts breathtaking coastlines, secluded coves, and white-sand beaches.",
         "Known for vibrant anchorages and rich marine life, these islands are a dream for yacht charters, with stunning spots like Trunk Bay and Honeymoon Beach offering perfect swimming and snorkelling away from the crowds.",
         "Ashore, a unique blend of American, Caribbean, and European cultures awaits. St. Thomas, St. John, and St. Croix offer historical landmarks, restored sugar plantations, and charming local culture. With ideal trade winds, the U.S. Virgin Islands are a paradise for sailors, and with Cyril E. King International Airport (STT) on the island of St. Thomas, the USVI are easily reached and offer a convenient gateway to the British Virgin Islands, making it easy to combine both in your charter itinerary."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "History and culture",
-        "Spectacular Hiking",
-        "Vibrant nightlife",
-        "Wildlife",
-        "Diving And Snorkelling",
-        "Local Dining",
-        "Chic boutiques"
       ],
       "keyFacts": [
         {
@@ -6511,13 +5959,6 @@
         "The medieval town, which was largely remodelled after an earthquake in 1667, certainly exudes a timeless elegance. Add to this its coastal location on the Adriatic with constant light northwest winds, plus its proximity to Croatia’s beautiful islands and it’s easy to see why Dubrovnik is a favoured yachting holiday destination, especially for families. The Bokra castle tower is Dubrovnik’s most iconic landmark and the first thing you see arriving by yacht. Walk along the imposing castle walls and then take the cable car up to Mt Srd – which takes under 4 minutes. At 405m high the spectacular panoramic views extend over the old town rooftops to the Elafiti Islands.",
         "At dusk, wander through the narrow alleys in the Old Town; look out for the open-air cinema with nightly showings under the stars (July and August). Grab a table at the most prestigious and scenic restaurant, Nautika. Sit on one of two panoramic terraces at starched-white tables and order local delicacies: Lopud brodet with polenta and Šipan; fisherman’s carpaccio.",
         "Dubrovnik’s port is the gateway to the southern islands of the Adriatic: the wild islands of Koločep, Lopud and Šipan with their deserted beaches and tranquil coves. Or set a course for the emerald green island of Mljet – one of the most beautiful on this stretch of coast – but make sure you allow a day or two to really soak up the ambience of this little-known sanctuary."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Stunning views",
-        "World class restaurants",
-        "History and culture",
-        "Vibrant nightlife"
       ],
       "keyFacts": [
         {
@@ -6681,11 +6122,6 @@
         "Identifying Hvar as the new St Tropez (which many do) is doing it an injustice. Indeed, it has lavender fields, a pretty harbour with crystal clear water and it’s firmly on the map of the gliteratti. However, this small island on the east coast of the Adriatic has its own identity: the feel is more relaxed, more contemporary and less glitzy than St Tropez. Effusive and vibrant in the summer, peaceful in the winter, this is a year-round sailing destination, but it has the old-world charm of the Greek islands combined with the elegance of Venice. In summer, Hvar harbour swells with beautiful yachts and beautiful people, who gather after supper at Carpe Diem, the mothership of Croatia’s coastal clubs, to dance through the honeyed night until dawn.",
         "If you are awake with the sun, discover hillsides blanketed in olive groves and vineyards, idyllic little villages along the coast and larger towns like Jelsa and Stari Grad, the oldest town of Croatia, ripe for exploring. Hvar Town is the largest and most fascinating in Croatia. A maze of cobbled streets and shuttered villas spreads out from the Renaissance harbour and central piazza while the imposing fortifications remind visitors of the island’s history. The port of Hvar is a favoured starting point to sail around the Adriatic Islands and, outside prime times of July and August, you will have your pick of empty coves and bays to drop anchor or stroll through town and enjoy a plate of fresh calamari or a crispy pizza without worrying about booking."
       ],
-      "whyVisit": [
-        "Palaces",
-        "Stunning views",
-        "Vibrant nightlife"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -6848,15 +6284,6 @@
         "Offering a multitude of possibilities, a yacht charter is an ideal opportunity to experience all the island has to offer. Here you find that archaeological sites, museums and vineyards are ubiquitous.",
         "A haven for sun-lovers, Limassol is blessed with 16km of exceptional sandy beaches, with an abundance of watersports activities available. Notably, Pissouri Bay, fringed by hills and cliffs, creates a beautifully serene anchorage, while unspoiled Button Beach is a back to nature retreat amongst lofty sand dunes. Kitesurfing aficionados must head to the long stretch of beach at Paramali for the best adrenaline-filled fun."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Palaces",
-        "Wreck diving",
-        "Casinos",
-        "Stunning views",
-        "Great surf spots",
-        "Vibrant nightlife"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -6938,14 +6365,6 @@
         "The southern tip of Corsica houses Bonifacio, a historical jewel perched atop white cliffs, offering a unique blend of history and dramatic landscapes. Its harbour, one of the most striking in the Mediterranean, serves as a gateway to exploring the old town's narrow streets, rich with centuries-old architecture and stories.",
         "Inland adventures reveal the rugged beauty of Corsica's mountains, such as the Col de Bavella, where trails of varying difficulty levels invite you to explore at your own pace, ensuring that adventurers, both young and old, can enjoy the breathtaking views together.",
         "For aquatic enthusiasts, the island's clear waters are ideal for snorkelling and diving, providing an incredible underwater spectacle of marine life. Corsica encapsulates a diverse range of experiences, making it the perfect setting for a both family yacht charters or a romantic couples retreat, combining luxury and passionate culture with the thrill of discovery."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Chic boutiques",
-        "Vibrant nightlife",
-        "History and culture",
-        "Stunning views",
-        "World class restaurants"
       ],
       "keyFacts": [
         {
@@ -7204,14 +6623,6 @@
         "The French Riviera is one of the world’s most popular luxury holiday destinations. With glamorous towns to explore, rich historical legacy to uncover, delicious local food and wine varying from one town to the next – not to mention some of the most stunning scenery in Europe – you will be spoiled for choice.",
         "A French Riviera luxury yacht charter will offer opportunities to dip to shore to discover chic boutiques and sophisticated dining scenes – where you can explore gorgeous Cannes and Nice at leisure. Enjoy shopping and lunch in St. Tropez before retreating to a secluded cove to enjoy the sun in peace and privacy. Extend your trip by continuing east to Monaco, the playground of the glitterati, where supercars and superyachts congregate, and haute couture is the norm.",
         "Named the Cote d’Azur after its strikingly blue waters, it’s no wonder that several famous painters, including Picasso and Cezanne, chose to live in this area."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Chic boutiques",
-        "Vibrant nightlife",
-        "Casinos",
-        "Palaces",
-        "World class restaurants"
       ],
       "keyFacts": [
         {
@@ -7479,15 +6890,6 @@
         "And then Athens turns your attention away from its past by luring you into exclusive boutiques, world-class restaurants and stellar nightclubs to rival any in Europe. Sit in one of the many pavement bars on tree-lined Kolonaki Square and indulge in some people watching, or head up to the roof of leftfield art space and music venue, Bios. Beyond the city walls, the sun blushed islands and bays of the surrounding coastline call itinerant sailors.",
         "Thessaloniki’s vibrant harbour town is renowned for its healing waters, pristine beaches and fantastic diving. Nearby Nafplion attracts a well-heeled crowd without being overrun, even in summer. The historic charm of its architecture pairs beautifully with its gorgeous surroundings. Despite its ruined state, Olympia, home of the Olympic Games, inspires awe in visitors."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "History and culture",
-        "Vibrant nightlife",
-        "Casinos",
-        "Palaces",
-        "Chic boutiques",
-        "Stunning views"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -7654,15 +7056,6 @@
         "When chartering a yacht in Crete from the west, the first port of call is Rethymnon, between Chania and Heraklion. Without a doubt the most exclusive port on the island, the thriving restaurant scene extends beyond the promenade, which has spectacular views over the sea. From here, visitors shouldn’t miss a trip to the historical monasteries of Preveli and Arkadi, as well as the Ideon Cave where the mythylogical Zeus was said to be raised.",
         "Eastward along the coast lies bustling Heraklion. Vibrant and colourful, the city is packed with chic restaurants, exclusive bars and flamboyant nightclubs. The town swells in the summer; charter a yacht early or late in the season – May or October – to get the best tables and cooler weather. Heraklion is also an ideal base for day trips further inland. Enjoy some of the excellent hiking routes to remote villages.",
         "Further east, on the northern side of Mirabello Bay, lies one of the many highlights of the island – the charming yet luxurious village of Elounda, with its elegant resorts, high class restaurants and exclusive bars. The beautiful harbour is sheltered by the peninsula of Kalydon and is ideal for kayaking, windsurfing and paddleboarding, whilst north of the harbour is Spinalonga – once an impenetrable Venetian sea fortress, now uninhabited and known for its beautiful shallow waters. The village is steeped in history with preserved houses and churches, whilst the famous Minoan palace of Knossos is well worth a visit. Discovered in 1900, visitors can walk through the palace’s rooms and visualise day-to-day ancient life. To really appreciate the timelessness of Crete on your yacht charter, head to the south where tourism is yet to really emerge."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "History and culture",
-        "Wreck diving",
-        "Culinary delights",
-        "Stunning views",
-        "Chic boutiques",
-        "Vibrant nightlife"
       ],
       "keyFacts": [
         {
@@ -7831,13 +7224,6 @@
         "The beauty of chartering a yacht in the Cyclades is that you have complete freedom to hop between the islands as your captain and crew will adapt your itinerary to your personal preferences. The beaches are one of the biggest draws to the Aegean, with warm, calm waters making a yacht charter here a wonderfully relaxing and experience for couples, friends or families.",
         "The best-known islands in the Cyclades, Mykonos, Santorini and Ios draw lovers and couples who stroll through their narrow streets arm in arm, taking selfies besides glorious Bougainvillea. Be sure to visit Santorini, renowned for its own volcano as well as its scenic natural, black pebble beaches. A party hotspot, Mykonos boasts lavish nightlife and some of the most notable and romantic restaurants in Greece, while Ios – also known for its nightlife – offers the chance to relish gorgeous Magganari beach and explore the town’s windmills.",
         "Besides the main islands, there are numerous little islands. To the south, the once remote island of Folegandros is becoming increasingly popular, whilst nearby Sikinos is still little-visited and boasts a population of only 300. Oia is peaceful and romantic, while the best sunsets can be seen from the ancient ruins on Thea. Kea, with its oak forest, and Kythnos, with its hot springs, are both quieter than many of the other islands. Like the other Aegean islands, the Cyclades are in the path of the warm Meltemi wind from the end of June through into September – ensuring excellent conditions for a sailing yacht charter."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Stunning views",
-        "Wreck diving",
-        "History and culture",
-        "Vibrant nightlife"
       ],
       "keyFacts": [
         {
@@ -8012,14 +7398,6 @@
         "The most famous destinations of the island group are Rhodes and Kos, both cosmopolitan islands. Historically, the more important and renowned is Rhodes, due in part to its superlative beaches, well-preserved medieval town and archaeological sites. Wander the streets of the walled old town, now a UNESCO World Heritage City, or enjoy stunning views of whitewashed houses cascading down the hillsides against the imposing medieval fortifications of the old town from the comfort of your yacht.",
         "Kos is also well worth visiting. Known for its sandy beaches medieval settlements and archaeological sites, it is a very popular yacht charter destination in Greece, partly as it is ideally placed to cruise around to a number of other beautiful islands, including Leros – popular for diving, Kalymnos – a famous rock climbing destination and Patmos – renowned as the Jerusalem of the Aegean. This peaceful, very religious and historically important island was the place where Saint John the Divine wrote the Apocalypse."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "History and culture",
-        "Vibrant nightlife",
-        "Chic boutiques",
-        "Stunning views",
-        "Wreck diving"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -8186,12 +7564,6 @@
         "The pleasantly mild climate, deep waters (the deepest in the Mediterranean) and famous meltemia winds along with the soft, northwestern breeze, make the Ionian Islands perfect cruising grounds for a yacht charter. Zakynthos, Ithaca, Corfu, Kefalonia, Lefkada, and Paxos are six of the larger Ionian Islands, while Antipaxi, Erikousa, Mathraki, Othoni, Meganisi and the uninhabited islets of Strofades complete the set of this stunning archipelago.",
         "From Zakynthos in the south to Corfu in the north, chartering a yacht in Ionian Islands is a perfect way to experience lush green landscapes, with towering mountains at their spine and stunning horseshoe beaches fringing the water – ideal for windsurfing and diving. Although Ithaca lacks sandy beaches, it makes up for this through its importance in Greek mythology, as the home of Odysseus whose temple can be visited on the island. Featured in the best-selling novel and film, Captain Corelli’s Mandolin, Kefalonia is the largest and perhaps the best known island in the region.",
         "Less touristy, but offering up some of the most magical beaches, is low-key Lefkada. When the sun gets low, head inland to the mountain tavern, Panorama, in Athani. As the name suggests, the view alone makes it worth the journey, but they also serve an excellent selection of Greek classics. If the beaches in popular Paxos are too busy, anchor in one of the nearby quiet coves and enjoy the tranquillity on your luxury yacht. In Corfu Town, head to the lively local haunt, Tsipouradiko, located near the Old Port and visit the Moni Theotokou 13th century monastery, perched on the rocky promontory at the end of Paleokastritsa."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Stunning views",
-        "Wreck diving",
-        "History and culture"
       ],
       "keyFacts": [
         {
@@ -8366,14 +7738,6 @@
         "For history aficionados, this is a treasure trove of incredible ancient culture where ruins, like sirens, lure you in with spellbinding appeal. Mythology and legend thrive in this extraordinary region where your imagination can run wild.",
         "Bustling village cafes filled with friendly locals and an easy-going atmosphere will doubtless entertain tastebuds with deliciously rustic local fare. Wide open landscapes beg walkers to explore rugged pathways that wind through olive groves, over rocky hillsides and across pine-strewn shores dotted along the undulating coastline. Easily accessed by yacht, the idyllic, private coves are tranquil, presenting countless stunning beaches to choose from. From pebbles to velvet sand, tiny rock platforms to horseshoe stretches, these diverse shores are all set within effortlessly laid back landscapes. There is no better way to explore the clusters of glorious beach, clear seas and secluded bays than by chartering a luxury yacht.",
         "Culture is key: from worshipping the sea god Poseidon in Poros to reliving a monumental sea battle in Salamina, the countless tales from history and mythology serve to enhance the allure of a Saronic yacht charter. Chartering a yacht in the Saronic Islands means that you are guaranteed a warm Greek welcome, overflowing with charisma. It’s no wonder that ouzo-washed evenings seduce visitors in this isle-rich utopia."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Stunning views",
-        "Wildlife",
-        "History and culture",
-        "Vibrant nightlife",
-        "Wreck diving"
       ],
       "keyFacts": [
         {
@@ -8572,14 +7936,6 @@
         "One of the most picturesque coastal walks to embark on during your Amalfi yacht charter is Cape Licosa. Named after the siren Leucosia, who came here to die upon failing to lure Odysseus and his men to shore with her singing; this walk will take you along ancient donkey trails that wind through fragrant pine forests, offering incredible views of timeless landscapes. As you follow the trail, you’ll come across several hidden beaches that are ideal for a refreshing dip and several ancient watchtowers.",
         "Another fantastic coastal walk that you can’t miss is Cape Palinuro. The trail takes you through the heart of the Cilento and Vallo di Diano National Park, where you’ll be surrounded by lush Mediterranean vegetation and stunning scenery. The walk will take you through ancient paths and stairways that lead to the top of the cape, where you can enjoy panoramic views of the Gulf of Palinuro and the surrounding countryside. At the end of the trail, you’ll find a beautiful natural arch that has been carved out of the rock by the sea.",
         "Both of these walks offer an excellent opportunity to experience the natural beauty of the Amalfi Coast from a unique perspective. If you’re a keen hiker or just looking for a change of pace from your yacht charter in Amalfi, these trails are an ideal way to explore the region’s rich cultural heritage and natural beauty."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Chic boutiques",
-        "History and culture",
-        "Stunning views",
-        "Vibrant nightlife",
-        "World class restaurants"
       ],
       "keyFacts": [
         {
@@ -8873,13 +8229,6 @@
         "Less popular with tourists than Italy’s southwest coast, Bari is directly across the Adriatic from Dubrovnik and is nestled around a bustling harbour. The old town is filled with historical architecture such as the Castel Svevo, whilst the modern town is host to museums and excellent shopping.",
         "Charter a yacht from Bari along the coast to find lilting fishing villages dotted with charming restaurants, making this magical sun-baked stretch of southeast Italy even more attractive. Enjoy the outstanding local cuisine that highlights simple, fresh ingredients – from the regional orecchiette pasta prepared any number of ways, to huge quantities of fresh seafood."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Stunning views",
-        "World class restaurants",
-        "History and culture",
-        "Vibrant nightlife"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -9163,11 +8512,6 @@
       "paragraphs": [
         "Its hot waters are believed to bring a multitude of health and beauty benefits and have made it a spa destination. Casamicciola Terme is one of the island’s premier ports and boasts a modern marina close to Monte Epomeo. To truly appreciate the natural beauty of Ischia, hike up beyond the dense pine and chestnut forest to the peak of Monte Epomeo. Here walkers can find a quiet escape from the buzzing towns.",
         "The town of Ischia on the northeast coast is made of two halves: Ischia Ponte and Ischia Porto. The latter is lively and bustling, with a vibrant nightlife. The bars and restaurants have a lilting Mediterranean vibe and striking views of the harbour. The place has the all the elements of a classic Italian seaside town at its best: lovely promenades, pretty architecture and a relaxed, generous and convivial atmosphere. And of course, there’s the food. You’re in Campania, so you can’t lose. Indulge in a wealth of shellfish and pasta."
-      ],
-      "whyVisit": [
-        "Stunning views",
-        "Vibrant nightlife",
-        "World Class Restaurants"
       ],
       "keyFacts": [
         {
@@ -9454,16 +8798,6 @@
         "The arc of the Italian Riviera consists of a thin coastal strip at the foot of the Maritime Alps, encompassing the dramatic coastline of Liguria, between Tuscany and the French Côte d’Azur. Narrow beaches dust the coves and bays between sheer rock faces plunging into the water. During an Italian Riviera yacht, discover bustling seaside towns like Genoa and the picturesque beaches of Lerici from the privacy of your luxury yacht.",
         "To really get a sense of the region on a Liguria yacht charter, spend time exploring the Cinque Terre, five enchanting coastal villages which are beautifully preserved and protected as a UNESCO World Cultural Heritage site. Put on some hiking boots and walk between them for a truly immersive experience.",
         "Make sure you spend a romantic afternoon in the achingly pretty Portofino, the harbour of 65 colours, while on an Italian Riviera yacht charter. This little port between the cobalt sea and the emerald mountains is enduringly popular with sailors and ranks among the most expensive in the world for a berth or a bite to eat."
-      ],
-      "whyVisit": [
-        "Stunning views",
-        "Vibrant nightlife",
-        "World Class Restaurants",
-        "Beautiful beaches",
-        "Casinos",
-        "Chic boutiques",
-        "Wreck diving",
-        "Palaces"
       ],
       "keyFacts": [
         {
@@ -9764,14 +9098,6 @@
         "The entire region features countless archaeological sites, while the Vesuvius National Park offers stunning views from the vast network of hiking trails.",
         "A luxury yacht charter in the Gulf of Naples offers a glimpse into a historic era when Nobles, Lords and Emperors reigned supreme. Providing a unique opportunity to explore the rich history and stunning beauty of Naples before cruising to some of Italy’s finest destinations, with its warm climate for most of the year, the Gulf of Naples is a favourite on the yachting circuit. Offering a deep dive into Italian culture amid soul-stirring scenery, the Gulf of Naples is a must-visit destination for those seeking a true taste of Italy."
       ],
-      "whyVisit": [
-        "Chic boutiques",
-        "Vibrant nightlife",
-        "Stunning views",
-        "World class restaurants",
-        "Beautiful beaches",
-        "History and culture"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -10062,12 +9388,6 @@
         "Located between San Marino and Bologna, Ravenna is one of the larger cities in this region. With countless historical buildings of significant importance and several UNESCO world heritage sites, the architecture and mosaics are some of the best preserved in Italy. A popular charter destination and easily accessed by yacht, Ravenna has many fantastic coastal resorts.",
         "In the city centre, visit a selection of elaborate churches and basilicas, wander through picturesque squares or even see the tomb of legendary writer, Dante. Ravenna Marina is a wonderful area offering a chance to relax and soak up the warm sunshine."
       ],
-      "whyVisit": [
-        "History and culture",
-        "Stunning views",
-        "Palaces",
-        "World class restaurants"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -10354,14 +9674,6 @@
         "The northeastern coast, home to the famed Emerald Coast, is a mosaic of glittering beaches, exclusive resorts, and upscale boutiques, particularly around Porto Cervo. Famously fashionable, the marina is lined with sophisticated cafes, high-end shops, and world class restaurants, creating one of the finest destinations for a luxury yacht charter in the Mediterranean.",
         "Sardinia's cultural tapestry is equally compelling, with ancient archaeological sites like the ruins of Nora and Tharros offering a glimpse into the island's rich past. The mediaeval city of Alghero, with its Catalan heritage, presents a fascinating exploration of history and architecture.",
         "Gastronomy is another pillar of the Sardinian luxury charter experience. The island's cuisine is a celebration of its maritime and agricultural heritage, offering dishes that range from the decadence of lobsters to the simplicity of pane carasau. Local vineyards complement these culinary delights with exquisite wines, enhancing the island's gastronomic appeal."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Chic boutiques",
-        "Vibrant nightlife",
-        "History and culture",
-        "Stunning views",
-        "World class restaurants"
       ],
       "keyFacts": [
         {
@@ -10654,16 +9966,6 @@
         "Palermo, the old town of Sicily’s capital, is absolutely stunning; a terracotta-walled rabbit warren of cobbled streets with hanging baskets trailing flame-red flowers. Catania is a paradise for adventurers and hikers, as is the UNESCO-protected World Heritage site around Etna, Europe’s tallest and largest active volcano, which can be perfectly observed from your private yacht charter in Sicily.",
         "The rolling countryside in the south throws up the precariously balanced hilltop towns of Ragusa Ibla and Erice, though you’ll keep coming back to Taormina. As the heat rises, retreat to Gran Duca for a bottle of chilled local Nero d’Avola (viticulture is a big thing in Sicily, however don’t expect a broad selection of international wines) and a generous plate of spicy spaghetti al vongole while sitting high above the bay to see your crewed motor yacht or sailing boat at anchor below you.",
         "Cruise the Mediterranean Sea around the Aeolian islands of Vulcano, Salina and Lipari and explore everything from lava formations to cliff-top meadows and deserted white sand beaches during your Sicily yacht charter."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "History and culture",
-        "Vibrant nightlife",
-        "Casinos",
-        "Palaces",
-        "World class restaurants",
-        "Chic boutiques",
-        "Stunning views"
       ],
       "keyFacts": [
         {
@@ -10959,13 +10261,6 @@
         "Built on a lagoon, Venice comprises over 100 tiny islands, divided by canals and connected by bridges. The unique construction and architecture give the Italian city more than its share of romance. As the world’s only pedestrian city, Venice is a sensory overload: from the mosaic encrusted Basilica di San Marco, to the Museo Querini Stampalia crammed with Renaissance paintings. It is, without a doubt, the most photogenic city in Europe and must be explored when chartering a yacht in eastern Italy. Explore the labyrinth of canals, wander the atmospheric cobbled streets, marvel at the iconic Renaissance architecture and visit the skilled glass blowers of Murano.",
         "From Venice, you’re within a day’s sail of the Croatian coast. But if it’s Italy that you want to explore, head south along the east coast to discover the fabulous beaches and villages along the Adriatic coastline. Stop in Rimini for an alfresco snack at Casina del Bosco where you can enjoy some of the best and most diverse piadine in town, served with sensational fillings such as caramelised figs. Visit Ravenna, home to a UNESCO World Heritage Site with captivating monuments and mosaics. In Puglia, Bari offers the chance to indulge in simple but delicious cuisine and relish the lilting fishing villages of this magical sun-baked stretch of southeast Italy."
       ],
-      "whyVisit": [
-        "Chic boutiques",
-        "Palaces",
-        "World class restaurants",
-        "History and culture",
-        "Stunning views"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -11250,12 +10545,6 @@
         "Budva is Montenegro’s most popular tourist destination, and a city that should be on every to-do list. The Old Town is a maze of Venetian cobblestone streets and historic monuments, centred around the 15th century citadel.",
         "Known as the “Riviera of Sandy Beaches”, Budva comes alive in the summer months. The beautiful and well-equipped beaches are buzzing with atmosphere, making it a perfect location for yacht charter. Take a tender into one of the beaches, the popular choices being Mogren, Becici and Sveti Stefan, to enjoy the shallow waters or anchor further out and enjoy some watersports. Choose Enjoy relaxing at the Skadar Lake or visiting the Lovcen National Park; if feeling active, enjoy a hike in the mountains of the Durmitor National Park with spectacular glacier lakes and snow-covered peaks – the panoramic views are amazing."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Stunning views",
-        "History and culture",
-        "Vibrant nightlife"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -11404,10 +10693,6 @@
         "Stroll past ancient churches, slip into a romantic restaurant or sit outside one of the many bars watching animated locals on their way to dinner.",
         "Nearby the pretty Our Lady of the Rocks island, is well worth a tour and listen to guides recount the legend of the isle. Look out for dolphins when cruising here.",
         "Kotor is a fortified town on Montenegro’s Adriatic coast, in a bay near the limestone cliffs of Mt. Lovćen. Characterized by winding streets and squares, its medieval old town has several Romanesque churches, including Kotor Cathedral. It’s also home to the Maritime Museum, which explores local seafaring history."
-      ],
-      "whyVisit": [
-        "Palaces",
-        "Stunning views"
       ],
       "keyFacts": [
         {
@@ -11561,14 +10846,6 @@
         "Sun-soaked and skirted by golden sands, take your pick from 375 beaches of the Balearic Islands, like Cala Bóquer, where only goats, starfish, and kayakers make it ashore. Or Playa de Ses Illetes, a twin-sided sandbar where the only beach club is the one on your yacht.",
         "Colourful fishing boats piled high with nets are pulled up on the shore, and glamorous boutiques sit hidden on narrow cobbled lanes. Tapas bars line busy squares, and Michelin star restaurants sit shoreside. Littered with UNESCO World Heritage Sites, destination cities, and wildly competitive gastronomy, the Balearic Islands are vastly different in their separate identities and a highlight of any superyacht charter."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Chic boutiques",
-        "History and culture",
-        "Great surf spots",
-        "Stunning views",
-        "Vibrant nightlife"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -11699,13 +10976,6 @@
         "To get your bearings, stroll the 4 kilometre long Paseo Marítimo, a beautiful palm-tree-lined promenade. The port itself was completely remodelled for the 32nd America’s Cup, while the Medieval architecture of the old city is retained in pockets. Highlights include the San Miguel de Los Reyes Monastery and the ancient Towers of the Medieval city, which afford stunning views across the city to the Mediterranean Sea.",
         "Don’t miss the Las Fallas festival in March during your Valencia luxury yacht charter, which begins with spectacular fireworks. The Holy Week celebrations held in Valencia are also considered among the most intensely colourful in Spain. During August, crowds are drawn to the nearby town of Buñol by “La Tomatina” for the annual tomato fight, which makes a fascinating spectacle. Make sure you leave time during a private yacht charter in Valencia to visit Albufera, a beautiful freshwater lagoon and estuary that is a natural park perfect for bird watching and hiking. Golfers should hit the greens at El Saler, El Bosque, Manises, and the Club Escorpión."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Stunning views",
-        "World class restaurants",
-        "History and culture",
-        "Vibrant nightlife"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -11827,11 +11097,6 @@
         "There are many beautiful anchorages and attractions in the Göcek/Fethiye area so you can spend the week just pottering around. The prevailing wind is from the west and tends to blow a little stronger in the afternoons, so if you want to go further afield, the Bozburun peninsular is within a reasonable distance with a marina in Marmaris en route. In Göcek, fishing villages sit below dramatic rock faces and gorgeous beaches with shallow waters offer excellent snorkelling terrain. For sun-worshippers, the coastline is scattered with pristine beaches, from sands of Sarigerme or the Inclice beach, surrounded by dense pine woodland.",
         "But it’s not all slow living. For those who want to get the adrenalin coursing, consider a wild water ride in the Saklikent, Turkey’s longest and deepest gorge and an insanely beautiful spot. Furthermore, the favourable winds here mean the Gulf of Gocek is a paradise for paragliders. The town of Göcek still has the lilt of a traditional fishing village, despite the fact that is has slowly and quietly emerged as Turkey’s superyacht hub, with magnificent marinas and all the amenities a seasoned traveller expects. An archipelago of gorgeous islands pepper the gulf, each with their individual charm, but all featuring postcard beaches as well as secluded anchorages and the opportunity to try out your yachts toys: from jet skiing to scuba diving."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "History and culture",
-        "Stunning views"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -11935,17 +11200,6 @@
       "paragraphs": [
         "Living up to its name in every sense, the translation for Marmaris is “shining”. The city is a labyrinth of bazaars, fine dining restaurants and chichi bars and clubs: a microcosm of modern Turkey. With wild, mountainous terrain and dense pine forests, it is also a paradise for hiking and outdoor enthusiasts. Adventure-hungry visitors can explore on mountain bikes or quad bikes, with both easy and more challenging routes to choose from. Or why not try horse riding through the countryside, and experience the scenery at a slower pace.",
         "The coast around Marmaris is known for gorgeous beaches, with Cleopatra Beach – allegedly her wedding present from Mark Anthony – being the most famed. The icing-sugar sand beach of Iclemer is an ideal spot for families with its gentle slopes and shallow waters. Cruise along the coast to create your own breeze in summer, have lunch on board and cool off by diving and snorkeling in one of the many small bays where the marine life is rich and plentiful and the water is crystal clear"
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Great surf spots",
-        "Vibrant nightlife",
-        "Big game fishing",
-        "History and culture",
-        "World class restaurants",
-        "Chic boutiques",
-        "Stunning views",
-        "Wreck diving"
       ],
       "keyFacts": [
         {
@@ -12053,12 +11307,6 @@
         "Underwater, the bounty of life is equally exciting. Experienced divers will revel in a world filled with marine life that is encouraged by an amalgamation of colder currents from Antarctica and warmer ones from the Pacific. Large and vibrant fish, ranging from hammerhead sharks to eagle rays make a dive here a singularly extraordinary experience. Equally, the waters can be explored by snorkelling for those less accustomed to the somewhat difficult diving conditions.",
         "Unsurprisingly, the most popular activities in the Galapagos are snorkelling, scuba diving and guided tours. With white beaches and great swells, there is also plenty of surfing, swimming and sunbathing to do. For those that prefer a more relaxed pace, the tourist hub of Puerto Ayora (Santa Cruz Island) also offers great shopping, fine restaurants and luxury hotels."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Stunning views",
-        "Great surf spots",
-        "Wildlife"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -12103,15 +11351,6 @@
       "paragraphs": [
         "With rare species of plants, animals and especially birds, this is a paradise for naturalists. Many make a pilgrimage here to see the Sisserou parrot. Found only on Dominica, it is the island’s national bird and features on the flag. Hike to the country’s highest point, Morne Diablotins, or stay on board and try and seek out the whales. The clear azure waters surrounding Dominica are home to an abundance of whale species.",
         "Dominica is still being formed by geothermal-volcanic activity and has an impressive hot spring, Boiling Lake, which is an awesome sight. As a result the marine life means excellent scuba diving and snorkelling. Culturally, Dominica is famed for its musical festivals Creole in the Park and the World Creole Music Festival, which are full of folklore, colour and music. A yachting holiday on Dominica is a unique experience of simply astounding natural beauty paired with a gentle climate and a sense of pure calm and relaxation."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Big game fishing",
-        "Great surf spots",
-        "History and culture",
-        "Stunning views",
-        "Wildlife",
-        "Wreck diving"
       ],
       "keyFacts": [
         {
@@ -12160,15 +11399,6 @@
         "In the bay of Saint-Pierre many ships were sunk by the eruption of the Mont Pelée volcano in 1902 and the wrecks are intriguing and eerie. Another popular spot for divers is Nahoon, a three-mast boat lying off the coast under only 36m of water: you may even be able to see it from aboard your yacht.",
         "Choose your slice of Martinique: secluded beaches or gorgeous waterfalls, or explore both by circumnavigating the island."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Great surf spots",
-        "History and culture",
-        "Stunning views",
-        "Vibrant nightlife",
-        "World class restaurants",
-        "Wreck diving"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -12215,14 +11445,6 @@
         "For those with a penchant for history, head up to the 15th century citadel and the Cathedrale St-Jean-Baptiste at the highest point. Soak up magnificent views of the red-tiled town and over the bay as the sun sets. During the busy summer months, Calvi is alive with the sound of music thanks to a series of festivals and concerts in the citadel and around the town – and on 15 August enjoy an impressive fireworks display aboard your superyacht charter offering breathtaking views of Calvi. With plenty to do in the area, nature lovers will enjoy a trip down the coast to the Scandola World Heritage Site, strewn with dramatic cliff formations and sea stacks, not to mention home to diverse marine life. Quai Landry links the marina and the port, and is a great place to get a feel for the town and watch the world go by. Past the promenade, lush la Pinède forest stretches along the back of the beach bordering Calvi bay, underlining the frontier between land and sea.",
         "Calvi’s 6km of glittering beach, simply oozes style of a French Riviera resort, offering gently shelving, warm, protected waters, ideal for families. With a fine array of waterfront restaurants, some of which serve directly onto the beach, visitors will never go hungry. Nearby Arinella Plage at Lumio is a small sandy stretch with stunning views across the bay to the citadel, this is an ideal bay to drop anchor to benefit from the shelter of rocky headlands and a popular spot to snorkel."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Chic boutiques",
-        "History and culture",
-        "Stunning views",
-        "Vibrant nightlife",
-        "World class restaurants"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -12268,14 +11490,6 @@
         "Cap d’Antibes is a great day anchorage – during your Antibes yacht charter indulge in a morning dip before taking the tender to shore for lunch at the iconic Hotel du Cap Eden Rock. Picasso once lived in Antibes and was reputedly captivated by the views and the nostalgic glamour: it is well worth taking a visit to the Museé Picasso to see some of his most iconic works.",
         "Within the quaint, cobbled streets of the old town it is easy to re-imagine the old fishing village of Antibes. Wind your way to upscale La Taille de Guepe and relish the intimate setting and sublime food. Panoramic views from the Phare de la Garoupe lighthouse are sensational. Explore small coves, private castles and the exquisite beauty of the Sentier des Douaniers during your Antibes superyacht charter. For those who prefer the ease of marina life, Port Vauban is Europe’s largest, offering plenty of berthing for superyachts over 60m (and earning Antibes the nickname Billionaires’ Quay)."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Chic boutiques",
-        "History and culture",
-        "Stunning views",
-        "Vibrant nightlife",
-        "World class restaurants"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -12320,14 +11534,6 @@
       "paragraphs": [
         "Falling neatly between Nice, Antibes, Monaco and St. Tropez, Cannes is home to the Cannes Film Festival, held in May, where celebrities take over the town, attending lavish ceremonies and parties at a handful of discreet venues. When the sun sets everyone spills out into one of countless Michelin Star restaurants, where Mediterranean food and wine commands serious prices and excellent reviews. The pavements are lined with beautiful people sharing platters of succulent shellfish and bottles of ice-cold rosé.",
         "The legendary La Croisette will satisfy your shopping needs during your Cannes yacht charter. It is the perfect destination for shoppers, with every conceivable independent boutique and couture house lining the boulevard. For the food lovers, make sure to explore Le Suquet where you can wander into local eateries without booking and find some of the finest, most authentic regional and international cuisine. Nearby, the Isles des Lérins, off mainland Cannes, are an ideal place to drop anchor and spend a relaxing afternoon during your Cannes luxury yacht charter. The fort on the larger island is reputed to have held Dumas’ Man in the Iron Mask. There is also a monastery to visit on Ile St Honorat, belonging to Cistercian monks who produce exquisite wines, honey and lavender oil."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Casinos",
-        "Chic boutiques",
-        "Palaces",
-        "Vibrant nightlife",
-        "World class restaurants"
       ],
       "keyFacts": [
         {
@@ -12375,15 +11581,6 @@
         "If the mood takes you, the Villa Ephrussi is a fascinating afternoon excursion. This hilltop palace offers stunning views from the Cap and was once home to Baroness Rothschild in the Belle Époque era. With a combination of Spanish, French and Japanese influences, it plays host to an outstanding art collection and the gardens are spectacular. St Jean Harbour and Promenade Maurice Rouvier offer excellent yacht spotting and the ideal place for an evening stroll before ducking into one of the many exceptional fish restaurants.",
         "Perhaps first enjoy a glass of wine among the locals at Le Cadillac or La Civette. With a backdrop of rich terracotta rooftops among beautiful tiered gardens, this relaxed and exclusive enclave is one for the pocket book of the discerning yacht charterer. The peninsula is part of the Pelagos Sanctuary for Mediterranean Marine Mammals, a protected area jointly managed by France, Monaco and Italy, making it a prime spot for diving as well as whale and dolphin watching."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Casinos",
-        "Chic boutiques",
-        "History and culture",
-        "Stunning views",
-        "Vibrant nightlife",
-        "World class restaurants"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -12430,12 +11627,6 @@
         "Tucked away, the enchanting and ancient Chateau Eza is one of the most visually stunning hotels along the Cote d’Azur. A former residence to a Swedish Prince, private balconies and terraces in the 14 intimate suites offer epic vistas: during your Eze luxury yacht charter adventure, have lunch in the gourmet restaurant on one of the terraces overlooking the sparkling sea. At the top of Eze village beyond the stone walls is the Chateau de la Chèvre d’Or; also one of the world’s finest hotels. The Moroccan-style gardens link to streams of beautiful terraces dropping down towards the sea, set amongst serene courtyards, swimming pools and sundecks. Inside guests marvel at the giant chandeliers, Italian marble and Parisian antiques: no wonder the spacious suites have hosted Marlene Dietrich and Robert de Niro. Coffee on the terrace, soaking up the ultimate Mediterranean view, is highly recommended.",
         "A special surprise awaits visitors to Eze in the form of the Galimard Perfume Factory and Museum. Enjoy a unique opportunity to take part in the perfumery workshop, fascinating behind-the-scenes tour of the lab and factory, plus regular demonstrations. Here nostalgia is captured in antique perfume bottles abundantly displayed in this magical environment, take a chance to purchase aromatic products from this unforgettable haven of olfactory delights."
       ],
-      "whyVisit": [
-        "Chic boutiques",
-        "History and culture",
-        "Stunning views",
-        "World class restaurants"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -12480,13 +11671,6 @@
       "paragraphs": [
         "Monaco’s exclusivity and preferable tax system make it home to some of the world’s largest yachts. For fast paced, glitzy lifestyle, Monte Carlo is the perfect playground for grown-ups who appreciate the finer things in life. From the superyachts lining the marina and the sports cars circling Casino Square to the boutiques – there is nothing understated about this bold enclave of luxury. While cruising on your Monaco yacht charter, take in the stunning anchorages of nearby Cap d’Ail or Cap Ferrat. From Monaco, the Italian Riviera is a natural onwards charter destination.",
         "If partying until dawn is not on the agenda, enjoying an Aperol spritz in Casino Square is recommended. Visit the Oceanographic Museum or the Palace, act like a local and take a dip in the saltwater pool at Port de Hercules where you have a spectacular view over the harbour and the yachts. Plan in advance to attend the Grand Prix in May, where you can watch the race trackside from the back of your Monaco superyacht charter, or attend the Monaco Yacht Show in September."
-      ],
-      "whyVisit": [
-        "Casinos",
-        "Chic boutiques",
-        "Palaces",
-        "Vibrant nightlife",
-        "World class restaurants"
       ],
       "keyFacts": [
         {
@@ -12534,14 +11718,6 @@
         "The landscape of the Porquerolles is a medley of cliffs, bays, plains and forests, making the islands an perfect place to enjoy activities such as hiking, horse riding and mountain biking. Of course, that’s once you have tired of basking on the bow, anchored off one of the many idyllic white sand beaches.",
         "Vinophiles will enjoy a trip to Domaine Perzinsky, a family-run vineyard offering a wonderful selection of local Porquerolles wine, while sun-worshippers head to crescent-shaped Plage de Notre Dame, where the pearly sand is flanked by fragrant eucalyptus and pine trees whose exotic perfume is carried on the summer breeze. On Iles d’Hyères cars are not allowed so it has retained its natural beauty – bring comfortable shoes so that you can explore."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "History and culture",
-        "Stunning views",
-        "Vibrant nightlife",
-        "World class restaurants",
-        "Wreck diving"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -12587,12 +11763,6 @@
         "Without a doubt, St. Tropez is the most famous resort on the Cote d’Azur and the town is like a film set. Propelled to fame in the 60’s when Brigitte Bardot frequented its shores, it offers the exceptional of everything.",
         "At its heart St. Tropez is still an old fishing village. Its maritime history and relaxed atmosphere keep it down to earth. Just a few steps behind the opulent boutiques of the main streets, you’ll find old-fashioned butchers’ shops, a morning fish market, and boulangeries. As the sun goes down on the Vieille Ville, gleaming superyachts come back to port and vespas, porsches and mini-mokes zip around, dropping off bejewelled locals.",
         "Party people flock to the iconic bar at Les Caves du Roy at Hotel Byblos for cocktails and music to get the party started. Club 55 on Plage du Pampelonne is the longest running beach club. Established in the 50s, it still draws a chic international crowd. At both locations, the streets are lined with gleaming supercars. If you are looking for definitive glamour against a traditional backdrop, a St Tropez luxury yacht charter is the way to go."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Chic boutiques",
-        "Vibrant nightlife",
-        "World class restaurants"
       ],
       "keyFacts": [
         {
@@ -12642,12 +11812,6 @@
         "On the quayside, destination restaurants include La Mére Germaine, which reputedly serves the best soupe de poisson on the Riviera – a must during a luxury yacht charter in Villefranche Sur Mer.",
         "Villefranche Sur Mer is conveniently located between Monaco and Nice, with moorings offering excellent security for large superyachts. Additionally, the surrounding hills are ideal for biking and hiking, offering plenty of trails to choose from. During a Villefranche luxury yacht charter, make sure you leave time to head to the top of Mont Leuze, where you can enjoy spectacular views over the bay."
       ],
-      "whyVisit": [
-        "History and culture",
-        "Stunning views",
-        "Vibrant nightlife",
-        "World class restaurants"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -12694,14 +11858,6 @@
         "Allegedly the location of the great mythic battle between Zeus and the Titans, the island captures the heady allure of this fable. Traditional Cycladic architecture, whitewashed streets and pretty churches are beautifully preserved, as is the quaint harbour in the middle of a wide bay – the perfect place from which to embark on your charter. If you want to hit the beach, gen up first. On the southern coast are the cosmopolitan party beaches like Paradise and Super Paradise, which are busy day and night, whereas Órnos and Psaroú are great for families. To escape the crowds head along the northern coast to Ayia Ánna, Houlákia, Kápari, Agrári and Ayios Stéfanos.",
         "Mykonos is renowned for its stylish boutiques and frenetic nightlife during the summer season. Often called the Ibiza of Greece, its party hot spots are teeming with beautiful people. Head to Chora and while away an afternoon shopping along glamorous Matoyánni Street, lined with brand name stores, charming cafés and stylish restaurants. In contrast, there are also many peaceful bays and anchorages as well as quiet rural villages. A must-do for every tourist is Little Venice, where medieval stone buildings were constructed right on the edge of the sea; their colourful wooden balconies overhang the water. The town has a romantic atmosphere, particularly at sunset. Order a cocktail in one of several welcoming restaurants and bars along the promenade."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Great surf spots",
-        "History and culture",
-        "Stunning views",
-        "Vibrant nightlife",
-        "Wreck diving"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -12747,13 +11903,6 @@
         "Santorini’s landscape and seascape were formed by a volcanic explosion, which was allegedly the inspiration for the myth of Atlantis.",
         "Today you can anchor off Kamari’s black pebble beach, visit the volcano and walk across the caldera. Head to Oia, balanced on a hilltop in the northwest, where whitewashed houses are built on gigantic rocks and woven by orange and lemon groves. The incredible sunsets here are beyond breath-taking; couples will be reminded of their first flush of romance."
       ],
-      "whyVisit": [
-        "History and culture",
-        "Stunning views",
-        "Vibrant nightlife",
-        "World class restaurants",
-        "Wreck diving"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -12798,14 +11947,6 @@
       "paragraphs": [
         "An island immersed in Greek mythology. and in history, ravaged by a string of fearsome battles and violent conquests, Corfu today is astonishingly peaceful and pretty. Ticking all the boxes on a Mediterranean yacht charter checklist, visitors can enjoy the relaxed atmosphere, beautiful sunshine, cultural highlights and stunning landscapes. Where the northern part of the island is more mountainous and ringed by pebble beaches, the south is characterized by lush lowlands, wide, sandy beaches and tranquil bays.",
         "Influenced by the English nobility, Greek education and Venetian style, Corfu attracts a cultured crowd. In the small capital Corfu city, the old town is a labyrinth of narrow, colourful cobblestone streets surrounded by vast fortifications. As a World Heritage Site, the architecture of the old town is well worth leaving the beaches for. While you’re on land, make a beeline to the lively locals haunt Tsipouradiko. Near the Old Port you can eat meze washed down with a lively glass of tsipouro.Those with a sweet tooth should stop at Papagiorgis, offering 40 different flavours of homemade ice cream. Enjoying a steady breeze all summer long, Corfu delivers culture, culinary flair and excellent sailing in the crystalline Ionian Sea – this is a great starting point from which to explore further."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Culinary delights",
-        "History and culture",
-        "Stunning views",
-        "Vibrant nightlife",
-        "Wreck diving"
       ],
       "keyFacts": [
         {
@@ -12853,15 +11994,6 @@
         "With an abundance of pine tree strewn hills, the contrasting golden beaches are found in the north, east and south. In the west the rocky landscape has a number of sea caves including the famous Blue Grotto Caves. When the sun shines in the afternoon, it creates patterns in every blue hue imaginable across the cave walls.",
         "Smugglers Cove is renowned for the large wreck nestling in a golden bay, the remains of a shipwreck in 1980, the story allegedly involves the black market and smuggling. Only accessed by yacht, this is a popular tourist attraction, but really has to be seen. Zakynthos (or Zante) Town, the islands’ capital, is a busy port with great shopping and restaurants. Sit with a chilled frappe and watch the world go by."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Culinary delights",
-        "History and culture",
-        "Stunning views",
-        "Vibrant nightlife",
-        "Wildlife",
-        "Wreck diving"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -12908,11 +12040,6 @@
         "One of the most romantic destinations and often named the St Tropez of Greece, Hydra is home to a fabulously charismatic port. The arc-shaped harbour is lined with bustling boutiques, cool galleries and vibrant restaurants. The diverse mix of traditional waterfront mansions alongside the naval academy, backed by rows of stone houses displaying red rooftops alongside blue windows and doors is a vibrant blend. At each side of the harbour, cannons from days gone by face to sea and statues of the heroes of independence give a nod to history lessons. Hydra is the only town on the island; motorbikes and cars, even bicycles, are forbidden, and instead, transport is by donkey. Restored and preserved exactly as it appeared in the 1800’s; this is a listed architectural reserve, any new construction is (theoretically) banned, leaving this island adorably time-warped.",
         "Dutifully eco-friendly and an atmospheric gem, Hydra is scattered with narrow cobbled streets rising steeply against lush foliage and craggy hills. Wander the elaborate backstreets for genuine Greek charm, radiating from tucked-away cafes, where resident felines wait for a titbit. Old-style tavernas are abundant, serving traditional dishes such as mouth-watering kydonato (veal and quinces) and delightful achladakia (almond pastries). Expect warm hospitality from the residents who gather along the harbour in the early evening, casually sipping espresso freddos and cold Mythos beers, they calmly indulge in the fascinating pastime of people-watching.",
         "If you head away from the main town, the rest of the island is mountainous, barely inhabited and little visited, barring hilltop monasteries, goat farms and pine forests. However hikers enthuse that Hydra is paradise for adventure; so, if your walking boots need some action, this is the place. Despite not having sandy beaches, Hydra is not short of decent swimming spots. Recommended is pebbly Plakes beach with sparkling clear water and lunch at the Four Seasons taverna is delicious. The isolated beaches of Bisti Bay and Agios Nikolaos on the south western tip of Hydra are achingly gorgeous and often unoccupied. Best approached by yacht, drop anchor in this haven and spend dreamy hours lulled by the green waves lapping the pebbly shoreline, while local butterflies land helter skelter. Bariami Cave, near to the main town, is essentially a sea cave that is treated by locals like a swimming pool."
-      ],
-      "whyVisit": [
-        "Culinary delights",
-        "Stunning views",
-        "Wreck diving"
       ],
       "keyFacts": [
         {
@@ -12962,12 +12089,6 @@
         "Steeped in history and tradition, one of the most famous heroes of the Greek Revolution in Spetses was the female captain, Lascarina Bouboulina. Taking command of her murdered husband’s fleet, she was an active member of the Filiki Etairia, a secret organisation plotting the revolt. Also a great business woman, she paid over her fortune amassed from two husbands, to finance the war: indeed she built the famous ship Agamemnon, equipped with 18 cannons, the largest vessel used in the War of Independence. Many streets in Greece are named after her today as a mark of the esteem she is held in.",
         "This enticing isle is a fascinating stopping point on a Saronic Islands yacht charter and a few days exploring is well worth the time."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Culinary delights",
-        "Stunning views",
-        "History and culture"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -13015,14 +12136,6 @@
         "The waterfront promenade skirts the marina filled with colourful boats, whilst the Piazza del Duomo in front of the impressive cathedral is the focal point of the historic centre, buzzing with cafes and boutiques in the square. Head up the 60 steps during an Amalfi luxury yacht charter and admire the Byzantine architecture and decoration of the Duomo di Sant’Andrea. With a long history of paper milling: stop at the Museo della Carta to view the attractive handmade products, indeed some family-owned mills still follow this tradition. In Amalfi, citrus scents fill the air thanks to the surrounding lemon groves laden with lemon trees. Enjoy some local limoncello liqueur and look out for pretty handmade ceramics decorated with fruit.",
         "With some of the best beaches found along this coastline, Amalfi is blessed with crystal clear blue waters – great for swimming, snorkelling, diving and making use of your Amalfi yacht charter’s tenders and toys. The Emerald Grotto at Cape Conca is one of Amalfi’s great natural wonders, where sunlight refracts through an underwater crevice to emit an astonishing green hue."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Chic boutiques",
-        "History and culture",
-        "Stunning views",
-        "Vibrant nightlife",
-        "World class restaurants"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -13068,13 +12181,6 @@
         "Unforgettable, exclusive and magical, a Capri yacht charter is filled with Italian delights. From mouth-watering local dishes to panoramic views over crystalline waters, this tiny isle in the Gulf of Naples on the Italian coast packs a real punch.",
         "On Italy’s most exclusive island and yacht charter destination, they say that finding a summer mooring for a yacht in Capri is like finding a diamond in the sand. But thanks to forward planning by your captain it will not be your concern! Near to Marina Piccola, drop anchor beyond the Faraglioni rocks. From the little tender dock take an old-school taxi with an iconic sunshade to properly explore the island. Cruise around the island on a typical Gozzo Classico but visit the Blue Grotto again later in privacy. Snorkelling and swimming here is unparalleled, as long as you beat the crowds, while the surrounding azure blue waters make it the ideal destination to make use of your luxury Capri yacht charter’s tenders and toys.",
         "Ashore, don’t forgo the chance to wander around Villa San Michele, Axel Munthe’s fascinating mansion. At the Via Camarelle, it is credit cards at dawn, with international designers, bespoke shoemakers, sunglasses ateliers, artisan food shops and linen stores. There are a number of excellent gelaterias, selling mouth-watering ice cream – a must-try during a Capri yacht charter. Emperor Tiberio notably built 12 mansions on Capri and some of the ruins can still be visited today. First, get your bearings by walking up the steep path to Monte Solaro (almost 600m over sea level). Take an espresso at the top and soak up the spectacular panoramic views stretching out across the Bay of Naples and the Amalfi Coast, then catch the funicular back down. The island of Capri is a culinary paradise and exploring the island’s wonderful eateries and fine dining restaurants is a must during a Capri luxury yacht charter vacation. An aperitif on Piazzetta Capri makes for excellent people-watching, but go beyond the guidebook recommendations for incredible views at Ristorante Da Gelsomina in Anacapri."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Casinos",
-        "Chic boutiques",
-        "Vibrant nightlife",
-        "World class restaurants"
       ],
       "keyFacts": [
         {
@@ -13122,14 +12228,6 @@
         "Many of the coves and picturesque bays surrounding this popular yachting destination are only accessible from the water. During a Positano yacht charter cruise to Fiordo di Furore for unique rock diving, the three Galli islands for stunning anchorages, or head to Fornillo where the beach is a peaceful haunt for discerning locals. After a day of exploration, relax on your Positano yacht charter with a handcrafted cocktail or enjoy an exquisite meal ashore.",
         "For individuals in search of nightlife with an exclusive feel, don’t miss a visit to the hot spot ‘club-in-a-cave’ Music on the Rocks while on a yacht charter in Amalfi, regarded as one of the leading clubs in Europe."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Culinary delights",
-        "History and culture",
-        "Stunning views",
-        "Vibrant nightlife",
-        "World class restaurants"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -13174,12 +12272,6 @@
       "paragraphs": [
         "One of the lesser-known destinations to explore on Italy’s Ligurian coast is Cinque Terre. Many experienced captains will recommend cruising this idyllic stretch of coastline to their charter clients and owners, as it is largely inaccessible except by boat or train. Directly translated, Cinque Terre means ‘Five Lands’; namely the coastal villages of Monterosso al Mare, Vernazza, Corniglia, Manarola, and Riomaggiore. This unique region is part of the Cinque Terre National Park and is a UNESCO World Heritage site.",
         "Here, hilltop houses are painted in a range of vivid colours so that local fishermen can see their homes from the sea. No big label shops will take your attention from the main event: lunch. Meander through the narrow streets, stop and sip an ice-cold limoncello and soak up the laid back atmosphere with a plate of fresh antipasti. Here’s a place to slow down and watch the world go by on your Cinque Terre luxury yacht charter. Make a beeline for Ristorante Minky where you will struggle to choose between an array of daily specials in lashings of lemon butter, garlic and herbs. Hike the Sentiero Azzurro trail connecting the villages along a cliff top path. Finally, cycle through the vineyards and swim from the aft deck to see abundant marine life."
-      ],
-      "whyVisit": [
-        "Chic boutiques",
-        "History and culture",
-        "Stunning views",
-        "World class restaurants"
       ],
       "keyFacts": [
         {
@@ -13226,12 +12318,6 @@
         "As a cultural capital it benefits from numerous museums, some housed in palaces, and also hosts several cultural events. Be sure to make time during your Genoa luxury yacht charter to visit the maritime museum and the giant aquarium, the largest in Europe.",
         "Genoa was the birthplace of Christopher Columbus, and history lovers will appreciate a tour of the old harbour, Port Antico, which was restored to its former glory in 2004.",
         "For more earthly pleasures while on a Genoa luxury yacht charter, the city boasts plenty of chic boutiques and a sophisticated bar and restaurant scene. The town is typically Italian in its design: lavish arcades and leafy piazzas, populated with fine shops and convivial pavement cafés in which you can while away the heat of the afternoon. Plan your Genoa yacht charter for a perfect pairing of history and modernity, tradition and innovation, all set against a picture-perfect Italian landscape."
-      ],
-      "whyVisit": [
-        "Chic boutiques",
-        "History and culture",
-        "Stunning views",
-        "Vibrant nightlife"
       ],
       "keyFacts": [
         {
@@ -13280,12 +12366,6 @@
         "Yachts and gozzi, the typical small fishing boats of the area, jostle for space. The medieval fishing village is dominated by the castle. Built during the 11th century on a rocky promontory, it towers above the port.",
         "Head along Via Roma during a yacht charter in La Spezia, where you can dip into the many boutiques selling traditional Italian goods and high fashion. The Gothic chapel Sant Anastasio at the top of the castle offers stunning views across the Riviera and the Golfo dei Poeti. If you are travelling with children, a morning spent at the Castello di Lerici’s Museo Geopaleontologico will enthral little ones, who will marvel at life-size dinosaurs and can experience a simulated earthquake.",
         "Lerici is the ideal location for an Italian Riviera yacht charter where you can enjoy natural beauty, culture, and gastronomy at its finest."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Stunning views",
-        "Vibrant nightlife",
-        "World class restaurants"
       ],
       "keyFacts": [
         {
@@ -13342,11 +12422,6 @@
         "Sailing and boating enthusiasts flock to Portofino for the numerous opportunities to explore the shore. Portofino is a great place to rent a sailboat or motorboat and cruise around the many bays and inlets in the area, or to go on a guided trip with a local. Kayaks, paddleboards, and jet skis are just some of the water sports equipment that accompany most yacht charters in Portofino.",
         "There are several trails and hills in the Portofino area that are perfect for hikers and trekkers who want to see the area’s stunning scenery up close. The Way of the Gods and Monte di Portofino Natural Park are just two of the many hiking routes that lead to breathtaking vistas and private beaches. You can go on a guided hiking tour with a yacht charter, or you can go off and discover on your own with a good map and sturdy hiking boots."
       ],
-      "whyVisit": [
-        "History and culture",
-        "Stunning views",
-        "World class restaurants"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -13396,13 +12471,6 @@
         "Tiny Santo Stefano measures just 400 metres from one side to the other. Once a penal colony, it is now completely uninhabited. The main sight here is the abandoned prison which can be visited by a guided excursion. The mix of azure waters around the island are quite extraordinary and home to rich marine life.",
         "Craggy Zannone has a somewhat chequered past, made famous by a group of adventurous aristocrats. However these days, the island’s only inhabitants left are a flock of mouflon wild sheep, brought specifically to the island to liven up hunting. Raw nature and wild allure give this isle its blissful appeal."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Culinary delights",
-        "History and culture",
-        "Stunning views",
-        "Wreck diving"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -13449,16 +12517,6 @@
         "Winding lanes leading from Corso Umberto reveal unassuming, family-run restaurants to enjoy delicious traditional food and local wines as you watch the world go by; indeed the charm of Olbia undoubtedly lies in its laidback piazza’s and the ritual evening passeggiata. Visit the superb archaeological museum, set on its own little fortified island, to discover the full story of early Greek settlers and the subsequent rich history of Olbia, then wander the back streets and find the Pisan-style basilica of San Simplicio which is well worth a visit.",
         "The sheltered bay of Costa Corallina provides great anchorage for luxury yacht charters in Olbia, opposite the quiet stretch beach with crystalline, shallow waters: this is a top spot for kayaking and snorkelling. Alternatively, for some good windsurfing grounds, make for the long stretch of reddish sands on Spiaggia della Saline, lying between the sea and salt flats, populated by elegant flamingos."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Great surf spots",
-        "History and culture",
-        "Stunning views",
-        "Vibrant nightlife",
-        "Wildlife",
-        "World class restaurants",
-        "Wreck diving"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -13504,13 +12562,6 @@
         "The main island, Lipari, has a vibrant town and is a great place from which to explore. Visit Vulcano, famed for its vast and sweeping black sand beaches and mud baths. Remote Stromboli, dominated by the active volcano Gran Cratere, offers incredible views for adventurous hikers and regular magma firework displays at night.",
         "Those who prefer a gentle walk can drop anchor off Salina, a lush, hilly island, crammed with history. Don’t miss Pollara – a beautiful bay with an underwater crater. Panarea is the smallest and most refined island. With an upmarket shopping street and a number of quaint hotels dotted between huge, private villas in lush gardens, this is a culinary haven with a surprisingly busy nightlife. For ultimate escapism, head west to the smallest islands, Filicudi and Alicudi; catch your own fish, BBQ on deck and wash them down with some Sicilian wine. On the uninhabited west coast of Alicudi, the seclusion of sheer rock walls make for a great swimming spot in total privacy."
       ],
-      "whyVisit": [
-        "Chic boutiques",
-        "History and culture",
-        "Stunning views",
-        "Vibrant nightlife",
-        "World class restaurants"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -13555,10 +12606,6 @@
       "paragraphs": [
         "Formentera is the southernmost Balearic Island lying nine nautical miles south of Ibiza. But while Ibiza basks in the limelight of its own celebrity, quieter, calmer Formentera has no airport and can only be reached by boat.",
         "Many of the island’s pristine beaches are deserted, even in high summer. Es Palmador is an uninhabited island, only accessible by boat to the north of Formentera: connected by ‘Es Pas’ sand bar: it’s possible to walk waist deep from one island to the other – just don’t run aground. Because of the relative inaccessibility of Formentera, the island has retained its old-world charm and is unfettered by mass tourism. A popular hangout for haute hippies in the 60s and 70s who came from Ibiza for some respite, the artists market in El Pilar has a distinctly bohemian vibe. For a brush with fame, grab a table at Juan y Andrea restaurant or, for a slower pace of life, head to Es Calo, a small fishing village with a beautiful beach and perfectly clear water teeming with tiny fish. Order paella or aroz negro (black rice) and switch off your phone."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Stunning views"
       ],
       "keyFacts": [
         {
@@ -13627,12 +12674,6 @@
         "Ibiza is the ideal location for a luxury yacht charter because of its breathtaking surroundings, top-notch restaurants, and exciting nightlife. There is no better way to experience the magic of Ibiza than by mooring in the best marinas on the island and delighting in the top restaurants and attractions. So get ready to go on your ideal yacht rental in Ibiza and make lifelong memories.",
         "Contact us to make sure that your yacht charter experience is customised to your needs and preferences. Before setting sail, we’ll make sure that everything is in order because there is much more to the ideal yacht charter than the location."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Stunning views",
-        "Vibrant nightlife",
-        "World class restaurants"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -13699,13 +12740,6 @@
         "One of the largest and most lavish spas in Europe is the Arabella Spa at the St. Regis Mardavall. The ideal spa experience consists of indulging in trademark treatments, chilling out in the peaceful indoor and outdoor pools, and taking use of the large hydrotherapy circuit.",
         "Relax in the spa at Cap Rocat, housed in a historic fort. Spa services such as massages, facials, and individualized health plans are available at this exotic, private place."
       ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Palaces",
-        "Stunning views",
-        "Vibrant nightlife",
-        "World class restaurants"
-      ],
       "keyFacts": [
         {
           "label": "Best time to visit",
@@ -13756,12 +12790,6 @@
       "paragraphs": [
         "A private crewed Menorca yacht charter brings you to a landscape dotted with picturesque fishing villages and whitewashed farms. Almost half of the island is a nature reserve, a hotspot for a wide variety of insects and birds. Blue sargatanas lizards dart over hot rocks and through dry grass while birdsong fills the air. Menorca’s coastline is famed for its fabulous beaches, which are lapped by the azure blue waters of the Mediterranean Sea. However, the best are tucked away in secluded coves – wild, wide, and windswept Cala Macarella, Son Saura, and Cala Pregonda are best accessed on your private Menorca luxury yacht charter.",
         "Menorca’s southern beaches are dusted with white sand, while the beaches on the west are dotted with jagged rocks. The northern region of the island boasts dark sand and strong winds. This makes it a favoured spot with surfers, particularly around the picturesque village of Fornells. The port city of Ciutadella has retained its Medieval charm. Striking churches and palaces, picturesque harbours, and narrow, romantic side streets help to remind visitors of the island’s rich history and are a must-visit. If you charter in Menorca during the month of June, then don’t miss the colourful fiesta of Sant Joan, held every June in Ciutadella, offering multiple days of celebrations filled with local food, drink, and vibrant entertainment. It’s in the metropolis Mahón that you’ll find modern Menorca."
-      ],
-      "whyVisit": [
-        "Beautiful beaches",
-        "Great surf spots",
-        "History and culture",
-        "Stunning views"
       ],
       "keyFacts": [
         {

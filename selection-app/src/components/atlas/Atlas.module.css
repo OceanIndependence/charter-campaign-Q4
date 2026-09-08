@@ -267,7 +267,7 @@
 
 .regionList {
   list-style: none;
-  margin: 8px 0 0;
+  margin: 8px 0 28px;
   padding: 0;
 }
 
@@ -575,50 +575,23 @@
   color: var(--mint);
 }
 
-.highlights {
-  list-style: none;
-  margin: 8px 0 0;
-  padding: 0;
-  display: grid;
+.guideLink {
+  color: var(--fg-5);
+  text-decoration: none;
+  border-bottom: 1px solid var(--fg-3);
+  white-space: nowrap;
+  transition: color 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
-.highlight {
-  display: flex;
-  gap: 18px;
-  align-items: baseline;
-  padding: 16px 0;
-  border-bottom: 1px solid var(--hairline);
-}
-
-.highlight:last-child {
-  border-bottom: 0;
-}
-
-.highlightNo {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--fg-35);
-  font-family: var(--font-display);
-  letter-spacing: 0.08em;
-  flex: 0 0 40px;
-}
-
-.highlightText {
-  flex: 1;
-  font-size: 11px;
-  letter-spacing: 0.24em;
-  font-weight: 500;
-  line-height: 1.7;
+.guideLink:hover {
+  color: var(--mint);
+  border-bottom-color: var(--mint);
 }
 
 .panelFoot {
   margin-top: 48px;
   border-top: 1px solid var(--hairline-strong);
   padding-top: 24px;
-}
-
-.panelFoot .footnote {
-  margin-bottom: 24px;
 }
 
 .footBody {

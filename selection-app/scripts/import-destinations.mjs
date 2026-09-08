@@ -10,8 +10,8 @@
  * Crawls https://www.oceanindependence.com/yacht-charter/destinations/ and
  * every region / country / cruising-ground / place page beneath it, capturing
  * for each page: name, URL, intro copy verbatim, hero image (Sirv ?w=2000 where
- * offered), the "why visit" list, key facts, the child destinations and the
- * page's featured charter yachts (name, specs, rate, Sirv lead image, URL).
+ * offered), key facts, the child destinations and the page's featured charter
+ * yachts (name, specs, rate, Sirv lead image, URL).
  *
  * Every destination is geocoded automatically:
  *   1. the page's own Google-map pin (data-map-locations)      → "site-map"
@@ -304,7 +304,6 @@ function parsePage(url, html) {
       (/u-text-huge/.test(cls) ? lede : paragraphs).push(...ps);
     }
   }
-  const whyVisit = root.querySelectorAll(".o-tick-list__text").map(text).filter(Boolean);
   const keyFacts = root.querySelectorAll(".o-key-facts figure.o-meta").map((fig) => {
     const label = text(fig.querySelector(".o-meta__label")).replace(/:$/, "");
     const cap = fig.querySelector("figcaption");
@@ -380,7 +379,6 @@ function parsePage(url, html) {
     heroVideo,
     lede: lede.join(" "),
     paragraphs,
-    whyVisit,
     keyFacts,
     mapPins,
     mapZoom,
@@ -649,7 +647,6 @@ async function main() {
       metaDescription: p.metaDescription,
       lede: p.lede,
       paragraphs: p.paragraphs,
-      whyVisit: p.whyVisit,
       keyFacts: p.keyFacts,
       childIds: sortIds(childrenOf.get(id) || []),
       yachtIds: [...new Set(p.yachts.map((y) => y.id))],

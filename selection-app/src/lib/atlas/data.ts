@@ -153,3 +153,18 @@ export function fmtYachtMeta(y: AtlasYacht): string {
   if (y.guests) parts.push(`${y.guests} guests`);
   return (parts.length ? parts.join(" · ") : y.specsRaw).toUpperCase();
 }
+
+/**
+ * A sentence or two of the page's own copy — the panel leads with this and
+ * moves straight on to the cruising grounds; the full guide stays a link away.
+ */
+export function shortIntro(d: AtlasDestination, sentences = 2): string {
+  const source = d.lede || d.paragraphs[0] || d.summary || "";
+  const parts = source.match(/[^.!?]+[.!?]+(?:["”’'])?(?=\s|$)/g);
+  if (!parts) return source.trim();
+  return parts
+    .slice(0, sentences)
+    .map((s) => s.trim())
+    .join(" ");
+}
+

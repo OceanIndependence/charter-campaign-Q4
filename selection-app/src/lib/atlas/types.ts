@@ -48,8 +48,6 @@ export interface AtlasDestination {
   /** Intro copy, verbatim: the large lede block then the body paragraphs */
   lede: string;
   paragraphs: string[];
-  /** "Why visit?" tick list */
-  whyVisit: string[];
   keyFacts: AtlasKeyFact[];
   childIds: string[];
   /** Keys into AtlasSnapshot.yachts, in the order the page lists them */
