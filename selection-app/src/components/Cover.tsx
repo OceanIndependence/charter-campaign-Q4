@@ -17,7 +17,7 @@ export default function Cover({ config }: { config: PageConfig }) {
     <section className={styles.cover}>
       <header className={styles.header}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/assets/logo-white.png" alt="Ocean Independence" className={styles.logo} />
+        <img src={config.theme === "light" ? "/assets/logo-black.png" : "/assets/logo-white.png"} alt="Ocean Independence" className={styles.logo} />
         <span className={styles.headerLabel}>{headerLabel}</span>
       </header>
       <div className={styles.centre}>

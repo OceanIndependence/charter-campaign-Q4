@@ -108,6 +108,7 @@ export function draftToPageConfig(draft: PortalDraft, slug: string): PageConfig 
       photoUrl: str(draft.consultant.photoUrl) ?? "",
     },
     atlasUrl: CAMPAIGN_ATLAS_URL,
+    theme: draft.theme === "light" ? "light" : "dark",
   };
 }
 

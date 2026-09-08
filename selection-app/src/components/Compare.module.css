@@ -7,9 +7,9 @@
   display: flex;
   align-items: center;
   gap: 18px;
-  background: var(--panel);
+  background: var(--surface);
   border: 1px solid rgba(167, 230, 215, 0.5);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+  box-shadow: var(--bar-shadow);
   padding: 12px 18px;
   max-width: 92vw;
 }
@@ -18,7 +18,7 @@
   font-size: 9px;
   letter-spacing: 0.3em;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--fg-6);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -39,26 +39,26 @@
   border-bottom: 1.5px solid var(--mint);
 }
 .barGoDisabled {
-  color: rgba(255, 255, 255, 0.3);
-  border-bottom: 1.5px solid rgba(255, 255, 255, 0.3);
+  color: var(--fg-3);
+  border-bottom: 1.5px solid var(--fg-3);
   cursor: default;
 }
 
 .barClear {
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--fg-5);
   user-select: none;
   line-height: 1;
 }
 .barClear:hover {
-  color: #ffffff;
+  color: var(--fg);
 }
 
 .overlay {
   position: fixed;
   inset: 0;
   z-index: 100;
-  background: rgba(4, 8, 10, 0.97);
+  background: var(--overlay-bg);
   overflow-y: auto;
 }
 
@@ -82,12 +82,12 @@
 .overlayClose {
   font-size: 26px;
   font-weight: 300;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--fg-6);
   user-select: none;
   line-height: 1;
 }
 .overlayClose:hover {
-  color: #ffffff;
+  color: var(--fg);
 }
 
 /* Compare table scrolls horizontally inside the overlay on small screens */
@@ -114,7 +114,7 @@
 .row {
   display: grid;
   gap: 0 18px;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid var(--fg-12);
   padding: 13px 0;
 }
 
@@ -122,7 +122,7 @@
   font-size: 9px;
   letter-spacing: 0.3em;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--fg-45);
   align-self: center;
 }
 

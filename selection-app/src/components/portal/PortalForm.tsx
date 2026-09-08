@@ -1088,6 +1088,28 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
         <section className={styles.card}>
           <div className={styles.sectionHead}>03 — PAGE SECTIONS</div>
           <div className={styles.checkGrid}>
+            <div className={styles.checkChild} style={{ paddingLeft: 0 }}>
+              <span className={styles.fieldLabel}>
+                THEME <span className={styles.fieldLabelHint}>— the client page&rsquo;s colour scheme</span>
+              </span>
+              <div className={styles.segmented} role="radiogroup" aria-label="Client page theme">
+                {(["dark", "light"] as const).map((t) => {
+                  const on = (draft.theme ?? "dark") === t;
+                  return (
+                    <button
+                      key={t}
+                      type="button"
+                      role="radio"
+                      aria-checked={on}
+                      className={`${styles.segment} ${on ? styles.segmentOn : ""}`}
+                      onClick={() => update((d) => ({ ...d, theme: t }))}
+                    >
+                      {t.toUpperCase()}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
             <label className={styles.checkRow}>
               <input
                 type="checkbox"

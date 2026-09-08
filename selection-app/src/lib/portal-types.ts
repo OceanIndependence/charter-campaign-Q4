@@ -94,6 +94,8 @@ export interface PortalDraft {
   subHeadline: string;
   /** Optional consultant welcome greeting (cover falls back to a generated line) */
   welcome: string;
+  /** Client page theme; absent means dark */
+  theme?: "dark" | "light";
   yachts: DraftYacht[];
   sections: {
     costs: boolean;

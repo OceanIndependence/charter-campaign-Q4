@@ -1171,3 +1171,36 @@
   opacity: 0.3;
   pointer-events: none;
 }
+
+/* ------------------------------------------------------- segmented toggle */
+
+.segmented {
+  display: inline-flex;
+  border: 1px solid #c9c9c7;
+  background: #ffffff;
+}
+
+.segment {
+  font-family: inherit;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  font-weight: 500;
+  color: #555759;
+  background: #ffffff;
+  border: 0;
+  padding: 11px 22px 11px calc(22px + 0.3em);
+  cursor: pointer;
+}
+
+.segment + .segment {
+  border-left: 1px solid #c9c9c7;
+}
+
+.segment:hover {
+  color: #1d1d1d;
+}
+
+.segmentOn {
+  background: #1d1d1d;
+  color: #ffffff;
+}
