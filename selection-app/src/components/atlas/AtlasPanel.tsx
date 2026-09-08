@@ -231,7 +231,13 @@ export function DestinationPanel({ dest, index, onSelect, onBack }: DestinationP
       )}
 
       <div className={styles.panelFoot}>
-        {yachts.length > 0 && <p className={styles.footBody}>These are a selection. Your consultant can suggest yachts beyond it.</p>}
+        {yachts.length > 0 && (
+          <p className={styles.footBody}>
+            Please note that this is a small selection of yachts and is intended as inspiration rather than a definitive list. A yacht’s cruising area
+            for the coming summer is set by her Owner ahead of the season and may differ from the destinations shown here. Your consultant can confirm
+            which yachts will be available in your preferred region and suggest further options matched to your requirements.
+          </p>
+        )}
         <Enquire />
       </div>
     </div>
