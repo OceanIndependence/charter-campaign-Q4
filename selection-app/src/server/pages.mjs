@@ -22,7 +22,7 @@
  */
 
 import { randomUUID } from "node:crypto";
-import { deleteJson, getJson, listKeys, putJson } from "./storage.mjs";
+import { deleteJson, getJson, hashJson, listKeys, putJson } from "./storage.mjs";
 
 const OWNER_RE = /^[A-Za-z0-9._@:-]{1,128}$/;
 const SLUG_RE = /^[a-z0-9-]{1,120}$/;
@@ -103,6 +103,12 @@ async function readIndex(ownerId) {
 
 async function writeIndexEntry(ownerId, meta) {
   const idx = await readIndex(ownerId);
+  // Autosave fires on every pause in typing; the row's metadata rarely
+  // changes with it. Skip the index write when the row is unchanged, since
+  // every write is a billed Blob operation.
+  const { updatedAt: _u, ...next } = meta;
+  const { updatedAt: _p, ...prev } = idx.items[meta.id] ?? {};
+  if (idx.items[meta.id] && hashJson(next) === hashJson(prev)) return;
   idx.items[meta.id] = meta;
   idx.updatedAt = new Date().toISOString();
   await putJson(indexKey(ownerId), idx);

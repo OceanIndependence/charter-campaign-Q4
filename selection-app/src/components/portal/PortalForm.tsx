@@ -9,7 +9,9 @@ import ImagePicker from "./ImagePicker";
 import styles from "./PortalForm.module.css";
 
 const MAX_YACHTS = 10;
-const AUTOSAVE_MS = 900;
+// Each save is two billed Blob writes at most; pause longer between them and
+// flush when the tab is hidden or closed so nothing is lost.
+const AUTOSAVE_MS = 2500;
 
 type SaveState = "idle" | "saving" | "saved" | "error";
 
@@ -217,6 +219,30 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
   );
 
   useEffect(() => () => window.clearTimeout(saveTimer.current), []);
+
+  // Flush a pending save when the page is hidden or closed.
+  useEffect(() => {
+    const flush = () => {
+      if (saveTimer.current === undefined || !draftRef.current) return;
+      window.clearTimeout(saveTimer.current);
+      saveTimer.current = undefined;
+      void fetch(api, {
+        method: "PUT",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(draftRef.current),
+        keepalive: true,
+      });
+    };
+    const onHide = () => {
+      if (document.visibilityState === "hidden") flush();
+    };
+    window.addEventListener("pagehide", flush);
+    document.addEventListener("visibilitychange", onHide);
+    return () => {
+      window.removeEventListener("pagehide", flush);
+      document.removeEventListener("visibilitychange", onHide);
+    };
+  }, [api]);
 
   // Close the image lightbox on Escape while it is open.
   useEffect(() => {

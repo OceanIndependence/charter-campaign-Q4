@@ -20,7 +20,12 @@ export async function GET(request: NextRequest) {
   }
   try {
     const result = await syncFleet();
-    console.log(`[cron/fleet-sync] ${result.count} yachts, ${result.removedCount} recorded removals`);
+    console.log(
+      `[cron/fleet-sync] ${result.count} yachts, ${result.removedCount} recorded removals; ` +
+        `fleet ${result.fleetWritten ? "written" : "unchanged"}, reference ${result.referenceWritten ? "written" : "unchanged"}; ` +
+        `manifest ${result.manifest}; Blob advanced operations ${result.blob?.advanced ?? "?"}` +
+        (result.dryRun ? " (DRY RUN — nothing written)" : "")
+    );
     return NextResponse.json(result);
   } catch (err) {
     console.error("[cron/fleet-sync]", err);
