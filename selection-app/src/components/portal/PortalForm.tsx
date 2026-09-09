@@ -41,7 +41,7 @@ type AutoField = (typeof AUTO_FIELDS)[number];
 const CURRENCIES = ["EUR", "USD", "GBP", "CAD", "AUD", "NZD"];
 
 /** Live price maths for the form readout (mirrors portal-map at publish). */
-function computePrice(y: { weeklyRate: string; apaPct: string; vatPct: string }) {
+function computePrice(y: { weeklyRate: string; apaPct: string; vatPct: string; deliveryFee?: string }) {
   const n = (v: string) => {
     const t = (v ?? "").replace(/[^\d.]/g, "");
     const x = t ? Number(t) : NaN;
@@ -50,10 +50,11 @@ function computePrice(y: { weeklyRate: string; apaPct: string; vatPct: string })
   const rate = n(y.weeklyRate);
   const apaPct = n(y.apaPct);
   const vatPct = n(y.vatPct);
+  const delivery = n(y.deliveryFee ?? "");
   const apaAmount = rate != null && apaPct != null ? Math.round((rate * apaPct) / 100) : undefined;
   const vatAmount = rate != null && vatPct != null ? Math.round((rate * vatPct) / 100) : undefined;
-  const total = rate != null ? rate + (apaAmount ?? 0) + (vatAmount ?? 0) : undefined;
-  return { rate, apaPct, vatPct, apaAmount, vatAmount, total };
+  const total = rate != null ? rate + (apaAmount ?? 0) + (vatAmount ?? 0) + (delivery ?? 0) : undefined;
+  return { rate, apaPct, vatPct, delivery, apaAmount, vatAmount, total };
 }
 
 const fmtMoneyForm = (currency: string, amount: number) =>
@@ -146,6 +147,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
             uid: y.uid || crypto.randomUUID(),
             gallery: y.gallery ?? [],
             crew: y.crew ?? "",
+            deliveryFee: y.deliveryFee ?? "",
             exteriorImageUrl: y.exteriorImageUrl ?? y.deckImageUrl ?? "",
             lifestyleImageUrl: y.lifestyleImageUrl ?? y.watertoysImageUrl ?? "",
           };
@@ -994,6 +996,18 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
                           onChange={(e) => setYacht(y.uid, { vatPct: e.target.value })}
                         />
                       </label>
+                      <label className={styles.field}>
+                        <span className={styles.fieldLabel}>
+                          DELIVERY FEE <span className={styles.fieldLabelHint}>— optional, added to the total</span>
+                        </span>
+                        <input
+                          type="text"
+                          className={styles.input}
+                          placeholder="Leave blank if none"
+                          value={y.deliveryFee ?? ""}
+                          onChange={(e) => setYacht(y.uid, { deliveryFee: e.target.value })}
+                        />
+                      </label>
                       {(() => {
                         const p = computePrice(y);
                         if (p.rate == null) return null;
@@ -1011,6 +1025,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
                                 {fmtMoneyForm(cur, p.apaAmount)} ({p.apaPct}%)
                               </span>
                             )}
+                            {p.delivery != null && <span>DELIVERY FEE {fmtMoneyForm(cur, p.delivery)}</span>}
                             {p.total != null && (
                               <span className={styles.priceTotal}>
                                 TOTAL {pre}

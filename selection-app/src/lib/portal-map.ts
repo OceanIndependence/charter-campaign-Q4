@@ -50,6 +50,7 @@ export function mapDraftYacht(y: DraftYacht): Yacht | null {
   const currency = (str(y.currency) ?? "EUR").toUpperCase();
   const apaPct = num(y.apaPct);
   const vatPct = num(y.vatPct);
+  const deliveryFee = num(y.deliveryFee);
 
   // Compute price components in the yacht's own currency and freeze them, so
   // the published page never recalculates. A component exists only when both
@@ -57,7 +58,7 @@ export function mapDraftYacht(y: DraftYacht): Yacht | null {
   const apaAmount = weeklyRate != null && apaPct != null ? Math.round((weeklyRate * apaPct) / 100) : undefined;
   const vatAmount = weeklyRate != null && vatPct != null ? Math.round((weeklyRate * vatPct) / 100) : undefined;
   const totalAmount =
-    weeklyRate != null ? weeklyRate + (apaAmount ?? 0) + (vatAmount ?? 0) : undefined;
+    weeklyRate != null ? weeklyRate + (apaAmount ?? 0) + (vatAmount ?? 0) + (deliveryFee ?? 0) : undefined;
 
   return {
     id: slugify(name) || y.uid,
@@ -75,6 +76,7 @@ export function mapDraftYacht(y: DraftYacht): Yacht | null {
     ...(apaAmount != null ? { apaAmount } : {}),
     ...(vatPct != null ? { vatPct } : {}),
     ...(vatAmount != null ? { vatAmount } : {}),
+    ...(deliveryFee != null ? { deliveryFee } : {}),
     ...(totalAmount != null ? { totalAmount } : {}),
     notes: str(y.notes),
     keyFeatures: mapKeyFeatures(y.keyFeatures),

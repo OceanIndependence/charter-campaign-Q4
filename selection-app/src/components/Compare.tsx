@@ -55,6 +55,7 @@ export function CompareOverlay({ yachts, onClose }: { yachts: Yacht[]; onClose: 
             ? `${y.weeklyRateIsFrom ? "from " : ""}${fmtMoney(y.currency, y.apaAmount)} (${y.apaPct}%)`
             : undefined,
       ],
+      ["DELIVERY FEE", (y) => (y.deliveryFee != null ? fmtMoney(y.currency, y.deliveryFee) : undefined)],
       [
         "TOTAL",
         (y) =>

@@ -111,6 +111,12 @@ export default function SpecPanel({
               </span>
             </div>
           )}
+          {yacht.deliveryFee != null && (
+            <div className={styles.priceRow}>
+              <span className={styles.specLabel}>DELIVERY FEE</span>
+              <span className={styles.dimValue}>{fmtMoney(cur, yacht.deliveryFee)}</span>
+            </div>
+          )}
           {yacht.totalAmount != null && (
             <div className={styles.totalRow}>
               <span className={styles.totalLabel}>TOTAL</span>

@@ -907,8 +907,9 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
               const removedRecord = y.yfId != null && removedIds.has(y.yfId);
               const rate = num(y.weeklyRate);
               const apa = num(y.apaPct);
+              const delivery = num(y.deliveryFee ?? "");
               const apaAmount = rate != null && apa != null ? Math.round((rate * apa) / 100) : undefined;
-              const total = rate != null ? rate + (apaAmount ?? 0) : undefined;
+              const total = rate != null ? rate + (apaAmount ?? 0) + (delivery ?? 0) : undefined;
               const noDest = y.name.trim() && !y.destinationIds.some((id) => chosen.some((d) => d.destinationId === id));
               return (
                 <div
@@ -1078,6 +1079,18 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                       </label>
                       <label className={styles.field}>
                         <span className={styles.fieldLabel}>
+                          DELIVERY FEE <span className={styles.fieldLabelHint}>— optional, added to the total</span>
+                        </span>
+                        <input
+                          type="text"
+                          className={styles.input}
+                          placeholder="Leave blank if none"
+                          value={y.deliveryFee ?? ""}
+                          onChange={(e) => setYacht(y.uid, { deliveryFee: e.target.value })}
+                        />
+                      </label>
+                      <label className={styles.field}>
+                        <span className={styles.fieldLabel}>
                           E-BROCHURE LINK <span className={styles.fieldLabelHint}>— Yachtfolio</span>
                         </span>
                         <input type="url" className={styles.input} placeholder="https://…" value={y.brochureUrl} onChange={(e) => setYacht(y.uid, { brochureUrl: e.target.value })} />
@@ -1091,6 +1104,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                             </span>
                           )}
                           <span>VAT {y.vatText || "Varies by location"}</span>
+                          {delivery != null && <span>DELIVERY FEE {fmtMoneyForm(y.currency, delivery)}</span>}
                           {total != null && <span className={styles.priceTotal}>TOTAL {fmtMoneyForm(y.currency, total)}</span>}
                         </div>
                       )}
