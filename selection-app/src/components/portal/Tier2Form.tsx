@@ -1040,9 +1040,6 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                         />
                       </label>
                       <div className={`${styles.field} ${styles.fieldFull}`}>
-                        <span className={styles.fieldLabel}>
-                          PAGE IMAGES
-                        </span>
                         <ImagePicker
                           gallery={y.gallery ?? []}
                           values={{ leadImageUrl: y.leadImageUrl, interiorImageUrl: y.interiorImageUrl, exteriorImageUrl: y.exteriorImageUrl, lifestyleImageUrl: y.lifestyleImageUrl }}
