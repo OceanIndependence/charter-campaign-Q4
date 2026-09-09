@@ -1,0 +1,106 @@
+{
+  "destinationId": "mediterranean/italy/venice",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "venice-5",
+      "nights": 5,
+      "title": "Five days from Venice into the lagoon",
+      "intro": "Arrive in Venice by water, then the lagoon islands and the Istrian coast across the gulf.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Venice",
+          "lat": 45.429,
+          "lng": 12.343,
+          "note": "Board at San Giorgio; the Grand Canal at dusk."
+        },
+        {
+          "day": 2,
+          "place": "Burano",
+          "lat": 45.485,
+          "lng": 12.417,
+          "note": "The lace island and Torcello."
+        },
+        {
+          "day": 3,
+          "place": "Lido di Venezia",
+          "lat": 45.411,
+          "lng": 12.37,
+          "note": "The Lido and the lagoon’s outer beaches."
+        },
+        {
+          "day": 4,
+          "place": "Chioggia",
+          "lat": 45.219,
+          "lng": 12.279,
+          "note": "The little Venice at the lagoon’s southern end."
+        },
+        {
+          "day": 5,
+          "place": "Venice",
+          "lat": 45.429,
+          "lng": 12.343,
+          "note": "A last morning in the city; disembark."
+        }
+      ]
+    },
+    {
+      "id": "venice-7",
+      "nights": 7,
+      "title": "Seven days from Venice to Istria",
+      "intro": "Venice, its lagoon and the Venetian towns of the Istrian coast.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Venice",
+          "lat": 45.429,
+          "lng": 12.343,
+          "note": "Arrive by water along the Giudecca canal; a quiet evening after the day visitors leave."
+        },
+        {
+          "day": 2,
+          "place": "Burano",
+          "lat": 45.485,
+          "lng": 12.417,
+          "note": "The painted houses and the lace workshops, with Torcello’s basilica across the water."
+        },
+        {
+          "day": 3,
+          "place": "Grado",
+          "lat": 45.677,
+          "lng": 13.39,
+          "note": "The lagoon town and its beaches; a slow evening in the old quarter."
+        },
+        {
+          "day": 4,
+          "place": "Trieste",
+          "lat": 45.65,
+          "lng": 13.76,
+          "note": "The Habsburg seafront and Miramare."
+        },
+        {
+          "day": 5,
+          "place": "Poreč",
+          "lat": 45.227,
+          "lng": 13.593,
+          "note": "Cross to Istria: the Euphrasian Basilica."
+        },
+        {
+          "day": 6,
+          "place": "Rovinj",
+          "lat": 45.081,
+          "lng": 13.638,
+          "note": "The old town on its headland; swims in the Rovinj islands."
+        },
+        {
+          "day": 7,
+          "place": "Pula",
+          "lat": 44.868,
+          "lng": 13.848,
+          "note": "The Roman arena; disembark in Pula or return to Venice."
+        }
+      ]
+    }
+  ]
+}

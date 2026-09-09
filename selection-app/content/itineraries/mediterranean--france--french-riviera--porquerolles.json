@@ -1,0 +1,106 @@
+{
+  "destinationId": "mediterranean/france/french-riviera/porquerolles",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "porquerolles-5",
+      "nights": 5,
+      "title": "Five days among the Îles d’Hyères",
+      "intro": "Porquerolles, Port-Cros and the Maures coast.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Saint-Tropez",
+          "lat": 43.272,
+          "lng": 6.64,
+          "note": "The citadel, the Place des Lices and the harbour front at aperitif hour."
+        },
+        {
+          "day": 2,
+          "place": "Cavalaire-sur-Mer",
+          "lat": 43.174,
+          "lng": 6.533,
+          "note": "A calm bay beneath the Maures hills; the beaches west towards Le Rayol."
+        },
+        {
+          "day": 3,
+          "place": "Port-Cros",
+          "lat": 43.006,
+          "lng": 6.386,
+          "note": "The national park island; swims at Palud."
+        },
+        {
+          "day": 4,
+          "place": "Porquerolles",
+          "lat": 43.001,
+          "lng": 6.201,
+          "note": "Notre-Dame beach and the vineyards."
+        },
+        {
+          "day": 5,
+          "place": "Le Lavandou",
+          "lat": 43.137,
+          "lng": 6.368,
+          "note": "Return along the coast; disembark."
+        }
+      ]
+    },
+    {
+      "id": "porquerolles-7",
+      "nights": 7,
+      "title": "Seven days from Marseille to Saint-Tropez",
+      "intro": "The calanques, the Îles d’Hyères and the Maures.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Marseille",
+          "lat": 43.295,
+          "lng": 5.37,
+          "note": "The Vieux Port, Le Panier and the view from Notre-Dame de la Garde."
+        },
+        {
+          "day": 2,
+          "place": "Îles du Frioul",
+          "lat": 43.278,
+          "lng": 5.305,
+          "note": "The Château d’If and the coves of the Frioul islands, a short hop from the city."
+        },
+        {
+          "day": 3,
+          "place": "Calanque d’En-Vau",
+          "lat": 43.2,
+          "lng": 5.5,
+          "note": "The finest of the calanques, its white cliffs above a narrow turquoise inlet."
+        },
+        {
+          "day": 4,
+          "place": "Bandol",
+          "lat": 43.135,
+          "lng": 5.753,
+          "note": "The vineyards behind the town and the island of Bendor in the bay."
+        },
+        {
+          "day": 5,
+          "place": "Porquerolles",
+          "lat": 43.001,
+          "lng": 6.201,
+          "note": "Cycle the island’s tracks to Notre-Dame beach; anchor for the night off the village."
+        },
+        {
+          "day": 6,
+          "place": "Port-Cros",
+          "lat": 43.006,
+          "lng": 6.386,
+          "note": "The national park island: the underwater trail at La Palud and the fort walks."
+        },
+        {
+          "day": 7,
+          "place": "Saint-Tropez",
+          "lat": 43.272,
+          "lng": 6.64,
+          "note": "The citadel, the Place des Lices and the harbour front at aperitif hour."
+        }
+      ]
+    }
+  ]
+}

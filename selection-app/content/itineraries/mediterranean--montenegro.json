@@ -1,0 +1,106 @@
+{
+  "destinationId": "mediterranean/montenegro",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "montenegro-5",
+      "nights": 5,
+      "title": "Five days in the Bay of Kotor",
+      "intro": "A fjord in all but name: Kotor, Perast and the Luštica peninsula.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Porto Montenegro, Tivat",
+          "lat": 42.434,
+          "lng": 18.691,
+          "note": "Board at Porto Montenegro; the naval heritage museum and the waterfront."
+        },
+        {
+          "day": 2,
+          "place": "Kotor",
+          "lat": 42.425,
+          "lng": 18.769,
+          "note": "The walled town and the fortress climb."
+        },
+        {
+          "day": 3,
+          "place": "Perast",
+          "lat": 42.487,
+          "lng": 18.698,
+          "note": "The baroque town and Our Lady of the Rocks on its man-made islet."
+        },
+        {
+          "day": 4,
+          "place": "Rose",
+          "lat": 42.436,
+          "lng": 18.574,
+          "note": "The fishing village and the Blue Grotto."
+        },
+        {
+          "day": 5,
+          "place": "Porto Montenegro, Tivat",
+          "lat": 42.434,
+          "lng": 18.691,
+          "note": "Board at Porto Montenegro; the naval heritage museum and the waterfront."
+        }
+      ]
+    },
+    {
+      "id": "montenegro-7",
+      "nights": 7,
+      "title": "Seven days from Dubrovnik to Budva",
+      "intro": "Dubrovnik, the Bay of Kotor and the Budva riviera.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Dubrovnik",
+          "lat": 42.665,
+          "lng": 18.088,
+          "note": "Board beneath the walls; walk them in the evening once the day visitors have gone."
+        },
+        {
+          "day": 2,
+          "place": "Cavtat",
+          "lat": 42.581,
+          "lng": 18.217,
+          "note": "A quiet peninsula town south of Dubrovnik, with the Račić mausoleum above it."
+        },
+        {
+          "day": 3,
+          "place": "Herceg Novi",
+          "lat": 42.452,
+          "lng": 18.532,
+          "note": "The town at the mouth of the bay and its fortresses; a swim at Žanjice."
+        },
+        {
+          "day": 4,
+          "place": "Perast",
+          "lat": 42.487,
+          "lng": 18.698,
+          "note": "The baroque town and Our Lady of the Rocks on its man-made islet."
+        },
+        {
+          "day": 5,
+          "place": "Kotor",
+          "lat": 42.425,
+          "lng": 18.769,
+          "note": "The walled town at the head of the bay; climb to the fortress for the view."
+        },
+        {
+          "day": 6,
+          "place": "Luštica Bay",
+          "lat": 42.372,
+          "lng": 18.682,
+          "note": "The new marina on the peninsula and the coves towards Cape Arza."
+        },
+        {
+          "day": 7,
+          "place": "Budva",
+          "lat": 42.278,
+          "lng": 18.839,
+          "note": "Budva and Sveti Stefan; disembark."
+        }
+      ]
+    }
+  ]
+}

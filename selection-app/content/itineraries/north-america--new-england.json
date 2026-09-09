@@ -1,0 +1,106 @@
+{
+  "destinationId": "north-america/new-england",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "new-england-5",
+      "nights": 5,
+      "title": "Five days from Newport to Nantucket",
+      "intro": "Newport, Block Island, Martha’s Vineyard and Nantucket.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Newport",
+          "lat": 41.488,
+          "lng": -71.326,
+          "note": "Board in Newport."
+        },
+        {
+          "day": 2,
+          "place": "Block Island",
+          "lat": 41.19,
+          "lng": -71.576,
+          "note": "Block Island."
+        },
+        {
+          "day": 3,
+          "place": "Cuttyhunk",
+          "lat": 41.423,
+          "lng": -70.926,
+          "note": "Cuttyhunk."
+        },
+        {
+          "day": 4,
+          "place": "Martha’s Vineyard, Edgartown",
+          "lat": 41.39,
+          "lng": -70.511,
+          "note": "Edgartown."
+        },
+        {
+          "day": 5,
+          "place": "Nantucket",
+          "lat": 41.285,
+          "lng": -70.096,
+          "note": "Nantucket; disembark."
+        }
+      ]
+    },
+    {
+      "id": "new-england-7",
+      "nights": 7,
+      "title": "Seven days from Newport to Boston",
+      "intro": "The islands, Cape Cod and Boston harbour.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Newport",
+          "lat": 41.488,
+          "lng": -71.326,
+          "note": "Board in Newport."
+        },
+        {
+          "day": 2,
+          "place": "Block Island",
+          "lat": 41.19,
+          "lng": -71.576,
+          "note": "Block Island."
+        },
+        {
+          "day": 3,
+          "place": "Martha’s Vineyard, Edgartown",
+          "lat": 41.39,
+          "lng": -70.511,
+          "note": "Martha’s Vineyard."
+        },
+        {
+          "day": 4,
+          "place": "Nantucket",
+          "lat": 41.285,
+          "lng": -70.096,
+          "note": "Nantucket."
+        },
+        {
+          "day": 5,
+          "place": "Woods Hole",
+          "lat": 41.523,
+          "lng": -70.672,
+          "note": "Woods Hole."
+        },
+        {
+          "day": 6,
+          "place": "Provincetown",
+          "lat": 42.051,
+          "lng": -70.183,
+          "note": "Provincetown."
+        },
+        {
+          "day": 7,
+          "place": "Boston",
+          "lat": 42.358,
+          "lng": -71.048,
+          "note": "Boston; disembark."
+        }
+      ]
+    }
+  ]
+}

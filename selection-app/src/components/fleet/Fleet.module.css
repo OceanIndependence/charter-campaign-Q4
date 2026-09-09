@@ -1,0 +1,382 @@
+/* Public fleet page — the Atlas header on the Tier 3 card and drawer tokens. */
+
+.page {
+  min-height: 100svh;
+  background: var(--atlas-ink);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-weight: 300;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px 32px;
+  padding: 0 40px;
+  min-height: 72px;
+  border-bottom: 1px solid var(--hairline-strong);
+}
+
+.logoLink {
+  display: block;
+  line-height: 0;
+}
+
+.logo {
+  height: 18px;
+  width: auto;
+  display: block;
+}
+
+.headerMid {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  min-width: 220px;
+}
+
+.headerTitle {
+  font-size: 11px;
+  letter-spacing: 0.36em;
+  font-weight: 500;
+  padding-left: 0.36em;
+}
+
+.headerRule {
+  width: 28px;
+  height: 1px;
+  background: var(--fg-35);
+  align-self: center;
+}
+
+.headerSub {
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: var(--fg-6);
+}
+
+.btnOutline {
+  display: inline-block;
+  border: 1px solid var(--btn-outline);
+  padding: 13px 30px 13px calc(30px + 0.36em);
+  font-size: 11px;
+  letter-spacing: 0.36em;
+  font-weight: 500;
+  color: var(--btn-fg);
+  text-decoration: none;
+  transition: all 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.btnOutline:hover {
+  background: var(--btn-hover-bg);
+  color: var(--btn-hover-fg);
+  border-color: var(--btn-hover-bg);
+}
+
+/* ------------------------------------------------------------------ hero */
+
+.hero {
+  position: relative;
+  border-bottom: 1px solid var(--hairline-strong);
+  overflow: hidden;
+}
+
+.heroMedia {
+  position: absolute;
+  inset: 0;
+}
+
+.heroMedia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.32;
+}
+
+.heroMedia::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(6, 8, 9, 0.2) 0%, rgba(6, 8, 9, 0.85) 100%);
+}
+
+.heroBody {
+  position: relative;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 56px clamp(24px, 5vw, 64px) 48px;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--fg-5);
+  font-weight: 500;
+  text-decoration: none;
+  margin-bottom: 36px;
+}
+
+.back:hover {
+  color: var(--mint);
+}
+
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.36em;
+  color: var(--mint);
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+
+.h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(30px, 4.4vw, 46px);
+  letter-spacing: 0.26em;
+  line-height: 1.2;
+  margin: 0 0 18px;
+}
+
+.lede {
+  font-size: 14px;
+  line-height: 1.85;
+  color: var(--fg-75);
+  max-width: 62ch;
+  margin: 0 0 22px;
+  text-wrap: pretty;
+}
+
+.count {
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  font-weight: 500;
+  color: var(--fg-5);
+}
+
+/* --------------------------------------------------------------- filters */
+
+.filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 22px clamp(24px, 5vw, 64px) 0;
+}
+
+.filterLabel {
+  font-size: 9.5px;
+  letter-spacing: 0.3em;
+  color: var(--fg-4);
+  font-weight: 500;
+  margin-right: 8px;
+}
+
+.chip {
+  padding: 9px 14px;
+  border: 1px solid var(--fg-25);
+  font-size: 9.5px;
+  letter-spacing: 0.24em;
+  font-weight: 500;
+  color: var(--fg-7);
+  transition: all 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.chip:hover {
+  border-color: var(--mint-hairline-strong);
+  color: var(--fg);
+}
+
+.chipOn {
+  border-color: var(--mint);
+  color: var(--mint);
+  background: rgba(167, 230, 215, 0.06);
+}
+
+/* ------------------------------------------------------------------ bands */
+
+.main {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 16px clamp(24px, 5vw, 64px) 40px;
+}
+
+.band {
+  padding: 40px 0 8px;
+}
+
+.bandHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  padding-bottom: 12px;
+  margin-bottom: 26px;
+}
+
+.bandTitle {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 22px;
+  letter-spacing: 0.28em;
+  margin: 0;
+}
+
+.bandCount {
+  font-size: 9.5px;
+  letter-spacing: 0.3em;
+  color: var(--fg-4);
+  font-weight: 500;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 22px;
+}
+
+/* The Tier 3 card frame, flat: same border, glow and radius as the ring. */
+.card {
+  position: relative;
+  display: block;
+  width: 100%;
+  text-align: left;
+  border-radius: 16px;
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  transition: transform 480ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 480ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+.empty {
+  padding: 56px 0;
+  max-width: 56ch;
+}
+
+.emptyBody {
+  font-size: 14px;
+  line-height: 1.85;
+  color: var(--fg-75);
+  margin: 0 0 28px;
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  border-top: 1px solid var(--hairline-strong);
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 40px clamp(24px, 5vw, 64px) 72px;
+}
+
+.footNote {
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--fg-5);
+  max-width: 70ch;
+  margin: 0 0 28px;
+}
+
+/* ----------------------------------------------------------------- drawer */
+
+.drawerScrim {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(4, 8, 10, 0.72);
+  animation: fadeIn 240ms ease both;
+}
+
+.drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(640px, 100vw);
+  background: var(--panel);
+  border-left: 1px solid var(--hairline-strong);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 24px 0 56px;
+  animation: slideIn 480ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+.drawerClose {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fg-6);
+  font-size: 14px;
+  border: 1px solid var(--fg-25);
+  z-index: 2;
+  transition: all 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.drawerClose:hover {
+  color: var(--fg);
+  border-color: var(--mint);
+}
+
+.drawerFoot {
+  padding: 8px clamp(24px, 6vw, 48px) 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(40px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+/* ----------------------------------------------------------------- mobile */
+
+@media (max-width: 760px) {
+  .header {
+    padding: 14px 20px;
+    gap: 14px 20px;
+  }
+
+  .header .btnOutline {
+    display: none;
+  }
+
+  .heroBody {
+    padding: 36px 22px 32px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

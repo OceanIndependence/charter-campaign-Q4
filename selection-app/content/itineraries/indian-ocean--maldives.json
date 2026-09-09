@@ -1,0 +1,106 @@
+{
+  "destinationId": "indian-ocean/maldives",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "maldives-5",
+      "nights": 5,
+      "title": "Five days from Malé into Ari Atoll",
+      "intro": "Manta and whale-shark waters west of Malé.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Malé",
+          "lat": 4.175,
+          "lng": 73.509,
+          "note": "Board in Malé."
+        },
+        {
+          "day": 2,
+          "place": "Rasdhoo",
+          "lat": 4.263,
+          "lng": 72.995,
+          "note": "Rasdhoo."
+        },
+        {
+          "day": 3,
+          "place": "Ari Atoll, Maaya Thila",
+          "lat": 4.07,
+          "lng": 72.86,
+          "note": "Maaya Thila."
+        },
+        {
+          "day": 4,
+          "place": "Dhigurah",
+          "lat": 3.53,
+          "lng": 72.93,
+          "note": "Dhigurah and the whale sharks of Maamigili."
+        },
+        {
+          "day": 5,
+          "place": "Malé",
+          "lat": 4.175,
+          "lng": 73.509,
+          "note": "Return; disembark."
+        }
+      ]
+    },
+    {
+      "id": "maldives-7",
+      "nights": 7,
+      "title": "Seven days from Malé to Malé",
+      "intro": "North Malé, Baa Atoll’s Hanifaru and the Ari reefs.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Malé",
+          "lat": 4.175,
+          "lng": 73.509,
+          "note": "Board in Malé."
+        },
+        {
+          "day": 2,
+          "place": "Thulusdhoo",
+          "lat": 4.374,
+          "lng": 73.651,
+          "note": "Thulusdhoo."
+        },
+        {
+          "day": 3,
+          "place": "Dharavandhoo",
+          "lat": 5.158,
+          "lng": 73.13,
+          "note": "Baa Atoll."
+        },
+        {
+          "day": 4,
+          "place": "Baa Atoll, Hanifaru",
+          "lat": 5.172,
+          "lng": 73.14,
+          "note": "Hanifaru Bay."
+        },
+        {
+          "day": 5,
+          "place": "Rasdhoo",
+          "lat": 4.263,
+          "lng": 72.995,
+          "note": "Rasdhoo."
+        },
+        {
+          "day": 6,
+          "place": "Ari Atoll, Maaya Thila",
+          "lat": 4.07,
+          "lng": 72.86,
+          "note": "Ari Atoll."
+        },
+        {
+          "day": 7,
+          "place": "Malé",
+          "lat": 4.175,
+          "lng": 73.509,
+          "note": "Return; disembark."
+        }
+      ]
+    }
+  ]
+}

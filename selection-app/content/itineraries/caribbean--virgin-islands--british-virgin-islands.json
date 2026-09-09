@@ -1,0 +1,106 @@
+{
+  "destinationId": "caribbean/virgin-islands/british-virgin-islands",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "british-virgin-islands-5",
+      "nights": 5,
+      "title": "Five days in the British Virgin Islands",
+      "intro": "The Sir Francis Drake Channel: Norman, Cooper, the Baths and Jost Van Dyke, all a short sail apart.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Tortola, Road Town",
+          "lat": 18.395,
+          "lng": -64.626,
+          "note": "Board in Road Town; a first swim at the Indians."
+        },
+        {
+          "day": 2,
+          "place": "Norman Island, The Bight",
+          "lat": 18.317,
+          "lng": -64.618,
+          "note": "The caves at The Bight."
+        },
+        {
+          "day": 3,
+          "place": "Cooper Island",
+          "lat": 18.386,
+          "lng": -64.514,
+          "note": "Cooper Island and the wreck of the Rhone off Salt Island."
+        },
+        {
+          "day": 4,
+          "place": "Virgin Gorda, The Baths",
+          "lat": 18.43,
+          "lng": -64.445,
+          "note": "The Baths at first light; North Sound by evening."
+        },
+        {
+          "day": 5,
+          "place": "Jost Van Dyke",
+          "lat": 18.444,
+          "lng": -64.75,
+          "note": "Jost Van Dyke and White Bay; disembark in Road Town."
+        }
+      ]
+    },
+    {
+      "id": "british-virgin-islands-7",
+      "nights": 7,
+      "title": "Seven days from Tortola around the Virgin Islands",
+      "intro": "The full channel plus Anegada’s reef and lobster beach.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Tortola, Road Town",
+          "lat": 18.395,
+          "lng": -64.626,
+          "note": "Board in Road Town."
+        },
+        {
+          "day": 2,
+          "place": "Norman Island, The Bight",
+          "lat": 18.317,
+          "lng": -64.618,
+          "note": "Norman Island."
+        },
+        {
+          "day": 3,
+          "place": "Cooper Island",
+          "lat": 18.386,
+          "lng": -64.514,
+          "note": "Cooper Island."
+        },
+        {
+          "day": 4,
+          "place": "Virgin Gorda, The Baths",
+          "lat": 18.43,
+          "lng": -64.445,
+          "note": "Virgin Gorda and the Baths."
+        },
+        {
+          "day": 5,
+          "place": "Anegada",
+          "lat": 18.72,
+          "lng": -64.386,
+          "note": "The reef and Loblolly Bay."
+        },
+        {
+          "day": 6,
+          "place": "North Sound",
+          "lat": 18.5,
+          "lng": -64.36,
+          "note": "North Sound."
+        },
+        {
+          "day": 7,
+          "place": "Jost Van Dyke",
+          "lat": 18.444,
+          "lng": -64.75,
+          "note": "Jost Van Dyke; disembark in Road Town."
+        }
+      ]
+    }
+  ]
+}

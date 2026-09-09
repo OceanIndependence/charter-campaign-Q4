@@ -1,0 +1,106 @@
+{
+  "destinationId": "central-america/costa-rica",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "costa-rica-5",
+      "nights": 5,
+      "title": "Five days from Los Sueños",
+      "intro": "The Pacific coast: Tortuga, Curú and Manuel Antonio.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Los Sueños, Herradura",
+          "lat": 9.647,
+          "lng": -84.664,
+          "note": "Board at Los Sueños."
+        },
+        {
+          "day": 2,
+          "place": "Tortuga Island",
+          "lat": 9.78,
+          "lng": -84.89,
+          "note": "Tortuga Island."
+        },
+        {
+          "day": 3,
+          "place": "Curú",
+          "lat": 9.79,
+          "lng": -84.918,
+          "note": "Curú."
+        },
+        {
+          "day": 4,
+          "place": "Quepos, Manuel Antonio",
+          "lat": 9.43,
+          "lng": -84.165,
+          "note": "Manuel Antonio."
+        },
+        {
+          "day": 5,
+          "place": "Los Sueños, Herradura",
+          "lat": 9.647,
+          "lng": -84.664,
+          "note": "Return; disembark."
+        }
+      ]
+    },
+    {
+      "id": "costa-rica-7",
+      "nights": 7,
+      "title": "Seven days from Papagayo to Golfo Dulce",
+      "intro": "The Guanacaste coast south to the Osa peninsula.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Marina Papagayo",
+          "lat": 10.646,
+          "lng": -85.662,
+          "note": "Board at Marina Papagayo."
+        },
+        {
+          "day": 2,
+          "place": "Islas Murciélago",
+          "lat": 10.86,
+          "lng": -85.91,
+          "note": "Islas Murciélago."
+        },
+        {
+          "day": 3,
+          "place": "Playa Flamingo",
+          "lat": 10.436,
+          "lng": -85.79,
+          "note": "Playa Flamingo."
+        },
+        {
+          "day": 4,
+          "place": "Los Sueños, Herradura",
+          "lat": 9.647,
+          "lng": -84.664,
+          "note": "Los Sueños."
+        },
+        {
+          "day": 5,
+          "place": "Quepos, Manuel Antonio",
+          "lat": 9.43,
+          "lng": -84.165,
+          "note": "Manuel Antonio."
+        },
+        {
+          "day": 6,
+          "place": "Caño Island",
+          "lat": 8.718,
+          "lng": -83.88,
+          "note": "Caño Island."
+        },
+        {
+          "day": 7,
+          "place": "Golfo Dulce, Puerto Jiménez",
+          "lat": 8.535,
+          "lng": -83.307,
+          "note": "Golfo Dulce; disembark."
+        }
+      ]
+    }
+  ]
+}

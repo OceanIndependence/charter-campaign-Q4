@@ -1,0 +1,106 @@
+{
+  "destinationId": "south-east-asia/indonesia",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "indonesia-5",
+      "nights": 5,
+      "title": "Five days in Komodo",
+      "intro": "Labuan Bajo, the dragons and the manta channels.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Labuan Bajo",
+          "lat": -8.496,
+          "lng": 119.878,
+          "note": "Board in Labuan Bajo."
+        },
+        {
+          "day": 2,
+          "place": "Rinca, Loh Buaya",
+          "lat": -8.654,
+          "lng": 119.718,
+          "note": "Rinca."
+        },
+        {
+          "day": 3,
+          "place": "Padar",
+          "lat": -8.658,
+          "lng": 119.581,
+          "note": "Padar and Pink Beach."
+        },
+        {
+          "day": 4,
+          "place": "Komodo, Loh Liang",
+          "lat": -8.559,
+          "lng": 119.488,
+          "note": "Komodo."
+        },
+        {
+          "day": 5,
+          "place": "Labuan Bajo",
+          "lat": -8.496,
+          "lng": 119.878,
+          "note": "Karang Makassar; disembark."
+        }
+      ]
+    },
+    {
+      "id": "indonesia-7",
+      "nights": 7,
+      "title": "Seven days from Bali to Komodo",
+      "intro": "Bali, Lombok, Moyo and the Komodo National Park.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Bali, Benoa",
+          "lat": -8.745,
+          "lng": 115.221,
+          "note": "Board at Benoa."
+        },
+        {
+          "day": 2,
+          "place": "Nusa Penida",
+          "lat": -8.792,
+          "lng": 115.525,
+          "note": "Nusa Penida."
+        },
+        {
+          "day": 3,
+          "place": "Gili Trawangan",
+          "lat": -8.35,
+          "lng": 116.038,
+          "note": "Gili Trawangan."
+        },
+        {
+          "day": 4,
+          "place": "Moyo",
+          "lat": -8.245,
+          "lng": 117.522,
+          "note": "Moyo."
+        },
+        {
+          "day": 5,
+          "place": "Satonda",
+          "lat": -8.113,
+          "lng": 117.744,
+          "note": "Satonda."
+        },
+        {
+          "day": 6,
+          "place": "Gili Lawa Darat",
+          "lat": -8.463,
+          "lng": 119.547,
+          "note": "Gili Lawa."
+        },
+        {
+          "day": 7,
+          "place": "Labuan Bajo",
+          "lat": -8.496,
+          "lng": 119.878,
+          "note": "Komodo and Labuan Bajo; disembark."
+        }
+      ]
+    }
+  ]
+}

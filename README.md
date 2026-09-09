@@ -70,6 +70,49 @@ regenerated JSON.
 ENQUIRE links out to the website's enquiry form; the page carries meta tags
 only (title, description, Open Graph image, canonical) and no analytics.
 
+### Itineraries
+
+Each destination panel offers a five-day and a seven-day suggested itinerary;
+choosing one draws the route on the globe (camera eased to the route, numbered
+day markers, the day list following as you scroll). The routes live in the
+repo, one file per destination:
+
+```
+selection-app/content/itineraries/<destination id with / → -->.json
+{ "destinationId": "mediterranean/italy/amalfi-coast",
+  "status": "placeholder" | "approved",          # internal, never rendered
+  "itineraries": [ { "id", "nights", "title", "intro",
+                     "days": [ { "day", "place", "lat", "lng", "note" } ] } ] }
+```
+
+Coordinates are authored in the files; nothing is geocoded at build or run
+time. `npm run build:itineraries` (also the `prebuild` step) validates them,
+writes `selection-app/data/itineraries.json` for the page and
+`design/itinerary-coverage.md` for editorial review. The website sync also
+captures the itinerary pages linked from each destination
+(`itineraryLinks` and `itineraries` in the snapshot) and the panel links to
+them.
+
+### Public fleet page (`/2027-charter-season/yachts/<destination id>`)
+
+"View yachts for charter in …" on a destination panel opens a public listing
+of the yachts whose Yachtfolio cruising area covers that destination, grouped
+into length bands (Under 30m, 30 – 40m, 40 – 50m, 50m and above, then
+"Further yachts" for yachts with no length), each with "From EUR 250,000 per
+week plus 35% APA plus VAT" from the weekly rate minimum in the yacht's own
+currency (or "Rate on application"). The APA percentage is the Tier 3
+default (`DEFAULT_APA_PCT` in `src/lib/portal-types.ts`); no amounts or
+totals are shown. Cards open the Tier 3 detail drawer.
+
+The page is server-rendered from a fleet-wide facts document that the nightly
+Cron (`/api/cron/fleet-sync`) builds after the fleet list, one basic record
+per yacht within a time budget, so a fresh deployment fills it over the
+first few runs. Without `YACHTFOLIO_PASSKEY` or before the first run the
+six-yacht demo fleet is served and the fallback is logged.
+`GET /api/fleet/report` (send the Cron bearer token, `Authorization: Bearer
+$CRON_SECRET`) returns a Markdown report of the mapping coverage, band
+distribution and data gaps the page will show from the current facts.
+
 
 ## Tier 2 production page (`selection-app/` → `/atlas/<slug>`)
 

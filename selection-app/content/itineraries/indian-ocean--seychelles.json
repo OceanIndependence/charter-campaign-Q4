@@ -1,0 +1,106 @@
+{
+  "destinationId": "indian-ocean/seychelles",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "seychelles-5",
+      "nights": 5,
+      "title": "Five days from Mahé to La Digue",
+      "intro": "Praslin, Curieuse and La Digue.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Mahé, Eden Island",
+          "lat": -4.627,
+          "lng": 55.471,
+          "note": "Board at Eden Island."
+        },
+        {
+          "day": 2,
+          "place": "Praslin, Baie Ste Anne",
+          "lat": -4.348,
+          "lng": 55.758,
+          "note": "Praslin and the Vallée de Mai."
+        },
+        {
+          "day": 3,
+          "place": "Anse Lazio",
+          "lat": -4.294,
+          "lng": 55.706,
+          "note": "Anse Lazio."
+        },
+        {
+          "day": 4,
+          "place": "La Digue",
+          "lat": -4.355,
+          "lng": 55.829,
+          "note": "La Digue and Anse Source d’Argent."
+        },
+        {
+          "day": 5,
+          "place": "Mahé, Eden Island",
+          "lat": -4.627,
+          "lng": 55.471,
+          "note": "Return; disembark."
+        }
+      ]
+    },
+    {
+      "id": "seychelles-7",
+      "nights": 7,
+      "title": "Seven days around the inner islands",
+      "intro": "Mahé, Silhouette, the Praslin group and the Sisters.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Mahé, Eden Island",
+          "lat": -4.627,
+          "lng": 55.471,
+          "note": "Board at Eden Island."
+        },
+        {
+          "day": 2,
+          "place": "Silhouette",
+          "lat": -4.48,
+          "lng": 55.248,
+          "note": "Silhouette."
+        },
+        {
+          "day": 3,
+          "place": "Aride",
+          "lat": -4.213,
+          "lng": 55.665,
+          "note": "Aride."
+        },
+        {
+          "day": 4,
+          "place": "Curieuse",
+          "lat": -4.283,
+          "lng": 55.732,
+          "note": "Curieuse."
+        },
+        {
+          "day": 5,
+          "place": "Anse Lazio",
+          "lat": -4.294,
+          "lng": 55.706,
+          "note": "Anse Lazio."
+        },
+        {
+          "day": 6,
+          "place": "Grande Soeur",
+          "lat": -4.296,
+          "lng": 55.87,
+          "note": "Grande Soeur and Félicité."
+        },
+        {
+          "day": 7,
+          "place": "La Digue",
+          "lat": -4.355,
+          "lng": 55.829,
+          "note": "La Digue; disembark on Mahé."
+        }
+      ]
+    }
+  ]
+}

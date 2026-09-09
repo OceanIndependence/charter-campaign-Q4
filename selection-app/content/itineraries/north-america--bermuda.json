@@ -1,0 +1,49 @@
+{
+  "destinationId": "north-america/bermuda",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "bermuda-5",
+      "nights": 5,
+      "title": "Five days around Bermuda",
+      "intro": "Hamilton, the Great Sound and St George’s.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Hamilton",
+          "lat": 32.293,
+          "lng": -64.783,
+          "note": "Board in Hamilton."
+        },
+        {
+          "day": 2,
+          "place": "Royal Naval Dockyard",
+          "lat": 32.325,
+          "lng": -64.834,
+          "note": "The Royal Naval Dockyard."
+        },
+        {
+          "day": 3,
+          "place": "Somerset, Mangrove Bay",
+          "lat": 32.31,
+          "lng": -64.865,
+          "note": "Mangrove Bay."
+        },
+        {
+          "day": 4,
+          "place": "St George’s",
+          "lat": 32.381,
+          "lng": -64.678,
+          "note": "St George’s."
+        },
+        {
+          "day": 5,
+          "place": "Castle Harbour",
+          "lat": 32.35,
+          "lng": -64.67,
+          "note": "Castle Harbour; disembark in Hamilton."
+        }
+      ]
+    }
+  ]
+}

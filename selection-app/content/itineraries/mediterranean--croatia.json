@@ -1,0 +1,106 @@
+{
+  "destinationId": "mediterranean/croatia",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "croatia-5",
+      "nights": 5,
+      "title": "Five days from Dubrovnik to the Elaphiti and Mljet",
+      "intro": "Dubrovnik’s walls, the stone villages of the Elaphiti and Mljet’s salt lakes.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Dubrovnik",
+          "lat": 42.665,
+          "lng": 18.088,
+          "note": "Board in Gruž; the walls at dusk."
+        },
+        {
+          "day": 2,
+          "place": "Lopud",
+          "lat": 42.689,
+          "lng": 17.941,
+          "note": "Šunj beach and the Elaphiti."
+        },
+        {
+          "day": 3,
+          "place": "Šipan",
+          "lat": 42.736,
+          "lng": 17.86,
+          "note": "The largest of the Elaphiti islands: olive groves, a fjord-like bay and few visitors."
+        },
+        {
+          "day": 4,
+          "place": "Mljet, Polače",
+          "lat": 42.786,
+          "lng": 17.45,
+          "note": "The national park and the salt lakes."
+        },
+        {
+          "day": 5,
+          "place": "Dubrovnik",
+          "lat": 42.665,
+          "lng": 18.088,
+          "note": "Board beneath the walls; walk them in the evening once the day visitors have gone."
+        }
+      ]
+    },
+    {
+      "id": "croatia-7",
+      "nights": 7,
+      "title": "Seven days from Dubrovnik to Trogir",
+      "intro": "Ocean Independence’s classic Dalmatian week: Mljet, Korčula, Vis, Hvar and Trogir.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Dubrovnik",
+          "lat": 42.665,
+          "lng": 18.088,
+          "note": "Board beneath the walls; walk them in the evening once the day visitors have gone."
+        },
+        {
+          "day": 2,
+          "place": "Mljet, Polače",
+          "lat": 42.786,
+          "lng": 17.45,
+          "note": "The national park’s saltwater lakes and the monastery on its islet."
+        },
+        {
+          "day": 3,
+          "place": "Korčula",
+          "lat": 42.96,
+          "lng": 17.135,
+          "note": "Marco Polo’s walled town and the Moreška sword dance; wine at Lumbarda."
+        },
+        {
+          "day": 4,
+          "place": "Vis",
+          "lat": 43.062,
+          "lng": 16.183,
+          "note": "The furthest inhabited island: Stiniva cove and the Blue Cave on Biševo."
+        },
+        {
+          "day": 5,
+          "place": "Hvar",
+          "lat": 43.172,
+          "lng": 16.443,
+          "note": "Hvar and the Pakleni islands."
+        },
+        {
+          "day": 6,
+          "place": "Bol",
+          "lat": 43.262,
+          "lng": 16.654,
+          "note": "Zlatni Rat, the shifting spit of white pebbles, and the stone town behind it."
+        },
+        {
+          "day": 7,
+          "place": "Trogir",
+          "lat": 43.517,
+          "lng": 16.251,
+          "note": "The island town within its walls, a UNESCO site; disembark in the morning."
+        }
+      ]
+    }
+  ]
+}

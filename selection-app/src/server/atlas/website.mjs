@@ -222,6 +222,10 @@ export function parsePage(url, html) {
     if (u && u !== INDEX_URL) links.add(u);
   }
 
+  // Itinerary features and cards — the "#itineraries" section links to the
+  // website's own itinerary pages (day-by-day narrative lives there).
+  const itineraryLinks = parseItineraryLinks(root);
+
   // Featured charter yachts — "Yachts in the Area".
   let yachtSection = root.querySelector("#yachts-in-the-area");
   if (!yachtSection) {
@@ -248,7 +252,158 @@ export function parsePage(url, html) {
     mapZoom,
     cards,
     links: [...links],
+    itineraryLinks,
     yachts,
+  };
+}
+
+/* ------------------------------------------------------------ itineraries */
+
+const ITINERARY_PATH = "/yacht-charter/itineraries/";
+
+export function isItineraryUrl(href) {
+  return typeof href === "string" && href.startsWith(SITE + ITINERARY_PATH) && href.replace(SITE + ITINERARY_PATH, "").replace(/\/$/, "").split("/").length >= 2;
+}
+
+/**
+ * The itinerary blocks a destination page carries: the single "Charter
+ * Itinerary — <title>" feature on country pages and the itinerary card
+ * slider on region pages. Each entry links to a website itinerary page.
+ */
+export function parseItineraryLinks(root) {
+  const out = [];
+  const seen = new Set();
+  const add = (entry) => {
+    if (!entry.url || !isItineraryUrl(entry.url) || seen.has(entry.url)) return;
+    seen.add(entry.url);
+    out.push(entry);
+  };
+  const section = root.querySelector("#itineraries");
+  if (!section) return out;
+  // Feature block: <h2><span class="h5">Charter Itinerary</span> Rome to Naples</h2>
+  for (const h2 of section.querySelectorAll("h2")) {
+    const eyebrow = h2.querySelector(".h5");
+    const eyebrowText = text(eyebrow);
+    if (eyebrow) eyebrow.remove();
+    const title = text(h2);
+    const block = h2.parentNode;
+    const link = block?.querySelectorAll("a[href]").map((a) => a.getAttribute("href")).find((h) => isItineraryUrl(h || ""));
+    if (!link) continue;
+    const summary = block.querySelectorAll("p").map(text).filter(Boolean).join(" ");
+    const figure = block.parentNode?.querySelector("img");
+    add({ url: link, title, eyebrow: eyebrowText || null, summary, image: figure?.getAttribute("src") || null, days: null });
+  }
+  // Card slider: <a class="c-itinerary-card" href><h3>Rome to Naples</h3><div>7 days</div>
+  for (const card of section.querySelectorAll(".c-itinerary-card")) {
+    const href = card.getAttribute("href") || card.querySelector("a[href]")?.getAttribute("href");
+    const details = card.querySelectorAll(".o-card__details, .c-itinerary-card__details, p").map(text).filter(Boolean);
+    const daysText = details.find((d) => /\bday/i.test(d)) || "";
+    const days = Number.parseInt(daysText, 10);
+    add({
+      url: href,
+      title: text(card.querySelector("h3")),
+      eyebrow: null,
+      summary: details.filter((d) => d !== daysText).join(" "),
+      image: card.querySelector("img")?.getAttribute("src") || null,
+      days: Number.isFinite(days) ? days : null,
+    });
+  }
+  return out;
+}
+
+const DAY_WORDS = {
+  one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10,
+  eleven: 11, twelve: 12, thirteen: 13, fourteen: 14,
+};
+
+/** "Day One rome" → { day: 1, place: "Rome" }; "Day 3 Ischia" → { day: 3, place: "Ischia" }. */
+function parseDayHeading(heading) {
+  const m = heading.match(/^day\s+([a-z]+|\d+)\s*[:–-]?\s*(.*)$/i);
+  if (!m) return null;
+  const token = m[1].toLowerCase();
+  const day = DAY_WORDS[token] ?? Number.parseInt(token, 10);
+  if (!Number.isFinite(day)) return null;
+  const place = m[2].trim().replace(/\s+/g, " ").replace(/(^|[\s-])([a-z\u00e0-\u00ff])/g, (_, pre, ch) => pre + ch.toUpperCase());
+  return { day, place };
+}
+
+/**
+ * A website itinerary page (/yacht-charter/itineraries/<region>/<slug>/):
+ * title, length, intro copy and the DAY TO DAY narrative, verbatim, plus the
+ * map endpoints the page carries. No geocoding — the day places are names.
+ */
+export function parseItineraryPage(url, html) {
+  const root = parse(html, { blockTextElements: { script: false, style: false, noscript: false } });
+  const h1 = text(root.querySelector("h1"));
+  const daysMatch = h1.match(/^(\d+)\s*days?\s+(.*)$/i);
+  const title = daysMatch ? daysMatch[2].trim() : h1;
+  const days = daysMatch ? Number.parseInt(daysMatch[1], 10) : null;
+  const metaDescription = decode(root.querySelector('meta[name="description"]')?.getAttribute("content") || "");
+  const ogImage = root.querySelector('meta[property="og:image"]')?.getAttribute("content") || null;
+  const hero = root.querySelector(".c-hero");
+  const heroImage = sirv2000(
+    hero?.querySelector('picture source[media*="min-width"]')?.getAttribute("srcset")?.split(/\s+/)[0] ||
+      hero?.querySelector("img")?.getAttribute("src") ||
+      ogImage
+  );
+
+  const intro = [];
+  const stops = [];
+  const sections = root.querySelectorAll("section");
+  const daySection = sections.find((sec) => /day to day/i.test(text(sec.querySelector("h2"))));
+  // Intro: standard copy before the day list.
+  const main = root.querySelector("main") || root;
+  for (const block of main.querySelectorAll(".s-standard-content")) {
+    if (daySection && daySection.contains && daySection.contains(block)) continue;
+    if (block.closest(".o-card") || block.closest(".c-featured-items-slider__intro")) continue;
+    if (block.querySelector("h3")) continue;
+    for (const p of block.querySelectorAll("p").map(text).filter(Boolean)) if (!intro.includes(p)) intro.push(p);
+    if (intro.length >= 4) break;
+  }
+  if (daySection) {
+    let current = null;
+    const walk = (node) => {
+      for (const child of node.childNodes) {
+        if (child.nodeType !== 1) continue;
+        const tag = child.tagName;
+        if (tag === "H3" || tag === "H4") {
+          const parsed = parseDayHeading(text(child));
+          current = parsed ? { ...parsed, text: [] } : null;
+          if (current) stops.push(current);
+          continue;
+        }
+        if (tag === "P" && current) {
+          const t = text(child);
+          if (t) current.text.push(t);
+          continue;
+        }
+        walk(child);
+      }
+    };
+    walk(daySection);
+  }
+  let mapPins = [];
+  const map = root.querySelector(".o-google-map[data-map-locations]");
+  if (map) {
+    try {
+      mapPins = JSON.parse(decode(map.getAttribute("data-map-locations")))
+        .map((p) => ({ lat: Number.parseFloat(p.latitude), lon: Number.parseFloat(p.longitude), label: decode(String(p.content || "").replace(/<[^>]+>/g, " ")) }))
+        .filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lon));
+    } catch {
+      mapPins = [];
+    }
+  }
+  // The day list's own paragraphs are not intro copy.
+  const dayText = new Set(stops.flatMap((s) => s.text));
+  return {
+    url,
+    title,
+    days: days ?? (stops.length || null),
+    metaDescription,
+    heroImage,
+    intro: intro.filter((p) => !dayText.has(p)),
+    stops: stops.map((s) => ({ day: s.day, place: s.place, text: s.text.join(" ") })),
+    mapPins,
   };
 }
 

@@ -1,0 +1,106 @@
+{
+  "destinationId": "mediterranean/turkey/gocek",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "gocek-5",
+      "nights": 5,
+      "title": "Five days in the Gulf of Fethiye",
+      "intro": "Göcek’s twelve islands: pine-fringed, current-free and made for a first family charter.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Göcek",
+          "lat": 36.753,
+          "lng": 28.94,
+          "note": "Board in Göcek; the first anchorage among the pine-clad islands of the gulf."
+        },
+        {
+          "day": 2,
+          "place": "Tersane Island",
+          "lat": 36.675,
+          "lng": 28.913,
+          "note": "The ruined Byzantine village."
+        },
+        {
+          "day": 3,
+          "place": "Hamam Bay",
+          "lat": 36.708,
+          "lng": 28.857,
+          "note": "The sunken baths in the shallows and the walk over the hill to Kapı Creek."
+        },
+        {
+          "day": 4,
+          "place": "Kapı Creek",
+          "lat": 36.671,
+          "lng": 28.874,
+          "note": "The narrow inlet with its single restaurant; stern to the rocks for the night."
+        },
+        {
+          "day": 5,
+          "place": "Göcek",
+          "lat": 36.753,
+          "lng": 28.94,
+          "note": "Board in Göcek; the first anchorage among the pine-clad islands of the gulf."
+        }
+      ]
+    },
+    {
+      "id": "gocek-7",
+      "nights": 7,
+      "title": "Seven days from Göcek to Göcek",
+      "intro": "Ocean Independence’s classic Lycian week: Fethiye, Ölüdeniz, Ekincik and the islands.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Göcek",
+          "lat": 36.753,
+          "lng": 28.94,
+          "note": "Board in Göcek; the first anchorage among the pine-clad islands of the gulf."
+        },
+        {
+          "day": 2,
+          "place": "Fethiye",
+          "lat": 36.621,
+          "lng": 29.103,
+          "note": "Fethiye and the Lycian tombs."
+        },
+        {
+          "day": 3,
+          "place": "Ölüdeniz",
+          "lat": 36.548,
+          "lng": 29.111,
+          "note": "The blue lagoon and Butterfly Valley."
+        },
+        {
+          "day": 4,
+          "place": "Tersane Island",
+          "lat": 36.675,
+          "lng": 28.913,
+          "note": "The old shipyard island and its Byzantine ruins; a swim in the inner bay."
+        },
+        {
+          "day": 5,
+          "place": "Ekincik",
+          "lat": 36.825,
+          "lng": 28.556,
+          "note": "Ekincik and the Dalyan river."
+        },
+        {
+          "day": 6,
+          "place": "Sarsala",
+          "lat": 36.716,
+          "lng": 28.868,
+          "note": "A sheltered bay on the gulf’s west shore for a quiet last night."
+        },
+        {
+          "day": 7,
+          "place": "Göcek",
+          "lat": 36.753,
+          "lng": 28.94,
+          "note": "Board in Göcek; the first anchorage among the pine-clad islands of the gulf."
+        }
+      ]
+    }
+  ]
+}

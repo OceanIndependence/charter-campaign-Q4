@@ -1,0 +1,106 @@
+{
+  "destinationId": "australia-and-new-zealand/australia/the-kimberley",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "the-kimberley-5",
+      "nights": 5,
+      "title": "Five days in the Buccaneer Archipelago",
+      "intro": "Broome to Talbot Bay and Montgomery Reef.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Broome",
+          "lat": -17.961,
+          "lng": 122.236,
+          "note": "Board in Broome."
+        },
+        {
+          "day": 2,
+          "place": "Cape Leveque",
+          "lat": -16.399,
+          "lng": 122.928,
+          "note": "Cape Leveque."
+        },
+        {
+          "day": 3,
+          "place": "Buccaneer Archipelago, Silvergull Creek",
+          "lat": -16.29,
+          "lng": 123.61,
+          "note": "Silvergull Creek."
+        },
+        {
+          "day": 4,
+          "place": "Talbot Bay, Horizontal Falls",
+          "lat": -16.386,
+          "lng": 123.961,
+          "note": "Horizontal Falls."
+        },
+        {
+          "day": 5,
+          "place": "Montgomery Reef",
+          "lat": -15.96,
+          "lng": 124.22,
+          "note": "Montgomery Reef; return by air from Talbot Bay."
+        }
+      ]
+    },
+    {
+      "id": "the-kimberley-7",
+      "nights": 7,
+      "title": "Seven days from Broome to the Hunter River",
+      "intro": "Ocean Independence’s Kimberley: Horizontal Falls, Montgomery Reef and the King Cascade.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Broome",
+          "lat": -17.961,
+          "lng": 122.236,
+          "note": "Board in Broome."
+        },
+        {
+          "day": 2,
+          "place": "Cape Leveque",
+          "lat": -16.399,
+          "lng": 122.928,
+          "note": "Cape Leveque."
+        },
+        {
+          "day": 3,
+          "place": "Talbot Bay, Horizontal Falls",
+          "lat": -16.386,
+          "lng": 123.961,
+          "note": "Horizontal Falls."
+        },
+        {
+          "day": 4,
+          "place": "Montgomery Reef",
+          "lat": -15.96,
+          "lng": 124.22,
+          "note": "Montgomery Reef."
+        },
+        {
+          "day": 5,
+          "place": "Raft Point",
+          "lat": -16.067,
+          "lng": 124.452,
+          "note": "Raft Point rock art."
+        },
+        {
+          "day": 6,
+          "place": "Prince Regent River, King Cascade",
+          "lat": -15.618,
+          "lng": 125.302,
+          "note": "King Cascade."
+        },
+        {
+          "day": 7,
+          "place": "Hunter River",
+          "lat": -15.02,
+          "lng": 125.39,
+          "note": "Hunter River; disembark by air from Mitchell Plateau."
+        }
+      ]
+    }
+  ]
+}

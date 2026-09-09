@@ -1,0 +1,106 @@
+{
+  "destinationId": "central-america/belize",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "belize-5",
+      "nights": 5,
+      "title": "Five days from Belize City to Lighthouse Reef",
+      "intro": "Caye Caulker, Turneffe and the Blue Hole.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Belize City",
+          "lat": 17.496,
+          "lng": -88.186,
+          "note": "Board in Belize City."
+        },
+        {
+          "day": 2,
+          "place": "Caye Caulker",
+          "lat": 17.742,
+          "lng": -88.025,
+          "note": "Caye Caulker."
+        },
+        {
+          "day": 3,
+          "place": "Turneffe Atoll",
+          "lat": 17.324,
+          "lng": -87.8,
+          "note": "Turneffe Atoll."
+        },
+        {
+          "day": 4,
+          "place": "Half Moon Caye",
+          "lat": 17.206,
+          "lng": -87.535,
+          "note": "Half Moon Caye and the Blue Hole."
+        },
+        {
+          "day": 5,
+          "place": "Ambergris Caye, San Pedro",
+          "lat": 17.916,
+          "lng": -87.966,
+          "note": "Ambergris Caye; disembark."
+        }
+      ]
+    },
+    {
+      "id": "belize-7",
+      "nights": 7,
+      "title": "Seven days from Placencia to Ambergris Caye",
+      "intro": "The southern cayes north along the barrier reef.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Placencia",
+          "lat": 16.514,
+          "lng": -88.367,
+          "note": "Board in Placencia."
+        },
+        {
+          "day": 2,
+          "place": "Laughing Bird Caye",
+          "lat": 16.442,
+          "lng": -88.199,
+          "note": "Laughing Bird Caye."
+        },
+        {
+          "day": 3,
+          "place": "South Water Caye",
+          "lat": 16.813,
+          "lng": -88.081,
+          "note": "South Water Caye."
+        },
+        {
+          "day": 4,
+          "place": "Glover’s Reef",
+          "lat": 16.79,
+          "lng": -87.79,
+          "note": "Glover’s Reef."
+        },
+        {
+          "day": 5,
+          "place": "Half Moon Caye",
+          "lat": 17.206,
+          "lng": -87.535,
+          "note": "Half Moon Caye."
+        },
+        {
+          "day": 6,
+          "place": "Hol Chan",
+          "lat": 17.864,
+          "lng": -87.974,
+          "note": "Hol Chan."
+        },
+        {
+          "day": 7,
+          "place": "Ambergris Caye, San Pedro",
+          "lat": 17.916,
+          "lng": -87.966,
+          "note": "San Pedro; disembark."
+        }
+      ]
+    }
+  ]
+}

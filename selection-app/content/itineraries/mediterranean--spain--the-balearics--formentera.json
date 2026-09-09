@@ -1,0 +1,106 @@
+{
+  "destinationId": "mediterranean/spain/the-balearics/formentera",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "formentera-5",
+      "nights": 5,
+      "title": "Five days around Formentera",
+      "intro": "The sandbars and clear water of Formentera, with Ibiza across the strait.",
+      "days": [
+        {
+          "day": 1,
+          "place": "La Savina",
+          "lat": 38.733,
+          "lng": 1.416,
+          "note": "Formentera’s harbour; bicycles to the lighthouse at La Mola."
+        },
+        {
+          "day": 2,
+          "place": "Ses Illetes",
+          "lat": 38.751,
+          "lng": 1.433,
+          "note": "The clearest water in the Balearics; lunch ashore on the sand."
+        },
+        {
+          "day": 3,
+          "place": "Espalmador",
+          "lat": 38.787,
+          "lng": 1.421,
+          "note": "The sand bar and lagoon between Formentera and Ibiza; anchor for the night."
+        },
+        {
+          "day": 4,
+          "place": "Es Caló",
+          "lat": 38.703,
+          "lng": 1.483,
+          "note": "The little fishing harbour below La Mola and the beach at Ses Platgetes."
+        },
+        {
+          "day": 5,
+          "place": "Ibiza Town",
+          "lat": 38.911,
+          "lng": 1.443,
+          "note": "Dalt Vila’s walls above the harbour, then a quieter anchorage for the night."
+        }
+      ]
+    },
+    {
+      "id": "formentera-7",
+      "nights": 7,
+      "title": "Seven days from Ibiza to Formentera",
+      "intro": "A week between the two islands, changing register mid-week.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Ibiza Town",
+          "lat": 38.911,
+          "lng": 1.443,
+          "note": "Dalt Vila’s walls above the harbour, then a quieter anchorage for the night."
+        },
+        {
+          "day": 2,
+          "place": "Talamanca",
+          "lat": 38.918,
+          "lng": 1.455,
+          "note": "The bay across from the old town."
+        },
+        {
+          "day": 3,
+          "place": "Cala Bassa",
+          "lat": 38.969,
+          "lng": 1.253,
+          "note": "The west coast and San Antonio."
+        },
+        {
+          "day": 4,
+          "place": "Es Vedrà",
+          "lat": 38.89,
+          "lng": 1.226,
+          "note": "Anchor beneath the great rock off Cala d’Hort for the sunset."
+        },
+        {
+          "day": 5,
+          "place": "Espalmador",
+          "lat": 38.787,
+          "lng": 1.421,
+          "note": "The sandbars between the islands."
+        },
+        {
+          "day": 6,
+          "place": "Ses Illetes",
+          "lat": 38.751,
+          "lng": 1.433,
+          "note": "The clearest water in the Balearics; lunch ashore on the sand."
+        },
+        {
+          "day": 7,
+          "place": "La Savina",
+          "lat": 38.733,
+          "lng": 1.416,
+          "note": "Formentera’s port; disembark or return to Ibiza."
+        }
+      ]
+    }
+  ]
+}

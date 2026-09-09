@@ -1,0 +1,106 @@
+{
+  "destinationId": "central-america/mexico",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "mexico-5",
+      "nights": 5,
+      "title": "Five days in Banderas Bay",
+      "intro": "Puerto Vallarta, the Marietas and Yelapa.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Puerto Vallarta",
+          "lat": 20.656,
+          "lng": -105.25,
+          "note": "Board in Puerto Vallarta."
+        },
+        {
+          "day": 2,
+          "place": "Islas Marietas",
+          "lat": 20.696,
+          "lng": -105.568,
+          "note": "The Marietas."
+        },
+        {
+          "day": 3,
+          "place": "Punta de Mita",
+          "lat": 20.772,
+          "lng": -105.52,
+          "note": "Punta de Mita."
+        },
+        {
+          "day": 4,
+          "place": "Yelapa",
+          "lat": 20.492,
+          "lng": -105.445,
+          "note": "Yelapa."
+        },
+        {
+          "day": 5,
+          "place": "Puerto Vallarta",
+          "lat": 20.656,
+          "lng": -105.25,
+          "note": "Return; disembark."
+        }
+      ]
+    },
+    {
+      "id": "mexico-7",
+      "nights": 7,
+      "title": "Seven days from La Paz to La Paz",
+      "intro": "Ocean Independence’s Sea of Cortez: Espíritu Santo, Los Islotes and Isla San Francisco.",
+      "days": [
+        {
+          "day": 1,
+          "place": "La Paz",
+          "lat": 24.156,
+          "lng": -110.32,
+          "note": "Board in La Paz."
+        },
+        {
+          "day": 2,
+          "place": "Balandra",
+          "lat": 24.32,
+          "lng": -110.326,
+          "note": "Balandra."
+        },
+        {
+          "day": 3,
+          "place": "Espíritu Santo, Ensenada Grande",
+          "lat": 24.545,
+          "lng": -110.383,
+          "note": "Espíritu Santo."
+        },
+        {
+          "day": 4,
+          "place": "Los Islotes",
+          "lat": 24.595,
+          "lng": -110.397,
+          "note": "Los Islotes sea lions."
+        },
+        {
+          "day": 5,
+          "place": "Isla San Francisco",
+          "lat": 24.82,
+          "lng": -110.57,
+          "note": "Isla San Francisco."
+        },
+        {
+          "day": 6,
+          "place": "Espíritu Santo, Ensenada Grande",
+          "lat": 24.545,
+          "lng": -110.383,
+          "note": "Return to Espíritu Santo."
+        },
+        {
+          "day": 7,
+          "place": "La Paz",
+          "lat": 24.156,
+          "lng": -110.32,
+          "note": "La Paz; disembark."
+        }
+      ]
+    }
+  ]
+}

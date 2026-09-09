@@ -1,0 +1,106 @@
+{
+  "destinationId": "south-pacific/french-polynesia",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "french-polynesia-5",
+      "nights": 5,
+      "title": "Five days in the Society Islands",
+      "intro": "Raiatea, Taha’a and Bora Bora.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Raiatea, Uturoa",
+          "lat": -16.729,
+          "lng": -151.443,
+          "note": "Board at Uturoa."
+        },
+        {
+          "day": 2,
+          "place": "Taha’a",
+          "lat": -16.632,
+          "lng": -151.52,
+          "note": "Taha’a’s coral gardens."
+        },
+        {
+          "day": 3,
+          "place": "Bora Bora",
+          "lat": -16.506,
+          "lng": -151.752,
+          "note": "Bora Bora."
+        },
+        {
+          "day": 4,
+          "place": "Bora Bora",
+          "lat": -16.506,
+          "lng": -151.752,
+          "note": "The motus and the lagoon."
+        },
+        {
+          "day": 5,
+          "place": "Raiatea, Uturoa",
+          "lat": -16.729,
+          "lng": -151.443,
+          "note": "Return; disembark."
+        }
+      ]
+    },
+    {
+      "id": "french-polynesia-7",
+      "nights": 7,
+      "title": "Seven days from Tahiti to Bora Bora",
+      "intro": "Moorea, Huahine, Raiatea, Taha’a and Bora Bora.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Papeete",
+          "lat": -17.535,
+          "lng": -149.57,
+          "note": "Board in Papeete."
+        },
+        {
+          "day": 2,
+          "place": "Moorea, Opunohu Bay",
+          "lat": -17.497,
+          "lng": -149.851,
+          "note": "Moorea."
+        },
+        {
+          "day": 3,
+          "place": "Huahine, Fare",
+          "lat": -16.715,
+          "lng": -151.033,
+          "note": "Huahine."
+        },
+        {
+          "day": 4,
+          "place": "Raiatea, Uturoa",
+          "lat": -16.729,
+          "lng": -151.443,
+          "note": "Raiatea."
+        },
+        {
+          "day": 5,
+          "place": "Taha’a",
+          "lat": -16.632,
+          "lng": -151.52,
+          "note": "Taha’a."
+        },
+        {
+          "day": 6,
+          "place": "Bora Bora",
+          "lat": -16.506,
+          "lng": -151.752,
+          "note": "Bora Bora."
+        },
+        {
+          "day": 7,
+          "place": "Bora Bora",
+          "lat": -16.506,
+          "lng": -151.752,
+          "note": "The lagoon; disembark."
+        }
+      ]
+    }
+  ]
+}

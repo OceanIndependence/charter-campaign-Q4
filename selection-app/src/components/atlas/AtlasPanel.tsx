@@ -1,33 +1,14 @@
 "use client";
 
-import type { AtlasDestination, AtlasYacht } from "@/lib/atlas/types";
-import {
-  children,
-  childrenLabel,
-  countWords,
-  eyebrowFor,
-  fmtYachtMeta,
-  fmtYachtRate,
-  parentOf,
-  placesLine,
-  POPULAR_IDS,
-  shortIntro,
-  sirv,
-  sirvSrcSet,
-  type AtlasIndex,
-} from "@/lib/atlas/data";
+import { useEffect, useRef } from "react";
+import type { AtlasDestination } from "@/lib/atlas/types";
+import { children, childrenLabel, countWords, eyebrowFor, parentOf, placesLine, POPULAR_IDS, shortIntro, sirv, type AtlasIndex } from "@/lib/atlas/data";
+import { nightsLabel, type Itinerary } from "@/lib/atlas/itineraries";
 import styles from "./Atlas.module.css";
 
 export const ENQUIRE_URL = "https://www.oceanindependence.com/contact-us/#enquiry-form";
-const MAX_YACHTS = 8;
-
-function Enquire({ className }: { className?: string }) {
-  return (
-    <a className={`${styles.btnOutline} ${className ?? ""}`} href={ENQUIRE_URL} target="_blank" rel="noopener">
-      ENQUIRE
-    </a>
-  );
-}
+/** The public fleet listing for a destination */
+export const yachtsHref = (destinationId: string) => `/2027-charter-season/yachts/${destinationId}`;
 
 /* ------------------------------------------------------------------ intro */
 
@@ -53,8 +34,8 @@ export function IntroPanel({ index, onSelect }: { index: AtlasIndex | null; onSe
       {index && (
         <>
           <div className={styles.sectionHead}>
-            <div className={styles.sectionTitle}>THE MEDITERRANEAN</div>
-            <div className={styles.sectionSub}>The most requested waters of the summer. Select a country to see its cruising grounds</div>
+            <div className={styles.sectionTitle}>MOST POPULAR CHARTER DESTINATIONS</div>
+            <div className={styles.sectionSub}>The Mediterranean in summer 2027. Select a country to see its cruising grounds</div>
           </div>
           <ul className={styles.regionList}>
             {POPULAR_IDS.map((id) => index.byId.get(id))
@@ -83,58 +64,41 @@ export function IntroPanel({ index, onSelect }: { index: AtlasIndex | null; onSe
 
 /* ------------------------------------------------------------ destination */
 
-function YachtCard({ y }: { y: AtlasYacht }) {
-  const rate = fmtYachtRate(y);
-  const body = (
-    <>
-      <div className={styles.yachtMedia}>
-        {y.image && (
-          <img
-            className={styles.cover}
-            src={sirv(y.image, 900)}
-            srcSet={sirvSrcSet(y.image, [600, 900, 1200])}
-            sizes="(max-width: 760px) 100vw, 480px"
-            alt={`${y.name} — exterior profile`}
-            loading="lazy"
-            decoding="async"
-          />
-        )}
-      </div>
-      <div className={styles.yachtBody}>
-        <div className={styles.yachtHead}>
-          <div className={styles.yachtName}>{y.name.toUpperCase()}</div>
-          {rate && <div className={styles.yachtRate}>{rate}</div>}
-        </div>
-        <div className={styles.yachtMeta}>{fmtYachtMeta(y)}</div>
-        {y.tags.length > 0 && <div className={styles.yachtTag}>{y.tags.join(" · ").toUpperCase()}</div>}
-      </div>
-    </>
-  );
-  return y.url ? (
-    <a className={`${styles.card} ${styles.cardLink}`} href={y.url} target="_blank" rel="noopener">
-      {body}
-    </a>
-  ) : (
-    <div className={styles.card}>{body}</div>
-  );
+/** Route state shown in place of the itinerary cards */
+export interface RouteView {
+  itinerary: Itinerary;
+  activeDay: number | null;
 }
 
 interface DestinationProps {
   dest: AtlasDestination;
   index: AtlasIndex;
+  itineraries: Itinerary[];
+  route: RouteView | null;
   onSelect: (id: string) => void;
   onBack: () => void;
+  onSelectItinerary: (it: Itinerary) => void;
+  onExitRoute: () => void;
+  onActiveDay: (day: number | null) => void;
+  onGoToDay: (day: number) => void;
 }
 
-export function DestinationPanel({ dest, index, onSelect, onBack }: DestinationProps) {
+export function DestinationPanel(props: DestinationProps) {
+  const { dest, index, itineraries, route, onSelect, onBack, onSelectItinerary, onExitRoute, onActiveDay, onGoToDay } = props;
+  if (route) {
+    return <RoutePanel dest={dest} index={index} route={route} onExit={onExitRoute} onActiveDay={onActiveDay} onGoToDay={onGoToDay} />;
+  }
   const parent = parentOf(dest, index);
   const kids = children(dest, index);
   const places = placesLine(dest, index);
-  const yachts = dest.yachtIds.map((id) => index.snapshot.yachts[id]).filter((y): y is AtlasYacht => !!y);
-  const shownYachts = yachts.slice(0, MAX_YACHTS);
   const hero = dest.heroImage ?? dest.cardImage ?? dest.ogImage;
   const facts = dest.keyFacts.filter((f) => !/popular destinations/i.test(f.label));
   const intro = shortIntro(dest);
+  // Website itineraries this page links to, kept to ones about this region.
+  const websiteItineraries = (dest.itineraryLinks ?? []).filter((l) => {
+    const region = l.url.match(/\/itineraries\/([^/]+)\//)?.[1] ?? "";
+    return region === dest.regionId || l.title.toLowerCase().includes(dest.name.toLowerCase());
+  });
   const kidsLabel = childrenLabel(dest, kids.length);
   const kidsSub =
     dest.level <= 1
@@ -200,25 +164,6 @@ export function DestinationPanel({ dest, index, onSelect, onBack }: DestinationP
         </>
       )}
 
-      {shownYachts.length > 0 && (
-        <>
-          <div className={styles.sectionHead}>
-            <div className={styles.sectionTitle}>FEATURED YACHTS</div>
-            <div className={styles.sectionSub}>Cruising this area in 2027</div>
-          </div>
-          <div className={styles.grid28}>
-            {shownYachts.map((y) => (
-              <YachtCard y={y} key={y.id} />
-            ))}
-          </div>
-          {yachts.length > shownYachts.length && (
-            <a className={styles.moreLink} href={`${dest.url}#yachts-in-the-area`} target="_blank" rel="noopener">
-              VIEW MORE YACHTS IN {dest.name.toUpperCase()}
-            </a>
-          )}
-        </>
-      )}
-
       {facts.length > 0 && (
         <dl className={styles.facts}>
           {facts.map((f) => (
@@ -230,16 +175,156 @@ export function DestinationPanel({ dest, index, onSelect, onBack }: DestinationP
         </dl>
       )}
 
-      <div className={styles.panelFoot}>
-        {yachts.length > 0 && (
-          <p className={styles.footBody}>
-            Please note that this is a small selection of yachts and is intended as inspiration rather than a definitive list. A yacht’s cruising area
-            for the coming summer is set by her Owner ahead of the season and may differ from the destinations shown here. Your consultant can confirm
-            which yachts will be available in your preferred region and suggest further options matched to your requirements.
-          </p>
-        )}
-        <Enquire />
-      </div>
+      {itineraries.length > 0 && (
+        <>
+          <div className={styles.sectionHead}>
+            <div className={styles.sectionTitle}>SUGGESTED ITINERARIES</div>
+            <div className={styles.sectionSub}>
+              {itineraries.length === 1 ? "One route to trace on the globe" : `${countWords(itineraries.length).replace(/^\w/, (c) => c.toUpperCase())} routes to trace on the globe`}
+            </div>
+          </div>
+          <div className={styles.itinGrid}>
+            {itineraries.map((it) => (
+              <button type="button" className={styles.itinCard} key={it.id} onClick={() => onSelectItinerary(it)}>
+                <span className={styles.itinNights}>{nightsLabel(it.nights)}</span>
+                <span className={styles.itinTitle}>{it.title}</span>
+                <span className={styles.itinStops}>{it.days.map((d) => d.place.split(",")[0]).join(" · ")}</span>
+                <span className={styles.itinCta}>
+                  VIEW ON THE GLOBE <span aria-hidden="true">→</span>
+                </span>
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+
+      {websiteItineraries.length > 0 && (
+        <div className={styles.libraryBlock}>
+          <div className={styles.libraryLabel}>FROM THE OCEAN INDEPENDENCE ITINERARY LIBRARY</div>
+          {websiteItineraries.map((l) => (
+            <a className={styles.libraryLink} key={l.url} href={l.url} target="_blank" rel="noopener">
+              <span>{l.title.replace(/\b\w/g, (c) => c.toUpperCase())}</span>
+              <span className={styles.libraryDays}>{l.days ? `${l.days} DAYS` : "GUIDE"}</span>
+            </a>
+          ))}
+        </div>
+      )}
+
+      <a className={styles.yachtsButton} href={yachtsHref(dest.id)}>
+        View yachts for charter in {dest.name}
+      </a>
     </div>
   );
 }
+
+/* ------------------------------------------------------------------ route */
+
+interface RoutePanelProps {
+  dest: AtlasDestination;
+  index: AtlasIndex;
+  route: RouteView;
+  onExit: () => void;
+  onActiveDay: (day: number | null) => void;
+  onGoToDay: (day: number) => void;
+}
+
+/**
+ * The day list shown while a route is drawn. The day nearest the top third of
+ * the panel is active as the list scrolls; hovering or tapping a day also
+ * activates it and its marker on the globe.
+ */
+function RoutePanel({ dest, index, route, onExit, onActiveDay, onGoToDay }: RoutePanelProps) {
+  const { itinerary, activeDay } = route;
+  const listRef = useRef<HTMLOListElement>(null);
+  /** Days the scroll-follow chose itself; anything else was an explicit choice */
+  const followedDay = useRef<number | null>(null);
+  const explicitAt = useRef(0);
+
+  useEffect(() => {
+    // An active day the scroll-follow did not set was chosen by the visitor
+    // (hover, tap, or a marker on the globe): hold it against scroll noise.
+    if (activeDay != null && activeDay !== followedDay.current) explicitAt.current = Date.now();
+  }, [activeDay]);
+
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list) return;
+    // The scrolling ancestor: the aside on desktop, the window on phones.
+    const aside = list.closest("aside");
+    const scroller: HTMLElement | Window = aside && aside.scrollHeight > aside.clientHeight + 4 ? aside : window;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      if (Date.now() - explicitAt.current < 1500) return;
+      const items = [...list.querySelectorAll<HTMLElement>("[data-day]")];
+      if (!items.length) return;
+      // Only follow when the list is long enough to scroll through.
+      const viewport = scroller === window ? window.innerHeight : (scroller as HTMLElement).clientHeight;
+      if (list.scrollHeight < viewport * 0.6) return;
+      const viewportTop = scroller === window ? 0 : (scroller as HTMLElement).getBoundingClientRect().top;
+      const viewportH = scroller === window ? window.innerHeight : (scroller as HTMLElement).clientHeight;
+      const focusY = viewportTop + viewportH * 0.32;
+      let best = items[0];
+      let bestD = Infinity;
+      for (const el of items) {
+        const r = el.getBoundingClientRect();
+        const d = Math.abs(r.top + r.height / 2 - focusY);
+        if (d < bestD) {
+          bestD = d;
+          best = el;
+        }
+      }
+      const day = Number(best.dataset.day);
+      if (Number.isFinite(day)) {
+        followedDay.current = day;
+        onActiveDay(day);
+      }
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    scroller.addEventListener("scroll", onScroll, { passive: true });
+    update();
+    return () => {
+      scroller.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [itinerary.id, onActiveDay]);
+
+  return (
+    <div className={`${styles.panelInner} ${styles.panelDest}`} data-screen-label={`Route — ${itinerary.title}`} key={itinerary.id}>
+      <button type="button" className={styles.back} onClick={onExit}>
+        <span aria-hidden="true">←</span>&nbsp; BACK TO {dest.name.toUpperCase()}
+      </button>
+      <div className={styles.eyebrow}>
+        {eyebrowFor(dest, index).toUpperCase()} · {nightsLabel(itinerary.nights)}
+      </div>
+      <h2 className={styles.h2}>{itinerary.title.toUpperCase()}</h2>
+      {itinerary.intro && <p className={styles.lede}>{itinerary.intro}</p>}
+      <ol className={styles.dayList} ref={listRef}>
+        {itinerary.days.map((d) => {
+          const active = d.day === activeDay;
+          return (
+            <li
+              key={d.day}
+              data-day={d.day}
+              className={`${styles.dayRow} ${active ? styles.dayRowActive : ""}`}
+              onMouseEnter={() => onActiveDay(d.day)}
+              onClick={() => onGoToDay(d.day)}
+            >
+              <span className={styles.dayNo}>DAY {d.day}</span>
+              <span className={styles.dayBody}>
+                <span className={styles.dayPlace}>{d.place.toUpperCase()}</span>
+                {d.note && <span className={styles.dayNote}>{d.note}</span>}
+              </span>
+            </li>
+          );
+        })}
+      </ol>
+      <a className={styles.yachtsButton} href={yachtsHref(dest.id)}>
+        View yachts for charter in {dest.name}
+      </a>
+    </div>
+  );
+}
+
