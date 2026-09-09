@@ -81,28 +81,22 @@ export interface PageOwner {
   name: string;
 }
 
-export interface PortalDraft {
+/**
+ * Campaign tiers built in the portal. Tier 3 is the original Yacht Selection;
+ * Tier 2 is the Personalised Atlas (three destinations on the globe plus a
+ * yacht rail). Selections saved before tiers existed have no field: read
+ * them as Tier 3 with selectionTier().
+ */
+export type Tier = 2 | 3;
+
+/** Fields every selection shares, whichever tier it renders as. */
+export interface SelectionBase {
   id: string;
+  tier?: Tier;
   /** Consultant identity that owns this draft (stamped server-side) */
   owner?: PageOwner;
   updatedAt: string;
   clientNames: string;
-  season: string;
-  region: string;
-  headline: string;
-  /** Cover eyebrow override (falls back to "{N} YACHT(S), HELD FOR YOUR REVIEW") */
-  subHeadline: string;
-  /** Optional consultant welcome greeting (cover falls back to a generated line) */
-  welcome: string;
-  /** Client page theme; absent means dark */
-  theme?: "dark" | "light";
-  yachts: DraftYacht[];
-  sections: {
-    costs: boolean;
-    itinerary: boolean;
-    itineraryUrl: string;
-    compare: boolean;
-  };
   consultant: {
     name: string;
     title: string;
@@ -119,6 +113,161 @@ export interface PortalDraft {
   published?: PublishState;
 }
 
+export function selectionTier(s: { tier?: Tier } | null | undefined): Tier {
+  return s?.tier === 2 ? 2 : 3;
+}
+
+/** Tier 3 — Yacht Selection. */
+export interface PortalDraft extends SelectionBase {
+  tier?: 3;
+  season: string;
+  region: string;
+  headline: string;
+  /** Cover eyebrow override (falls back to "{N} YACHT(S), HELD FOR YOUR REVIEW") */
+  subHeadline: string;
+  /** Optional consultant welcome greeting (cover falls back to a generated line) */
+  welcome: string;
+  /** Client page theme; absent means dark */
+  theme?: "dark" | "light";
+  yachts: DraftYacht[];
+  sections: {
+    costs: boolean;
+    itinerary: boolean;
+    itineraryUrl: string;
+    compare: boolean;
+  };
+}
+
+/* ------------------------------------------------------------ Tier 2 */
+
+/**
+ * One editable block of destination copy or imagery. Populated from the 2027
+ * Atlas (source "atlas") when a destination is chosen; the first consultant
+ * edit flips it to "consultant". The client page derives its attribution
+ * label ("FROM THE 2027 ATLAS" / "CURATED FOR YOU BY <NAME>") from source.
+ */
+export interface ContentBlock {
+  value: string;
+  source: "atlas" | "consultant";
+}
+
+/** The Atlas defaults for a destination, kept so "Restore Atlas text" works offline. */
+export interface AtlasDefaults {
+  eyebrow: string;
+  deckLine: string;
+  description: string;
+  /** Prepared 2000×1250 URLs, most relevant first */
+  images: string[];
+  /** Whether the copy came from the live website or the checked-in snapshot */
+  contentSource: "live" | "cache";
+  fetchedAt: string;
+}
+
+/** One of the three destination slots on a Tier 2 draft. */
+export interface Tier2DestinationDraft {
+  /** Tier 1 destination id (data/destinations.json), null while unchosen */
+  destinationId: string | null;
+  /** Display name as shown on the page (from the Atlas) */
+  name: string;
+  eyebrow: ContentBlock;
+  deckLine: ContentBlock;
+  description: ContentBlock;
+  /** Optional — blank hides the note */
+  consultantNote: ContentBlock;
+  /** Two 16:10 images */
+  images: [ContentBlock, ContentBlock];
+  atlas: AtlasDefaults | null;
+  /** Cruising-area terms from the Atlas, used to pre-tick yachts (region terms prefixed "region:") */
+  areaTerms?: string[];
+}
+
+export interface YachtHighlight {
+  title: string;
+  line: string;
+}
+
+/**
+ * A Tier 2 yacht: the Tier 3 draft yacht (Yachtfolio facts, gallery and image
+ * slots, auto-filled the same way) plus the rail and drawer fields.
+ */
+export interface Tier2DraftYacht extends DraftYacht {
+  /** One or more of the draft's three destination ids */
+  destinationIds: string[];
+  /** "THE YACHT YOU KNOW" eyebrow */
+  knownYacht: boolean;
+  /** One line, signed with the consultant's first name on the page */
+  consultantNote: string;
+  /** Drawer VAT row text (there is no VAT percentage on Tier 2) */
+  vatText: string;
+  highlights: [YachtHighlight, YachtHighlight, YachtHighlight];
+}
+
+export interface SeasonNote {
+  eyebrow: string;
+  body: string;
+}
+
+export const TIER2_DEFAULT_DISCLAIMER = "These vessels are offered subject to change, price change, and owners’ final approval.";
+export const TIER2_DEFAULT_VAT_TEXT = "Varies by location";
+export const TIER2_DEFAULT_APA = "35";
+export const TIER2_MIN_YACHTS = 2;
+export const TIER2_MAX_YACHTS = 8;
+
+/** Tier 2 — Personalised Atlas. */
+export interface Tier2Draft extends SelectionBase {
+  tier: 2;
+  /** Client page address under /atlas/ — auto from the client name, editable */
+  slug: string;
+  /** The h1 line */
+  clientGreeting: string;
+  /** The consultant's paragraph; signed with their first name on the page */
+  introNote: string;
+  seasonNote: SeasonNote | null;
+  footerDisclaimer: string;
+  /** Always three slots */
+  destinations: [Tier2DestinationDraft, Tier2DestinationDraft, Tier2DestinationDraft];
+  yachts: Tier2DraftYacht[];
+}
+
+export type AnySelection = PortalDraft | Tier2Draft;
+
+export function emptyContentBlock(value = "", source: ContentBlock["source"] = "atlas"): ContentBlock {
+  return { value, source };
+}
+
+export function emptyTier2Destination(): Tier2DestinationDraft {
+  return {
+    destinationId: null,
+    name: "",
+    eyebrow: emptyContentBlock(),
+    deckLine: emptyContentBlock(),
+    description: emptyContentBlock(),
+    consultantNote: emptyContentBlock("", "consultant"),
+    images: [emptyContentBlock(), emptyContentBlock()],
+    atlas: null,
+  };
+}
+
+export function emptyHighlights(): Tier2DraftYacht["highlights"] {
+  return [
+    { title: "", line: "" },
+    { title: "", line: "" },
+    { title: "", line: "" },
+  ];
+}
+
+export function emptyTier2Yacht(uid: string): Tier2DraftYacht {
+  return {
+    ...emptyDraftYacht(uid),
+    apaPct: TIER2_DEFAULT_APA,
+    destinationIds: [],
+    knownYacht: false,
+    consultantNote: "",
+    vatText: TIER2_DEFAULT_VAT_TEXT,
+    highlights: emptyHighlights(),
+  };
+}
+
 export interface PublishState {
   version: number;
   publishedAt: string;
@@ -132,8 +281,10 @@ export type SelectionStatus = "draft" | "published" | "unpublished";
 /** Dashboard row — stored in the per-consultant index at save time. */
 export interface SelectionMeta {
   id: string;
+  tier: Tier;
   owner: PageOwner;
   clientNames: string;
+  /** Tier 3: page headline; Tier 2: the client greeting */
   headline: string;
   slug: string | null;
   yachtCount: number;
@@ -159,6 +310,38 @@ export interface VersionInfo {
 /** Dashboard heading for a selection: page title, else client name. */
 export function selectionTitle(m: { headline?: string; clientNames?: string }): string {
   return (m.headline ?? "").trim() || (m.clientNames ?? "").trim() || "Untitled selection";
+}
+
+export const TIER_LABEL: Record<Tier, string> = { 2: "Personalised Atlas", 3: "Yacht Selection" };
+
+/** Where a published selection lives: /atlas/<slug> for Tier 2, /selection/<slug> for Tier 3. */
+export function clientPagePath(tier: Tier, slug: string): string {
+  return tier === 2 ? `/atlas/${slug}` : `/selection/${slug}`;
+}
+
+/* --------------------------------------------- Tier 1 content for the form */
+
+/** One Atlas destination as offered by the Tier 2 destination pickers. */
+export interface AtlasDestinationOption {
+  id: string;
+  name: string;
+  level: number;
+  regionId: string;
+  regionName: string;
+  /** "Mediterranean · Italy" — the ancestors above this destination */
+  pathLabel: string;
+  lat: number | null;
+  lon: number | null;
+  featured: boolean;
+}
+
+/** Response of GET /api/atlas/destinations/:id — the prepared defaults for one destination. */
+export interface AtlasDestinationContent {
+  id: string;
+  name: string;
+  atlas: AtlasDefaults;
+  /** Terms (destination and place names) used to map Yachtfolio cruising areas onto it */
+  areaTerms: string[];
 }
 
 export interface FleetEntry {

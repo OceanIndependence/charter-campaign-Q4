@@ -70,3 +70,22 @@ regenerated JSON.
 ENQUIRE links out to the website's enquiry form; the page carries meta tags
 only (title, description, Open Graph image, canonical) and no analytics.
 
+
+## Tier 2 production page (`selection-app/` → `/atlas/<slug>`)
+
+The Personalised Atlas is the 2027 Atlas for one client: the consultant chooses three
+destinations and a shortlist of two to eight yachts in the Charter Portal (choose
+"Personalised Atlas" when creating a new selection); the client gets the globe with
+those three pinned bright, every other destination dimmed but clickable, a yacht rail
+and a Tier 3-style detail drawer. It composes the Tier 1 globe and content pipeline
+with the Tier 3 Yachtfolio, image, publishing and auth modules; nothing is duplicated.
+
+- Destination copy and imagery arrive from the Atlas when a destination is chosen
+  (live from the website where it answers, else the checked-in snapshot); each block
+  records whether it is Atlas text or the consultant's edit, and the page labels it.
+- Published pages freeze destination content, pins and yacht data at publish time.
+- Without `YACHTFOLIO_PASSKEY` the fleet is served from a six-yacht demo set, and
+  `/atlas/harrington-summer-2027` renders the demo page (`DEMO_PAGES=false` disables it).
+
+See `selection-app/docs/tier2-build-report.md` for the modules reused, the globe API
+adaptations, the destination ids and a sample page config.

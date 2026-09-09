@@ -1,4 +1,5 @@
 import type { Consultant } from "@/lib/types";
+import { whatsappHref } from "@/lib/format";
 import { MailIcon, PhoneIcon } from "./icons";
 import styles from "./ConsultantBlock.module.css";
 
@@ -31,9 +32,11 @@ export default function ConsultantBlock({
               </a>
             </div>
           </div>
-          <a href={consultant.whatsapp} className={styles.whatsapp}>
-            WHATSAPP ME
-          </a>
+          {whatsappHref(consultant.whatsapp) && (
+            <a href={whatsappHref(consultant.whatsapp)} className={styles.whatsapp} target="_blank" rel="noopener">
+              WHATSAPP ME
+            </a>
+          )}
           {atlasUrl && (
             <div className={styles.explore}>
               <a href={atlasUrl} className={styles.exploreLink}>

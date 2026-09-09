@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
     const noStore = [{ key: "Cache-Control", value: "private, no-store, max-age=0, must-revalidate" }];
     return [
       { source: "/selection/:path*", headers: noStore },
+      { source: "/atlas/:path*", headers: noStore },
       { source: "/portal/preview", headers: noStore },
     ];
   },

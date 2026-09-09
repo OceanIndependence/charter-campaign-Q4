@@ -1,0 +1,732 @@
+/* Tier 2 — Personalised Atlas. Values from the Tier 2 design export
+   (personalised-atlas/index.html) on the shared dark tokens (globals.css):
+   ground #060809, panel #0B0E10, hairline rgba(255,255,255,0.14), mint. */
+
+.page {
+  min-height: 100svh;
+  background: var(--atlas-ink);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-weight: 300;
+}
+
+/* ---------------------------------------------------------------- header */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding: 0 40px;
+  min-height: 72px;
+  border-bottom: 1px solid var(--hairline-strong);
+  position: relative;
+  z-index: 5;
+}
+
+.logo {
+  height: 24px;
+  width: auto;
+  display: block;
+}
+
+.headerLabel {
+  font-size: 10px;
+  letter-spacing: 0.36em;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* ------------------------------------------------------------ type ramp */
+
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.36em;
+  font-weight: 500;
+  color: var(--fg-45);
+  margin-bottom: 14px;
+}
+
+.h1 {
+  font-weight: 300;
+  font-size: 42px;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+  margin: 0 0 24px;
+  max-width: 18ch;
+  text-wrap: balance;
+}
+
+.h2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 30px;
+  letter-spacing: 0.28em;
+  margin: 0;
+}
+
+/* ----------------------------------------------------------------- intro */
+
+.intro {
+  padding: 56px 64px 48px;
+}
+
+.introNote {
+  font-size: 14px;
+  line-height: 1.85;
+  color: var(--fg-8);
+  margin: 0;
+  max-width: 52ch;
+  text-wrap: pretty;
+}
+
+/* ----------------------------------------------------------------- tabs */
+
+.globeSection {
+  border-top: 1px solid var(--hairline-strong);
+}
+
+.tabs {
+  display: flex;
+  gap: 0 28px;
+  padding: 0 64px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 4;
+}
+
+.tab {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 18px 0;
+  border-bottom: 2px solid transparent;
+  transition: border-color 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  white-space: nowrap;
+}
+
+.tabActive {
+  border-bottom-color: var(--mint);
+}
+
+.tabNum {
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--fg-4);
+  font-weight: 500;
+}
+
+.tabName {
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  font-weight: 500;
+  color: var(--fg-45);
+  transition: color 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.tab:hover .tabName,
+.tabActive .tabName {
+  color: var(--fg);
+}
+
+/* ---------------------------------------------------------------- stage */
+
+.stage {
+  position: relative;
+  height: 85vh;
+  height: 85svh;
+  min-height: 520px;
+  overflow: hidden;
+  border-top: 1px solid var(--hairline-strong);
+  margin-top: -1px;
+}
+
+.globe {
+  position: absolute;
+  inset: 0;
+  /* The engine stacks its pin labels with large z-indexes; keep them inside
+     the globe so the panel, zoom control and drawer always sit above. */
+  z-index: 1;
+  isolation: isolate;
+}
+
+.hint {
+  position: absolute;
+  left: 40px;
+  bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: none;
+}
+
+.hintDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--mint);
+}
+
+.hintText {
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--fg-45);
+  font-weight: 400;
+}
+
+.zoom {
+  position: absolute;
+  right: 40px;
+  bottom: 24px;
+  display: flex;
+  border: 1px solid var(--fg-3);
+  z-index: 3;
+  transition: right 480ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.zoomBtn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fg-75);
+  font-size: 16px;
+  font-weight: 300;
+  user-select: none;
+  transition: all 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.zoomBtn:hover {
+  background: var(--fg-12);
+  color: var(--fg);
+}
+
+.zoomSep {
+  width: 1px;
+  background: var(--fg-3);
+}
+
+/* With the panel open the zoom control steps left of it. */
+.stagePanelOpen .zoom {
+  right: calc(min(460px, 100%) + 40px);
+}
+
+/* ---------------------------------------------------------------- panel */
+
+.panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(460px, 100%);
+  background: var(--panel);
+  border-left: 1px solid var(--hairline-strong);
+  overflow-y: auto;
+  overflow-x: hidden;
+  transform: translateX(100%);
+  visibility: hidden;
+  transition:
+    transform 480ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    visibility 0s linear 480ms;
+  z-index: 6;
+}
+
+.panelOpen {
+  transform: translateX(0);
+  visibility: visible;
+  transition: transform 480ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.panelClose {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fg-6);
+  font-size: 14px;
+  border: 1px solid var(--fg-25);
+  z-index: 2;
+  transition: all 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.panelClose:hover {
+  color: var(--fg);
+  border-color: var(--mint);
+}
+
+.panelInner {
+  padding: 40px 44px 56px;
+  animation: fadeIn 480ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.panelHeading {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 26px;
+  letter-spacing: 0.26em;
+  margin: 0 0 8px;
+  padding-right: 48px;
+  text-wrap: balance;
+}
+
+.deck {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  margin-bottom: 24px;
+}
+
+.attribution {
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  font-weight: 500;
+  color: var(--fg-35);
+  margin-bottom: 10px;
+}
+
+.attributionMint {
+  color: var(--mint);
+}
+
+.description {
+  font-size: 13.5px;
+  line-height: 1.8;
+  color: var(--fg-72);
+  margin: 0 0 24px;
+  text-wrap: pretty;
+}
+
+.textLink {
+  display: inline-block;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  font-weight: 500;
+  color: var(--fg-6);
+  text-decoration: none;
+  transition: color 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.textLink:hover {
+  color: var(--mint);
+}
+
+.note {
+  font-size: 12.5px;
+  line-height: 1.75;
+  color: var(--fg-6);
+  margin: 28px 0 0;
+  border-left: 1px solid rgba(167, 230, 215, 0.5);
+  padding-left: 16px;
+  text-wrap: pretty;
+}
+
+.images {
+  display: grid;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.image {
+  position: relative;
+  aspect-ratio: 2000 / 1250;
+  background: var(--fg-03);
+  border: 1px solid var(--hairline-strong);
+  overflow: hidden;
+}
+
+.image img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.otherBody {
+  font-size: 13.5px;
+  line-height: 1.85;
+  color: var(--fg-72);
+  margin: 16px 0 28px;
+  max-width: 42ch;
+  text-wrap: pretty;
+}
+
+.panelFoot {
+  margin-top: 36px;
+  border-top: 1px solid var(--hairline-strong);
+  padding-top: 24px;
+}
+
+.btnOutline {
+  display: inline-block;
+  border: 1px solid var(--btn-outline);
+  padding: 13px 30px 13px calc(30px + 0.36em);
+  font-size: 11px;
+  letter-spacing: 0.36em;
+  font-weight: 500;
+  color: var(--btn-fg);
+  text-decoration: none;
+  transition: all 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.btnOutline:hover {
+  background: var(--btn-hover-bg);
+  color: var(--btn-hover-fg);
+  border-color: var(--btn-hover-bg);
+}
+
+/* ----------------------------------------------------------------- rail */
+
+.railSection {
+  border-top: 1px solid var(--hairline-strong);
+  padding: 56px 0 64px;
+}
+
+.railHead {
+  padding: 0 64px 28px;
+}
+
+.rail {
+  display: flex;
+  gap: 24px;
+  padding: 0 64px 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 64px;
+  scrollbar-width: thin;
+}
+
+.card {
+  flex: 0 0 340px;
+  scroll-snap-align: start;
+  border: 1px solid var(--hairline-strong);
+  background: var(--fg-02);
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  transition:
+    opacity 480ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    border-color 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.card:hover {
+  border-color: var(--fg-5);
+}
+
+.cardKnown {
+  border-color: var(--mint-hairline);
+}
+
+.cardKnown:hover {
+  border-color: var(--mint);
+}
+
+.cardDim {
+  opacity: 0.4;
+}
+
+.cardMedia {
+  aspect-ratio: 2000 / 1250;
+  position: relative;
+  background: var(--fg-03);
+  overflow: hidden;
+}
+
+.cardMedia img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cardBody {
+  padding: 18px 20px 20px;
+}
+
+.cardKnownTag {
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  font-weight: 500;
+  color: var(--mint);
+  margin-bottom: 10px;
+}
+
+.cardName {
+  font-size: 14px;
+  letter-spacing: 0.3em;
+  font-weight: 500;
+}
+
+.cardMeta {
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  color: var(--fg-45);
+  margin-top: 8px;
+}
+
+.cardRate {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--mint);
+  letter-spacing: 0.04em;
+  margin-top: 12px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.chip {
+  font-size: 8.5px;
+  letter-spacing: 0.24em;
+  font-weight: 500;
+  color: var(--fg-5);
+  border: 1px solid var(--fg-25);
+  border-radius: 999px;
+  padding: 5px 10px 5px calc(10px + 0.24em);
+  transition: all 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.chipActive {
+  color: var(--mint);
+  border-color: var(--mint-hairline-strong);
+}
+
+/* ---------------------------------------------------------------- drawer */
+
+.drawerScrim {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(4, 8, 10, 0.72);
+  animation: fadeIn 240ms ease both;
+}
+
+.drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(640px, 100vw);
+  background: var(--panel);
+  border-left: 1px solid var(--hairline-strong);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 24px 0 56px;
+  animation: slideIn 480ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(40px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.drawerClose {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fg-6);
+  font-size: 14px;
+  border: 1px solid var(--fg-25);
+  z-index: 2;
+  transition: all 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.drawerClose:hover {
+  color: var(--fg);
+  border-color: var(--mint);
+}
+
+/* ----------------------------------------------------------- season note */
+
+.seasonNote {
+  border-top: 1px solid var(--hairline-strong);
+  padding: 72px 64px;
+  display: flex;
+  justify-content: center;
+}
+
+.seasonInner {
+  max-width: 620px;
+  text-align: center;
+}
+
+.seasonInner .eyebrow {
+  margin-bottom: 20px;
+}
+
+.seasonBody {
+  font-size: 16px;
+  line-height: 1.9;
+  font-weight: 300;
+  color: var(--fg-8);
+  margin: 0;
+  text-wrap: pretty;
+}
+
+/* ------------------------------------------------------------ disclaimer */
+
+.disclaimer {
+  border-top: 1px solid var(--hairline);
+  padding: 22px clamp(24px, 6vw, 72px) 32px;
+  text-align: center;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--fg-4);
+  line-height: 1.8;
+}
+
+/* ---------------------------------------------------------------- mobile */
+
+@media (max-width: 760px) {
+  .header {
+    padding: 14px 20px;
+  }
+
+  .intro {
+    padding: 40px 22px 36px;
+  }
+
+  .h1 {
+    font-size: 30px;
+  }
+
+  .tabs {
+    padding: 0 22px;
+    gap: 0 22px;
+  }
+
+  .railHead {
+    padding: 0 22px 24px;
+  }
+
+  .rail {
+    padding: 0 22px 16px;
+    scroll-padding-left: 22px;
+    gap: 16px;
+  }
+
+  .card {
+    flex-basis: min(300px, 82vw);
+  }
+
+  .hint {
+    display: none;
+  }
+
+  .zoom {
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .seasonNote {
+    padding: 56px 22px;
+  }
+
+  .panelInner {
+    padding: 32px 22px 48px;
+  }
+}
+
+/* ≤ 420px: globe at 60vh, tab strip scrolls, panel and drawer as bottom sheets. */
+@media (max-width: 420px) {
+  .stage {
+    height: 60vh;
+    height: 60svh;
+    min-height: 360px;
+  }
+
+  .tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .panel {
+    top: auto;
+    left: 0;
+    width: 100%;
+    max-height: 72%;
+    border-left: 0;
+    border-top: 1px solid var(--hairline-strong);
+    transform: translateY(100%);
+  }
+
+  .panelOpen {
+    transform: translateY(0);
+  }
+
+  .panelClose {
+    top: 14px;
+    right: 14px;
+  }
+
+  .stagePanelOpen .zoom {
+    display: none;
+  }
+
+  .drawer {
+    top: auto;
+    left: 0;
+    width: 100%;
+    max-height: 92vh;
+    max-height: 92svh;
+    border-left: 0;
+    border-top: 1px solid var(--hairline-strong);
+    animation-name: slideUp;
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(40px);
+      opacity: 0;
+    }
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+
+  .rail {
+    scroll-snap-type: x mandatory;
+  }
+
+  .card {
+    flex-basis: 86vw;
+  }
+}

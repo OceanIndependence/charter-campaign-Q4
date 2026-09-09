@@ -64,3 +64,16 @@ export function fmtDateLong(iso: string | null | undefined): string {
   const month = d.toLocaleDateString("en-GB", { month: "long" });
   return `${day} ${month} ${d.getFullYear()}`;
 }
+
+/**
+ * WhatsApp link from whatever the consultant typed: a full URL is kept, a
+ * phone number becomes https://wa.me/<digits> (the wa.me pattern shared by
+ * every client page).
+ */
+export function whatsappHref(value: string | undefined): string {
+  const v = (value ?? "").trim();
+  if (!v) return "";
+  if (/^https?:\/\//i.test(v)) return v;
+  const digits = v.replace(/[^\d]/g, "").replace(/^00/, "");
+  return digits ? `https://wa.me/${digits}` : "";
+}

@@ -28,6 +28,7 @@ import {
 } from "./yachtfolio/normalise.mjs";
 import { cropToSizes, selectGalleryImages } from "./yachtfolio/images.mjs";
 import { blobOps, getJson, hashBytes, hashJson, isDryRun, putFile, putJson, putJsonIfChanged } from "./storage.mjs";
+import { demoDetail, demoFleet, demoImages, isDemoFleet } from "./demo/fleet.mjs";
 
 const FLEET_KEY = "yachtfolio/fleet.json";
 const REFERENCE_KEY = "yachtfolio/reference.json";
@@ -79,6 +80,7 @@ let lastStorageError = null;
 export function fleetDiagnostics() {
   return {
     passkeyConfigured: Boolean(process.env.YACHTFOLIO_PASSKEY),
+    demoFleet: isDemoFleet(),
     lastStorageError,
     memoryCache: memoryFleet ? { syncedAt: memoryFleet.syncedAt, count: memoryFleet.count } : null,
   };
@@ -238,6 +240,13 @@ async function writeIfChanged(run, key, value, recordedHash, record) {
 }
 
 export async function syncFleet() {
+  if (isDemoFleet()) {
+    // No passkey: nothing to sync. The demo set is served instead so the
+    // portal keeps working; say so rather than failing the cron.
+    const fleet = demoFleet();
+    console.warn("[fleet:sync] YACHTFOLIO_PASSKEY is not configured — serving the demo fleet, nothing synced.");
+    return { count: fleet.count, removedCount: 0, syncedAt: fleet.syncedAt, persisted: false, demo: true, notes: ["demo fleet — no passkey"] };
+  }
   const passkey = await passkeyOrThrow();
   const run = await startRun("sync");
   const previous = (await readStoredJson(FLEET_KEY)) ?? memoryFleet;
@@ -303,6 +312,7 @@ export async function syncFleet() {
 
 /** The cached fleet list; bootstraps from the live API when missing/stale. */
 export async function getFleet() {
+  if (isDemoFleet()) return demoFleet();
   let fleet = (await readStoredJson(FLEET_KEY)) ?? memoryFleet;
   // An unchanged list is not rewritten, so its syncedAt can be old; the
   // manifest records when it was last checked against Yachtfolio.
@@ -343,6 +353,11 @@ async function getReference(passkey) {
  * for a few hours.
  */
 export async function getYachtDetail(yfId, { forceRefresh = false, debug = false } = {}) {
+  if (isDemoFleet()) {
+    const demo = demoDetail(yfId);
+    if (!demo) throw Object.assign(new Error("No such demo yacht."), { code: "NOT_FOUND" });
+    return demo;
+  }
   const cached = await readStoredJson(detailKey(yfId));
   if (
     !forceRefresh &&
@@ -471,6 +486,11 @@ async function brochureFor(passkey, yfId) {
  * reported so they can be dealt with separately.
  */
 export async function getYachtImages(yfId) {
+  if (isDemoFleet()) {
+    const demo = demoImages(yfId);
+    if (!demo) throw Object.assign(new Error("No such demo yacht."), { code: "NOT_FOUND" });
+    return demo;
+  }
   const passkey = await passkeyOrThrow();
   const run = await startRun("images");
   const entry = manifestYacht(run, yfId);

@@ -4,6 +4,11 @@ import { SmallChevronIcon } from "./icons";
 import EnlargeableImage from "./EnlargeableImage";
 import styles from "./SpecPanel.module.css";
 
+export interface SpecHighlight {
+  title: string;
+  line: string;
+}
+
 interface SpecPanelProps {
   yacht: Yacht;
   position: number;
@@ -11,6 +16,12 @@ interface SpecPanelProps {
   fading: boolean;
   onPrev: () => void;
   onNext: () => void;
+  /** Tier 2: the consultant's note is signed "— <first name>" */
+  signedBy?: string;
+  /** Tier 2: VAT row text when no VAT amount is known (Tier 3 shows "TBC") */
+  vatText?: string;
+  /** Tier 2: titled highlights; when given they replace the keyFeatures list */
+  highlights?: SpecHighlight[];
 }
 
 export default function SpecPanel({
@@ -20,6 +31,9 @@ export default function SpecPanel({
   fading,
   onPrev,
   onNext,
+  signedBy,
+  vatText,
+  highlights,
 }: SpecPanelProps) {
   /* Rows with no value are hidden rather than rendered as a null. */
   const specRows = (
@@ -56,7 +70,10 @@ export default function SpecPanel({
 
       <h2 className={styles.name}>{yacht.name}</h2>
       {yacht.notes && (
-        <p className={styles.note}>{yacht.notes}</p>
+        <p className={styles.note}>
+          {yacht.notes}
+          {signedBy ? ` — ${signedBy}` : ""}
+        </p>
       )}
 
 
@@ -90,7 +107,7 @@ export default function SpecPanel({
           <div className={styles.priceRow}>
             <span className={styles.specLabel}>VAT{hasVat ? ` (${yacht.vatPct}%)` : ""}</span>
             <span className={styles.dimValue}>
-              {hasVat ? `${fromPrefix}${fmtMoney(cur, yacht.vatAmount as number)}` : "TBC"}
+              {hasVat ? `${fromPrefix}${fmtMoney(cur, yacht.vatAmount as number)}` : vatText ?? "TBC"}
             </span>
           </div>
           {yacht.apaAmount != null && yacht.apaPct != null && (
@@ -114,7 +131,24 @@ export default function SpecPanel({
         </div>
       )}
 
-      {yacht.keyFeatures && yacht.keyFeatures.length > 0 && (
+      {highlights && highlights.length > 0 && (
+        <div className={styles.highlights}>
+          <div className={styles.highlightsHeading}>HIGHLIGHTS</div>
+          <ol className={styles.hlList}>
+            {highlights.map((h, i) => (
+              <li key={i} className={styles.hlRow}>
+                <span className={styles.hlNum}>{String(i + 1).padStart(2, "0")}</span>
+                <span className={styles.hlText}>
+                  {h.title && <span className={styles.hlTitle}>{h.title.toUpperCase()}</span>}
+                  {h.line && <span className={styles.hlLine}>{h.line}</span>}
+                </span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      )}
+
+      {!highlights && yacht.keyFeatures && yacht.keyFeatures.length > 0 && (
         <div className={styles.highlights}>
           <div className={styles.highlightsHeading}>HIGHLIGHTS</div>
           <ol className={styles.features}>
@@ -130,7 +164,7 @@ export default function SpecPanel({
 
       {yacht.brochureUrl && yacht.brochureUrl !== "#" && (
         <div className={styles.brochure}>
-          <a href={yacht.brochureUrl} className={styles.brochureLink}>
+          <a href={yacht.brochureUrl} className={styles.brochureLink} target="_blank" rel="noopener">
             VIEW BROCHURE
           </a>
         </div>
