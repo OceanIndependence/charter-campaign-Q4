@@ -1,0 +1,106 @@
+{
+  "destinationId": "australia-and-new-zealand/new-zealand",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "new-zealand-5",
+      "nights": 5,
+      "title": "Five days in the Bay of Islands",
+      "intro": "Russell, the islands and Whangaroa.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Opua",
+          "lat": -35.313,
+          "lng": 174.123,
+          "note": "Board at Opua."
+        },
+        {
+          "day": 2,
+          "place": "Russell",
+          "lat": -35.262,
+          "lng": 174.121,
+          "note": "Russell."
+        },
+        {
+          "day": 3,
+          "place": "Roberton Island",
+          "lat": -35.215,
+          "lng": 174.156,
+          "note": "Roberton Island."
+        },
+        {
+          "day": 4,
+          "place": "Urupukapuka",
+          "lat": -35.22,
+          "lng": 174.23,
+          "note": "Urupukapuka."
+        },
+        {
+          "day": 5,
+          "place": "Opua",
+          "lat": -35.313,
+          "lng": 174.123,
+          "note": "Return; disembark."
+        }
+      ]
+    },
+    {
+      "id": "new-zealand-7",
+      "nights": 7,
+      "title": "Seven days from Auckland to the Bay of Islands",
+      "intro": "The Hauraki Gulf north to Russell.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Auckland, Viaduct Harbour",
+          "lat": -36.842,
+          "lng": 174.763,
+          "note": "Board at Viaduct Harbour."
+        },
+        {
+          "day": 2,
+          "place": "Waiheke, Oneroa",
+          "lat": -36.783,
+          "lng": 175,
+          "note": "Waiheke."
+        },
+        {
+          "day": 3,
+          "place": "Kawau, Bon Accord Harbour",
+          "lat": -36.425,
+          "lng": 174.833,
+          "note": "Kawau."
+        },
+        {
+          "day": 4,
+          "place": "Great Barrier Island, Port Fitzroy",
+          "lat": -36.172,
+          "lng": 175.354,
+          "note": "Great Barrier Island."
+        },
+        {
+          "day": 5,
+          "place": "Poor Knights Islands",
+          "lat": -35.47,
+          "lng": 174.74,
+          "note": "The Poor Knights."
+        },
+        {
+          "day": 6,
+          "place": "Urupukapuka",
+          "lat": -35.22,
+          "lng": 174.23,
+          "note": "The Bay of Islands."
+        },
+        {
+          "day": 7,
+          "place": "Russell",
+          "lat": -35.262,
+          "lng": 174.121,
+          "note": "Russell; disembark at Opua."
+        }
+      ]
+    }
+  ]
+}

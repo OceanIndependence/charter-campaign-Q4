@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "yachts:fetch": "node scripts/fetch-yachtfolio.mjs",
-    "import:destinations": "node scripts/import-destinations.mjs"
+    "import:destinations": "node scripts/import-destinations.mjs",
+    "build:itineraries": "node scripts/build-itineraries.mjs",
+    "prebuild": "node scripts/build-itineraries.mjs"
   },
   "dependencies": {
     "@vercel/blob": "^2.8.0",

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { matchDestinationsByArea } from "@/lib/area-match";
 import { useRouter } from "next/navigation";
 import type {
   AtlasDestinationContent,
@@ -75,15 +76,11 @@ const num = (v: string) => {
  * Mediterranean choices). The consultant confirms or changes the result.
  */
 export function mapCruisingArea(cruisingArea: string, destinations: Tier2DestinationDraft[]): string[] {
-  const area = (cruisingArea ?? "").toLowerCase();
-  if (!area.trim()) return [];
-  const chosen = destinations.filter((d) => d.destinationId);
-  const hit = (term: string) => new RegExp(`(^|[^a-z])${term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}([^a-z]|$)`).test(area);
-  const specific = chosen.filter((d) => (d.areaTerms ?? []).some((t) => !t.startsWith("region:") && hit(t)));
-  if (specific.length) return specific.map((d) => d.destinationId as string);
-  return chosen
-    .filter((d) => (d.areaTerms ?? []).some((t) => t.startsWith("region:") && hit(t.slice(7))))
-    .map((d) => d.destinationId as string);
+  // Shared with the public fleet page (src/lib/area-match.ts); same rules.
+  return matchDestinationsByArea(
+    cruisingArea,
+    destinations.filter((d) => d.destinationId).map((d) => ({ id: d.destinationId as string, areaTerms: d.areaTerms ?? [] }))
+  );
 }
 
 /** Resolve the weekly rate from the Yachtfolio rate matrix for a season/tier (as on Tier 3). */

@@ -1,0 +1,106 @@
+{
+  "destinationId": "mediterranean/greece/crete",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "crete-5",
+      "nights": 5,
+      "title": "Five days on Crete’s north coast",
+      "intro": "Chania, Rethymno and the Venetian harbours.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Chania",
+          "lat": 35.518,
+          "lng": 24.019,
+          "note": "Board in Chania; the Venetian harbour."
+        },
+        {
+          "day": 2,
+          "place": "Balos",
+          "lat": 35.586,
+          "lng": 23.591,
+          "note": "The lagoon of pink sand and turquoise shallows below the Gramvousa peninsula."
+        },
+        {
+          "day": 3,
+          "place": "Rethymno",
+          "lat": 35.37,
+          "lng": 24.476,
+          "note": "The fortezza and the old town."
+        },
+        {
+          "day": 4,
+          "place": "Dia island",
+          "lat": 35.44,
+          "lng": 25.22,
+          "note": "The uninhabited island off Heraklion; a quiet anchorage for the last night."
+        },
+        {
+          "day": 5,
+          "place": "Heraklion",
+          "lat": 35.344,
+          "lng": 25.133,
+          "note": "Knossos in the morning, then the archaeological museum before sailing."
+        }
+      ]
+    },
+    {
+      "id": "crete-7",
+      "nights": 7,
+      "title": "Seven days from Chania to Elounda",
+      "intro": "The length of Crete’s north coast, ending in the Mirabello bay.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Chania",
+          "lat": 35.518,
+          "lng": 24.019,
+          "note": "The Venetian harbour and lighthouse; the covered market and the old town."
+        },
+        {
+          "day": 2,
+          "place": "Gramvousa",
+          "lat": 35.612,
+          "lng": 23.586,
+          "note": "The Venetian fortress on the islet and the shipwreck in the bay."
+        },
+        {
+          "day": 3,
+          "place": "Rethymno",
+          "lat": 35.37,
+          "lng": 24.476,
+          "note": "The fortezza over the harbour and the long town beach."
+        },
+        {
+          "day": 4,
+          "place": "Heraklion",
+          "lat": 35.344,
+          "lng": 25.133,
+          "note": "Knossos in the morning, then the archaeological museum before sailing."
+        },
+        {
+          "day": 5,
+          "place": "Dia island",
+          "lat": 35.44,
+          "lng": 25.22,
+          "note": "The uninhabited island off Heraklion; a quiet anchorage for the last night."
+        },
+        {
+          "day": 6,
+          "place": "Agios Nikolaos",
+          "lat": 35.19,
+          "lng": 25.716,
+          "note": "The lake in the middle of town and the coves of the Mirabello gulf."
+        },
+        {
+          "day": 7,
+          "place": "Elounda",
+          "lat": 35.262,
+          "lng": 25.739,
+          "note": "The lagoon and the sunken city of Olous; Spinalonga’s fortress island by tender."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "destinationId": "north-america/alaska",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "alaska-5",
+      "nights": 5,
+      "title": "Five days from Juneau to Tracy Arm",
+      "intro": "Glaciers, whales and hot springs in the Inside Passage.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Juneau",
+          "lat": 58.299,
+          "lng": -134.419,
+          "note": "Board in Juneau."
+        },
+        {
+          "day": 2,
+          "place": "Tracy Arm",
+          "lat": 57.8,
+          "lng": -133.2,
+          "note": "Tracy Arm and the Sawyer glaciers."
+        },
+        {
+          "day": 3,
+          "place": "Petersburg",
+          "lat": 56.813,
+          "lng": -132.955,
+          "note": "Petersburg and Frederick Sound."
+        },
+        {
+          "day": 4,
+          "place": "Baranof Warm Springs",
+          "lat": 57.088,
+          "lng": -134.833,
+          "note": "Baranof Warm Springs."
+        },
+        {
+          "day": 5,
+          "place": "Juneau",
+          "lat": 58.299,
+          "lng": -134.419,
+          "note": "Return; disembark."
+        }
+      ]
+    },
+    {
+      "id": "alaska-7",
+      "nights": 7,
+      "title": "Seven days from Sitka to Juneau",
+      "intro": "Ocean Independence’s route: Sitka, Baranof, Frederick Sound, Tracy Arm and Glacier Bay.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Sitka",
+          "lat": 57.053,
+          "lng": -135.33,
+          "note": "Board in Sitka."
+        },
+        {
+          "day": 2,
+          "place": "Baranof Warm Springs",
+          "lat": 57.088,
+          "lng": -134.833,
+          "note": "Baranof Warm Springs."
+        },
+        {
+          "day": 3,
+          "place": "Red Bluff Bay",
+          "lat": 56.85,
+          "lng": -134.7,
+          "note": "Red Bluff Bay."
+        },
+        {
+          "day": 4,
+          "place": "Petersburg",
+          "lat": 56.813,
+          "lng": -132.955,
+          "note": "Petersburg."
+        },
+        {
+          "day": 5,
+          "place": "Tracy Arm",
+          "lat": 57.8,
+          "lng": -133.2,
+          "note": "Tracy Arm."
+        },
+        {
+          "day": 6,
+          "place": "Glacier Bay, Bartlett Cove",
+          "lat": 58.455,
+          "lng": -135.885,
+          "note": "Glacier Bay."
+        },
+        {
+          "day": 7,
+          "place": "Juneau",
+          "lat": 58.299,
+          "lng": -134.419,
+          "note": "Juneau; disembark."
+        }
+      ]
+    }
+  ]
+}

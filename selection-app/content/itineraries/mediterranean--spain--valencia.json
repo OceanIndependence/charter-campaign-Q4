@@ -1,0 +1,106 @@
+{
+  "destinationId": "mediterranean/spain/valencia",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "valencia-5",
+      "nights": 5,
+      "title": "Five days on the Costa Blanca",
+      "intro": "Valencia, the Marina Alta capes and the Columbretes.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Valencia",
+          "lat": 39.457,
+          "lng": -0.322,
+          "note": "Board in the marina; the City of Arts and Sciences."
+        },
+        {
+          "day": 2,
+          "place": "Dénia",
+          "lat": 38.844,
+          "lng": 0.12,
+          "note": "The castle over the town and the Montgó headland; a swim at Les Rotes."
+        },
+        {
+          "day": 3,
+          "place": "Jávea",
+          "lat": 38.794,
+          "lng": 0.183,
+          "note": "Cap de la Nau and the coves."
+        },
+        {
+          "day": 4,
+          "place": "Calpe",
+          "lat": 38.639,
+          "lng": 0.068,
+          "note": "The Penyal d’Ifac rock above the harbour; the salt lagoon behind the beach."
+        },
+        {
+          "day": 5,
+          "place": "Altea",
+          "lat": 38.597,
+          "lng": -0.047,
+          "note": "The blue-domed old town; disembark."
+        }
+      ]
+    },
+    {
+      "id": "valencia-7",
+      "nights": 7,
+      "title": "Seven days from Valencia to Alicante",
+      "intro": "The Valencian coast south, with a day at the Columbretes.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Valencia",
+          "lat": 39.457,
+          "lng": -0.322,
+          "note": "The City of Arts and Sciences and the old market; board at the marina."
+        },
+        {
+          "day": 2,
+          "place": "Islas Columbretes",
+          "lat": 39.897,
+          "lng": 0.686,
+          "note": "The volcanic islets of the marine reserve, forty miles offshore."
+        },
+        {
+          "day": 3,
+          "place": "Dénia",
+          "lat": 38.844,
+          "lng": 0.12,
+          "note": "The castle over the town and the Montgó headland; a swim at Les Rotes."
+        },
+        {
+          "day": 4,
+          "place": "Jávea",
+          "lat": 38.794,
+          "lng": 0.183,
+          "note": "The bay under Cap de la Nau and the coves along the cape."
+        },
+        {
+          "day": 5,
+          "place": "Calpe",
+          "lat": 38.639,
+          "lng": 0.068,
+          "note": "The Penyal d’Ifac rock above the harbour; the salt lagoon behind the beach."
+        },
+        {
+          "day": 6,
+          "place": "Tabarca",
+          "lat": 38.166,
+          "lng": -0.479,
+          "note": "The walled island off Alicante and its marine reserve for the afternoon swim."
+        },
+        {
+          "day": 7,
+          "place": "Alicante",
+          "lat": 38.34,
+          "lng": -0.482,
+          "note": "The Santa Bárbara castle over the bay; disembark at the marina."
+        }
+      ]
+    }
+  ]
+}

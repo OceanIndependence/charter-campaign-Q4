@@ -1,0 +1,106 @@
+{
+  "destinationId": "south-america/patagonia",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "patagonia-5",
+      "nights": 5,
+      "title": "Five days in the Beagle Channel",
+      "intro": "Ushuaia, the glaciers and Puerto Williams.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Ushuaia",
+          "lat": -54.807,
+          "lng": -68.303,
+          "note": "Board in Ushuaia."
+        },
+        {
+          "day": 2,
+          "place": "Pia Glacier",
+          "lat": -54.77,
+          "lng": -69.6,
+          "note": "Pia Glacier."
+        },
+        {
+          "day": 3,
+          "place": "Garibaldi Fjord",
+          "lat": -54.7,
+          "lng": -69.98,
+          "note": "Garibaldi Fjord."
+        },
+        {
+          "day": 4,
+          "place": "Wulaia Bay",
+          "lat": -55.05,
+          "lng": -68.15,
+          "note": "Wulaia Bay."
+        },
+        {
+          "day": 5,
+          "place": "Puerto Williams",
+          "lat": -54.933,
+          "lng": -67.617,
+          "note": "Puerto Williams; disembark."
+        }
+      ]
+    },
+    {
+      "id": "patagonia-7",
+      "nights": 7,
+      "title": "Seven days from Ushuaia to Cape Horn",
+      "intro": "The Beagle Channel glaciers and the Horn.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Ushuaia",
+          "lat": -54.807,
+          "lng": -68.303,
+          "note": "Board in Ushuaia."
+        },
+        {
+          "day": 2,
+          "place": "Garibaldi Fjord",
+          "lat": -54.7,
+          "lng": -69.98,
+          "note": "Garibaldi Fjord."
+        },
+        {
+          "day": 3,
+          "place": "Pia Glacier",
+          "lat": -54.77,
+          "lng": -69.6,
+          "note": "Pia Glacier."
+        },
+        {
+          "day": 4,
+          "place": "Puerto Williams",
+          "lat": -54.933,
+          "lng": -67.617,
+          "note": "Puerto Williams."
+        },
+        {
+          "day": 5,
+          "place": "Wulaia Bay",
+          "lat": -55.05,
+          "lng": -68.15,
+          "note": "Wulaia Bay."
+        },
+        {
+          "day": 6,
+          "place": "Cape Horn",
+          "lat": -55.98,
+          "lng": -67.27,
+          "note": "Cape Horn."
+        },
+        {
+          "day": 7,
+          "place": "Ushuaia",
+          "lat": -54.807,
+          "lng": -68.303,
+          "note": "Return; disembark."
+        }
+      ]
+    }
+  ]
+}

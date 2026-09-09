@@ -52,11 +52,28 @@ export interface GlobeOptions {
   lockZoom: boolean;
 }
 
+/** One stop of a drawn route, in visiting order. */
+export interface RoutePoint {
+  day: number;
+  place: string;
+  lat: number;
+  lon: number;
+}
+
+/** Camera state, so a view can be saved and restored around a route. */
+export interface GlobeView {
+  lat: number;
+  lon: number;
+  zoom: number;
+}
+
 export interface GlobeConfig {
   geoUrl?: string;
   geoHiUrl?: string;
   onPinSelect?: (id: string) => void;
   onDeselect?: () => void;
+  /** A numbered day marker was clicked while a route is drawn */
+  onRouteDaySelect?: (day: number) => void;
   /** Initial view (lat, lon, zoom). Defaults to the Mediterranean. */
   home?: { lat: number; lon: number; zoom: number };
 }
@@ -82,6 +99,32 @@ interface PinState extends GlobePin {
 
 type CountriesTopology = Topology<{ countries: GeometryCollection }>;
 
+interface RouteMarker {
+  point: RoutePoint;
+  el: HTMLDivElement;
+  label: HTMLSpanElement;
+  anchor: THREE.Object3D;
+}
+
+interface RouteState {
+  points: RoutePoint[];
+  line: THREE.Mesh<THREE.TubeGeometry, THREE.MeshBasicMaterial> | null;
+  /** The zoom the tube was sized for; it is rebuilt when the zoom moves far from it. */
+  builtZoom: number;
+  markers: RouteMarker[];
+  active: number | null;
+}
+
+const ROUTE_ALTITUDE = 1.003;
+/** Route tube radius on screen, in CSS pixels (converted to world units per zoom). */
+const ROUTE_TUBE_PX = 1.6;
+/**
+ * A route is a handful of ports a few miles apart, so the fit-to-route camera
+ * may go far closer than the destination browsing limit (ZOOM_MAX); the
+ * detail patch repaints the coastline at the higher zoom.
+ */
+const ROUTE_ZOOM_MAX = 60;
+
 const d2r = Math.PI / 180;
 const MINT = "#A7E6D7";
 const OCEAN = "#10171A";
@@ -91,7 +134,7 @@ const ZOOM_MIN = 0.7;
 const ZOOM_MAX = 8;
 const CAMERA_D = 3.2;
 
-const clampZoom = (z: number) => Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, z));
+const clampZoom = (z: number, max = ZOOM_MAX) => Math.max(ZOOM_MIN, Math.min(max, z));
 
 export class AtlasGlobe {
   private host: HTMLElement;
@@ -124,6 +167,8 @@ export class AtlasGlobe {
   private landMerged: GeoMultiPolygon | null = null;
   private texW = 2048;
   private texGrat = true;
+
+  private route: RouteState | null = null;
 
   private w = 0;
   private h = 0;
@@ -160,6 +205,8 @@ export class AtlasGlobe {
     this.ro = new ResizeObserver(() => this.resize());
     this.ro.observe(host);
     this.bindPointer();
+    // Test hook: lets browser checks read the camera without touching React.
+    (host as HTMLElement & { __atlasGlobe?: AtlasGlobe }).__atlasGlobe = this;
     void this.init();
   }
 
@@ -170,6 +217,7 @@ export class AtlasGlobe {
     for (const off of this.unbind) off();
     this.unbind = [];
     for (const p of this.pins.concat(this.subPins)) p._anchor?.removeFromParent();
+    this.setRoute(null);
     if (this.detail) {
       this.detail.geometry.dispose();
       this.detail.material.map?.dispose();
@@ -248,6 +296,10 @@ export class AtlasGlobe {
 
     // Pins created before the scene existed get their anchors now.
     for (const p of this.pins.concat(this.subPins)) this.anchorPin(p);
+    if (this.route && !this.route.line) {
+      this.route.line = this.buildRouteLine(this.route.points);
+      this.route.builtZoom = this.zoom;
+    }
 
     this.resize();
     if (!this.destroyed) this.startLoop();
@@ -341,7 +393,7 @@ export class AtlasGlobe {
     lon = ((((lon + 180) % 360) + 360) % 360) - 180;
     const lat = this.pitch / d2r;
     const Rpx = Math.max(40, (Math.min(this.w, this.h) / 2 - 24) * z);
-    const half = Math.min(60, Math.max(4, ((Math.max(this.w, this.h) / 2) / Rpx / d2r) * 1.3));
+    const half = Math.min(60, Math.max(1.2, ((Math.max(this.w, this.h) / 2) / Rpx / d2r) * 1.3));
     const key = `${Math.round(lon * 2)},${Math.round(lat * 2)},${Math.round(half * 4)}`;
     if (key === this.detailKey) return;
     if (now - this.detailBuiltAt < 180) return;
@@ -357,7 +409,9 @@ export class AtlasGlobe {
     const lonW = lon - half;
     const lonE = lon + half;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const texW = Math.min(4096, Math.pow(2, Math.ceil(Math.log2(this.w * dpr * 2))));
+    // Past the browsing zoom (route close-ups) the patch covers a window of a
+    // degree or two, so it takes the largest texture the coastline can fill.
+    const texW = Math.min(4096, Math.pow(2, Math.ceil(Math.log2(this.w * dpr * (this.zoom > ZOOM_MAX ? 4 : 2)))));
     const texH = Math.max(64, Math.round((texW * (latN - latS)) / (lonE - lonW)));
     const cv = document.createElement("canvas");
     cv.width = texW;
@@ -369,7 +423,13 @@ export class AtlasGlobe {
     const proj = geoEquirectangular()
       .rotate([-lon, 0])
       .scale(scale)
-      .translate([texW / 2, texH / 2 + ((latN + latS) / 2) * d2r * scale]);
+      .translate([texW / 2, texH / 2 + ((latN + latS) / 2) * d2r * scale])
+      // Clip to the patch: at route zooms the window is a degree or two, and
+      // painting the rest of the world's coastline off-canvas is wasted work.
+      .clipExtent([
+        [-8, -8],
+        [texW + 8, texH + 8],
+      ]);
     const lw = Math.max(1.2, (1.2 * texW) / (this.w * 1.3 * (window.devicePixelRatio || 1)));
     this.paintLand(ctx, proj, lw);
     const geo = new THREE.SphereGeometry(1.0015, 64, 64, (lonW + 180) * d2r, (lonE - lonW) * d2r, (90 - latN) * d2r, (latN - latS) * d2r);
@@ -460,7 +520,8 @@ export class AtlasGlobe {
       const e = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
       this.yaw = fromYaw + (toYaw - fromYaw) * e;
       this.pitch = fromPitch + (toPitch - fromPitch) * e;
-      this.zoom = fromZ + (zoom - fromZ) * e;
+      // Geometric: telephoto zoom reads as a ratio, so equal eased steps feel even.
+      this.zoom = fromZ * Math.pow(zoom / fromZ, e);
       this.idleAt = now + 2500;
       if (t < 1) requestAnimationFrame(step);
       else this.anim = null;
@@ -468,8 +529,18 @@ export class AtlasGlobe {
     requestAnimationFrame(step);
   }
 
+  /** The zoom range: the browsing limit, or the closer route limit while a route is drawn. */
+  private clampZ(z: number) {
+    return clampZoom(z, this.route ? ROUTE_ZOOM_MAX : ZOOM_MAX);
+  }
+
+  /** Screen radius of the globe in CSS pixels at a zoom. */
+  private globePx(zoom = this.zoom) {
+    return Math.max(40, (Math.min(this.w || 600, this.h || 600) / 2 - 24) * zoom);
+  }
+
   zoomBy(factor: number) {
-    const target = clampZoom(this.zoom * factor);
+    const target = this.clampZ(this.zoom * factor);
     const from = this.zoom;
     const start = performance.now();
     const dur = 320;
@@ -496,6 +567,217 @@ export class AtlasGlobe {
   reset() {
     this.flyTo(this.home.lat, this.home.lon, this.homeZoom(), 1600);
     this.setSelected(null);
+  }
+
+  /* ---------------------------------------------------------- view + route */
+
+  /** The current camera: centre and zoom. */
+  getView(): GlobeView {
+    let lon = (-Math.PI / 2 - this.yaw) / d2r;
+    lon = ((((lon + 180) % 360) + 360) % 360) - 180;
+    return { lat: this.pitch / d2r, lon, zoom: this.zoom };
+  }
+
+  flyToView(view: GlobeView, dur = 1400) {
+    this.flyTo(view.lat, view.lon, view.zoom, dur);
+  }
+
+  /**
+   * Ease the camera in on a set of points: centred on their spherical
+   * centroid, zoomed so the whole set sits inside the stage with room to
+   * spare. Returns the view flown to.
+   */
+  fitPoints(points: Array<{ lat: number; lon: number }>, dur = 1500): GlobeView | null {
+    if (!points.length) return null;
+    const vs = points.map((p) => this.latLonToVec(p.lat, p.lon));
+    const c = vs.reduce((acc, v) => acc.add(v), new THREE.Vector3()).normalize();
+    const lat = Math.asin(c.y) / d2r;
+    const lon = Math.atan2(c.z, -c.x) / d2r - 180;
+    const lonN = ((((lon + 180) % 360) + 360) % 360) - 180;
+    let theta = 0;
+    for (const v of vs) theta = Math.max(theta, Math.acos(Math.max(-1, Math.min(1, c.dot(v)))));
+    theta = Math.max(theta, 0.12 * d2r); // a single stop still gets a sensible close-up (about seven nautical miles)
+    const S = Math.min(this.w || 600, this.h || 600) / 2;
+    const r0 = Math.max(40, S - 24);
+    // Points at angle θ from the centre project ~ Rpx·sin θ from the middle of
+    // the stage; keep the farthest one within half of the half-size, which
+    // leaves room for the numbered markers and their place names.
+    const zoom = Math.max(1.2, Math.min(ROUTE_ZOOM_MAX, (S * 0.5) / (r0 * Math.sin(theta))));
+    const view = { lat, lon: lonN, zoom };
+    this.flyTo(view.lat, view.lon, view.zoom, dur);
+    return view;
+  }
+
+  /**
+   * Draw a route through the points in order (great-circle legs on a raised
+   * tube) with a numbered marker per day, or clear it with null. While a
+   * route is drawn every destination pin is dimmed and unlabelled.
+   */
+  setRoute(points: RoutePoint[] | null) {
+    if (this.route) {
+      if (this.route.line) {
+        this.route.line.geometry.dispose();
+        this.route.line.material.dispose();
+        this.route.line.removeFromParent();
+      }
+      for (const m of this.route.markers) {
+        m.el.remove();
+        m.anchor.removeFromParent();
+      }
+      this.route = null;
+    }
+    if (!points || !points.length) return;
+    const route: RouteState = { points, line: null, builtZoom: this.zoom, markers: [], active: null };
+    if (this.yawG) route.line = this.buildRouteLine(points);
+    for (const point of points) route.markers.push(this.makeRouteMarker(point));
+    this.route = route;
+    this.idleAt = performance.now() + 60_000;
+  }
+
+  /** Emphasise one day's marker (and show its place name); null clears. */
+  setRouteActive(day: number | null) {
+    if (!this.route) return;
+    this.route.active = day;
+    for (const m of this.route.markers) this.styleRouteMarker(m);
+  }
+
+  private buildRouteLine(points: RoutePoint[]) {
+    if (points.length < 2) return null;
+    const dense: THREE.Vector3[] = [];
+    for (let i = 0; i < points.length - 1; i++) {
+      const a = this.latLonToVec(points[i].lat, points[i].lon);
+      const b = this.latLonToVec(points[i + 1].lat, points[i + 1].lon);
+      const omega = Math.acos(Math.max(-1, Math.min(1, a.dot(b))));
+      const steps = Math.max(2, Math.ceil(omega / (0.4 * d2r)));
+      for (let k = i === 0 ? 0 : 1; k <= steps; k++) {
+        const t = k / steps;
+        // Spherical interpolation keeps every leg on a great circle.
+        const v = omega < 1e-6 ? a.clone() : a.clone().multiplyScalar(Math.sin((1 - t) * omega) / Math.sin(omega)).add(b.clone().multiplyScalar(Math.sin(t * omega) / Math.sin(omega)));
+        dense.push(v.normalize().multiplyScalar(ROUTE_ALTITUDE));
+      }
+    }
+    if (dense.length < 2) return null;
+    const curve = new THREE.CatmullRomCurve3(dense, false, "catmullrom", 0.1);
+    // The tube keeps a constant on-screen thickness: world radius per zoom.
+    const geometry = new THREE.TubeGeometry(curve, dense.length * 2, ROUTE_TUBE_PX / this.globePx(), 6, false);
+    const material = new THREE.MeshBasicMaterial({ color: new THREE.Color(MINT), transparent: true, opacity: 0.85, depthWrite: false });
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.renderOrder = 2;
+    this.yawG.add(mesh);
+    return mesh;
+  }
+
+  private makeRouteMarker(point: RoutePoint): RouteMarker {
+    const el = document.createElement("div");
+    el.className = "ag-day";
+    Object.assign(el.style, {
+      position: "absolute",
+      left: "0",
+      top: "0",
+      display: "flex",
+      alignItems: "center",
+      gap: "8px",
+      pointerEvents: "auto",
+      cursor: "pointer",
+      willChange: "transform,opacity",
+      fontFamily: FONT,
+      opacity: "0",
+      zIndex: "3200",
+    });
+    const dot = document.createElement("span");
+    dot.textContent = String(point.day);
+    Object.assign(dot.style, {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      width: "22px",
+      height: "22px",
+      borderRadius: "50%",
+      fontSize: "10px",
+      fontWeight: "500",
+      letterSpacing: "0.04em",
+      boxSizing: "border-box",
+      transition: "background 240ms, color 240ms, transform 240ms",
+    });
+    const label = document.createElement("span");
+    label.textContent = point.place.toUpperCase();
+    Object.assign(label.style, {
+      fontSize: "10px",
+      letterSpacing: "0.22em",
+      fontWeight: "500",
+      whiteSpace: "nowrap",
+      color: "rgba(255,255,255,0.95)",
+      textShadow: "0 1px 6px rgba(6,8,9,0.9)",
+    });
+    el.appendChild(dot);
+    el.appendChild(label);
+    // The marker owns its pointer events: the stage must not treat a marker
+    // tap as an empty-ocean tap.
+    const swallow = (e: Event) => e.stopPropagation();
+    el.addEventListener("pointerdown", swallow);
+    el.addEventListener("pointerup", swallow);
+    el.addEventListener("click", (e) => {
+      e.stopPropagation();
+      this.cfg.onRouteDaySelect?.(point.day);
+    });
+    el.addEventListener("mouseenter", () => {
+      label.style.visibility = "visible";
+    });
+    el.addEventListener("mouseleave", () => {
+      if (this.route?.active !== point.day) label.style.visibility = "hidden";
+    });
+    this.pinLayer.appendChild(el);
+    const anchor = new THREE.Object3D();
+    anchor.position.copy(this.latLonToVec(point.lat, point.lon));
+    if (this.yawG) this.yawG.add(anchor);
+    const marker = { point, el, label, anchor };
+    this.styleRouteMarker(marker);
+    return marker;
+  }
+
+  private styleRouteMarker(m: RouteMarker) {
+    const active = this.route?.active === m.point.day;
+    const dot = m.el.firstElementChild as HTMLSpanElement;
+    Object.assign(dot.style, {
+      background: active ? MINT : "rgba(6,8,9,0.85)",
+      color: active ? "#060809" : MINT,
+      border: `1px solid ${active ? MINT : "rgba(167,230,215,0.75)"}`,
+      boxShadow: active ? "0 0 12px rgba(167,230,215,0.8)" : "0 0 6px rgba(167,230,215,0.35)",
+      transform: active ? "scale(1.18)" : "scale(1)",
+    });
+    m.label.style.visibility = active ? "visible" : "hidden";
+    m.el.style.zIndex = active ? "3300" : "3200";
+  }
+
+  /** Project the route markers each frame, alongside the pins. */
+  private frameRoute(camD: number) {
+    if (!this.route) return;
+    // Re-thickness the tube once the zoom has moved a good way from the one it was built for.
+    if (this.route.line && Math.abs(Math.log(this.zoom / this.route.builtZoom)) > 0.25 && this.yawG) {
+      this.route.line.geometry.dispose();
+      this.route.line.material.dispose();
+      this.route.line.removeFromParent();
+      this.route.line = this.buildRouteLine(this.route.points);
+      this.route.builtZoom = this.zoom;
+    }
+    const V = new THREE.Vector3();
+    for (const m of this.route.markers) {
+      if (!m.anchor.parent && this.yawG) this.yawG.add(m.anchor);
+      m.anchor.getWorldPosition(V);
+      const fade = Math.max(0, Math.min(1, (V.z * camD - 1) * 5));
+      if (fade <= 0) {
+        m.el.style.opacity = "0";
+        m.el.style.pointerEvents = "none";
+        continue;
+      }
+      const ndc = V.clone().project(this.camera);
+      const x = ((ndc.x + 1) / 2) * this.w;
+      const y = ((1 - ndc.y) / 2) * this.h;
+      m.el.style.opacity = String(fade);
+      m.el.style.pointerEvents = "auto";
+      m.el.style.transform = `translate(${x}px,${y}px) translate(-11px,-11px)`;
+    }
+    if (this.route.line && !this.route.line.parent && this.yawG) this.yawG.add(this.route.line);
   }
 
   /* ----------------------------------------------------------------- pins */
@@ -754,7 +1036,7 @@ export class AtlasGlobe {
       (e) => {
         if (this.opts.lockZoom) return;
         e.preventDefault();
-        this.zoom = clampZoom(this.zoom * Math.exp(-e.deltaY * 0.0014));
+        this.zoom = this.clampZ(this.zoom * Math.exp(-e.deltaY * 0.0014));
         this.idleAt = performance.now() + 4000;
         this.anim = null;
       },
@@ -780,7 +1062,7 @@ export class AtlasGlobe {
       if (touches.size === 2 && !this.opts.lockZoom) {
         const [a, b] = [...touches.values()];
         const d = Math.hypot(a[0] - b[0], a[1] - b[1]);
-        if (pinchDist > 0) this.zoom = clampZoom(this.zoom * (d / pinchDist));
+        if (pinchDist > 0) this.zoom = this.clampZ(this.zoom * (d / pinchDist));
         pinchDist = d;
         this.idleAt = performance.now() + 4000;
         this.anim = null;
@@ -820,7 +1102,7 @@ export class AtlasGlobe {
 
   private frame(now: number) {
     if (!this.renderer || !this.w) return;
-    if (this.opts.drift && !this.anim && now > this.idleAt && !this.selected) this.yaw += 0.00014;
+    if (this.opts.drift && !this.anim && now > this.idleAt && !this.selected && !this.route) this.yaw += 0.00014;
     this.pitchG.rotation.x = this.pitch;
     this.yawG.rotation.y = this.yaw;
 
@@ -848,8 +1130,8 @@ export class AtlasGlobe {
         continue;
       }
       p._limb = fade;
-      p._dimmed = !!(this.focus && !this.focus.has(p.id));
-      if (p._dimmed) fade *= 0.55;
+      p._dimmed = !!this.route || !!(this.focus && !this.focus.has(p.id));
+      if (p._dimmed) fade *= this.route ? 0.35 : 0.55;
       if (p._born) fade *= Math.min(1, (now - p._born) / 400);
       const ndc = V.clone().project(this.camera);
       p._xy = [((ndc.x + 1) / 2) * this.w, ((1 - ndc.y) / 2) * this.h];
@@ -931,6 +1213,7 @@ export class AtlasGlobe {
       p._pickable = (p._limb ?? 0) > 0.4;
       el.style.transform = this.placementTransform(place, x, y, tier.half);
     }
+    this.frameRoute(camD);
     this.renderer.render(this.scene, this.camera);
   }
 }

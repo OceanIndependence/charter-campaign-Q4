@@ -1,0 +1,106 @@
+{
+  "destinationId": "mediterranean/croatia/hvar",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "hvar-5",
+      "nights": 5,
+      "title": "Five days around Hvar and Vis",
+      "intro": "Hvar’s harbour, the Pakleni lagoons and Vis across the channel.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Split",
+          "lat": 43.507,
+          "lng": 16.44,
+          "note": "Board in Split; Diocletian’s palace."
+        },
+        {
+          "day": 2,
+          "place": "Hvar",
+          "lat": 43.172,
+          "lng": 16.443,
+          "note": "The Venetian square and the fortress above; anchor off the Pakleni islands."
+        },
+        {
+          "day": 3,
+          "place": "Palmižana",
+          "lat": 43.161,
+          "lng": 16.395,
+          "note": "The Pakleni islands’ bay and its gardens; lunch ashore and the afternoon at anchor."
+        },
+        {
+          "day": 4,
+          "place": "Vis",
+          "lat": 43.062,
+          "lng": 16.183,
+          "note": "Vis, Stiniva and the Blue Cave at Biševo."
+        },
+        {
+          "day": 5,
+          "place": "Hvar",
+          "lat": 43.172,
+          "lng": 16.443,
+          "note": "The Venetian square and the fortress above; anchor off the Pakleni islands."
+        }
+      ]
+    },
+    {
+      "id": "hvar-7",
+      "nights": 7,
+      "title": "Seven days from Split around the central Dalmatian islands",
+      "intro": "Šolta, Vis, Hvar, Korčula and Brač from Split.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Split",
+          "lat": 43.507,
+          "lng": 16.44,
+          "note": "Diocletian’s palace and the Riva; disembark at the ACI marina."
+        },
+        {
+          "day": 2,
+          "place": "Maslinica",
+          "lat": 43.396,
+          "lng": 16.207,
+          "note": "Šolta’s small harbour among the islets; a quiet night at anchor."
+        },
+        {
+          "day": 3,
+          "place": "Komiža",
+          "lat": 43.044,
+          "lng": 16.091,
+          "note": "The fishing town on Vis’s west coast; dinner on the quay."
+        },
+        {
+          "day": 4,
+          "place": "Vis",
+          "lat": 43.062,
+          "lng": 16.183,
+          "note": "The furthest inhabited island: Stiniva cove and the Blue Cave on Biševo."
+        },
+        {
+          "day": 5,
+          "place": "Hvar",
+          "lat": 43.172,
+          "lng": 16.443,
+          "note": "The Venetian square and the fortress above; anchor off the Pakleni islands."
+        },
+        {
+          "day": 6,
+          "place": "Korčula",
+          "lat": 42.96,
+          "lng": 17.135,
+          "note": "Marco Polo’s walled town and the Moreška sword dance; wine at Lumbarda."
+        },
+        {
+          "day": 7,
+          "place": "Bol",
+          "lat": 43.262,
+          "lng": 16.654,
+          "note": "Zlatni Rat, the shifting spit of white pebbles, and the stone town behind it."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "destinationId": "caribbean/the-windward-islands/st-vincent-the-grenadines/martinique",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "martinique-5",
+      "nights": 5,
+      "title": "Five days from Martinique to St Lucia",
+      "intro": "Le Marin, the Pitons and Marigot Bay.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Martinique, Le Marin",
+          "lat": 14.467,
+          "lng": -60.87,
+          "note": "Board at Le Marin."
+        },
+        {
+          "day": 2,
+          "place": "Fort-de-France",
+          "lat": 14.6,
+          "lng": -61.07,
+          "note": "Fort-de-France."
+        },
+        {
+          "day": 3,
+          "place": "St Lucia, Rodney Bay",
+          "lat": 14.077,
+          "lng": -60.95,
+          "note": "Rodney Bay."
+        },
+        {
+          "day": 4,
+          "place": "Marigot Bay",
+          "lat": 13.966,
+          "lng": -61.025,
+          "note": "Marigot Bay."
+        },
+        {
+          "day": 5,
+          "place": "Soufrière, The Pitons",
+          "lat": 13.852,
+          "lng": -61.064,
+          "note": "The Pitons; disembark at Rodney Bay."
+        }
+      ]
+    },
+    {
+      "id": "martinique-7",
+      "nights": 7,
+      "title": "Seven days from St Lucia to Grenada",
+      "intro": "The Pitons, then the length of the Grenadines to St George’s.",
+      "days": [
+        {
+          "day": 1,
+          "place": "St Lucia, Rodney Bay",
+          "lat": 14.077,
+          "lng": -60.95,
+          "note": "Board at Rodney Bay."
+        },
+        {
+          "day": 2,
+          "place": "Soufrière, The Pitons",
+          "lat": 13.852,
+          "lng": -61.064,
+          "note": "Soufrière and the Pitons."
+        },
+        {
+          "day": 3,
+          "place": "Bequia, Admiralty Bay",
+          "lat": 13.007,
+          "lng": -61.244,
+          "note": "Bequia."
+        },
+        {
+          "day": 4,
+          "place": "Mustique",
+          "lat": 12.887,
+          "lng": -61.193,
+          "note": "Mustique."
+        },
+        {
+          "day": 5,
+          "place": "Tobago Cays",
+          "lat": 12.63,
+          "lng": -61.354,
+          "note": "The Tobago Cays."
+        },
+        {
+          "day": 6,
+          "place": "Carriacou, Tyrrel Bay",
+          "lat": 12.457,
+          "lng": -61.486,
+          "note": "Carriacou."
+        },
+        {
+          "day": 7,
+          "place": "Grenada, St George’s",
+          "lat": 12.047,
+          "lng": -61.75,
+          "note": "St George’s; disembark."
+        }
+      ]
+    }
+  ]
+}

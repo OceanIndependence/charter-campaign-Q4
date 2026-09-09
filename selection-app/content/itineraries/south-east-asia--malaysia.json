@@ -1,0 +1,106 @@
+{
+  "destinationId": "south-east-asia/malaysia",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "malaysia-5",
+      "nights": 5,
+      "title": "Five days around Langkawi",
+      "intro": "Langkawi’s islands and Pulau Payar.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Langkawi, Telaga Harbour",
+          "lat": 6.367,
+          "lng": 99.686,
+          "note": "Board at Telaga Harbour."
+        },
+        {
+          "day": 2,
+          "place": "Pulau Dayang Bunting",
+          "lat": 6.2,
+          "lng": 99.79,
+          "note": "The Lake of the Pregnant Maiden."
+        },
+        {
+          "day": 3,
+          "place": "Pulau Payar",
+          "lat": 6.063,
+          "lng": 100.04,
+          "note": "Pulau Payar."
+        },
+        {
+          "day": 4,
+          "place": "Rebak",
+          "lat": 6.296,
+          "lng": 99.696,
+          "note": "Rebak."
+        },
+        {
+          "day": 5,
+          "place": "Langkawi, Telaga Harbour",
+          "lat": 6.367,
+          "lng": 99.686,
+          "note": "Return; disembark."
+        }
+      ]
+    },
+    {
+      "id": "malaysia-7",
+      "nights": 7,
+      "title": "Seven days from Langkawi to Phuket",
+      "intro": "Ocean Independence’s Langkawi to Phuket passage.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Langkawi, Telaga Harbour",
+          "lat": 6.367,
+          "lng": 99.686,
+          "note": "Board in Langkawi."
+        },
+        {
+          "day": 2,
+          "place": "Pulau Dayang Bunting",
+          "lat": 6.2,
+          "lng": 99.79,
+          "note": "Dayang Bunting."
+        },
+        {
+          "day": 3,
+          "place": "Ko Rok",
+          "lat": 7.213,
+          "lng": 99.062,
+          "note": "Ko Rok."
+        },
+        {
+          "day": 4,
+          "place": "Ko Lanta",
+          "lat": 7.532,
+          "lng": 99.038,
+          "note": "Ko Lanta."
+        },
+        {
+          "day": 5,
+          "place": "Ko Phi Phi Don",
+          "lat": 7.739,
+          "lng": 98.777,
+          "note": "Phi Phi."
+        },
+        {
+          "day": 6,
+          "place": "Ko Hong",
+          "lat": 8.063,
+          "lng": 98.702,
+          "note": "Phang Nga Bay."
+        },
+        {
+          "day": 7,
+          "place": "Phuket, Ao Po",
+          "lat": 8.063,
+          "lng": 98.43,
+          "note": "Phuket; disembark."
+        }
+      ]
+    }
+  ]
+}

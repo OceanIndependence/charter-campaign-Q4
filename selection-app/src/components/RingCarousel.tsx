@@ -2,14 +2,11 @@
 
 import { useEffect, useRef } from "react";
 import type { Yacht } from "@/lib/types";
-import { fmtCardRate, fmtLengthShort } from "@/lib/format";
+import YachtCardBody from "./YachtCardBody";
 import {
   ChevronIcon,
   CompareToggleIcon,
-  GuestsIcon,
-  LengthIcon,
   SpeakerIcon,
-  StateroomsIcon,
 } from "./icons";
 import styles from "./RingCarousel.module.css";
 
@@ -178,51 +175,7 @@ export default function RingCarousel(props: RingCarouselProps) {
                       <CompareToggleIcon selected={selected} />
                     </button>
                   )}
-                  <div className={styles.cardBody}>
-                    <div className={styles.cardImage}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={yacht.leadImageUrl} alt={yacht.name} className={styles.cardImg} />
-                      <div className={styles.cardScrim}>
-                        <div className={styles.cardName}>{yacht.name}</div>
-                      </div>
-                    </div>
-                    {/* Light theme only (CSS): the name below the image fade. */}
-                    <div className={styles.cardNameRow}>
-                      <div className={styles.cardName}>{yacht.name}</div>
-                    </div>
-                    <div className={styles.statRow}>
-                      {yacht.guests != null && (
-                        <div className={styles.stat}>
-                          <GuestsIcon />
-                          <span className={styles.statValue}>{yacht.guests}</span>
-                          <span className={styles.statLabel}>GUESTS</span>
-                        </div>
-                      )}
-                      {yacht.staterooms && (
-                        <div className={styles.stat}>
-                          <StateroomsIcon />
-                          <span className={styles.statValue}>{yacht.staterooms.count}</span>
-                          <span className={styles.statLabel}>STATEROOMS</span>
-                        </div>
-                      )}
-                      {yacht.lengthM != null && (
-                        <div className={styles.stat}>
-                          <LengthIcon />
-                          <span className={styles.statValue}>{fmtLengthShort(yacht)}</span>
-                          <span className={styles.statLabel}>LENGTH</span>
-                        </div>
-                      )}
-                    </div>
-                    <div className={styles.priceBlock}>
-                      {yacht.weeklyRate != null && (
-                        <div className={styles.price}>{fmtCardRate(yacht)}</div>
-                      )}
-                      {yacht.cruisingArea && (
-                        <div className={styles.area}>CRUISING AREA · {yacht.cruisingArea}</div>
-                      )}
-                    </div>
-                    <div className={isFront ? styles.dashActive : styles.dash} />
-                  </div>
+                  <YachtCardBody yacht={yacht} active={isFront} />
                 </div>
               );
             })}

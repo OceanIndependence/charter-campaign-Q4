@@ -202,7 +202,14 @@ export interface SeasonNote {
 
 export const TIER2_DEFAULT_DISCLAIMER = "These vessels are offered subject to change, price change, and owners’ final approval.";
 export const TIER2_DEFAULT_VAT_TEXT = "Varies by location";
-export const TIER2_DEFAULT_APA = "35";
+/**
+ * The APA percentage every tier starts from: the Tier 3 form default, the
+ * Tier 2 default and the public fleet page's "plus N% APA" all read this.
+ * Consultants override it per yacht in their drafts; the public page never
+ * sees those overrides.
+ */
+export const DEFAULT_APA_PCT = 35;
+export const TIER2_DEFAULT_APA = String(DEFAULT_APA_PCT);
 export const TIER2_MIN_YACHTS = 2;
 export const TIER2_MAX_YACHTS = 8;
 
@@ -397,7 +404,7 @@ export function emptyDraftYacht(uid: string): DraftYacht {
     weeklyRateIsFrom: false,
     rateSeason: "summer",
     rateTier: "low",
-    apaPct: "35",
+    apaPct: String(DEFAULT_APA_PCT),
     vatPct: "",
     notes: "",
     keyFeatures: "",

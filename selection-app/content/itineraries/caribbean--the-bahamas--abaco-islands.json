@@ -1,0 +1,49 @@
+{
+  "destinationId": "caribbean/the-bahamas/abaco-islands",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "abaco-islands-5",
+      "nights": 5,
+      "title": "Five days in the Abacos",
+      "intro": "Marsh Harbour, Hope Town and Green Turtle Cay.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Marsh Harbour",
+          "lat": 26.541,
+          "lng": -77.062,
+          "note": "Board in Marsh Harbour."
+        },
+        {
+          "day": 2,
+          "place": "Hope Town",
+          "lat": 26.536,
+          "lng": -76.96,
+          "note": "Hope Town and the lighthouse."
+        },
+        {
+          "day": 3,
+          "place": "Man-O-War Cay",
+          "lat": 26.594,
+          "lng": -77.003,
+          "note": "Man-O-War Cay."
+        },
+        {
+          "day": 4,
+          "place": "Green Turtle Cay",
+          "lat": 26.766,
+          "lng": -77.33,
+          "note": "Green Turtle Cay."
+        },
+        {
+          "day": 5,
+          "place": "Treasure Cay",
+          "lat": 26.672,
+          "lng": -77.296,
+          "note": "Treasure Cay; disembark in Marsh Harbour."
+        }
+      ]
+    }
+  ]
+}

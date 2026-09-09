@@ -1,0 +1,106 @@
+{
+  "destinationId": "antarctica/antarctica",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "antarctica-antarctica-5",
+      "nights": 5,
+      "title": "Five days on the Antarctic Peninsula",
+      "intro": "Fly-cruise from King George Island to the Gerlache Strait.",
+      "days": [
+        {
+          "day": 1,
+          "place": "King George Island",
+          "lat": -62.193,
+          "lng": -58.97,
+          "note": "Board at King George Island."
+        },
+        {
+          "day": 2,
+          "place": "Deception Island, Whalers Bay",
+          "lat": -62.98,
+          "lng": -60.56,
+          "note": "Whalers Bay."
+        },
+        {
+          "day": 3,
+          "place": "Cuverville Island",
+          "lat": -64.683,
+          "lng": -62.633,
+          "note": "Cuverville."
+        },
+        {
+          "day": 4,
+          "place": "Neko Harbour",
+          "lat": -64.84,
+          "lng": -62.53,
+          "note": "Neko Harbour."
+        },
+        {
+          "day": 5,
+          "place": "King George Island",
+          "lat": -62.193,
+          "lng": -58.97,
+          "note": "Return; fly out."
+        }
+      ]
+    },
+    {
+      "id": "antarctica-antarctica-7",
+      "nights": 7,
+      "title": "Seven days from King George Island to the Lemaire Channel",
+      "intro": "The Peninsula’s landings and channels.",
+      "days": [
+        {
+          "day": 1,
+          "place": "King George Island",
+          "lat": -62.193,
+          "lng": -58.97,
+          "note": "Board at King George Island."
+        },
+        {
+          "day": 2,
+          "place": "Half Moon Island",
+          "lat": -62.595,
+          "lng": -59.92,
+          "note": "Half Moon Island."
+        },
+        {
+          "day": 3,
+          "place": "Deception Island, Whalers Bay",
+          "lat": -62.98,
+          "lng": -60.56,
+          "note": "Deception Island."
+        },
+        {
+          "day": 4,
+          "place": "Wilhelmina Bay",
+          "lat": -64.63,
+          "lng": -62.17,
+          "note": "Wilhelmina Bay."
+        },
+        {
+          "day": 5,
+          "place": "Paradise Harbour",
+          "lat": -64.85,
+          "lng": -62.87,
+          "note": "Paradise Harbour."
+        },
+        {
+          "day": 6,
+          "place": "Port Lockroy",
+          "lat": -64.826,
+          "lng": -63.494,
+          "note": "Port Lockroy and the Lemaire Channel."
+        },
+        {
+          "day": 7,
+          "place": "King George Island",
+          "lat": -62.193,
+          "lng": -58.97,
+          "note": "Return; fly out."
+        }
+      ]
+    }
+  ]
+}

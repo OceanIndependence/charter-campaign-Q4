@@ -1,0 +1,106 @@
+{
+  "destinationId": "south-pacific/fiji",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "fiji-5",
+      "nights": 5,
+      "title": "Five days in the Mamanucas and Yasawas",
+      "intro": "Musket Cove, Monuriki and the Blue Lagoon.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Port Denarau",
+          "lat": -17.771,
+          "lng": 177.383,
+          "note": "Board at Port Denarau."
+        },
+        {
+          "day": 2,
+          "place": "Malolo, Musket Cove",
+          "lat": -17.777,
+          "lng": 177.186,
+          "note": "Musket Cove."
+        },
+        {
+          "day": 3,
+          "place": "Monuriki",
+          "lat": -17.607,
+          "lng": 177.035,
+          "note": "Monuriki."
+        },
+        {
+          "day": 4,
+          "place": "Naviti, Blue Lagoon",
+          "lat": -17.107,
+          "lng": 177.226,
+          "note": "The Blue Lagoon."
+        },
+        {
+          "day": 5,
+          "place": "Port Denarau",
+          "lat": -17.771,
+          "lng": 177.383,
+          "note": "Return; disembark."
+        }
+      ]
+    },
+    {
+      "id": "fiji-7",
+      "nights": 7,
+      "title": "Seven days up the Yasawas",
+      "intro": "The length of the Yasawa chain to Sawa-i-Lau.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Port Denarau",
+          "lat": -17.771,
+          "lng": 177.383,
+          "note": "Board at Port Denarau."
+        },
+        {
+          "day": 2,
+          "place": "Malolo, Musket Cove",
+          "lat": -17.777,
+          "lng": 177.186,
+          "note": "Musket Cove."
+        },
+        {
+          "day": 3,
+          "place": "Waya",
+          "lat": -17.288,
+          "lng": 177.138,
+          "note": "Waya."
+        },
+        {
+          "day": 4,
+          "place": "Naviti, Blue Lagoon",
+          "lat": -17.107,
+          "lng": 177.226,
+          "note": "Naviti."
+        },
+        {
+          "day": 5,
+          "place": "Nanuya Lailai",
+          "lat": -16.943,
+          "lng": 177.368,
+          "note": "Nanuya Lailai."
+        },
+        {
+          "day": 6,
+          "place": "Sawa-i-Lau",
+          "lat": -16.846,
+          "lng": 177.472,
+          "note": "Sawa-i-Lau caves."
+        },
+        {
+          "day": 7,
+          "place": "Yasawa-i-Rara",
+          "lat": -16.703,
+          "lng": 177.522,
+          "note": "Yasawa-i-Rara; return to Denarau."
+        }
+      ]
+    }
+  ]
+}

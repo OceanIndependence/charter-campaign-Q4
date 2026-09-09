@@ -1,0 +1,106 @@
+{
+  "destinationId": "caribbean/the-bahamas/nassau",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "nassau-5",
+      "nights": 5,
+      "title": "Five days from Nassau into the Exumas",
+      "intro": "The northern Exuma cays: Highbourne, Norman’s, Shroud and Warderick Wells.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Nassau",
+          "lat": 25.079,
+          "lng": -77.34,
+          "note": "Board in Nassau."
+        },
+        {
+          "day": 2,
+          "place": "Highbourne Cay",
+          "lat": 24.71,
+          "lng": -76.82,
+          "note": "Highbourne Cay."
+        },
+        {
+          "day": 3,
+          "place": "Norman’s Cay",
+          "lat": 24.598,
+          "lng": -76.818,
+          "note": "Norman’s Cay."
+        },
+        {
+          "day": 4,
+          "place": "Shroud Cay",
+          "lat": 24.53,
+          "lng": -76.793,
+          "note": "Shroud Cay’s mangrove creeks."
+        },
+        {
+          "day": 5,
+          "place": "Warderick Wells",
+          "lat": 24.395,
+          "lng": -76.63,
+          "note": "Warderick Wells; return to Nassau."
+        }
+      ]
+    },
+    {
+      "id": "nassau-7",
+      "nights": 7,
+      "title": "Seven days from Nassau to George Town",
+      "intro": "The full Exuma chain.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Nassau",
+          "lat": 25.079,
+          "lng": -77.34,
+          "note": "Board in Nassau."
+        },
+        {
+          "day": 2,
+          "place": "Highbourne Cay",
+          "lat": 24.71,
+          "lng": -76.82,
+          "note": "Highbourne."
+        },
+        {
+          "day": 3,
+          "place": "Shroud Cay",
+          "lat": 24.53,
+          "lng": -76.793,
+          "note": "Shroud Cay."
+        },
+        {
+          "day": 4,
+          "place": "Warderick Wells",
+          "lat": 24.395,
+          "lng": -76.63,
+          "note": "Warderick Wells."
+        },
+        {
+          "day": 5,
+          "place": "Compass Cay",
+          "lat": 24.26,
+          "lng": -76.515,
+          "note": "Compass Cay."
+        },
+        {
+          "day": 6,
+          "place": "Staniel Cay",
+          "lat": 24.173,
+          "lng": -76.445,
+          "note": "Staniel Cay, Thunderball Grotto and the pigs of Big Major."
+        },
+        {
+          "day": 7,
+          "place": "Great Exuma, George Town",
+          "lat": 23.506,
+          "lng": -75.778,
+          "note": "George Town; disembark."
+        }
+      ]
+    }
+  ]
+}

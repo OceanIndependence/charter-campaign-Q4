@@ -1,0 +1,106 @@
+{
+  "destinationId": "arctic/east-greenland",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "east-greenland-5",
+      "nights": 5,
+      "title": "Five days in Scoresby Sund",
+      "intro": "Constable Point into the largest fjord system on earth.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Constable Point",
+          "lat": 70.743,
+          "lng": -22.65,
+          "note": "Board at Constable Point."
+        },
+        {
+          "day": 2,
+          "place": "Ittoqqortoormiit",
+          "lat": 70.485,
+          "lng": -21.966,
+          "note": "Ittoqqortoormiit."
+        },
+        {
+          "day": 3,
+          "place": "Hekla Havn, Danmark Ø",
+          "lat": 70.44,
+          "lng": -26.25,
+          "note": "Hekla Havn."
+        },
+        {
+          "day": 4,
+          "place": "Røde Ø",
+          "lat": 70.46,
+          "lng": -27.73,
+          "note": "Røde Ø."
+        },
+        {
+          "day": 5,
+          "place": "Constable Point",
+          "lat": 70.743,
+          "lng": -22.65,
+          "note": "Return; disembark."
+        }
+      ]
+    },
+    {
+      "id": "east-greenland-7",
+      "nights": 7,
+      "title": "Seven days from Constable Point around Scoresby Sund",
+      "intro": "The full sound: the Bjørne Øer, Nordvestfjord and Røde Ø.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Constable Point",
+          "lat": 70.743,
+          "lng": -22.65,
+          "note": "Board at Constable Point."
+        },
+        {
+          "day": 2,
+          "place": "Ittoqqortoormiit",
+          "lat": 70.485,
+          "lng": -21.966,
+          "note": "Ittoqqortoormiit."
+        },
+        {
+          "day": 3,
+          "place": "Bjørne Øer",
+          "lat": 70.9,
+          "lng": -25.2,
+          "note": "Bjørne Øer."
+        },
+        {
+          "day": 4,
+          "place": "Nordvestfjord",
+          "lat": 71.5,
+          "lng": -25.5,
+          "note": "Nordvestfjord."
+        },
+        {
+          "day": 5,
+          "place": "Sydkap",
+          "lat": 71.64,
+          "lng": -26.55,
+          "note": "Sydkap."
+        },
+        {
+          "day": 6,
+          "place": "Røde Ø",
+          "lat": 70.46,
+          "lng": -27.73,
+          "note": "Røde Ø."
+        },
+        {
+          "day": 7,
+          "place": "Constable Point",
+          "lat": 70.743,
+          "lng": -22.65,
+          "note": "Return; disembark."
+        }
+      ]
+    }
+  ]
+}

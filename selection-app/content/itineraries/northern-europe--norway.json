@@ -1,0 +1,106 @@
+{
+  "destinationId": "northern-europe/norway",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "norway-5",
+      "nights": 5,
+      "title": "Five days in the Hardangerfjord",
+      "intro": "Bergen, Rosendal and the orchards of Hardanger.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Bergen",
+          "lat": 60.393,
+          "lng": 5.324,
+          "note": "Board in Bergen."
+        },
+        {
+          "day": 2,
+          "place": "Rosendal",
+          "lat": 60,
+          "lng": 6.007,
+          "note": "Rosendal."
+        },
+        {
+          "day": 3,
+          "place": "Ulvik",
+          "lat": 60.568,
+          "lng": 6.908,
+          "note": "Ulvik."
+        },
+        {
+          "day": 4,
+          "place": "Eidfjord",
+          "lat": 60.467,
+          "lng": 7.07,
+          "note": "Eidfjord and Vøringsfossen."
+        },
+        {
+          "day": 5,
+          "place": "Bergen",
+          "lat": 60.393,
+          "lng": 5.324,
+          "note": "Return; disembark."
+        }
+      ]
+    },
+    {
+      "id": "norway-7",
+      "nights": 7,
+      "title": "Seven days from Stavanger to Bergen",
+      "intro": "Lysefjord, the Hardangerfjord and the Sognefjord.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Stavanger",
+          "lat": 58.97,
+          "lng": 5.733,
+          "note": "Board in Stavanger."
+        },
+        {
+          "day": 2,
+          "place": "Lysefjord, Lysebotn",
+          "lat": 59.057,
+          "lng": 6.652,
+          "note": "Lysefjord and Preikestolen."
+        },
+        {
+          "day": 3,
+          "place": "Rosendal",
+          "lat": 60,
+          "lng": 6.007,
+          "note": "Rosendal."
+        },
+        {
+          "day": 4,
+          "place": "Eidfjord",
+          "lat": 60.467,
+          "lng": 7.07,
+          "note": "Eidfjord."
+        },
+        {
+          "day": 5,
+          "place": "Flåm",
+          "lat": 60.863,
+          "lng": 7.113,
+          "note": "Flåm."
+        },
+        {
+          "day": 6,
+          "place": "Balestrand",
+          "lat": 61.208,
+          "lng": 6.535,
+          "note": "Balestrand."
+        },
+        {
+          "day": 7,
+          "place": "Bergen",
+          "lat": 60.393,
+          "lng": 5.324,
+          "note": "Bergen; disembark."
+        }
+      ]
+    }
+  ]
+}

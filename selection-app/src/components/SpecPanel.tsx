@@ -15,6 +15,11 @@ interface SpecPanelProps {
   signedBy?: string;
   /** Tier 2: VAT row text when no VAT amount is known (Tier 3 shows "TBC") */
   vatText?: string;
+  /**
+   * Public fleet page: a single "from" rate line in place of the breakdown.
+   * When set, the WEEKLY RATE row shows it and no VAT, APA or TOTAL row renders.
+   */
+  rateLine?: string;
 }
 
 export default function SpecPanel({
@@ -26,6 +31,7 @@ export default function SpecPanel({
   onNext,
   signedBy,
   vatText,
+  rateLine,
 }: SpecPanelProps) {
   /* Rows with no value are hidden rather than rendered as a null. */
   const specRows = (
@@ -90,7 +96,16 @@ export default function SpecPanel({
         ))}
       </div>
 
-      {yacht.weeklyRate != null && (
+      {rateLine && (
+        <div className={styles.priceBlock}>
+          <div className={styles.priceRow}>
+            <span className={styles.specLabel}>WEEKLY RATE</span>
+            <span className={styles.rateValue}>{rateLine}</span>
+          </div>
+        </div>
+      )}
+
+      {!rateLine && yacht.weeklyRate != null && (
         <div className={styles.priceBlock}>
           <div className={styles.priceRow}>
             <span className={styles.specLabel}>WEEKLY RATE</span>

@@ -49,11 +49,33 @@ export interface AtlasDestination {
   lede: string;
   paragraphs: string[];
   keyFacts: AtlasKeyFact[];
+  /** Itinerary features this page links to (narrative in AtlasSnapshot.itineraries) */
+  itineraryLinks?: AtlasItineraryLink[];
   childIds: string[];
   /** Keys into AtlasSnapshot.yachts, in the order the page lists them */
   yachtIds: string[];
   /** Has featured charter yachts — mint pin on the globe */
   featured: boolean;
+}
+
+export interface AtlasItineraryLink {
+  url: string;
+  title: string;
+  days: number | null;
+  summary: string;
+  image: string | null;
+}
+
+/** A website itinerary page, captured verbatim (no coordinates for the days) */
+export interface WebsiteItinerary {
+  url: string;
+  title: string;
+  days: number | null;
+  metaDescription: string;
+  heroImage: string | null;
+  intro: string[];
+  stops: Array<{ day: number; place: string; text: string }>;
+  mapPins: Array<{ lat: number; lon: number; label: string }>;
 }
 
 export interface AtlasYacht {
@@ -99,11 +121,14 @@ export interface AtlasSnapshot {
     regions: number;
     destinations: number;
     yachts: number;
+    itineraries?: number;
     review: number;
     errors: number;
   };
   destinations: AtlasDestination[];
   yachts: Record<string, AtlasYacht>;
+  /** Website itinerary pages keyed by URL */
+  itineraries?: Record<string, WebsiteItinerary>;
   review: AtlasReviewItem[];
   errors: Array<{ url: string; error: string }>;
 }

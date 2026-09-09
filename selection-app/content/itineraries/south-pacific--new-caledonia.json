@@ -1,0 +1,106 @@
+{
+  "destinationId": "south-pacific/new-caledonia",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "new-caledonia-5",
+      "nights": 5,
+      "title": "Five days in the Nouméa lagoon",
+      "intro": "Amédée, Île Ouen and Prony Bay.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Nouméa",
+          "lat": -22.276,
+          "lng": 166.438,
+          "note": "Board in Nouméa."
+        },
+        {
+          "day": 2,
+          "place": "Amédée",
+          "lat": -22.477,
+          "lng": 166.467,
+          "note": "Amédée lighthouse."
+        },
+        {
+          "day": 3,
+          "place": "Île Ouen",
+          "lat": -22.43,
+          "lng": 166.79,
+          "note": "Île Ouen."
+        },
+        {
+          "day": 4,
+          "place": "Prony Bay",
+          "lat": -22.36,
+          "lng": 166.83,
+          "note": "Prony Bay."
+        },
+        {
+          "day": 5,
+          "place": "Nouméa",
+          "lat": -22.276,
+          "lng": 166.438,
+          "note": "Return; disembark."
+        }
+      ]
+    },
+    {
+      "id": "new-caledonia-7",
+      "nights": 7,
+      "title": "Seven days from Nouméa to the Île des Pins",
+      "intro": "The great lagoon south to Kuto Bay.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Nouméa",
+          "lat": -22.276,
+          "lng": 166.438,
+          "note": "Board in Nouméa."
+        },
+        {
+          "day": 2,
+          "place": "Îlot Maître",
+          "lat": -22.332,
+          "lng": 166.413,
+          "note": "Îlot Maître."
+        },
+        {
+          "day": 3,
+          "place": "Amédée",
+          "lat": -22.477,
+          "lng": 166.467,
+          "note": "Amédée."
+        },
+        {
+          "day": 4,
+          "place": "Île Ouen",
+          "lat": -22.43,
+          "lng": 166.79,
+          "note": "Île Ouen."
+        },
+        {
+          "day": 5,
+          "place": "Prony Bay",
+          "lat": -22.36,
+          "lng": 166.83,
+          "note": "Prony Bay."
+        },
+        {
+          "day": 6,
+          "place": "Île des Pins, Kuto Bay",
+          "lat": -22.656,
+          "lng": 167.438,
+          "note": "Kuto Bay."
+        },
+        {
+          "day": 7,
+          "place": "Île des Pins, Kuto Bay",
+          "lat": -22.656,
+          "lng": 167.438,
+          "note": "Oro Bay; disembark."
+        }
+      ]
+    }
+  ]
+}

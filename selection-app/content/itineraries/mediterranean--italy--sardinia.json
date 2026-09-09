@@ -1,0 +1,106 @@
+{
+  "destinationId": "mediterranean/italy/sardinia",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "sardinia-5",
+      "nights": 5,
+      "title": "Five days on the Costa Smeralda",
+      "intro": "Porto Cervo, the granite coves of the Costa Smeralda and the Maddalena archipelago twenty minutes to the north.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Olbia",
+          "lat": 40.9236,
+          "lng": 9.4964,
+          "note": "Board in Olbia; a first swim off Tavolara."
+        },
+        {
+          "day": 2,
+          "place": "Porto Cervo",
+          "lat": 41.1372,
+          "lng": 9.535,
+          "note": "The marina and the boutiques; dinner at the Piazzetta."
+        },
+        {
+          "day": 3,
+          "place": "Cala di Volpe",
+          "lat": 41.084,
+          "lng": 9.545,
+          "note": "A day at anchor in the bay; lunch ashore at the hotel."
+        },
+        {
+          "day": 4,
+          "place": "Spargi, Cala Corsara",
+          "lat": 41.238,
+          "lng": 9.341,
+          "note": "Cala Corsara and the pink sands of Budelli in the Maddalena archipelago."
+        },
+        {
+          "day": 5,
+          "place": "La Maddalena",
+          "lat": 41.213,
+          "lng": 9.406,
+          "note": "A morning in the old town; disembark in Olbia."
+        }
+      ]
+    },
+    {
+      "id": "sardinia-7",
+      "nights": 7,
+      "title": "Seven days from Olbia to the Maddalena archipelago",
+      "intro": "The north-east of Sardinia and the Bonifacio strait: the Costa Smeralda, La Maddalena, Lavezzi and a night beneath Bonifacio’s cliffs.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Olbia",
+          "lat": 40.9236,
+          "lng": 9.4964,
+          "note": "Board in Olbia; an evening at anchor off Tavolara."
+        },
+        {
+          "day": 2,
+          "place": "Porto Rotondo",
+          "lat": 41.029,
+          "lng": 9.546,
+          "note": "Marinella bay and the marina village."
+        },
+        {
+          "day": 3,
+          "place": "Porto Cervo",
+          "lat": 41.1372,
+          "lng": 9.535,
+          "note": "Porto Cervo and the Costa Smeralda coves."
+        },
+        {
+          "day": 4,
+          "place": "Caprera, Cala Coticcio",
+          "lat": 41.216,
+          "lng": 9.468,
+          "note": "Cala Coticcio, then Spargi and Budelli."
+        },
+        {
+          "day": 5,
+          "place": "Îles Lavezzi",
+          "lat": 41.335,
+          "lng": 9.256,
+          "note": "Cross the strait to the Lavezzi islets’ pale coves."
+        },
+        {
+          "day": 6,
+          "place": "Bonifacio",
+          "lat": 41.387,
+          "lng": 9.159,
+          "note": "A night in the fjord-like harbour beneath the citadel."
+        },
+        {
+          "day": 7,
+          "place": "Cala di Volpe",
+          "lat": 41.084,
+          "lng": 9.545,
+          "note": "Return across the strait; a last lunch at anchor, disembark in Olbia."
+        }
+      ]
+    }
+  ]
+}

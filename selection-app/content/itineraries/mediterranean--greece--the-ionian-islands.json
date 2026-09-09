@@ -1,0 +1,106 @@
+{
+  "destinationId": "mediterranean/greece/the-ionian-islands",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "the-ionian-islands-5",
+      "nights": 5,
+      "title": "Five days in the southern Ionian",
+      "intro": "Lefkada, Meganisi, Ithaca and Fiskardo.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Lefkada, Nydri",
+          "lat": 38.708,
+          "lng": 20.709,
+          "note": "Board at Nydri; Skorpios from the water."
+        },
+        {
+          "day": 2,
+          "place": "Meganisi",
+          "lat": 38.666,
+          "lng": 20.758,
+          "note": "Spartochori and the sea caves."
+        },
+        {
+          "day": 3,
+          "place": "Fiskardo",
+          "lat": 38.459,
+          "lng": 20.577,
+          "note": "Kefalonia’s Venetian harbour."
+        },
+        {
+          "day": 4,
+          "place": "Ithaca, Vathy",
+          "lat": 38.365,
+          "lng": 20.717,
+          "note": "Vathy at the head of its deep bay; the walk to Homer’s spring."
+        },
+        {
+          "day": 5,
+          "place": "Lefkada, Nydri",
+          "lat": 38.708,
+          "lng": 20.709,
+          "note": "Lefkada’s sheltered inlets and the waterfalls behind the village."
+        }
+      ]
+    },
+    {
+      "id": "the-ionian-islands-7",
+      "nights": 7,
+      "title": "Seven days from Corfu to Zakynthos",
+      "intro": "The Ionian from north to south, green islands and short hops.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Corfu",
+          "lat": 39.624,
+          "lng": 19.922,
+          "note": "Board in Corfu; the old town."
+        },
+        {
+          "day": 2,
+          "place": "Paxos, Gaios",
+          "lat": 39.199,
+          "lng": 20.186,
+          "note": "Gaios harbour behind its islets; the west coast caves by tender."
+        },
+        {
+          "day": 3,
+          "place": "Parga",
+          "lat": 39.285,
+          "lng": 20.4,
+          "note": "The Venetian castle above the town and the beach at Valtos."
+        },
+        {
+          "day": 4,
+          "place": "Lefkada, Nydri",
+          "lat": 38.708,
+          "lng": 20.709,
+          "note": "Lefkada’s sheltered inlets and the waterfalls behind the village."
+        },
+        {
+          "day": 5,
+          "place": "Fiskardo",
+          "lat": 38.459,
+          "lng": 20.577,
+          "note": "The Venetian houses of the harbour and the anchorages of the strait."
+        },
+        {
+          "day": 6,
+          "place": "Ithaca, Vathy",
+          "lat": 38.365,
+          "lng": 20.717,
+          "note": "Vathy at the head of its deep bay; the walk to Homer’s spring."
+        },
+        {
+          "day": 7,
+          "place": "Zakynthos",
+          "lat": 37.786,
+          "lng": 20.9,
+          "note": "Navagio and the town; disembark."
+        }
+      ]
+    }
+  ]
+}

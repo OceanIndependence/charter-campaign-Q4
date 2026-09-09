@@ -1,0 +1,106 @@
+{
+  "destinationId": "australia-and-new-zealand/australia/the-whitsundays",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "the-whitsundays-5",
+      "nights": 5,
+      "title": "Five days in the Whitsundays",
+      "intro": "Whitehaven, Hook Island and Hayman.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Hamilton Island",
+          "lat": -20.348,
+          "lng": 148.954,
+          "note": "Board on Hamilton Island."
+        },
+        {
+          "day": 2,
+          "place": "Whitehaven Beach",
+          "lat": -20.283,
+          "lng": 149.044,
+          "note": "Whitehaven Beach and Hill Inlet."
+        },
+        {
+          "day": 3,
+          "place": "Hook Island, Nara Inlet",
+          "lat": -20.149,
+          "lng": 148.901,
+          "note": "Nara Inlet."
+        },
+        {
+          "day": 4,
+          "place": "Blue Pearl Bay",
+          "lat": -20.054,
+          "lng": 148.877,
+          "note": "Blue Pearl Bay."
+        },
+        {
+          "day": 5,
+          "place": "Hamilton Island",
+          "lat": -20.348,
+          "lng": 148.954,
+          "note": "Return; disembark."
+        }
+      ]
+    },
+    {
+      "id": "the-whitsundays-7",
+      "nights": 7,
+      "title": "Seven days from Airlie Beach around the Whitsundays",
+      "intro": "Every anchorage of the group.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Airlie Beach",
+          "lat": -20.265,
+          "lng": 148.714,
+          "note": "Board at Airlie Beach."
+        },
+        {
+          "day": 2,
+          "place": "Cid Harbour",
+          "lat": -20.254,
+          "lng": 148.933,
+          "note": "Cid Harbour."
+        },
+        {
+          "day": 3,
+          "place": "Whitehaven Beach",
+          "lat": -20.283,
+          "lng": 149.044,
+          "note": "Whitehaven."
+        },
+        {
+          "day": 4,
+          "place": "Border Island, Cateran Bay",
+          "lat": -20.168,
+          "lng": 149.037,
+          "note": "Border Island."
+        },
+        {
+          "day": 5,
+          "place": "Butterfly Bay",
+          "lat": -20.062,
+          "lng": 148.916,
+          "note": "Butterfly Bay."
+        },
+        {
+          "day": 6,
+          "place": "Langford Reef",
+          "lat": -20.08,
+          "lng": 148.876,
+          "note": "Langford Reef and Hayman."
+        },
+        {
+          "day": 7,
+          "place": "Hamilton Island",
+          "lat": -20.348,
+          "lng": 148.954,
+          "note": "Hamilton Island; disembark."
+        }
+      ]
+    }
+  ]
+}

@@ -31,11 +31,13 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { INDEX_URL, fetchHtml, idFromUrl, parsePage, sleep } from "../src/server/atlas/website.mjs";
+import { INDEX_URL, fetchHtml, idFromUrl, parseItineraryPage, parsePage, sleep } from "../src/server/atlas/website.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_PATH = path.join(ROOT, "data", "destinations.json");
 const OVERRIDES_PATH = path.join(ROOT, "data", "destination-overrides.json");
+
+const SITE_ITINERARIES = INDEX_URL.replace(/yacht-charter\/destinations\/$/, "yacht-charter/itineraries/");
 
 const args = process.argv.slice(2);
 const flag = (name) => args.includes(name);
@@ -219,6 +221,25 @@ async function main() {
 
   const index = pages.get("");
   pages.delete("");
+
+  // ---- website itineraries -------------------------------------------------
+  // Each destination page links to the website's own itinerary pages; read
+  // every distinct one once and keep its day-by-day narrative verbatim.
+  const itineraryUrls = new Set();
+  for (const p of [index, ...pages.values()]) for (const l of p?.itineraryLinks ?? []) itineraryUrls.add(l.url);
+  const websiteItineraries = {};
+  for (const url of itineraryUrls) {
+    try {
+      const html = await fetchHtml(url);
+      const it = parseItineraryPage(url, html);
+      websiteItineraries[url] = it;
+      console.log(`  ✓ itinerary ${url.replace(SITE_ITINERARIES, "")}  ${it.days ?? "?"} days · ${it.stops.length} stops`);
+    } catch (err) {
+      errors.push({ url, error: String(err.message || err) });
+      console.log(`  ✗ itinerary ${url}: ${err.message || err}`);
+    }
+    await sleep(150);
+  }
 
   // ---- tree ------------------------------------------------------------
   const byId = new Map([...pages.values()].filter((p) => p.id).map((p) => [p.id, p]));
@@ -408,6 +429,14 @@ async function main() {
       lede: p.lede,
       paragraphs: p.paragraphs,
       keyFacts: p.keyFacts,
+      // Website itinerary features on this page (narrative lives in snapshot.itineraries)
+      itineraryLinks: (p.itineraryLinks ?? []).map((l) => ({
+        url: l.url,
+        title: websiteItineraries[l.url]?.title || l.title,
+        days: websiteItineraries[l.url]?.days ?? l.days,
+        summary: l.summary,
+        image: l.image,
+      })),
       childIds: sortIds(childrenOf.get(id) || []),
       yachtIds: [...new Set(p.yachts.map((y) => y.id))],
       featured: p.yachts.length > 0,
@@ -430,11 +459,14 @@ async function main() {
       regions: destinations.filter((d) => d.level === 1).length,
       destinations: destinations.length,
       yachts: Object.keys(yachts).length,
+      itineraries: Object.keys(websiteItineraries).length,
       review: review.length,
       errors: errors.length,
     },
     destinations,
     yachts,
+    /** Website itinerary pages, keyed by URL: title, intro and DAY TO DAY narrative verbatim */
+    itineraries: websiteItineraries,
     review,
     errors,
   };
