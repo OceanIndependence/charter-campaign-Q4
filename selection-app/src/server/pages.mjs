@@ -19,6 +19,11 @@
  *
  * The earlier single working draft (portal/drafts/<ownerId>/working.json) is
  * imported as a selection on the consultant's first dashboard load.
+ *
+ * Tiers: a selection is Tier 3 (Yacht Selection, the original shape) or
+ * Tier 2 (Personalised Atlas). The tier is fixed at creation; everything
+ * here is shared, and the few places that depend on the shape branch on
+ * tierOf(). Published pages of both tiers share one slug namespace.
  */
 
 import { randomUUID } from "node:crypto";
@@ -36,6 +41,16 @@ const currentKey = (slug) => `portal/pages/${slug}/current.json`;
 const versionKey = (slug, n) => `portal/pages/${slug}/versions/${n}.json`;
 
 const fail = (code, message) => Object.assign(new Error(message), { code });
+
+/** 2 for a Personalised Atlas, 3 for a Yacht Selection (and for anything saved before tiers). */
+export function tierOf(record) {
+  return record?.tier === 2 ? 2 : 3;
+}
+
+/** Client page path for a published record of either tier. */
+export function clientPathFor(tier, slug) {
+  return tier === 2 ? `/atlas/${slug}` : `/selection/${slug}`;
+}
 
 export function isValidSlug(slug) {
   return SLUG_RE.test(String(slug ?? ""));
@@ -80,11 +95,13 @@ function namedYachtCount(draft) {
 /** The dashboard row for a draft — derived, never edited by hand. */
 function metaOf(draft) {
   const p = draft.published;
+  const tier = tierOf(draft);
   return {
     id: draft.id,
+    tier,
     owner: draft.owner,
     clientNames: draft.clientNames ?? "",
-    headline: draft.headline ?? "",
+    headline: (tier === 2 ? draft.clientGreeting : draft.headline) ?? "",
     slug: draft.publishedSlug ?? null,
     yachtCount: namedYachtCount(draft),
     status: !p ? "draft" : p.live ? "published" : "unpublished",
@@ -131,10 +148,59 @@ async function store(ownerId, draft) {
 
 /* ---------------------------------------------------------- selections */
 
+function emptyDestination() {
+  const atlas = (value = "") => ({ value, source: "atlas" });
+  return {
+    destinationId: null,
+    name: "",
+    eyebrow: atlas(),
+    deckLine: atlas(),
+    description: atlas(),
+    consultantNote: { value: "", source: "consultant" },
+    images: [atlas(), atlas()],
+    atlas: null,
+  };
+}
+
+const TIER2_DISCLAIMER = "These vessels are offered subject to change, price change, and owners’ final approval.";
+
+/** A new Personalised Atlas: three empty destination slots, no yachts yet. */
+function emptyTier2Draft(identity) {
+  const now = new Date().toISOString();
+  return {
+    id: randomUUID(),
+    tier: 2,
+    owner: ownerOf(identity),
+    createdAt: now,
+    updatedAt: now,
+    clientNames: "",
+    slug: "",
+    clientGreeting: "",
+    introNote: "",
+    seasonNote: null,
+    footerDisclaimer: TIER2_DISCLAIMER,
+    destinations: [emptyDestination(), emptyDestination(), emptyDestination()],
+    yachts: [],
+    consultant: consultantOf(identity),
+  };
+}
+
+function consultantOf(identity) {
+  return {
+    name: identity.name ?? "",
+    title: "Charter Consultant, Ocean Independence",
+    phone: "",
+    email: identity.email ?? "",
+    whatsapp: "",
+    photoUrl: "",
+  };
+}
+
 function emptyDraft(identity) {
   const now = new Date().toISOString();
   return {
     id: randomUUID(),
+    tier: 3,
     owner: ownerOf(identity),
     createdAt: now,
     updatedAt: now,
@@ -147,14 +213,7 @@ function emptyDraft(identity) {
     theme: "dark",
     yachts: [],
     sections: { costs: true, itinerary: true, itineraryUrl: "", compare: true },
-    consultant: {
-      name: identity.name ?? "",
-      title: "Charter Consultant, Ocean Independence",
-      phone: "",
-      email: identity.email ?? "",
-      whatsapp: "",
-      photoUrl: "",
-    },
+    consultant: consultantOf(identity),
   };
 }
 
@@ -230,20 +289,32 @@ export async function getSelection(identity, id) {
  * highlights) carry across; the client name, welcome greeting, per-yacht
  * notes to the client and any publish state are cleared.
  */
-export async function createSelection(identity, { duplicateOf } = {}) {
+export async function createSelection(identity, { duplicateOf, tier } = {}) {
   const ownerId = requireOwnerId(identity);
-  let draft = emptyDraft(identity);
+  let draft = Number(tier) === 2 ? emptyTier2Draft(identity) : emptyDraft(identity);
   if (duplicateOf) {
     const src = await getSelection(identity, duplicateOf);
+    // A duplicate keeps its source's tier — the tier is fixed once created.
+    const base = tierOf(src) === 2 ? emptyTier2Draft(identity) : emptyDraft(identity);
     draft = {
       ...src,
-      id: draft.id,
+      id: base.id,
+      tier: tierOf(src),
       owner: ownerOf(identity),
-      createdAt: draft.createdAt,
-      updatedAt: draft.updatedAt,
+      createdAt: base.createdAt,
+      updatedAt: base.updatedAt,
       clientNames: "",
-      welcome: "",
-      yachts: (src.yachts ?? []).map((y) => ({ ...y, uid: randomUUID(), notes: "" })),
+      ...(tierOf(src) === 2
+        ? {
+            slug: "",
+            clientGreeting: "",
+            introNote: "",
+            yachts: (src.yachts ?? []).map((y) => ({ ...y, uid: randomUUID(), consultantNote: "", knownYacht: false })),
+          }
+        : {
+            welcome: "",
+            yachts: (src.yachts ?? []).map((y) => ({ ...y, uid: randomUUID(), notes: "" })),
+          }),
     };
     delete draft.publishedSlug;
     delete draft.published;
@@ -261,6 +332,7 @@ export async function saveSelection(identity, id, incoming) {
   const stored = {
     ...incoming,
     id: existing.id,
+    tier: tierOf(existing),
     owner: ownerOf(identity),
     createdAt: existing.createdAt,
     publishedSlug: existing.publishedSlug,
@@ -376,7 +448,7 @@ export async function listVersions(identity, id) {
       publishedAt: rec.publishedAt,
       yachtCount: rec.config?.yachts?.length ?? 0,
       clientNames: rec.config?.clientNames ?? "",
-      headline: rec.config?.headline ?? "",
+      headline: (rec.config?.tier === 2 ? rec.config?.clientGreeting : rec.config?.headline) ?? "",
       rolledBackFrom: rec.rolledBackFrom ?? null,
       isCurrent: n === current.version && !current.unpublished,
     });

@@ -85,6 +85,16 @@ export default function AtlasPage() {
     else goHome();
   }, [index, selectedId, select, goHome]);
 
+  // Deep link from other campaign pages: /2027-charter-season?destination=<id>
+  // opens that destination once the content has loaded.
+  const deepLinked = useRef(false);
+  useEffect(() => {
+    if (!index || deepLinked.current) return;
+    deepLinked.current = true;
+    const id = new URLSearchParams(window.location.search).get("destination");
+    if (id && index.byId.has(id)) select(id);
+  }, [index, select]);
+
   const selected = index && selectedId ? (index.byId.get(selectedId) ?? null) : null;
 
   return (

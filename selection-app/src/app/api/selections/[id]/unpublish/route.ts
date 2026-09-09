@@ -14,6 +14,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   try {
     const { slug } = await unpublishSelection(session.identity, id);
     revalidatePath(`/selection/${slug}`);
+    revalidatePath(`/atlas/${slug}`);
     return NextResponse.json({ ok: true, slug });
   } catch (err) {
     return errorResponse(err);

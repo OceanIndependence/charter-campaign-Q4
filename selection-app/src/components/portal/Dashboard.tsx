@@ -2,13 +2,17 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { SelectionMeta, SelectionStatus, VersionInfo } from "@/lib/portal-types";
-import { selectionTitle } from "@/lib/portal-types";
+import type { SelectionMeta, SelectionStatus, Tier, VersionInfo } from "@/lib/portal-types";
+import { TIER_LABEL, clientPagePath, selectionTitle } from "@/lib/portal-types";
 import { fmtDateLong } from "@/lib/format";
 import styles from "./PortalForm.module.css";
 
 type Scope = "mine" | "all";
 type StatusFilter = "all" | SelectionStatus;
+type TierFilter = "all" | "2" | "3";
+
+/** Tier of a dashboard row; rows written before tiers existed are Tier 3. */
+const tierOf = (m: { tier?: Tier }): Tier => (m.tier === 2 ? 2 : 3);
 
 const STATUS_LABEL: Record<SelectionStatus, string> = {
   draft: "Draft",
@@ -32,6 +36,9 @@ export default function Dashboard() {
   const [me, setMe] = useState<string>("");
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<StatusFilter>("all");
+  const [tier, setTier] = useState<TierFilter>("all");
+  /** The tier chooser shown before a new selection is created. */
+  const [choosing, setChoosing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [versionsFor, setVersionsFor] = useState<string | null>(null);
@@ -65,6 +72,7 @@ export default function Dashboard() {
     const needle = q.trim().toLowerCase();
     return (items ?? []).filter((m) => {
       if (status !== "all" && m.status !== status) return false;
+      if (tier !== "all" && String(tierOf(m)) !== tier) return false;
       if (!needle) return true;
       return (
         m.clientNames.toLowerCase().includes(needle) ||
@@ -72,7 +80,7 @@ export default function Dashboard() {
         (m.slug ?? "").toLowerCase().includes(needle)
       );
     });
-  }, [items, q, status]);
+  }, [items, q, status, tier]);
 
   /* --------------------------------------------------------- actions */
 
@@ -94,15 +102,16 @@ export default function Dashboard() {
     [load, scope]
   );
 
+  /** Create a selection of the chosen tier, or duplicate one (which keeps its tier). */
   const createNew = useCallback(
-    (duplicateOf?: string) =>
+    (opts: { tier?: Tier; duplicateOf?: string } = {}) =>
       act(
-        duplicateOf ?? "new",
+        opts.duplicateOf ?? "new",
         () =>
           fetch("/api/selections", {
             method: "POST",
             headers: { "content-type": "application/json" },
-            body: JSON.stringify(duplicateOf ? { duplicateOf } : {}),
+            body: JSON.stringify(opts.duplicateOf ? { duplicateOf: opts.duplicateOf } : { tier: opts.tier ?? 3 }),
           }),
         (body) => {
           if (typeof body.id === "string") router.push(`/portal/edit/${body.id}`);
@@ -129,7 +138,7 @@ export default function Dashboard() {
 
   const copyLink = useCallback(async (m: SelectionMeta) => {
     if (!m.slug) return;
-    const url = `${window.location.origin}/selection/${m.slug}`;
+    const url = `${window.location.origin}${clientPagePath(tierOf(m), m.slug)}`;
     try {
       await navigator.clipboard.writeText(url);
       setCopied(m.id);
@@ -197,7 +206,7 @@ export default function Dashboard() {
           </p>
         </div>
         {!nothingYet && (
-          <button type="button" className={styles.publishBtn} onClick={() => createNew()} disabled={busy === "new"}>
+          <button type="button" className={styles.publishBtn} onClick={() => setChoosing((c) => !c)} disabled={busy === "new"}>
             NEW SELECTION
           </button>
         )}
@@ -205,22 +214,11 @@ export default function Dashboard() {
 
       {error && <p className={styles.dashError}>{error}</p>}
 
-      {nothingYet ? (
-        <section className={`${styles.card} ${styles.cardFirst} ${styles.emptyCard}`}>
-          <div className={styles.eyebrow}>NOTHING HERE YET</div>
-          <h2 className={styles.emptyTitle}>Create your first selection</h2>
-          <p className={styles.intro}>
-            A selection is the client-facing page built from your chosen yachts — the ring carousel,
-            specification panels and your contact details. It starts as a private draft and goes live
-            only when you publish it.
-          </p>
-          <div>
-            <button type="button" className={styles.publishBtn} onClick={() => createNew()} disabled={busy === "new"}>
-              CREATE YOUR FIRST SELECTION
-            </button>
-          </div>
-        </section>
-      ) : (
+      {(choosing || nothingYet) && (
+        <TierChooser busy={busy === "new"} onPick={(t) => createNew({ tier: t })} onCancel={nothingYet ? undefined : () => setChoosing(false)} />
+      )}
+
+      {nothingYet ? null : (
         <section className={`${styles.card} ${styles.cardFirst} ${styles.dashCard}`}>
           <div className={styles.toolbar}>
             <input
@@ -241,6 +239,16 @@ export default function Dashboard() {
               <option value="draft">Draft</option>
               <option value="published">Published</option>
               <option value="unpublished">Unpublished</option>
+            </select>
+            <select
+              className={styles.select}
+              value={tier}
+              onChange={(e) => setTier(e.target.value as TierFilter)}
+              aria-label="Filter by tier"
+            >
+              <option value="all">All tiers</option>
+              <option value="2">{TIER_LABEL[2]}</option>
+              <option value="3">{TIER_LABEL[3]}</option>
             </select>
             {canViewAll && (
               <label className={styles.toggle}>
@@ -265,6 +273,7 @@ export default function Dashboard() {
                 <thead>
                   <tr>
                     <th>CLIENT</th>
+                    <th>TIER</th>
                     {scope === "all" && <th>CONSULTANT</th>}
                     <th>YACHTS SELECTED</th>
                     <th>STATUS</th>
@@ -289,7 +298,7 @@ export default function Dashboard() {
                         versionsOpen={open}
                         versions={open ? versions : null}
                         onOpen={() => router.push(`/portal/edit/${m.id}`)}
-                        onDuplicate={() => createNew(m.id)}
+                        onDuplicate={() => createNew({ duplicateOf: m.id })}
                         onCopy={() => copyLink(m)}
                         onUnpublish={() => unpublish(m)}
                         onDelete={() => remove(m)}
@@ -305,6 +314,54 @@ export default function Dashboard() {
         </section>
       )}
     </main>
+  );
+}
+
+/* --------------------------------------------------------- tier chooser */
+
+const TIER_CARDS: Array<{ tier: Tier; title: string; body: string; points: string[] }> = [
+  {
+    tier: 2,
+    title: "Personalised Atlas",
+    body: "The 2027 Atlas for one client: three destinations pinned bright on the globe, the yachts in a rail beneath it, and a detail drawer for each.",
+    points: ["Three destinations", "Yachts in a rail", "Client explores the globe"],
+  },
+  {
+    tier: 3,
+    title: "Yacht Selection",
+    body: "A shortlist of specific yachts for a client whose destination is already settled: the ring carousel, specification panels and your contact details.",
+    points: ["Yachts only", "Destination already known", "Ring carousel and spec panels"],
+  },
+];
+
+function TierChooser({ busy, onPick, onCancel }: { busy: boolean; onPick: (tier: Tier) => void; onCancel?: () => void }) {
+  return (
+    <section className={`${styles.card} ${styles.cardFirst} ${styles.chooser}`}>
+      <div className={styles.sectionHeadRow}>
+        <div className={styles.sectionHead}>NEW SELECTION — CHOOSE A TIER</div>
+        {onCancel && (
+          <button type="button" className={styles.actionBtn} onClick={onCancel}>
+            CANCEL
+          </button>
+        )}
+      </div>
+      <p className={styles.sectionNote}>The tier decides what the client page is and cannot be changed once the selection exists.</p>
+      <div className={styles.tierGrid}>
+        {TIER_CARDS.map((c) => (
+          <button type="button" key={c.tier} className={styles.tierCard} onClick={() => onPick(c.tier)} disabled={busy}>
+            <span className={styles.tierEyebrow}>TIER {c.tier}</span>
+            <span className={styles.tierTitle}>{c.title}</span>
+            <span className={styles.tierBody}>{c.body}</span>
+            <span className={styles.tierPoints}>
+              {c.points.map((pt) => (
+                <span key={pt}>{pt}</span>
+              ))}
+            </span>
+            <span className={styles.tierCta}>{busy ? "CREATING…" : `CREATE A ${c.title.toUpperCase()}`}</span>
+          </button>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -333,12 +390,17 @@ function RowGroup(p: RowProps) {
   // Preview always renders the current draft (what the next publish will
   // show); the live client page is a separate action.
   const previewHref = `/portal/preview?id=${m.id}`;
-  const cols = p.showOwner ? 7 : 6; // table columns, for the full-width rows
+  const tier = tierOf(m);
+  const liveHref = m.slug ? clientPagePath(tier, m.slug) : "#";
+  const cols = p.showOwner ? 8 : 7; // table columns, for the full-width rows
   return (
     <>
       <tr className={p.isBusy ? styles.rowBusy : undefined} data-id={m.id}>
         <td className={styles.tdWrap}>
           <span className={styles.rowClient}>{m.clientNames.trim() || title}</span>
+        </td>
+        <td>
+          <span className={`${styles.tierTag} ${tier === 2 ? styles.tierTag2 : ""}`}>{TIER_LABEL[tier]}</span>
         </td>
         {p.showOwner && <td>{m.owner?.name || m.owner?.email || "—"}</td>}
         <td>{m.yachtCount}</td>
@@ -371,7 +433,7 @@ function RowGroup(p: RowProps) {
                 PREVIEW
               </a>
               {m.status === "published" && m.slug && (
-                <a className={styles.actionBtn} href={`/selection/${m.slug}`} target="_blank" rel="noopener noreferrer">
+                <a className={styles.actionBtn} href={liveHref} target="_blank" rel="noopener noreferrer">
                   LIVE PAGE
                 </a>
               )}
@@ -397,7 +459,7 @@ function RowGroup(p: RowProps) {
           ) : (
             <div className={styles.rowActions}>
               {m.status === "published" && m.slug && (
-                <a className={styles.actionBtn} href={`/selection/${m.slug}`} target="_blank" rel="noopener noreferrer">
+                <a className={styles.actionBtn} href={liveHref} target="_blank" rel="noopener noreferrer">
                   VIEW PAGE
                 </a>
               )}

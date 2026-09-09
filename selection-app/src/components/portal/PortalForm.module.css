@@ -1204,3 +1204,270 @@
   background: #1d1d1d;
   color: #ffffff;
 }
+
+/* ------------------------------------------------------------ tier choice */
+
+.chooser {
+  padding-bottom: 36px;
+}
+
+.tierGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.tierCard {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+  text-align: left;
+  padding: 26px 24px 24px;
+  border: 1px solid #d8d8d6;
+  background: #ffffff;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.tierCard:hover:not(:disabled) {
+  border-color: #1d1d1d;
+}
+
+.tierCard:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.tierEyebrow {
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  font-weight: 500;
+  color: #99999a;
+}
+
+.tierTitle {
+  font-family: "Gotham Condensed", "Gotham", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 500;
+  font-size: 22px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #1d1d1d;
+}
+
+.tierBody {
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: #555759;
+  font-weight: 300;
+}
+
+.tierPoints {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.tierPoints span {
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  font-weight: 500;
+  color: #555759;
+  border: 1px solid #e3e3e1;
+  border-radius: 999px;
+  padding: 4px 10px 4px calc(10px + 0.2em);
+  text-transform: uppercase;
+}
+
+.tierCta {
+  margin-top: 8px;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  font-weight: 500;
+  color: #1d1d1d;
+  border-bottom: 2px solid #a7e6d7;
+  padding-bottom: 6px;
+  justify-self: start;
+}
+
+.tierTag {
+  display: inline-block;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  font-weight: 500;
+  color: #555759;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.tierTag2 {
+  color: #1d1d1d;
+  border-bottom: 2px solid #a7e6d7;
+  padding-bottom: 2px;
+}
+
+/* -------------------------------------------------------- Tier 2 form */
+
+.blockHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.sourceTag {
+  font-size: 8.5px;
+  letter-spacing: 0.2em;
+  font-weight: 500;
+  color: #99999a;
+  border: 1px solid #e3e3e1;
+  border-radius: 999px;
+  padding: 3px 8px 3px calc(8px + 0.2em);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.sourceTagEdited {
+  color: #1d1d1d;
+  border-color: #a7e6d7;
+  background: rgba(167, 230, 215, 0.18);
+}
+
+.restoreLink {
+  font-family: inherit;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  color: #555759;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.restoreLink:hover {
+  color: #1d1d1d;
+}
+
+.destSlot {
+  border: 1px solid #e3e3e1;
+  padding: 22px 20px 26px;
+  display: grid;
+  gap: 18px;
+}
+
+.destSlotHead {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+
+.destSlotHead .yachtTitle {
+  flex: 1;
+}
+
+.destNote {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: #99999a;
+  line-height: 1.6;
+}
+
+.imageSlots {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.imageSlot {
+  display: grid;
+  gap: 8px;
+}
+
+.imagePreview {
+  position: relative;
+  aspect-ratio: 2000 / 1250;
+  background: #f2f2f0;
+  border: 1px solid #d8d8d6;
+  overflow: hidden;
+}
+
+.imagePreview img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chipToggle {
+  font-family: inherit;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  font-weight: 500;
+  color: #555759;
+  border: 1px solid #c9c9c7;
+  border-radius: 999px;
+  padding: 7px 12px 7px calc(12px + 0.2em);
+  background: #ffffff;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.chipToggle:hover {
+  border-color: #1d1d1d;
+  color: #1d1d1d;
+}
+
+.chipOn {
+  background: #1d1d1d;
+  border-color: #1d1d1d;
+  color: #ffffff;
+}
+
+.chipOn:hover {
+  color: #ffffff;
+}
+
+.highlightRow {
+  display: grid;
+  grid-template-columns: 32px 1fr 1.4fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.highlightNum {
+  font-family: "Gotham Condensed", "Gotham", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: #99999a;
+}
+
+.problemList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 4px;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: #8a5a2b;
+}
+
+@media (max-width: 640px) {
+  .highlightRow {
+    grid-template-columns: 24px 1fr;
+  }
+
+  .highlightRow .input:last-child {
+    grid-column: 2;
+  }
+}

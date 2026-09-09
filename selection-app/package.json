@@ -13,6 +13,7 @@
     "@vercel/blob": "^2.8.0",
     "d3-geo": "^3.1.1",
     "next": "^15.5.4",
+    "node-html-parser": "^9.0.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "sharp": "^0.34.3",
@@ -26,7 +27,6 @@
     "@types/react-dom": "^19.1.0",
     "@types/three": "^0.185.4",
     "@types/topojson-client": "^3.1.5",
-    "node-html-parser": "^9.0.4",
     "typescript": "^5.7.0"
   }
 }

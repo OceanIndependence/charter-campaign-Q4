@@ -79,6 +79,8 @@ export interface PageSections {
 export type PageTheme = "dark" | "light";
 
 export interface PageConfig {
+  /** Absent on pages published before tiers existed — read as Tier 3 */
+  tier?: 3;
   slug: string;
   clientNames: string;
   season: string;
@@ -96,4 +98,78 @@ export interface PageConfig {
   atlasUrl?: string;
   /** Colour theme; absent means dark */
   theme?: PageTheme;
+}
+
+/* ------------------------------------------------------------------ Tier 2 */
+
+/** A copy or image block with its provenance, frozen at publish. */
+export interface AtlasBlock {
+  value: string;
+  source: "atlas" | "consultant";
+}
+
+/** One of the three chosen destinations, resolved from the Atlas at publish time. */
+export interface AtlasPageDestination {
+  /** Tier 1 destination id, e.g. "mediterranean/italy/amalfi-coast" */
+  id: string;
+  name: string;
+  lat: number;
+  lon: number;
+  /** The destination guide on the website */
+  guideUrl: string;
+  eyebrow: AtlasBlock;
+  deckLine: AtlasBlock;
+  description: AtlasBlock;
+  /** Absent when the consultant left it blank */
+  consultantNote?: AtlasBlock;
+  /** Two 16:10 images */
+  images: [AtlasBlock, AtlasBlock];
+}
+
+export interface AtlasPageHighlight {
+  title: string;
+  line: string;
+}
+
+/** A Tier 2 yacht: the Tier 3 yacht (frozen Yachtfolio facts) plus rail and drawer fields. */
+export interface AtlasPageYacht extends Yacht {
+  destinationIds: string[];
+  knownYacht: boolean;
+  /** One line, rendered signed with the consultant's first name */
+  consultantNote?: string;
+  /** Drawer VAT row text, e.g. "Varies by location" */
+  vatText: string;
+  highlights: AtlasPageHighlight[];
+}
+
+/** Every other Atlas destination, pinned dim on the globe; frozen at publish. */
+export interface AtlasPagePin {
+  id: string;
+  name: string;
+  lat: number;
+  lon: number;
+}
+
+export interface AtlasPageConfig {
+  tier: 2;
+  slug: string;
+  clientNames: string;
+  clientGreeting: string;
+  introNote: string;
+  seasonNote?: { eyebrow: string; body: string };
+  footerDisclaimer: string;
+  destinations: AtlasPageDestination[];
+  yachts: AtlasPageYacht[];
+  otherPins: AtlasPagePin[];
+  consultant: Consultant;
+  /** The public Tier 1 page */
+  atlasUrl: string;
+  /** Diagnostic: which destinations resolved from the live website vs the snapshot */
+  contentSources?: Record<string, "live" | "cache">;
+}
+
+export type AnyPageConfig = PageConfig | AtlasPageConfig;
+
+export function isAtlasPageConfig(c: AnyPageConfig | null | undefined): c is AtlasPageConfig {
+  return (c as AtlasPageConfig | undefined)?.tier === 2;
 }

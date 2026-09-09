@@ -16,6 +16,7 @@ const TYPES: Record<string, string> = {
 // private DATA store (drafts, page configs).
 const SERVABLE = [
   { prefix: "yachtfolio/images/", ext: /\.(jpe?g|png|webp)$/i },
+  { prefix: "atlas/images/", ext: /\.(jpe?g|png|webp)$/i },
 ];
 
 /**
