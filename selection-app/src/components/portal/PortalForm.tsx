@@ -1043,12 +1043,6 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
                         />
                       </label>
                       <div className={`${styles.field} ${styles.fieldFull}`}>
-                        <span className={styles.fieldLabel}>
-                          PAGE IMAGES
-                          <span className={styles.fieldLabelHint}>
-                            {" "}— each slot offers its own gallery category; click a thumbnail to choose, ⛶ to enlarge
-                          </span>
-                        </span>
                         <ImagePicker
                           gallery={y.gallery ?? []}
                           values={{

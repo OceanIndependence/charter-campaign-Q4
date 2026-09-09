@@ -35,19 +35,15 @@ export function chosenDestinationIds(draft: Tier2Draft): string[] {
 
 export function mapTier2Yacht(y: Tier2DraftYacht, validDestinationIds: Set<string>): AtlasPageYacht | null {
   // Tier 2 has no VAT percentage: the drawer shows vatText and the total is
-  // rate plus APA. Clear any stray percentage before the shared mapping runs.
-  const base = mapDraftYacht({ ...y, vatPct: "", notes: y.consultantNote, keyFeatures: "" });
+  // rate plus APA. Clear any stray percentage before the shared mapping runs;
+  // the Yachtfolio key features carry through as the drawer highlights.
+  const base = mapDraftYacht({ ...y, vatPct: "", notes: y.consultantNote });
   if (!base) return null;
-  const highlights = (y.highlights ?? [])
-    .map((h) => ({ title: (h?.title ?? "").trim(), line: (h?.line ?? "").trim() }))
-    .filter((h) => h.title || h.line);
   return {
     ...base,
     destinationIds: (y.destinationIds ?? []).filter((id) => validDestinationIds.has(id)),
-    knownYacht: Boolean(y.knownYacht),
     consultantNote: str(y.consultantNote),
     vatText: str(y.vatText) ?? TIER2_DEFAULT_VAT_TEXT,
-    highlights,
   };
 }
 

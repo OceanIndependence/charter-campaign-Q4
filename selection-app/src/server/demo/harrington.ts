@@ -57,10 +57,7 @@ function destination(id: string, edits: { eyebrow: string; deckLine: string; des
   };
 }
 
-function yacht(
-  yfId: number,
-  edits: { destinations: string[]; known?: boolean; note: string; highlights: [string, string][] }
-): Tier2DraftYacht {
+function yacht(yfId: number, edits: { destinations: string[]; note: string }): Tier2DraftYacht {
   const detail = demoDetail(yfId);
   const images = demoImages(yfId);
   if (!detail || !images) throw new Error(`Demo yacht ${yfId} is missing.`);
@@ -74,6 +71,7 @@ function yacht(
     crew: String(detail.crew),
     staterooms: detail.staterooms,
     cruisingArea: detail.cruisingArea,
+    keyFeatures: detail.keyFeatures.join("\n"),
     currency: detail.currency,
     weeklyRate: String(detail.weeklyRate),
     weeklyRateIsFrom: false,
@@ -84,13 +82,7 @@ function yacht(
     exteriorImageUrl: images.exteriorImageUrl,
     lifestyleImageUrl: images.lifestyleImageUrl,
     destinationIds: edits.destinations,
-    knownYacht: Boolean(edits.known),
     consultantNote: edits.note,
-    highlights: [
-      { title: edits.highlights[0][0], line: edits.highlights[0][1] },
-      { title: edits.highlights[1][0], line: edits.highlights[1][1] },
-      { title: edits.highlights[2][0], line: edits.highlights[2][1] },
-    ],
   };
 }
 
@@ -131,58 +123,27 @@ export function demoTier2Draft(): Omit<Tier2Draft, "id" | "owner" | "createdAt" 
     yachts: [
       yacht(900001, {
         destinations: [AMALFI],
-        known: true,
         note: "Same Captain, same crew, and the corners you missed.",
-        highlights: [
-          ["LO SCOGLIO, NERANO", "Lunch on the water, reached only by tender"],
-          ["DA ADOLFO, POSITANO", "No road access, so you arrive by boat"],
-          ["LI GALLI AT FIRST LIGHT", "An early-morning swim before the day boats arrive"],
-        ],
       }),
       yacht(900002, {
         destinations: [AMALFI, SARDINIA],
         note: "Sleek 2024 delivery, ideal for coastal hopping.",
-        highlights: [
-          ["DELIVERED 2024", "The newest yacht on this shortlist"],
-          ["QUIET AT ANCHOR", "Volvo IPS and Zero Speed Stabilizers"],
-          ["FULL-BEAM MASTER", "The master stateroom runs the width of the yacht"],
-        ],
       }),
       yacht(900003, {
         destinations: [SARDINIA],
         note: "A step up in every direction: wellness deck, vast beach club.",
-        highlights: [
-          ["THE MADDALENA ARCHIPELAGO", "A marine reserve of pink-sand islets"],
-          ["BONIFACIO", "A citadel carved into Corsica’s white cliffs"],
-          ["CALA COTICCIO, CAPRERA", "At its best early in the morning"],
-        ],
       }),
       yacht(900004, {
         destinations: [SARDINIA],
         note: "Effortless family charters with a devoted crew.",
-        highlights: [
-          ["SMALL-HARBOUR FRIENDLY", "Fits where the 50-metre yachts anchor off"],
-          ["FLY BRIDGE DINING", "Ten at the table under the Bimini"],
-          ["WATERTOYS", "Seabobs, paddleboards and a donut for the children"],
-        ],
       }),
       yacht(900005, {
         destinations: [AEOLIAN],
         note: "Riva glamour, sized for the islands.",
-        highlights: [
-          ["STROMBOLI AFTER DARK", "The crater watched from the water"],
-          ["CALA JUNCO, PANAREA", "A natural amphitheatre of green stone"],
-          ["SALINA", "Malvasia tastings above the sea"],
-        ],
       }),
       yacht(900006, {
         destinations: [AEOLIAN, AMALFI],
         note: "Refitted in 2025, with a sky lounge that opens onto the upper deck.",
-        highlights: [
-          ["SIX STATEROOMS", "Room for 12 guests across two families"],
-          ["SKY LOUNGE", "Opens fully onto the upper deck"],
-          ["DIVING INSTRUCTOR", "Certified instruction on board for the Aeolian reefs"],
-        ],
       }),
     ],
     consultant: {

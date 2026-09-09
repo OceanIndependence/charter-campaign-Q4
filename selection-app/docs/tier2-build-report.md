@@ -27,7 +27,7 @@ exactly" at the end).
 | Yachtfolio client, normaliser | `src/server/yachtfolio/client.mjs`, `normalise.mjs` | Unchanged; Tier 2 yachts are picked through the same `GET /api/fleet`, `GET /api/fleet/:yfId`, `GET /api/fleet/:yfId/images`. |
 | Fleet cache | `src/server/fleet.mjs` | Unchanged flow; gains a demo fallback when `YACHTFOLIO_PASSKEY` is absent (`src/server/demo/fleet.mjs`). |
 | sharp image pipeline | `src/server/yachtfolio/images.mjs` (`cropToSizes`) | Yacht imagery as before; destination imagery from the website is cropped to 2000 × 1250 and 1000 × 625 and stored under `atlas/images/<sha1 of source URL>` in the public IMAGES store. |
-| Yacht detail component | `src/components/SpecPanel.tsx` | The drawer. Three optional props added (`signedBy`, `vatText`, titled `highlights`); Tier 3 rendering is unchanged. |
+| Yacht detail component | `src/components/SpecPanel.tsx` | The drawer. Two optional props added (`signedBy`, `vatText`); the highlights are the Yachtfolio key features, as on Tier 3, and Tier 3 rendering is unchanged. |
 | Consultant footer | `src/components/ConsultantBlock.tsx` | Reused as-is; the WhatsApp link now goes through `whatsappHref()` so a typed number becomes `https://wa.me/<digits>` on both tiers. |
 | Draft / publish / versions | `src/server/pages.mjs` | Same store, index, slug claiming, versions, rollback and unpublish. Adds `tier` (fixed at creation), an empty Tier 2 draft, tier-aware duplicate and dashboard metadata. Both tiers share one slug namespace; each route 404s the other tier's slug. |
 | Auth | `src/server/auth/*` | Unchanged. Owner is stamped from the session identity (Microsoft object id once the provider is switched). |
@@ -123,8 +123,8 @@ live run.
   consultant as on Tier 3. The demo yachts have none, so their drawers hide VIEW BROCHURE.
 - **VAT.** Tier 2 shows free text ("Varies by location") and excludes VAT from the total;
   Tier 3's percentage is not used.
-- **Highlights, known-yacht flag, one-line note.** Consultant fields; nothing in
-  Yachtfolio corresponds.
+- **One-line note.** A consultant field; nothing in Yachtfolio corresponds. The drawer
+  highlights are Yachtfolio's key features (editable in the form), as on Tier 3.
 - **Builder** is missing for some yachts (recorded in `missing`); the rail meta line
   omits it by design ("38M · 10 GUESTS · 5 STATEROOMS").
 
@@ -196,14 +196,9 @@ rate plus APA, both computed by `mapDraftYacht`.
       "lifestyleImageUrl": "/assets/demo/serenity-2.jpg",
       "brochureUrl": "#",
       "destinationIds": ["mediterranean/italy/amalfi-coast"],
-      "knownYacht": true,
       "consultantNote": "Same Captain, same crew, and the corners you missed.",
       "vatText": "Varies by location",
-      "highlights": [
-        { "title": "LO SCOGLIO, NERANO", "line": "Lunch on the water, reached only by tender" },
-        { "title": "DA ADOLFO, POSITANO", "line": "No road access, so you arrive by boat" },
-        { "title": "LI GALLI AT FIRST LIGHT", "line": "An early-morning swim before the day boats arrive" }
-      ]
+      "keyFeatures": ["Sun deck Jacuzzi", "Beach club at sea level", "Zero Speed Stabilizers", "Same Captain and crew as 2026"]
     },
     "… five more"
   ],
@@ -250,8 +245,8 @@ rate plus APA, both computed by `mapDraftYacht`.
   section list (header label, intro band, 85vh globe, rail, drawer, season note,
   footer, disclaimer) and takes its type ramp, colours, spacing and component states
   from the export.
-- **Highlights** belong to yachts in the brief; in the export they are per-destination.
-  They are yacht fields here, in the export's numbered style.
+- **Highlights** are the yacht's Yachtfolio key features (as on Tier 3), not the
+  export's per-destination curated list, and there is no "THE YACHT YOU KNOW" flag.
 - **"SHALL WE HOLD SOME OPTIONS?"** in the export's footer is replaced by the Tier 3
   footer's WHATSAPP ME, as the brief asks.
 - **Live website refresh** could not be exercised from the build sandbox (HTML requests

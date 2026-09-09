@@ -429,14 +429,6 @@
   border-color: var(--fg-5);
 }
 
-.cardKnown {
-  border-color: var(--mint-hairline);
-}
-
-.cardKnown:hover {
-  border-color: var(--mint);
-}
-
 .cardDim {
   opacity: 0.4;
 }
@@ -458,14 +450,6 @@
 
 .cardBody {
   padding: 18px 20px 20px;
-}
-
-.cardKnownTag {
-  font-size: 9px;
-  letter-spacing: 0.3em;
-  font-weight: 500;
-  color: var(--mint);
-  margin-bottom: 10px;
 }
 
 .cardName {

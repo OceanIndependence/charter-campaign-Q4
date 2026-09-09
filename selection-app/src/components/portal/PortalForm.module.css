@@ -610,9 +610,9 @@
 
 .thumbStrip {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   overflow-x: auto;
-  padding-bottom: 6px;
+  padding: 6px 6px 10px;
   scrollbar-width: thin;
 }
 
@@ -623,10 +623,39 @@
   height: 65px;
   border: 1px solid #d8d8d6;
   background: #f2f2f0;
+  opacity: 0.6;
+  transition:
+    opacity 140ms ease,
+    box-shadow 140ms ease;
 }
 
+.thumb:hover {
+  opacity: 1;
+}
+
+/* The chosen image: full opacity, a heavy ink frame with a mint ring, and a
+   check badge (added by the picker); everything else in the strip is faded. */
 .thumbSelected {
-  border: 2px solid #1d1d1d;
+  opacity: 1;
+  border-color: #1d1d1d;
+  box-shadow:
+    0 0 0 2px #1d1d1d,
+    0 0 0 5px #a7e6d7;
+  z-index: 1;
+}
+
+.thumbSelected::after {
+  content: "SELECTED";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 2px 6px;
+  background: #1d1d1d;
+  color: #a7e6d7;
+  font-size: 7.5px;
+  letter-spacing: 0.2em;
+  font-weight: 500;
+  pointer-events: none;
 }
 
 .thumbPick {
@@ -664,12 +693,13 @@
   top: 4px;
   display: grid;
   place-items: center;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  background: #1d1d1d;
-  color: #ffffff;
-  font-size: 11px;
+  background: #a7e6d7;
+  color: #1d1d1d;
+  font-size: 12px;
+  font-weight: 700;
   pointer-events: none;
 }
 
