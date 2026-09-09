@@ -886,7 +886,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
           </div>
           <p className={styles.sectionNote}>
             Between {TIER2_MIN_YACHTS === 2 ? "two" : TIER2_MIN_YACHTS} and eight yachts, in rail order — drag a yacht’s grey bar (or use the arrows) to reorder. Facts, rates and images
-            arrive from Yachtfolio when a yacht is chosen; destinations are pre-ticked from its cruising areas for you to confirm.
+            arrive from Yachtfolio when a yacht is chosen; destinations are pre-ticked from its Yachtfolio location for you to confirm.
           </p>
           {fleetError && <p className={styles.fetchWarning}>{fleetError}</p>}
           {fleetDemo && <p className={styles.fetchWarning}>Demo fleet — YACHTFOLIO_PASSKEY is not configured on this server, so the fleet list is the six demo yachts.</p>}
@@ -995,7 +995,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
 
                       <div className={`${styles.field} ${styles.fieldFull}`}>
                         <span className={styles.fieldLabel}>
-                          DESTINATIONS <span className={styles.fieldLabelHint}>— pre-ticked from Yachtfolio cruising areas{y.cruisingArea ? `: ${y.cruisingArea}` : ""}</span>
+                          DESTINATIONS <span className={styles.fieldLabelHint}>— pre-ticked from the Yachtfolio location{y.cruisingArea ? `: ${y.cruisingArea}` : ""}</span>
                         </span>
                         <div className={styles.chipRow}>
                           {chosen.length === 0 && <span className={styles.destNote}>Choose destinations above first.</span>}
@@ -1024,7 +1024,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                           ["GUESTS", "guests"],
                           ["CREW", "crew"],
                           ["STATEROOMS", "staterooms"],
-                          ["CRUISING AREA", "cruisingArea"],
+                          ["LOCATION", "cruisingArea"],
                         ] as Array<[string, AutoField]>
                       ).map(([label, key]) => (
                         <label key={key} className={styles.field}>

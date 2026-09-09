@@ -905,7 +905,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
                         />
                       </label>
                       <label className={styles.field}>
-                        <span className={styles.fieldLabel}>CRUISING AREA</span>
+                        <span className={styles.fieldLabel}>LOCATION</span>
                         <input
                           type="text"
                           className={styles.input}

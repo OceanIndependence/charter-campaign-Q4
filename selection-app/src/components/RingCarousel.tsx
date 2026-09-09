@@ -218,7 +218,7 @@ export default function RingCarousel(props: RingCarouselProps) {
                         <div className={styles.price}>{fmtCardRate(yacht)}</div>
                       )}
                       {yacht.cruisingArea && (
-                        <div className={styles.area}>CRUISING AREA · {yacht.cruisingArea}</div>
+                        <div className={styles.area}>LOCATION · {yacht.cruisingArea}</div>
                       )}
                     </div>
                     <div className={isFront ? styles.dashActive : styles.dash} />
