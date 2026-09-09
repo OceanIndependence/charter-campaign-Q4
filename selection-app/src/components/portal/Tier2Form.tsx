@@ -886,7 +886,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
           </div>
           <p className={styles.sectionNote}>
             Between {TIER2_MIN_YACHTS === 2 ? "two" : TIER2_MIN_YACHTS} and eight yachts, in rail order — drag a yacht’s grey bar (or use the arrows) to reorder. Facts, rates and images
-            arrive from Yachtfolio when a yacht is chosen; destinations are pre-ticked from its cruising areas for you to confirm.
+            arrive from Yachtfolio when a yacht is chosen; destinations are pre-ticked from its Yachtfolio location for you to confirm.
           </p>
           {fleetError && <p className={styles.fetchWarning}>{fleetError}</p>}
           {fleetDemo && <p className={styles.fetchWarning}>Demo fleet — YACHTFOLIO_PASSKEY is not configured on this server, so the fleet list is the six demo yachts.</p>}
@@ -907,8 +907,9 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
               const removedRecord = y.yfId != null && removedIds.has(y.yfId);
               const rate = num(y.weeklyRate);
               const apa = num(y.apaPct);
+              const delivery = num(y.deliveryFee ?? "");
               const apaAmount = rate != null && apa != null ? Math.round((rate * apa) / 100) : undefined;
-              const total = rate != null ? rate + (apaAmount ?? 0) : undefined;
+              const total = rate != null ? rate + (apaAmount ?? 0) + (delivery ?? 0) : undefined;
               const noDest = y.name.trim() && !y.destinationIds.some((id) => chosen.some((d) => d.destinationId === id));
               return (
                 <div
@@ -995,7 +996,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
 
                       <div className={`${styles.field} ${styles.fieldFull}`}>
                         <span className={styles.fieldLabel}>
-                          DESTINATIONS <span className={styles.fieldLabelHint}>— pre-ticked from Yachtfolio cruising areas{y.cruisingArea ? `: ${y.cruisingArea}` : ""}</span>
+                          DESTINATIONS <span className={styles.fieldLabelHint}>— pre-ticked from the Yachtfolio location{y.cruisingArea ? `: ${y.cruisingArea}` : ""}</span>
                         </span>
                         <div className={styles.chipRow}>
                           {chosen.length === 0 && <span className={styles.destNote}>Choose destinations above first.</span>}
@@ -1024,7 +1025,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                           ["GUESTS", "guests"],
                           ["CREW", "crew"],
                           ["STATEROOMS", "staterooms"],
-                          ["CRUISING AREA", "cruisingArea"],
+                          ["LOCATION", "cruisingArea"],
                         ] as Array<[string, AutoField]>
                       ).map(([label, key]) => (
                         <label key={key} className={styles.field}>
@@ -1078,6 +1079,18 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                       </label>
                       <label className={styles.field}>
                         <span className={styles.fieldLabel}>
+                          DELIVERY FEE <span className={styles.fieldLabelHint}>— optional, added to the total</span>
+                        </span>
+                        <input
+                          type="text"
+                          className={styles.input}
+                          placeholder="Leave blank if none"
+                          value={y.deliveryFee ?? ""}
+                          onChange={(e) => setYacht(y.uid, { deliveryFee: e.target.value })}
+                        />
+                      </label>
+                      <label className={styles.field}>
+                        <span className={styles.fieldLabel}>
                           E-BROCHURE LINK <span className={styles.fieldLabelHint}>— Yachtfolio</span>
                         </span>
                         <input type="url" className={styles.input} placeholder="https://…" value={y.brochureUrl} onChange={(e) => setYacht(y.uid, { brochureUrl: e.target.value })} />
@@ -1091,6 +1104,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                             </span>
                           )}
                           <span>VAT {y.vatText || "Varies by location"}</span>
+                          {delivery != null && <span>DELIVERY FEE {fmtMoneyForm(y.currency, delivery)}</span>}
                           {total != null && <span className={styles.priceTotal}>TOTAL {fmtMoneyForm(y.currency, total)}</span>}
                         </div>
                       )}

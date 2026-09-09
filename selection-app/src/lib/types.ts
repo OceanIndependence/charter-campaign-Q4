@@ -42,6 +42,8 @@ export interface Yacht {
   apaAmount?: number;
   vatPct?: number;
   vatAmount?: number;
+  /** Optional delivery fee, in `currency`; added to the total when present */
+  deliveryFee?: number;
   totalAmount?: number;
   /** Consultant's personal note, rendered signed with the consultant name */
   notes?: string;

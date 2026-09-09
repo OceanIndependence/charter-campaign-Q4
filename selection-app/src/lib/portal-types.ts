@@ -43,6 +43,8 @@ export interface DraftYacht {
   apaPct: string;
   /** VAT percentage; blank shows "TBC" and drops out of the total */
   vatPct: string;
+  /** Optional delivery fee in the yacht's currency; blank hides the row */
+  deliveryFee: string;
   notes: string;
   /** One key feature per line (auto-filled from Yachtfolio, editable) */
   keyFeatures: string;
@@ -399,6 +401,7 @@ export function emptyDraftYacht(uid: string): DraftYacht {
     rateTier: "low",
     apaPct: "35",
     vatPct: "",
+    deliveryFee: "",
     notes: "",
     keyFeatures: "",
     gallery: [],

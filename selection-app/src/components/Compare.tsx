@@ -39,7 +39,7 @@ export function CompareOverlay({ yachts, onClose }: { yachts: Yacht[]; onClose: 
       ["GUESTS", (y) => (y.guests != null ? String(y.guests) : undefined)],
       ["CREW", (y) => (y.crew != null ? String(y.crew) : undefined)],
       ["STATEROOMS", fmtStaterooms],
-      ["CRUISING AREA", (y) => y.cruisingArea],
+      ["LOCATION", (y) => y.cruisingArea],
       ["WEEKLY RATE", fmtWeeklyRate],
       [
         "VAT",
@@ -55,6 +55,7 @@ export function CompareOverlay({ yachts, onClose }: { yachts: Yacht[]; onClose: 
             ? `${y.weeklyRateIsFrom ? "from " : ""}${fmtMoney(y.currency, y.apaAmount)} (${y.apaPct}%)`
             : undefined,
       ],
+      ["DELIVERY FEE", (y) => (y.deliveryFee != null ? fmtMoney(y.currency, y.deliveryFee) : undefined)],
       [
         "TOTAL",
         (y) =>

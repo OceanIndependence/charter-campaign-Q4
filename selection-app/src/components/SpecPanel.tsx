@@ -35,7 +35,7 @@ export default function SpecPanel({
       ["GUESTS", yacht.guests != null ? String(yacht.guests) : undefined],
       ["CREW", yacht.crew != null ? String(yacht.crew) : undefined],
       ["STATEROOMS", fmtStaterooms(yacht)],
-      ["CRUISING AREA", yacht.cruisingArea],
+      ["LOCATION", yacht.cruisingArea],
     ] as Array<[string, string | undefined]>
   ).filter((row): row is [string, string] => Boolean(row[1]));
 
@@ -109,6 +109,12 @@ export default function SpecPanel({
                 {fromPrefix}
                 {fmtMoney(cur, yacht.apaAmount)}
               </span>
+            </div>
+          )}
+          {yacht.deliveryFee != null && (
+            <div className={styles.priceRow}>
+              <span className={styles.specLabel}>DELIVERY FEE</span>
+              <span className={styles.dimValue}>{fmtMoney(cur, yacht.deliveryFee)}</span>
             </div>
           )}
           {yacht.totalAmount != null && (
