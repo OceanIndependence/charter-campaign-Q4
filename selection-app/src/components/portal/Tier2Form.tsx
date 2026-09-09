@@ -10,6 +10,7 @@ import type {
   FleetDetail,
   FleetEntry,
   FleetImages,
+  RateOptions,
   Tier2DestinationDraft,
   Tier2Draft,
   Tier2DraftYacht,
@@ -83,6 +84,23 @@ export function mapCruisingArea(cruisingArea: string, destinations: Tier2Destina
   return chosen
     .filter((d) => (d.areaTerms ?? []).some((t) => t.startsWith("region:") && hit(t.slice(7))))
     .map((d) => d.destinationId as string);
+}
+
+/** Resolve the weekly rate from the Yachtfolio rate matrix for a season/tier (as on Tier 3). */
+function rateFromOptions(
+  options: RateOptions | undefined,
+  season: "summer" | "winter",
+  tier: "low" | "high"
+): { weeklyRate: string; currency?: string; weeklyRateIsFrom: boolean } | null {
+  const o = options?.[season];
+  if (!o) return null;
+  const val = tier === "high" ? o.high : o.low;
+  const isFrom = tier === "low" && o.high != null && o.low != null && o.high !== o.low;
+  return {
+    weeklyRate: val != null ? String(val) : "",
+    currency: o.currency || undefined,
+    weeklyRateIsFrom: val != null ? isFrom : false,
+  };
 }
 
 interface CardFetchState {
@@ -370,6 +388,34 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
       else setYacht(uid, { [field]: value });
     },
     [setYacht]
+  );
+
+  /**
+   * Changing the season or rate tier re-fills the weekly rate from the stored
+   * Yachtfolio matrix and makes it authoritative again (clears the edited
+   * flag); the rate stays editable afterwards.
+   */
+  const setRateSelector = useCallback(
+    (uid: string, key: "rateSeason" | "rateTier", value: string) => {
+      update((d) => ({
+        ...d,
+        yachts: d.yachts.map((y) => {
+          if (y.uid !== uid) return y;
+          const next = { ...y, [key]: value } as typeof y;
+          const r = rateFromOptions(next.rateOptions, next.rateSeason, next.rateTier);
+          if (r) {
+            next.weeklyRate = r.weeklyRate;
+            next.weeklyRateIsFrom = r.weeklyRateIsFrom;
+            if (r.currency) next.currency = r.currency;
+            const dirty = dirtyFields.current.get(uid);
+            dirty?.delete("weeklyRate");
+            dirty?.delete("currency");
+          }
+          return next;
+        }),
+      }));
+    },
+    [update]
   );
 
   const setCard = useCallback((uid: string, patch: Partial<CardFetchState>) => {
@@ -987,6 +1033,28 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                         </label>
                       ))}
 
+                      {y.rateOptions && (
+                        <>
+                          <label className={styles.field}>
+                            <span className={styles.fieldLabel}>RATE SEASON</span>
+                            <select className={styles.input} value={y.rateSeason} onChange={(e) => setRateSelector(y.uid, "rateSeason", e.target.value)}>
+                              <option value="summer">
+                                Summer 2027{y.rateOptions.summer.low == null && y.rateOptions.summer.high == null ? " — no rate" : ""}
+                              </option>
+                              <option value="winter">
+                                Winter 2027{y.rateOptions.winter.low == null && y.rateOptions.winter.high == null ? " — no rate" : ""}
+                              </option>
+                            </select>
+                          </label>
+                          <label className={styles.field}>
+                            <span className={styles.fieldLabel}>RATE</span>
+                            <select className={styles.input} value={y.rateTier} onChange={(e) => setRateSelector(y.uid, "rateTier", e.target.value)}>
+                              <option value="low">Low rate</option>
+                              <option value="high">High rate</option>
+                            </select>
+                          </label>
+                        </>
+                      )}
                       <label className={styles.field}>
                         <span className={styles.fieldLabel}>WEEKLY RATE</span>
                         <div className={styles.rateRow}>
