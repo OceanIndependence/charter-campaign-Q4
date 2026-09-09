@@ -55,6 +55,17 @@ export function countWord(n: number): string {
   return n < 10 ? WORDS[n] : String(n);
 }
 
+/** Short date for dense tables: "07 Sep 2026" (no comma). */
+export function fmtDateShort(iso: string | null | undefined): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  const day = String(d.getDate()).padStart(2, "0");
+  // Fixed three-letter months: en-GB locales render September as "Sept".
+  const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][d.getMonth()];
+  return `${day} ${month} ${d.getFullYear()}`;
+}
+
 /** House-style long date: "07 September 2026" (no comma). */
 export function fmtDateLong(iso: string | null | undefined): string {
   if (!iso) return "";
