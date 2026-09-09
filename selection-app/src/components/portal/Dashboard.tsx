@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { SelectionMeta, SelectionStatus, Tier, VersionInfo } from "@/lib/portal-types";
 import { TIER_LABEL, clientPagePath, selectionTitle } from "@/lib/portal-types";
-import { fmtDateLong } from "@/lib/format";
+import { fmtDateShort } from "@/lib/format";
 import styles from "./PortalForm.module.css";
 
 type Scope = "mine" | "all";
@@ -24,9 +24,6 @@ const STATUS_LABEL: Record<SelectionStatus, string> = {
 const WORDS = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
 const yachtCountWord = (n: number) => (n < WORDS.length ? WORDS[n] : String(n));
 
-/** Version count in words: "second version" up to ninth, then "10th version". */
-const ORDINALS = ["", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth"];
-const ordinal = (n: number) => (n < ORDINALS.length ? ORDINALS[n] : `${n}th`);
 
 export default function Dashboard() {
   const router = useRouter();
@@ -44,6 +41,18 @@ export default function Dashboard() {
   const [versionsFor, setVersionsFor] = useState<string | null>(null);
   const [versions, setVersions] = useState<VersionInfo[] | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
+  /** Row whose MORE menu is open. */
+  const [menuFor, setMenuFor] = useState<string | null>(null);
+
+  // Any click outside a row menu closes it.
+  useEffect(() => {
+    if (!menuFor) return;
+    const close = (e: MouseEvent) => {
+      if (!(e.target as HTMLElement).closest("[data-row-menu]")) setMenuFor(null);
+    };
+    document.addEventListener("mousedown", close);
+    return () => document.removeEventListener("mousedown", close);
+  }, [menuFor]);
 
   const load = useCallback(async (s: Scope) => {
     try {
@@ -163,7 +172,7 @@ export default function Dashboard() {
 
   const rollback = useCallback(
     (m: SelectionMeta, v: VersionInfo) => {
-      if (!window.confirm(`Restore the client page to the ${ordinal(v.version)} version (${fmtDateLong(v.publishedAt)})? A new version is recorded; your draft is not changed.`)) return;
+      if (!window.confirm(`Restore the client page to version ${v.version} (${fmtDateShort(v.publishedAt)})? A new version is recorded; your draft is not changed.`)) return;
       act(
         m.id,
         () =>
@@ -273,13 +282,10 @@ export default function Dashboard() {
                 <thead>
                   <tr>
                     <th>CLIENT</th>
-                    <th>TIER</th>
-                    {scope === "all" && <th>CONSULTANT</th>}
-                    <th>YACHTS SELECTED</th>
                     <th>STATUS</th>
-                    <th>CREATED</th>
-                    <th>LAST EDITED</th>
+                    <th>EDITED</th>
                     <th>PUBLISHED</th>
+                    <th aria-label="Actions" />
                   </tr>
                 </thead>
                 <tbody>
@@ -295,6 +301,8 @@ export default function Dashboard() {
                         showOwner={scope === "all"}
                         isBusy={isBusy}
                         copied={copied === m.id}
+                        menuOpen={menuFor === m.id}
+                        onToggleMenu={() => setMenuFor((cur) => (cur === m.id ? null : m.id))}
                         versionsOpen={open}
                         versions={open ? versions : null}
                         onOpen={() => router.push(`/portal/edit/${m.id}`)}
@@ -373,6 +381,8 @@ interface RowProps {
   showOwner: boolean;
   isBusy: boolean;
   copied: boolean;
+  menuOpen: boolean;
+  onToggleMenu: () => void;
   versionsOpen: boolean;
   versions: VersionInfo[] | null;
   onOpen: () => void;
@@ -384,6 +394,13 @@ interface RowProps {
   onRollback: (v: VersionInfo) => void;
 }
 
+const COLS = 5;
+
+/**
+ * One selection: the client name with a quiet subline (tier, yachts,
+ * consultant), the status with its version history, two short dates, and a
+ * single OPEN action with everything else behind MORE.
+ */
 function RowGroup(p: RowProps) {
   const { m } = p;
   const title = selectionTitle(m);
@@ -392,84 +409,85 @@ function RowGroup(p: RowProps) {
   const previewHref = `/portal/preview?id=${m.id}`;
   const tier = tierOf(m);
   const liveHref = m.slug ? clientPagePath(tier, m.slug) : "#";
-  const cols = p.showOwner ? 8 : 7; // table columns, for the full-width rows
+  const published = m.status === "published";
+  const subline = [
+    TIER_LABEL[tier],
+    `${yachtCountWord(m.yachtCount)} ${m.yachtCount === 1 ? "yacht" : "yachts"}`,
+    p.showOwner ? m.owner?.name || m.owner?.email || null : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+  const menuItem = (label: string, onClick: () => void, danger = false) => (
+    <button
+      type="button"
+      className={`${styles.menuItem} ${danger ? styles.menuItemDanger : ""}`}
+      onClick={() => {
+        p.onToggleMenu();
+        onClick();
+      }}
+      disabled={p.isBusy}
+    >
+      {label}
+    </button>
+  );
   return (
     <>
-      <tr className={p.isBusy ? styles.rowBusy : undefined} data-id={m.id}>
+      <tr className={`${styles.row} ${p.isBusy ? styles.rowBusy : ""}`} data-id={m.id}>
         <td className={styles.tdWrap}>
           <span className={styles.rowClient}>{m.clientNames.trim() || title}</span>
+          <span className={styles.rowSub}>{subline}</span>
         </td>
-        <td>
-          <span className={`${styles.tierTag} ${tier === 2 ? styles.tierTag2 : ""}`}>{TIER_LABEL[tier]}</span>
-        </td>
-        {p.showOwner && <td>{m.owner?.name || m.owner?.email || "—"}</td>}
-        <td>{m.yachtCount}</td>
         <td>
           <span className={`${styles.status} ${styles[`status_${m.status}`]}`}>{STATUS_LABEL[m.status]}</span>
           {m.version > 1 && (
-            <button
-              type="button"
-              className={styles.versionBtn}
-              onClick={p.onToggleVersions}
-              aria-expanded={p.versionsOpen}
-              title="Version history"
-            >
-              {ordinal(m.version).toUpperCase()} VERSION {p.versionsOpen ? "−" : "+"}
+            <button type="button" className={styles.versionBtn} onClick={p.onToggleVersions} aria-expanded={p.versionsOpen} title="Version history">
+              {yachtCountWord(m.version)} versions {p.versionsOpen ? "▴" : "▾"}
             </button>
           )}
         </td>
-        <td>{fmtDateLong(m.createdAt)}</td>
-        <td>{fmtDateLong(m.updatedAt)}</td>
-        <td>{m.publishedAt ? fmtDateLong(m.publishedAt) : "—"}</td>
-      </tr>
-      <tr className={styles.actionsRow} data-actions-for={m.id}>
-        <td colSpan={cols}>
+        <td title={`Created ${fmtDateShort(m.createdAt)}`}>{fmtDateShort(m.updatedAt)}</td>
+        <td>{m.publishedAt ? fmtDateShort(m.publishedAt) : "—"}</td>
+        <td className={styles.rowActionsCell}>
           {p.mine ? (
-            <div className={styles.rowActions}>
-              <button type="button" className={styles.actionBtn} onClick={p.onOpen} disabled={p.isBusy}>
+            <>
+              <button type="button" className={styles.openBtn} onClick={p.onOpen} disabled={p.isBusy}>
                 OPEN
               </button>
-              <a className={styles.actionBtn} href={previewHref} target="_blank" rel="noopener noreferrer">
-                PREVIEW
-              </a>
-              {m.status === "published" && m.slug && (
-                <a className={styles.actionBtn} href={liveHref} target="_blank" rel="noopener noreferrer">
-                  LIVE PAGE
-                </a>
-              )}
-              {m.status === "published" && (
-                <button type="button" className={styles.actionBtn} onClick={p.onCopy}>
-                  {p.copied ? "COPIED" : "COPY LINK"}
+              <span className={styles.menuWrap} data-row-menu>
+                <button type="button" className={styles.menuBtn} onClick={p.onToggleMenu} aria-expanded={p.menuOpen} aria-haspopup="menu" aria-label="More actions">
+                  MORE {p.menuOpen ? "▴" : "▾"}
                 </button>
-              )}
-              <button type="button" className={styles.actionBtn} onClick={p.onDuplicate} disabled={p.isBusy}>
-                DUPLICATE
-              </button>
-              {m.status === "published" && (
-                <button type="button" className={styles.actionBtn} onClick={p.onUnpublish} disabled={p.isBusy}>
-                  UNPUBLISH
-                </button>
-              )}
-              {m.status === "draft" && (
-                <button type="button" className={`${styles.actionBtn} ${styles.actionDanger}`} onClick={p.onDelete} disabled={p.isBusy}>
-                  DELETE
-                </button>
-              )}
-            </div>
+                {p.menuOpen && (
+                  <div className={styles.menu} role="menu">
+                    <a className={styles.menuItem} href={previewHref} target="_blank" rel="noopener noreferrer" onClick={p.onToggleMenu}>
+                      Preview
+                    </a>
+                    {published && m.slug && (
+                      <a className={styles.menuItem} href={liveHref} target="_blank" rel="noopener noreferrer" onClick={p.onToggleMenu}>
+                        Live page
+                      </a>
+                    )}
+                    {published && menuItem(p.copied ? "Copied" : "Copy link", p.onCopy)}
+                    {menuItem("Duplicate", p.onDuplicate)}
+                    {published && menuItem("Unpublish", p.onUnpublish, true)}
+                    {m.status === "draft" && menuItem("Delete draft", p.onDelete, true)}
+                  </div>
+                )}
+              </span>
+            </>
           ) : (
-            <div className={styles.rowActions}>
-              {m.status === "published" && m.slug && (
-                <a className={styles.actionBtn} href={liveHref} target="_blank" rel="noopener noreferrer">
-                  VIEW PAGE
-                </a>
-              )}
-            </div>
+            published &&
+            m.slug && (
+              <a className={styles.openBtn} href={liveHref} target="_blank" rel="noopener noreferrer">
+                VIEW PAGE
+              </a>
+            )
           )}
         </td>
       </tr>
       {p.versionsOpen && (
         <tr className={styles.versionsRow}>
-          <td colSpan={cols}>
+          <td colSpan={COLS}>
             {p.versions === null ? (
               <span className={styles.dashEmptyFilter}>Loading versions…</span>
             ) : p.versions.length === 0 ? (
@@ -479,15 +497,12 @@ function RowGroup(p: RowProps) {
                 {p.versions.map((v) => (
                   <li key={v.version} className={styles.versionItem}>
                     <span className={styles.versionLabel}>
-                      {ordinal(v.version).toUpperCase()} VERSION
+                      VERSION {v.version}
                       {v.isCurrent && <span className={styles.versionCurrent}> — LIVE</span>}
-                      {v.rolledBackFrom && (
-                        <span className={styles.versionNote}> — restored from the {ordinal(v.rolledBackFrom)} version</span>
-                      )}
+                      {v.rolledBackFrom && <span className={styles.versionNote}> — restored from version {v.rolledBackFrom}</span>}
                     </span>
                     <span className={styles.versionMeta}>
-                      {fmtDateLong(v.publishedAt)} · {yachtCountWord(v.yachtCount)} {v.yachtCount === 1 ? "yacht" : "yachts"}
-                      {v.clientNames ? ` · ${v.clientNames}` : ""}
+                      {fmtDateShort(v.publishedAt)} · {yachtCountWord(v.yachtCount)} {v.yachtCount === 1 ? "yacht" : "yachts"}
                     </span>
                     {p.mine && !v.isCurrent && (
                       <button type="button" className={styles.actionBtn} onClick={() => p.onRollback(v)} disabled={p.isBusy}>

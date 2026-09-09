@@ -906,8 +906,15 @@
   max-width: 1160px;
 }
 
+/* The row menus overflow the table; only narrow screens scroll it sideways. */
 .tableWrap {
-  overflow-x: auto;
+  overflow-x: visible;
+}
+
+@media (max-width: 900px) {
+  .tableWrap {
+    overflow-x: auto;
+  }
 }
 
 .table {
@@ -930,9 +937,13 @@
 }
 
 .table td {
-  padding: 16px 10px 6px;
-  vertical-align: top;
+  padding: 16px 10px;
+  vertical-align: middle;
   white-space: nowrap;
+}
+
+.row td {
+  border-bottom: 1px solid #ececea;
 }
 
 .tdWrap {
@@ -941,18 +952,113 @@
   max-width: 220px;
 }
 
-.actionsRow td {
-  padding: 2px 8px 12px;
-  border-bottom: 1px solid #ececea;
-}
-
 .rowBusy td {
   opacity: 0.5;
 }
 
 .rowClient {
+  display: block;
   font-weight: 500;
   letter-spacing: 0.04em;
+}
+
+.rowSub {
+  display: block;
+  margin-top: 5px;
+  font-size: 10.5px;
+  color: #99999a;
+  letter-spacing: 0.04em;
+}
+
+.rowActionsCell {
+  text-align: right;
+}
+
+.openBtn {
+  font-family: inherit;
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  font-weight: 500;
+  color: #1d1d1d;
+  background: #ffffff;
+  border: 1px solid #c9c9c7;
+  padding: 8px 12px 8px calc(12px + 0.24em);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.openBtn:hover {
+  border-color: #1d1d1d;
+}
+
+.openBtn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.menuWrap {
+  position: relative;
+  display: inline-block;
+  margin-left: 6px;
+}
+
+.menuBtn {
+  font-family: inherit;
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  font-weight: 500;
+  color: #555759;
+  background: none;
+  border: 1px solid transparent;
+  padding: 8px 8px;
+  cursor: pointer;
+}
+
+.menuBtn:hover,
+.menuBtn[aria-expanded="true"] {
+  color: #1d1d1d;
+  border-color: #c9c9c7;
+}
+
+.menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 40;
+  min-width: 160px;
+  background: #ffffff;
+  border: 1px solid #1d1d1d;
+  padding: 6px 0;
+  display: grid;
+  text-align: left;
+}
+
+.menuItem {
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 300;
+  color: #1d1d1d;
+  background: none;
+  border: 0;
+  padding: 9px 16px;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.menuItem:hover {
+  background: #f4f4f2;
+}
+
+.menuItem:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.menuItemDanger {
+  color: #8a5a2b;
 }
 
 .status {
@@ -982,6 +1088,9 @@
 .versionBtn {
   display: block;
   margin-top: 6px;
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-size: 10.5px;
   padding: 0;
   border: 0;
   background: none;
