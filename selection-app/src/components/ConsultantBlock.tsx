@@ -37,7 +37,7 @@ export default function ConsultantBlock({
           {atlasUrl && (
             <div className={styles.explore}>
               <a href={atlasUrl} className={styles.exploreLink}>
-                EXPLORE ALL 2027 DESTINATIONS →
+                EXPLORE ALL 2027 DESTINATIONS <span className={styles.exploreArrow}>→</span>
               </a>
             </div>
           )}

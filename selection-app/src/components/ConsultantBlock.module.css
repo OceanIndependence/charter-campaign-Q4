@@ -30,6 +30,7 @@
   font-size: 14px;
   letter-spacing: 0.3em;
   font-weight: 500;
+  color: var(--fg);
   margin-bottom: 8px;
 }
 
@@ -56,7 +57,7 @@
 
 .email {
   text-decoration: none;
-  border-bottom: 1px solid var(--fg-3);
+  border-bottom: 1px solid var(--link-underline);
 }
 
 .whatsapp {
@@ -85,9 +86,17 @@
   font-size: 10px;
   letter-spacing: 0.3em;
   font-weight: 500;
-  color: var(--fg-45);
+  color: var(--link-fg-strong);
   text-decoration: none;
+  /* Never colour alone: the light theme adds a mint underline (both tokens
+     are zero in the dark theme, which leaves that rendering untouched). */
+  border-bottom: var(--link-underline-width) solid var(--link-underline-accent);
+  padding-bottom: var(--link-underline-gap);
 }
 .exploreLink:hover {
-  color: var(--mint);
+  color: var(--link-hover-fg);
+}
+
+.exploreArrow {
+  color: var(--link-arrow);
 }

@@ -19,8 +19,8 @@
 }
 
 .progressText {
-  font-size: 9.5px;
-  letter-spacing: 0.4em;
+  font-size: var(--progress-size);
+  letter-spacing: var(--progress-tracking);
   font-weight: 500;
   color: var(--fg-5);
 }
@@ -58,9 +58,9 @@
   margin-top: calc((var(--ring-r) + var(--card-w) * 0.35) * -1);
   transform: rotateX(90deg) translateZ(calc((var(--card-h) / 2 + 44px) * -1));
   border-radius: 50%;
-  border: 1px solid rgba(167, 230, 215, 0.35);
-  box-shadow: 0 0 50px rgba(167, 230, 215, 0.12);
-  background: radial-gradient(circle, rgba(167, 230, 215, 0.05) 0%, rgba(167, 230, 215, 0) 68%);
+  border: 1px solid var(--floor-border);
+  box-shadow: var(--floor-shadow);
+  background: var(--floor-bg);
   pointer-events: none;
 }
 
@@ -101,11 +101,11 @@
   user-select: none;
 }
 .cmpBtn:hover {
-  border-color: var(--mint);
+  border-color: var(--ctl-border-hover);
 }
 .cmpBtnOn {
-  border-color: var(--mint);
-  background: rgba(167, 230, 215, 0.15);
+  border-color: var(--cmp-on-border);
+  background: var(--cmp-on-bg);
 }
 
 .cardBody {
@@ -119,7 +119,7 @@
 .cardImage {
   position: relative;
   aspect-ratio: 2000 / 1250;
-  background: var(--fg-03);
+  background: var(--wash-placeholder);
 }
 
 .cardImg {
@@ -136,7 +136,7 @@
   right: 0;
   bottom: 0;
   padding: 46px 16px 13px;
-  background: linear-gradient(to top, rgba(4, 8, 10, 0.88) 0%, rgba(4, 8, 10, 0.4) 55%, rgba(4, 8, 10, 0) 100%);
+  background: var(--card-scrim);
   text-align: center;
 }
 
@@ -190,8 +190,8 @@
 }
 
 .statLabel {
-  font-size: 8.5px;
-  letter-spacing: 0.3em;
+  font-size: var(--stat-label-size);
+  letter-spacing: var(--stat-label-tracking);
   font-weight: 500;
   color: var(--fg-45);
 }
@@ -205,15 +205,33 @@
   font-size: 12px;
   letter-spacing: 0.14em;
   font-weight: 500;
-  color: var(--mint);
+  color: var(--figure-accent);
+}
+
+/* A rate is either legible or absent — never a half-visible figure. The
+   light theme hides it on the cards behind the front one, which carry a
+   grayscale filter and reduced opacity. Space is reserved so nothing shifts. */
+[data-theme="light"] .cardBack .price {
+  visibility: hidden;
 }
 
 .area {
-  font-size: 8.5px;
-  letter-spacing: 0.28em;
+  font-size: var(--area-size);
+  letter-spacing: var(--area-tracking);
   font-weight: 500;
   color: var(--fg-5);
   margin-top: 8px;
+}
+
+/* The card is a fixed height with hidden overflow. At the light theme's 11px
+   floor a long cruising area needs a third line on a narrow card, so bound it
+   to two and ellipsise rather than let it clip mid-word. Light theme only —
+   at the dark theme's 8.5px the line already fits. */
+[data-theme="light"] .area {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 
 .dash,
@@ -222,10 +240,10 @@
   height: 3px;
   border-radius: 2px;
   margin: 12px auto 0;
-  background: rgba(167, 230, 215, 0.3);
+  background: var(--pager-off-dash);
 }
 .dashActive {
-  background: var(--mint);
+  background: var(--pager-on);
 }
 
 .chevronLeft,
@@ -249,7 +267,7 @@
 }
 .chevronLeft:hover,
 .chevronRight:hover {
-  background: rgba(167, 230, 215, 0.06);
+  background: var(--ctl-wash);
 }
 
 .soundToggle {
@@ -264,18 +282,18 @@
   user-select: none;
 }
 .soundToggle:hover {
-  background: var(--fg-05);
+  background: var(--wash-hover);
 }
 
 .soundLabel,
 .soundLabelOn {
-  font-size: 8.5px;
-  letter-spacing: 0.34em;
+  font-size: var(--sound-label-size);
+  letter-spacing: var(--sound-label-tracking);
   font-weight: 500;
   color: var(--fg-45);
 }
 .soundLabelOn {
-  color: var(--mint);
+  color: var(--figure-accent);
 }
 
 .dots {
@@ -298,17 +316,12 @@
   display: block;
   width: 22px;
   height: 2px;
-  background: var(--fg-25);
+  background: var(--pager-off);
   transition: background 240ms ease;
 }
 .dotBarActive {
-  background: var(--mint);
+  background: var(--pager-on);
 }
 .dot:hover .dotBar {
-  background: var(--fg-5);
-}
-
-/* Light theme: the card rate in ink rather than mint. */
-[data-theme="light"] .price {
-  color: var(--fg);
+  background: var(--pager-hover);
 }

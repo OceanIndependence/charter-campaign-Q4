@@ -1,0 +1,333 @@
+/* ===========================================================================
+   Ocean Independence — client selection page colour layer
+   ===========================================================================
+   Every colour the client-facing page renders is declared here and nowhere
+   else. Components reference role tokens only; no component stylesheet holds
+   a hex value, an rgba() or a per-theme colour override.
+
+   The light theme is built exclusively from the five brand colours below.
+   There is exactly one mint: #A7E6D7. No tints, shades, opacity variants or
+   darkened derivatives of it are permitted on a light ground — where a darker
+   mint would be wanted, Graphite or Monochrome is used instead.
+
+   Mint is decoration only in the light theme (accent bars, the vertical rule
+   beside intro sentences, link underlines, the fill behind the 01–04
+   highlight markers). Mint text appears only on a Monochrome ground.
+
+   Grey is for rules, dividers, card borders and inactive fills. Never text,
+   never icons, never interactive controls.
+
+   The dark theme is unchanged. Its role tokens below resolve to exactly the
+   values the page shipped with, so the dark rendering is byte-identical.
+   =========================================================================== */
+
+:root {
+  /* --- Brand palette — the only permitted colours ----------------------- */
+  --oi-mono: #1d1d1d;
+  --oi-graphite: #555759;
+  --oi-grey: #99999a;
+  --oi-mint: #a7e6d7;
+  --oi-white: #ffffff;
+
+  /* --- Dark theme (default) — values as shipped ------------------------- */
+  --ink: #04080a;
+  --ink-lift: #0a1214;
+  --panel: #0b0e10;
+  --mint: #a7e6d7;
+  --hairline: rgba(255, 255, 255, 0.1);
+  --hairline-strong: rgba(255, 255, 255, 0.14);
+  --mint-hairline: rgba(167, 230, 215, 0.4);
+  --mint-hairline-strong: rgba(167, 230, 215, 0.55);
+  --font-sans: "Gotham", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-display: "Gotham Condensed", "Gotham", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --ease-settle: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Surfaces */
+  --page-base: #04080a;
+  --page-bg: radial-gradient(ellipse 120% 80% at 50% 30%, #0a1214 0%, #04080a 60%);
+  --surface: #0b0e10;
+  --overlay-bg: rgba(4, 8, 10, 0.97);
+  --bar-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+  --scroll-track: #0b0e10;
+  --scroll-thumb: #2a3134;
+
+  /* Ink at the opacities the dark page uses. In the light theme these are
+     remapped onto the palette by tier, so any element that reaches for one
+     lands on a compliant colour rather than a low-contrast wash. */
+  --fg: #ffffff;
+  --fg-8: rgba(255, 255, 255, 0.8);
+  --fg-75: rgba(255, 255, 255, 0.75);
+  --fg-72: rgba(255, 255, 255, 0.72);
+  --fg-7: rgba(255, 255, 255, 0.7);
+  --fg-65: rgba(255, 255, 255, 0.65);
+  --fg-6: rgba(255, 255, 255, 0.6);
+  --fg-5: rgba(255, 255, 255, 0.5);
+  --fg-45: rgba(255, 255, 255, 0.45);
+  --fg-4: rgba(255, 255, 255, 0.4);
+  --fg-35: rgba(255, 255, 255, 0.35);
+  --fg-3: rgba(255, 255, 255, 0.3);
+  --fg-25: rgba(255, 255, 255, 0.25);
+  --fg-12: rgba(255, 255, 255, 0.12);
+  --fg-05: rgba(255, 255, 255, 0.05);
+  --fg-03: rgba(255, 255, 255, 0.03);
+  --fg-02: rgba(255, 255, 255, 0.02);
+
+  /* Ring card */
+  --card-bg:
+    linear-gradient(180deg, rgba(167, 230, 215, 0.07) 0%, rgba(255, 255, 255, 0.02) 55%, rgba(167, 230, 215, 0.04) 100%),
+    rgba(6, 10, 12, 0.94);
+  --card-border: var(--mint-hairline-strong);
+  --card-shadow:
+    0 0 18px rgba(167, 230, 215, 0.28),
+    0 0 60px rgba(167, 230, 215, 0.14),
+    inset 0 0 24px rgba(167, 230, 215, 0.08),
+    0 30px 60px rgba(0, 0, 0, 0.55);
+  --cmp-bg: rgba(4, 8, 10, 0.55);
+  --cmp-border: rgba(255, 255, 255, 0.35);
+
+  /* Outline button (WhatsApp) */
+  --btn-outline: rgba(255, 255, 255, 0.5);
+  --btn-fg: #ffffff;
+  --btn-hover-bg: #ffffff;
+  --btn-hover-fg: #000000;
+
+  /* --- Role tokens ------------------------------------------------------ */
+  /* Links: colour plus a permanent underline, so the affordance is never
+     carried by colour alone. */
+  --link-fg: var(--fg-6);
+  --link-fg-strong: var(--fg-45);
+  --link-hover-fg: var(--mint);
+  --link-underline: var(--fg-3);
+  /* Underline presence for links that carry none in the dark theme */
+  --link-underline-width: 0;
+  --link-underline-gap: 0;
+  --bar-border: rgba(167, 230, 215, 0.5);
+  --link-underline-accent: var(--mint);
+  --link-arrow: currentColor;
+
+  /* Interactive controls: chevron buttons, accordion markers, close glyphs */
+  --ctl-fg: var(--fg-6);
+  --ctl-border: var(--fg-25);
+  --ctl-border-hover: var(--mint);
+  --ctl-disabled-fg: var(--fg-3);
+  --ctl-wash: rgba(167, 230, 215, 0.06);
+
+  /* Icons */
+  --icon-stroke: rgba(167, 230, 215, 0.6);
+  --icon-stroke-contact: rgba(167, 230, 215, 0.7);
+  --icon-chevron: rgba(167, 230, 215, 0.8);
+  --icon-ctl: var(--fg-75);
+  --icon-on: #a7e6d7;
+  --icon-off: var(--fg-45);
+
+  /* Figures in the cost table — weight is a token so the light theme can
+     match label and amount without altering the dark rendering. */
+  --figure-fg: var(--fg-7);
+  --figure-weight: 300;
+  --total-fg: var(--mint);
+  --total-weight: 500;
+
+  /* Small-caps micro-labels that ship mint in the dark theme */
+  --label-accent: var(--mint);
+  /* Costs Involved headings (APA, CHARTER FEE, DELIVERY FEE, VAT, CREW
+     GRATUITY): the same ink as the paragraph beneath, so each block reads as
+     one flat colour rather than shifting part-way through. */
+  --cost-label-fg: var(--mint);
+  /* Card rate and other accented figures */
+  --figure-accent: var(--mint);
+
+  /* 01–04 highlight markers: a glyph in the dark theme, a mint chip with a
+     Monochrome glyph in the light theme. */
+  --marker-fg: var(--mint);
+  --marker-bg: transparent;
+  --marker-pad: 0;
+
+  /* Pagination: dashes under the cards and the dot rail below the ring */
+  --pager-on: var(--mint);
+  --pager-off: var(--fg-25);
+  --pager-off-dash: rgba(167, 230, 215, 0.3);
+  --pager-hover: var(--fg-5);
+
+  /* Rules, dividers and decorative mint rules */
+  --rule-table: var(--fg-12);
+  --decor-rule: var(--mint-hairline);
+  --decor-rule-note: rgba(167, 230, 215, 0.5);
+
+  /* Surface washes: hover feedback and image placeholders */
+  --wash-hover: var(--fg-05);
+  --wash-hover-soft: var(--fg-02);
+  --wash-placeholder: var(--fg-03);
+
+  /* Compare toggle in its selected state */
+  --cmp-on-bg: rgba(167, 230, 215, 0.15);
+  --cmp-on-border: var(--mint);
+
+  /* Floor ring beneath the carousel */
+  --floor-border: rgba(167, 230, 215, 0.35);
+  --floor-shadow: 0 0 50px rgba(167, 230, 215, 0.12);
+  --floor-bg: radial-gradient(circle, rgba(167, 230, 215, 0.05) 0%, rgba(167, 230, 215, 0) 68%);
+
+  /* Card scrim (dark theme only — the light theme hides it) */
+  --card-scrim: linear-gradient(to top, rgba(4, 8, 10, 0.88) 0%, rgba(4, 8, 10, 0.4) 55%, rgba(4, 8, 10, 0) 100%);
+
+  /* Chrome that sits on top of photographs (enlarge chip, lightbox). Built
+     from Monochrome and White and identical in both themes, because it
+     never sits on a page panel — always on an image. */
+  --overlay-chip-bg: rgba(29, 29, 29, 0.55);
+  --overlay-chip-bg-hover: rgba(29, 29, 29, 0.8);
+  --overlay-chip-fg: var(--oi-white);
+  --overlay-close-bg: rgba(255, 255, 255, 0.16);
+  --overlay-close-bg-hover: rgba(255, 255, 255, 0.28);
+  --lightbox-veil: rgba(29, 29, 29, 0.92);
+  --lightbox-shadow: 0 10px 50px rgba(29, 29, 29, 0.6);
+
+  /* Carousel micro-label metrics (size and tracking are tokens so the light
+     theme can lift them to 11px without touching the dark theme) */
+  --stat-label-size: 8.5px;
+  --stat-label-tracking: 0.3em;
+  --area-size: 8.5px;
+  --area-tracking: 0.28em;
+  --sound-label-size: 8.5px;
+  --sound-label-tracking: 0.34em;
+  --progress-size: 9.5px;
+  --progress-tracking: 0.4em;
+}
+
+/* ===========================================================================
+   LIGHT THEME — built only from Monochrome, Graphite, Grey, Mint and White
+   =========================================================================== */
+[data-theme="light"] {
+  /* Rules and dividers. Grey, flat for structural rules and at half strength
+     for hairlines. No contrast requirement applies to rules. */
+  --hairline: rgba(153, 153, 154, 0.5);
+  --hairline-strong: var(--oi-grey);
+  --mint-hairline: var(--oi-mint);
+  --mint-hairline-strong: var(--oi-mint);
+
+  /* Surfaces: every content panel is White, so text gains contrast at no
+     design cost. Shadows stay neutral (Monochrome at low alpha). */
+  --page-base: var(--oi-white);
+  --page-bg: var(--oi-white);
+  --surface: var(--oi-white);
+  --overlay-bg: var(--oi-white);
+  --bar-shadow: 0 12px 40px rgba(29, 29, 29, 0.15);
+  --scroll-track: var(--oi-white);
+  --scroll-thumb: var(--oi-grey);
+
+  /* Text tiers. Content is Monochrome; labels and secondary copy are
+     Graphite. Nothing lands lighter than Graphite, so an element that still
+     reaches for an alpha token cannot drop below 7.26:1. */
+  --fg: var(--oi-mono);
+  --fg-8: var(--oi-mono);
+  --fg-75: var(--oi-mono);
+  --fg-72: var(--oi-mono);
+  --fg-7: var(--oi-mono);
+  --fg-65: var(--oi-mono);
+  --fg-6: var(--oi-graphite);
+  --fg-5: var(--oi-graphite);
+  --fg-45: var(--oi-graphite);
+  --fg-4: var(--oi-graphite);
+  --fg-35: var(--oi-graphite);
+  /* Border and wash tiers — Grey, never used for text */
+  --fg-3: var(--oi-grey);
+  --fg-25: var(--oi-grey);
+  --fg-12: var(--oi-grey);
+  --fg-05: rgba(153, 153, 154, 0.1);
+  --fg-03: rgba(153, 153, 154, 0.18);
+  --fg-02: rgba(153, 153, 154, 0.06);
+
+  /* Ring card: flat white, Grey border, neutral shadow, no glow */
+  --card-bg: var(--oi-white);
+  --card-border: var(--oi-grey);
+  --card-shadow: 0 8px 24px rgba(29, 29, 29, 0.08), 0 30px 60px rgba(29, 29, 29, 0.14);
+  --cmp-bg: var(--oi-white);
+  --cmp-border: var(--oi-graphite);
+
+  /* WhatsApp button: Graphite border, Monochrome label */
+  --btn-outline: var(--oi-graphite);
+  --btn-fg: var(--oi-mono);
+  --btn-hover-bg: var(--oi-mono);
+  --btn-hover-fg: var(--oi-white);
+
+  /* Links: Monochrome text, Mint underline, Mint arrow */
+  --link-fg: var(--oi-mono);
+  --link-fg-strong: var(--oi-mono);
+  --link-hover-fg: var(--oi-mono);
+  --link-underline: var(--oi-mint);
+  --link-underline-width: 1px;
+  --link-underline-gap: 5px;
+  --bar-border: var(--oi-mint);
+  --link-underline-accent: var(--oi-mint);
+  --link-arrow: var(--oi-mint);
+
+  /* Controls: Graphite glyphs and borders, Monochrome on hover */
+  --ctl-fg: var(--oi-graphite);
+  --ctl-border: var(--oi-graphite);
+  --ctl-border-hover: var(--oi-mono);
+  --ctl-disabled-fg: var(--oi-graphite);
+  --ctl-wash: var(--oi-mint);
+
+  /* Icons: Graphite line work; Monochrome for an active state */
+  --icon-stroke: var(--oi-graphite);
+  --icon-stroke-contact: var(--oi-graphite);
+  --icon-chevron: var(--oi-graphite);
+  --icon-ctl: var(--oi-graphite);
+  --icon-on: var(--oi-mono);
+  --icon-off: var(--oi-graphite);
+
+  /* Cost table: Graphite label, Monochrome amount at the same weight;
+     TOTAL in Monochrome at a heavier weight. */
+  --figure-fg: var(--oi-mono);
+  --figure-weight: 500;
+  --total-fg: var(--oi-mono);
+  --total-weight: 700;
+
+  /* Micro-labels that were mint become Graphite; accented figures become
+     Monochrome. No mint text on a light ground. */
+  --label-accent: var(--oi-graphite);
+  --cost-label-fg: var(--oi-mono);
+  --figure-accent: var(--oi-mono);
+
+  /* Highlight markers: mint chip, Monochrome glyph */
+  --marker-fg: var(--oi-mono);
+  --marker-bg: var(--oi-mint);
+  --marker-pad: 2px 6px;
+
+  /* Pagination: Monochrome active, Grey inactive */
+  --pager-on: var(--oi-mono);
+  --pager-off: var(--oi-grey);
+  --pager-off-dash: var(--oi-grey);
+  --pager-hover: var(--oi-graphite);
+
+  /* Dividers and the decorative mint rules (flat mint, no alpha) */
+  --rule-table: var(--oi-grey);
+  --decor-rule: var(--oi-mint);
+  --decor-rule-note: var(--oi-mint);
+
+  /* Washes: Grey at low alpha for hover feedback and image placeholders.
+     Non-text surfaces only, so no contrast requirement applies. */
+  --wash-hover: rgba(153, 153, 154, 0.1);
+  --wash-hover-soft: rgba(153, 153, 154, 0.06);
+  --wash-placeholder: rgba(153, 153, 154, 0.18);
+
+  /* Compare toggle selected: mint fill, Monochrome border and glyph */
+  --cmp-on-bg: var(--oi-mint);
+  --cmp-on-border: var(--oi-mono);
+
+  /* Floor ring: a flat mint hairline, no glow and no mint gradient */
+  --floor-border: var(--oi-mint);
+  --floor-shadow: none;
+  --floor-bg: none;
+
+  --card-scrim: none;
+
+  /* Carousel micro-labels: 11px floor, tracking cut by ~20 per cent */
+  --stat-label-size: 11px;
+  --stat-label-tracking: 0.24em;
+  --area-size: 11px;
+  --area-tracking: 0.224em;
+  --sound-label-size: 11px;
+  --sound-label-tracking: 0.27em;
+  --progress-size: 11px;
+  --progress-tracking: 0.32em;
+}

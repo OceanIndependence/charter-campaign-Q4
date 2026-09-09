@@ -1,3 +1,5 @@
+@import "./theme-tokens.css";
+
 /* Licensed Gotham TTFs — drop the files into /public/fonts (see its README).
    Helvetica Neue carries the page until they arrive. */
 @font-face {
@@ -36,111 +38,6 @@
   font-display: swap;
 }
 
-:root {
-  /* OI design tokens — dark theme (default). The light theme overrides the
-     surface/ink tokens under [data-theme="light"]; mint is #A7E6D7 in both. */
-  --ink: #04080a;
-  --ink-lift: #0a1214;
-  --panel: #0b0e10;
-  --mint: #a7e6d7;
-  --hairline: rgba(255, 255, 255, 0.1);
-  --hairline-strong: rgba(255, 255, 255, 0.14);
-  --mint-hairline: rgba(167, 230, 215, 0.4);
-  --mint-hairline-strong: rgba(167, 230, 215, 0.55);
-  --font-sans: "Gotham", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-display: "Gotham Condensed", "Gotham", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --ease-settle: cubic-bezier(0.16, 1, 0.3, 1);
-
-  /* Surfaces */
-  --page-base: #04080a;
-  --page-bg: radial-gradient(ellipse 120% 80% at 50% 30%, #0a1214 0%, #04080a 60%);
-  --surface: #0b0e10;
-  --overlay-bg: rgba(4, 8, 10, 0.97);
-  --bar-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
-  --scroll-track: #0b0e10;
-  --scroll-thumb: #2a3134;
-
-  /* Ink at the opacities the page uses */
-  --fg: #ffffff;
-  --fg-8: rgba(255, 255, 255, 0.8);
-  --fg-75: rgba(255, 255, 255, 0.75);
-  --fg-72: rgba(255, 255, 255, 0.72);
-  --fg-7: rgba(255, 255, 255, 0.7);
-  --fg-65: rgba(255, 255, 255, 0.65);
-  --fg-6: rgba(255, 255, 255, 0.6);
-  --fg-5: rgba(255, 255, 255, 0.5);
-  --fg-45: rgba(255, 255, 255, 0.45);
-  --fg-4: rgba(255, 255, 255, 0.4);
-  --fg-35: rgba(255, 255, 255, 0.35);
-  --fg-3: rgba(255, 255, 255, 0.3);
-  --fg-25: rgba(255, 255, 255, 0.25);
-  --fg-12: rgba(255, 255, 255, 0.12);
-  --fg-05: rgba(255, 255, 255, 0.05);
-  --fg-03: rgba(255, 255, 255, 0.03);
-  --fg-02: rgba(255, 255, 255, 0.02);
-
-  /* Ring card */
-  --card-bg:
-    linear-gradient(180deg, rgba(167, 230, 215, 0.07) 0%, rgba(255, 255, 255, 0.02) 55%, rgba(167, 230, 215, 0.04) 100%),
-    rgba(6, 10, 12, 0.94);
-  --card-border: var(--mint-hairline-strong);
-  --card-shadow:
-    0 0 18px rgba(167, 230, 215, 0.28),
-    0 0 60px rgba(167, 230, 215, 0.14),
-    inset 0 0 24px rgba(167, 230, 215, 0.08),
-    0 30px 60px rgba(0, 0, 0, 0.55);
-  --cmp-bg: rgba(4, 8, 10, 0.55);
-  --cmp-border: rgba(255, 255, 255, 0.35);
-
-  /* Outline button (WhatsApp) */
-  --btn-outline: rgba(255, 255, 255, 0.5);
-  --btn-fg: #ffffff;
-  --btn-hover-bg: #ffffff;
-  --btn-hover-fg: #000000;
-}
-
-[data-theme="light"] {
-  --hairline: rgba(29, 29, 29, 0.08);
-  --hairline-strong: rgba(29, 29, 29, 0.12);
-
-  --page-base: #fafaf8;
-  --page-bg: #fafaf8;
-  --surface: #ffffff;
-  --overlay-bg: rgba(250, 250, 248, 0.98);
-  --bar-shadow: 0 12px 40px rgba(29, 29, 29, 0.15);
-  --scroll-track: #ededeb;
-  --scroll-thumb: #c9c9c7;
-
-  --fg: #1d1d1d;
-  --fg-8: rgba(29, 29, 29, 0.8);
-  --fg-75: rgba(29, 29, 29, 0.75);
-  --fg-72: rgba(29, 29, 29, 0.72);
-  --fg-7: rgba(29, 29, 29, 0.7);
-  --fg-65: rgba(29, 29, 29, 0.65);
-  --fg-6: rgba(29, 29, 29, 0.6);
-  --fg-5: rgba(29, 29, 29, 0.5);
-  --fg-45: rgba(29, 29, 29, 0.45);
-  --fg-4: rgba(29, 29, 29, 0.4);
-  --fg-35: rgba(29, 29, 29, 0.35);
-  --fg-3: rgba(29, 29, 29, 0.3);
-  --fg-25: rgba(29, 29, 29, 0.25);
-  --fg-12: rgba(29, 29, 29, 0.12);
-  --fg-05: rgba(29, 29, 29, 0.05);
-  --fg-03: rgba(29, 29, 29, 0.03);
-  --fg-02: rgba(29, 29, 29, 0.02);
-
-  --card-bg: #ffffff;
-  --card-border: rgba(29, 29, 29, 0.14);
-  --card-shadow: 0 8px 24px rgba(29, 29, 29, 0.08), 0 30px 60px rgba(29, 29, 29, 0.14);
-  --cmp-bg: rgba(255, 255, 255, 0.85);
-  --cmp-border: rgba(29, 29, 29, 0.35);
-
-  --btn-outline: rgba(29, 29, 29, 0.5);
-  --btn-fg: #1d1d1d;
-  --btn-hover-bg: #1d1d1d;
-  --btn-hover-fg: #ffffff;
-}
-
 *,
 *::before,
 *::after {
@@ -166,7 +63,7 @@ a {
   color: var(--fg);
 }
 a:hover {
-  color: var(--mint);
+  color: var(--link-hover-fg);
 }
 
 button {

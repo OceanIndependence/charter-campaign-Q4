@@ -139,7 +139,7 @@ export default function RingCarousel(props: RingCarouselProps) {
               return (
                 <div
                   key={yacht.id}
-                  className={styles.card}
+                  className={isFront ? styles.card : `${styles.card} ${styles.cardBack}`}
                   style={{
                     transform: `rotateY(${i * step}deg) translateZ(var(--ring-r))`,
                     opacity: isFront ? 1 : far ? 0.3 : abs === 2 ? 0.55 : 0.8,
