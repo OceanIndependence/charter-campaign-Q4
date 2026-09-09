@@ -324,7 +324,7 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
               <button
                 type="button"
                 key={y.id}
-                className={`${styles.card} ${y.knownYacht ? styles.cardKnown : ""} ${dim ? styles.cardDim : ""}`}
+                className={`${styles.card} ${dim ? styles.cardDim : ""}`}
                 onClick={() => openDrawer(i)}
                 aria-label={`${y.name} — open details`}
               >
@@ -333,7 +333,6 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
                   {y.leadImageUrl && <img src={y.leadImageUrl} alt={`${y.name} — exterior profile`} loading="lazy" />}
                 </div>
                 <div className={styles.cardBody}>
-                  {y.knownYacht && <div className={styles.cardKnownTag}>THE YACHT YOU KNOW</div>}
                   <div className={styles.cardName}>{y.name}</div>
                   <div className={styles.cardMeta}>{yachtMeta(y)}</div>
                   {rate && <div className={styles.cardRate}>{rate}</div>}
@@ -388,7 +387,6 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
               onNext={() => stepDrawer(1)}
               signedBy={consultantFirst}
               vatText={drawerYacht.vatText}
-              highlights={drawerYacht.highlights}
             />
           </div>
         </div>

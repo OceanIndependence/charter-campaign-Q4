@@ -41,6 +41,7 @@ const AUTO_FIELDS = [
   "cruisingArea",
   "currency",
   "weeklyRate",
+  "keyFeatures",
   "leadImageUrl",
   "interiorImageUrl",
   "exteriorImageUrl",
@@ -159,7 +160,6 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
           uid: y.uid || crypto.randomUUID(),
           gallery: y.gallery ?? [],
           destinationIds: y.destinationIds ?? [],
-          highlights: (y.highlights?.length === 3 ? y.highlights : emptyTier2Yacht("x").highlights) as Tier2DraftYacht["highlights"],
         }));
         if (next.slug) slugTouched.current = true;
         setDraft(next);
@@ -681,56 +681,8 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                 onChange={(e) => update((d) => ({ ...d, introNote: e.target.value }))}
               />
             </label>
-            <label className={`${styles.checkRow} ${styles.fieldFull}`}>
-              <input
-                type="checkbox"
-                className={styles.checkbox}
-                checked={draft.seasonNote !== null}
-                onChange={(e) =>
-                  update((d) => ({ ...d, seasonNote: e.target.checked ? d.seasonNote ?? { eyebrow: "A NOTE ON JULY", body: "" } : null }))
-                }
-              />
-              <span className={styles.checkLabel}>Include a season note beneath the shortlist</span>
-            </label>
-            {draft.seasonNote && (
-              <>
-                <label className={styles.field}>
-                  <span className={styles.fieldLabel}>SEASON NOTE EYEBROW</span>
-                  <input
-                    type="text"
-                    className={styles.input}
-                    placeholder="A NOTE ON JULY"
-                    value={draft.seasonNote.eyebrow}
-                    onChange={(e) => update((d) => ({ ...d, seasonNote: { eyebrow: e.target.value, body: d.seasonNote?.body ?? "" } }))}
-                  />
-                </label>
-                <label className={`${styles.field} ${styles.fieldFull}`}>
-                  <span className={styles.fieldLabel}>SEASON NOTE</span>
-                  <textarea
-                    rows={3}
-                    className={styles.textarea}
-                    placeholder="You chartered in the third week of July, consistently the most requested week of the Mediterranean season…"
-                    value={draft.seasonNote.body}
-                    onChange={(e) => update((d) => ({ ...d, seasonNote: { eyebrow: d.seasonNote?.eyebrow ?? "", body: e.target.value } }))}
-                  />
-                </label>
-              </>
-            )}
-            <label className={`${styles.field} ${styles.fieldFull}`}>
-              <span className={styles.fieldLabel}>
-                FOOTER DISCLAIMER <span className={styles.fieldLabelHint}>— optional</span>
-              </span>
-              <input
-                type="text"
-                className={styles.input}
-                placeholder={TIER2_DEFAULT_DISCLAIMER}
-                value={draft.footerDisclaimer}
-                onChange={(e) => update((d) => ({ ...d, footerDisclaimer: e.target.value }))}
-              />
-            </label>
           </div>
         </section>
-
         {/* 02 — DESTINATIONS */}
         <section className={styles.card}>
           <div className={styles.sectionHeadRow}>
@@ -846,9 +798,10 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                                   <div className={styles.thumbStrip}>
                                     {candidates.map((u) => (
                                       <div key={u} className={`${styles.thumb} ${img.value === u ? styles.thumbSelected : ""}`}>
-                                        <button type="button" className={styles.thumbPick} onClick={() => setImage(i, n, u, "atlas")} aria-label="Use this image">
+                                        <button type="button" className={styles.thumbPick} onClick={() => setImage(i, n, u, "atlas")} aria-label="Use this image" aria-pressed={img.value === u}>
                                           {/* eslint-disable-next-line @next/next/no-img-element */}
                                           <img src={u} alt="" loading="lazy" />
+                                          {img.value === u && <span className={styles.thumbCheck} aria-hidden="true">✓</span>}
                                         </button>
                                       </div>
                                     ))}
@@ -961,7 +914,6 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                     <span className={styles.yachtNum}>{String(i + 1).padStart(2, "0")}</span>
                     <span className={styles.yachtTitle}>
                       {y.name.trim() ? y.name.trim().toUpperCase() : "UNTITLED YACHT"}
-                      {y.knownYacht && <span className={styles.headerNote}> · the yacht they know</span>}
                       {(gone || removedRecord) && <span className={styles.yachtWarning}> NO LONGER LISTED IN YACHTFOLIO</span>}
                       {noDest && <span className={styles.yachtWarning}> NO DESTINATION TICKED</span>}
                       {(fetching || preparing) && (
@@ -1012,11 +964,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                         </div>
                       </div>
 
-                      <label className={styles.checkRow}>
-                        <input type="checkbox" className={styles.checkbox} checked={y.knownYacht} onChange={(e) => setYacht(y.uid, { knownYacht: e.target.checked })} />
-                        <span className={styles.checkLabel}>The yacht they know (“THE YACHT YOU KNOW” on the card)</span>
-                      </label>
-                      <label className={styles.field}>
+                      <label className={`${styles.field} ${styles.fieldFull}`}>
                         <span className={styles.fieldLabel}>
                           YOUR NOTE <span className={styles.fieldLabelHint}>— one line</span>
                         </span>
@@ -1079,40 +1027,21 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                         </div>
                       )}
 
-                      <div className={`${styles.field} ${styles.fieldFull}`}>
+                      <label className={`${styles.field} ${styles.fieldFull}`}>
                         <span className={styles.fieldLabel}>
-                          THREE HIGHLIGHTS <span className={styles.fieldLabelHint}>— title and one line each</span>
+                          KEY FEATURES <span className={styles.fieldLabelHint}>— from Yachtfolio, one per line, editable; the drawer’s highlights</span>
                         </span>
-                        {y.highlights.map((h, hi) => (
-                          <div key={hi} className={styles.highlightRow}>
-                            <span className={styles.highlightNum}>{String(hi + 1).padStart(2, "0")}</span>
-                            <input
-                              type="text"
-                              className={styles.input}
-                              placeholder="LO SCOGLIO, NERANO"
-                              value={h.title}
-                              onChange={(e) => {
-                                const hl = y.highlights.map((x, k) => (k === hi ? { ...x, title: e.target.value } : x)) as Tier2DraftYacht["highlights"];
-                                setYacht(y.uid, { highlights: hl });
-                              }}
-                            />
-                            <input
-                              type="text"
-                              className={styles.input}
-                              placeholder="Lunch on the water, reached only by tender"
-                              value={h.line}
-                              onChange={(e) => {
-                                const hl = y.highlights.map((x, k) => (k === hi ? { ...x, line: e.target.value } : x)) as Tier2DraftYacht["highlights"];
-                                setYacht(y.uid, { highlights: hl });
-                              }}
-                            />
-                          </div>
-                        ))}
-                      </div>
-
+                        <textarea
+                          rows={3}
+                          className={styles.textarea}
+                          placeholder="Auto-filled from Yachtfolio — one feature per line, editable"
+                          value={y.keyFeatures}
+                          onChange={(e) => editAutoField(y.uid, "keyFeatures", e.target.value)}
+                        />
+                      </label>
                       <div className={`${styles.field} ${styles.fieldFull}`}>
                         <span className={styles.fieldLabel}>
-                          PAGE IMAGES <span className={styles.fieldLabelHint}> — lead image on the card; the other three in the drawer, 2000 × 1250</span>
+                          PAGE IMAGES
                         </span>
                         <ImagePicker
                           gallery={y.gallery ?? []}
@@ -1132,9 +1061,52 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
           </button>
         </section>
 
-        {/* 04 — YOUR DETAILS */}
+        {/* 04 — SEASON NOTE */}
         <section className={styles.card}>
-          <div className={styles.sectionHead}>04 — YOUR DETAILS</div>
+          <div className={styles.sectionHead}>04 — SEASON NOTE</div>
+          <p className={styles.sectionNote}>Shown beneath the shortlist, before your details — a short word on timing for the client’s season.</p>
+          <div className={styles.grid}>
+            <label className={`${styles.checkRow} ${styles.fieldFull}`}>
+              <input
+                type="checkbox"
+                className={styles.checkbox}
+                checked={draft.seasonNote !== null}
+                onChange={(e) =>
+                  update((d) => ({ ...d, seasonNote: e.target.checked ? d.seasonNote ?? { eyebrow: "A NOTE ON JULY", body: "" } : null }))
+                }
+              />
+              <span className={styles.checkLabel}>Include a season note beneath the shortlist</span>
+            </label>
+            {draft.seasonNote && (
+              <>
+                <label className={styles.field}>
+                  <span className={styles.fieldLabel}>SEASON NOTE EYEBROW</span>
+                  <input
+                    type="text"
+                    className={styles.input}
+                    placeholder="A NOTE ON JULY"
+                    value={draft.seasonNote.eyebrow}
+                    onChange={(e) => update((d) => ({ ...d, seasonNote: { eyebrow: e.target.value, body: d.seasonNote?.body ?? "" } }))}
+                  />
+                </label>
+                <label className={`${styles.field} ${styles.fieldFull}`}>
+                  <span className={styles.fieldLabel}>SEASON NOTE</span>
+                  <textarea
+                    rows={3}
+                    className={styles.textarea}
+                    placeholder="You chartered in the third week of July, consistently the most requested week of the Mediterranean season…"
+                    value={draft.seasonNote.body}
+                    onChange={(e) => update((d) => ({ ...d, seasonNote: { eyebrow: d.seasonNote?.eyebrow ?? "", body: e.target.value } }))}
+                  />
+                </label>
+              </>
+            )}
+          </div>
+        </section>
+
+        {/* 05 — YOUR DETAILS */}
+        <section className={styles.card}>
+          <div className={styles.sectionHead}>05 — YOUR DETAILS</div>
           <div className={styles.grid}>
             {(
               [
@@ -1151,6 +1123,18 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                 <input type={type} className={styles.input} placeholder={placeholder} value={draft.consultant[key]} onChange={(e) => update((d) => ({ ...d, consultant: { ...d.consultant, [key]: e.target.value } }))} />
               </label>
             ))}
+            <label className={`${styles.field} ${styles.fieldFull}`}>
+              <span className={styles.fieldLabel}>
+                FOOTER DISCLAIMER <span className={styles.fieldLabelHint}>— the last line of the page, under your details</span>
+              </span>
+              <input
+                type="text"
+                className={styles.input}
+                placeholder={TIER2_DEFAULT_DISCLAIMER}
+                value={draft.footerDisclaimer}
+                onChange={(e) => update((d) => ({ ...d, footerDisclaimer: e.target.value }))}
+              />
+            </label>
           </div>
         </section>
       </main>

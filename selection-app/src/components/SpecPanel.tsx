@@ -4,11 +4,6 @@ import { SmallChevronIcon } from "./icons";
 import EnlargeableImage from "./EnlargeableImage";
 import styles from "./SpecPanel.module.css";
 
-export interface SpecHighlight {
-  title: string;
-  line: string;
-}
-
 interface SpecPanelProps {
   yacht: Yacht;
   position: number;
@@ -20,8 +15,6 @@ interface SpecPanelProps {
   signedBy?: string;
   /** Tier 2: VAT row text when no VAT amount is known (Tier 3 shows "TBC") */
   vatText?: string;
-  /** Tier 2: titled highlights; when given they replace the keyFeatures list */
-  highlights?: SpecHighlight[];
 }
 
 export default function SpecPanel({
@@ -33,7 +26,6 @@ export default function SpecPanel({
   onNext,
   signedBy,
   vatText,
-  highlights,
 }: SpecPanelProps) {
   /* Rows with no value are hidden rather than rendered as a null. */
   const specRows = (
@@ -131,24 +123,7 @@ export default function SpecPanel({
         </div>
       )}
 
-      {highlights && highlights.length > 0 && (
-        <div className={styles.highlights}>
-          <div className={styles.highlightsHeading}>HIGHLIGHTS</div>
-          <ol className={styles.hlList}>
-            {highlights.map((h, i) => (
-              <li key={i} className={styles.hlRow}>
-                <span className={styles.hlNum}>{String(i + 1).padStart(2, "0")}</span>
-                <span className={styles.hlText}>
-                  {h.title && <span className={styles.hlTitle}>{h.title.toUpperCase()}</span>}
-                  {h.line && <span className={styles.hlLine}>{h.line}</span>}
-                </span>
-              </li>
-            ))}
-          </ol>
-        </div>
-      )}
-
-      {!highlights && yacht.keyFeatures && yacht.keyFeatures.length > 0 && (
+      {yacht.keyFeatures && yacht.keyFeatures.length > 0 && (
         <div className={styles.highlights}>
           <div className={styles.highlightsHeading}>HIGHLIGHTS</div>
           <ol className={styles.features}>

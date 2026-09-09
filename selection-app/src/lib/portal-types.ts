@@ -181,25 +181,18 @@ export interface Tier2DestinationDraft {
   areaTerms?: string[];
 }
 
-export interface YachtHighlight {
-  title: string;
-  line: string;
-}
-
 /**
- * A Tier 2 yacht: the Tier 3 draft yacht (Yachtfolio facts, gallery and image
- * slots, auto-filled the same way) plus the rail and drawer fields.
+ * A Tier 2 yacht: the Tier 3 draft yacht (Yachtfolio facts, key features,
+ * gallery and image slots, auto-filled the same way) plus the rail and
+ * drawer fields.
  */
 export interface Tier2DraftYacht extends DraftYacht {
   /** One or more of the draft's three destination ids */
   destinationIds: string[];
-  /** "THE YACHT YOU KNOW" eyebrow */
-  knownYacht: boolean;
   /** One line, signed with the consultant's first name on the page */
   consultantNote: string;
   /** Drawer VAT row text (there is no VAT percentage on Tier 2) */
   vatText: string;
-  highlights: [YachtHighlight, YachtHighlight, YachtHighlight];
 }
 
 export interface SeasonNote {
@@ -248,23 +241,13 @@ export function emptyTier2Destination(): Tier2DestinationDraft {
   };
 }
 
-export function emptyHighlights(): Tier2DraftYacht["highlights"] {
-  return [
-    { title: "", line: "" },
-    { title: "", line: "" },
-    { title: "", line: "" },
-  ];
-}
-
 export function emptyTier2Yacht(uid: string): Tier2DraftYacht {
   return {
     ...emptyDraftYacht(uid),
     apaPct: TIER2_DEFAULT_APA,
     destinationIds: [],
-    knownYacht: false,
     consultantNote: "",
     vatText: TIER2_DEFAULT_VAT_TEXT,
-    highlights: emptyHighlights(),
   };
 }
 

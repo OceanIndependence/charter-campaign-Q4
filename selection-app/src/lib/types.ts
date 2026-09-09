@@ -126,20 +126,16 @@ export interface AtlasPageDestination {
   images: [AtlasBlock, AtlasBlock];
 }
 
-export interface AtlasPageHighlight {
-  title: string;
-  line: string;
-}
-
-/** A Tier 2 yacht: the Tier 3 yacht (frozen Yachtfolio facts) plus rail and drawer fields. */
+/**
+ * A Tier 2 yacht: the Tier 3 yacht (frozen Yachtfolio facts, with keyFeatures
+ * as the drawer highlights) plus rail and drawer fields.
+ */
 export interface AtlasPageYacht extends Yacht {
   destinationIds: string[];
-  knownYacht: boolean;
   /** One line, rendered signed with the consultant's first name */
   consultantNote?: string;
   /** Drawer VAT row text, e.g. "Varies by location" */
   vatText: string;
-  highlights: AtlasPageHighlight[];
 }
 
 /** Every other Atlas destination, pinned dim on the globe; frozen at publish. */

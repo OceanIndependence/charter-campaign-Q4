@@ -183,55 +183,6 @@
   flex: 1;
 }
 
-/* Tier 2 titled highlights — numbered rows from the Personalised Atlas design. */
-.hlList {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-}
-
-.hlRow {
-  display: flex;
-  gap: 18px;
-  align-items: baseline;
-  padding: 16px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.hlRow:last-child {
-  border-bottom: 0;
-}
-
-.hlNum {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 22px;
-  letter-spacing: 0.08em;
-  color: var(--mint);
-  flex: 0 0 40px;
-}
-
-.hlText {
-  flex: 1;
-}
-
-.hlTitle {
-  display: block;
-  font-size: 11px;
-  letter-spacing: 0.24em;
-  font-weight: 500;
-}
-
-.hlLine {
-  display: block;
-  font-size: 12.5px;
-  font-weight: 300;
-  color: var(--fg-6);
-  margin-top: 6px;
-  line-height: 1.6;
-}
-
 .note {
   font-size: 12.5px;
   line-height: 1.75;

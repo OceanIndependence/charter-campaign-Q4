@@ -309,7 +309,7 @@ export async function createSelection(identity, { duplicateOf, tier } = {}) {
             slug: "",
             clientGreeting: "",
             introNote: "",
-            yachts: (src.yachts ?? []).map((y) => ({ ...y, uid: randomUUID(), consultantNote: "", knownYacht: false })),
+            yachts: (src.yachts ?? []).map((y) => ({ ...y, uid: randomUUID(), consultantNote: "" })),
           }
         : {
             welcome: "",
