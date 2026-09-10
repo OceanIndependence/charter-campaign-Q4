@@ -498,6 +498,51 @@
   margin-left: 30px;
 }
 
+/* One itinerary link: its button text, its address and a remove control. */
+.linkRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.linkHint {
+  font-size: 11px;
+  font-weight: 300;
+  line-height: 1.6;
+  color: #555759;
+}
+
+.addLinkBtn {
+  justify-self: start;
+  border: 1px dashed #c9c9c7;
+  padding: 11px 16px;
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  font-weight: 500;
+  color: #555759;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.addLinkBtn:hover {
+  border-color: #1d1d1d;
+  color: #1d1d1d;
+}
+
+/* Narrow screens: stack the two fields, keep REMOVE on its own line. */
+@media (max-width: 640px) {
+  .linkRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .linkRow .removeBtn {
+    justify-self: start;
+    padding-left: 0;
+  }
+}
+
 /* ----------------------------------------------------------- publish bar */
 
 .publishBar {

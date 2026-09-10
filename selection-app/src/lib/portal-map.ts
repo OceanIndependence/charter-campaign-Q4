@@ -4,7 +4,7 @@
  * to undefined rather than empty strings.
  */
 
-import type { PageConfig, Yacht } from "./types";
+import { MAX_ITINERARY_LINKS, type ItineraryLink, type PageConfig, type Yacht } from "./types";
 import type { DraftYacht, PortalDraft } from "./portal-types";
 import { slugify } from "@/server/yachtfolio/normalise.mjs";
 
@@ -88,7 +88,29 @@ export function mapDraftYacht(y: DraftYacht): Yacht | null {
   };
 }
 
+/**
+ * The itinerary buttons to freeze into the published page: blank rows
+ * dropped, text and URLs trimmed, capped at MAX_ITINERARY_LINKS. A draft
+ * saved before several itineraries were possible carries one itineraryUrl
+ * instead, which becomes the single link.
+ */
+function mapItineraryLinks(sections: PortalDraft["sections"]): ItineraryLink[] | undefined {
+  const rows: Array<{ label?: string; url?: string }> = sections.itineraryLinks?.length
+    ? sections.itineraryLinks
+    : [{ url: sections.itineraryUrl }];
+  const links: ItineraryLink[] = [];
+  for (const row of rows) {
+    const url = str(row.url);
+    if (!url) continue;
+    const label = str(row.label);
+    links.push(label ? { label, url } : { url });
+    if (links.length === MAX_ITINERARY_LINKS) break;
+  }
+  return links.length ? links : undefined;
+}
+
 export function draftToPageConfig(draft: PortalDraft, slug: string): PageConfig {
+  const itineraryLinks = mapItineraryLinks(draft.sections);
   return {
     slug,
     clientNames: str(draft.clientNames) ?? "",
@@ -101,7 +123,10 @@ export function draftToPageConfig(draft: PortalDraft, slug: string): PageConfig 
     sections: {
       costs: draft.sections.costs,
       itinerary: draft.sections.itinerary,
-      itineraryUrl: str(draft.sections.itineraryUrl),
+      itineraryLinks,
+      // Mirror the first link into the pre-multi-link field so a page
+      // published now still renders if the app is ever rolled back.
+      itineraryUrl: itineraryLinks?.[0]?.url,
       compare: draft.sections.compare,
     },
     consultant: {

@@ -96,12 +96,23 @@
   text-wrap: pretty;
 }
 
+/* Up to three itinerary buttons sit on one centred row, wrapping to their
+   own lines on a narrow screen. The row gap clears each link's underline. */
+.itinLinks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 26px 44px;
+}
+
 /* Styled to match VIEW BROCHURE in the spec panel: 2px mint underline,
-   the same size, tracking, weight and hover. */
+   the same size, tracking, weight and hover. The consultant's own button
+   text is capitalised here rather than stored in capitals. */
 .itinLink {
   font-size: 10px;
   letter-spacing: 0.3em;
   font-weight: 500;
+  text-transform: uppercase;
   color: var(--fg-6);
   text-decoration: none;
   border-bottom: 2px solid var(--mint);

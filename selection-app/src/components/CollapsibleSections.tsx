@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { DEFAULT_ITINERARY_LABEL, type ItineraryLink } from "@/lib/types";
 import styles from "./CollapsibleSections.module.css";
 
 function CollapsibleSection({
@@ -57,18 +58,38 @@ export function CostsSection() {
   );
 }
 
-export function ItinerarySection({ itineraryUrl }: { itineraryUrl?: string }) {
+export function ItinerarySection({
+  itineraryUrl,
+  itineraryLinks,
+}: {
+  itineraryUrl?: string;
+  itineraryLinks?: ItineraryLink[];
+}) {
+  // Pages published before a selection could carry several itineraries have
+  // one URL and no button text of their own.
+  const links: ItineraryLink[] = itineraryLinks?.length
+    ? itineraryLinks
+    : itineraryUrl
+      ? [{ url: itineraryUrl }]
+      : [];
   return (
     <CollapsibleSection title="YOUR ITINERARY">
       <div className={styles.itinBody}>
         <div className={styles.itinInner}>
           <p className={styles.itinIntro}>
-            This itinerary is purely a suggestion, and we shall work with the captain of your chosen
-            yacht to curate an itinerary with your preferences in mind.
+            {links.length > 1 ? "These itineraries are" : "This itinerary is"} purely a suggestion,
+            and we shall work with the captain of your chosen yacht to curate an itinerary with your
+            preferences in mind.
           </p>
-          <a href={itineraryUrl ?? "#"} className={styles.itinLink}>
-            VIEW YOUR SUGGESTED ITINERARY
-          </a>
+          {links.length > 0 && (
+            <div className={styles.itinLinks}>
+              {links.map((link, i) => (
+                <a key={`${link.url}-${i}`} href={link.url} className={styles.itinLink}>
+                  {link.label?.trim() || DEFAULT_ITINERARY_LABEL}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </CollapsibleSection>
