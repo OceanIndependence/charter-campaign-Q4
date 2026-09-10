@@ -91,9 +91,53 @@ export function specBlocks(brochure) {
   return { ds, detail: detail ?? {}, spec: brochure?.specifications ?? {} };
 }
 
+/**
+ * Yachtfolio returns operating-area names in capitals ("FRENCH RIVIERA &
+ * MONACO"). The client page reads them as ordinary values alongside the
+ * staterooms and the builder, so force them into title case. Acronyms stay
+ * up, joining words stay down, and elisions keep their leading particle
+ * lowercase ("COTE D'AZUR" reads "Cote d'Azur").
+ */
+const AREA_ACRONYMS = new Set(["BVI", "USVI", "US", "USA", "UK", "UAE", "NZ", "PNG"]);
+const AREA_MINOR = new Set([
+  "of", "the", "and", "in", "on", "at", "to", "a", "an", "or", "for",
+  "de", "del", "di", "da", "du", "des", "la", "le", "les", "los", "las",
+  "au", "aux", "van", "von", "e", "y",
+]);
+
+/** Capitalise one word, keeping elisions such as d'Azur and l'Estartit. */
+function capitaliseWord(word) {
+  if (!word) return word;
+  if (AREA_ACRONYMS.has(word.toUpperCase())) return word.toUpperCase();
+  const apos = word.match(/^([^'’]+)(['’])(.+)$/);
+  if (apos) {
+    const [, lead, mark, rest] = apos;
+    // A single-letter d' or l' is a particle and stays lowercase.
+    const particle = lead.length === 1 && /^[dl]$/i.test(lead);
+    return (
+      (particle ? lead.toLowerCase() : capitaliseWord(lead)) + mark + capitaliseWord(rest)
+    );
+  }
+  return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+}
+
+export function titleCaseArea(name) {
+  const text = String(name ?? "").trim();
+  if (!text) return text;
+  let first = true;
+  return text.replace(/[\p{L}\p{N}'’]+/gu, (word) => {
+    const lower = word.toLowerCase();
+    const out = !first && AREA_MINOR.has(lower) ? lower : capitaliseWord(word);
+    first = false;
+    return out;
+  });
+}
+
 /** Lookup helpers over the cached reference data. */
 export function buildReference({ seasons, operating_areas }) {
-  const areasById = new Map((operating_areas?.areas ?? []).map((a) => [a.id, a.area_name]));
+  const areasById = new Map(
+    (operating_areas?.areas ?? []).map((a) => [a.id, titleCaseArea(a.area_name)])
+  );
   return {
     seasons: seasons ?? [],
     areasById,

@@ -1677,12 +1677,12 @@
 
 .confirmGo {
   color: #ffffff;
-  background: #8a5a2b;
-  border: 1px solid #8a5a2b;
+  background: #1d1d1d;
+  border: 1px solid #1d1d1d;
 }
 
 .confirmGo:hover {
-  color: #8a5a2b;
+  color: #1d1d1d;
   background: #ffffff;
 }
 
