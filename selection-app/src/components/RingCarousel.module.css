@@ -214,6 +214,9 @@
   font-weight: 500;
   color: var(--fg-5);
   margin-top: 8px;
+  /* The card runs in small caps whatever case the value is stored in; the
+     spec panel shows the same value as written. */
+  text-transform: uppercase;
 }
 
 .dash,
@@ -308,7 +311,16 @@
   background: var(--fg-5);
 }
 
-/* Light theme: the card rate in ink rather than mint. */
-[data-theme="light"] .price {
+/* Light theme: the card rate and the sound label in ink rather than mint. */
+[data-theme="light"] .price,
+[data-theme="light"] .soundLabelOn {
   color: var(--fg);
+}
+
+/* Light theme: the card icons stay mint, but at full strength with a heavier
+   stroke so they hold their own against a white card. */
+[data-theme="light"] .stat svg circle,
+[data-theme="light"] .stat svg path {
+  stroke: var(--mint);
+  stroke-width: 1.75;
 }

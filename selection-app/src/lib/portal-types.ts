@@ -125,7 +125,7 @@ export interface PortalDraft extends SelectionBase {
   season: string;
   region: string;
   headline: string;
-  /** Cover eyebrow override (falls back to "{N} YACHT(S), HELD FOR YOUR REVIEW") */
+  /** Cover eyebrow override (falls back to "TIME TO START PLANNING AHEAD") */
   subHeadline: string;
   /** Optional consultant welcome greeting (cover falls back to a generated line) */
   welcome: string;

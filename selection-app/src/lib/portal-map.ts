@@ -69,7 +69,7 @@ export function mapDraftYacht(y: DraftYacht): Yacht | null {
     guests: num(y.guests) ? Math.round(num(y.guests) as number) : undefined,
     crew: num(y.crew) ? Math.round(num(y.crew) as number) : undefined,
     staterooms: mapStaterooms(y.staterooms),
-    cruisingArea: str(y.cruisingArea)?.toUpperCase(),
+    cruisingArea: str(y.cruisingArea),
     ...(weeklyRate != null ? { currency, weeklyRate } : {}),
     weeklyRateIsFrom: y.weeklyRateIsFrom || undefined,
     ...(apaPct != null ? { apaPct } : {}),

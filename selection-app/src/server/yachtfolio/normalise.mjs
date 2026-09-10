@@ -156,7 +156,7 @@ export function extractYachtFacts({ brochure, basic, reference, targetSeason }) 
       basic?.operating_areas_new?.find((o) => o.season_id === targetSeason.id)?.areas ??
       [];
     const names = areaIds.map((id) => reference.areasById.get(id)).filter(Boolean);
-    if (names.length) cruisingArea = names.join(", ").toUpperCase();
+    if (names.length) cruisingArea = names.join(", ");
   }
   if (!cruisingArea) missing.push("cruisingArea");
 

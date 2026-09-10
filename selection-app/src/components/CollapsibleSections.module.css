@@ -110,7 +110,8 @@
   border-color: var(--mint);
 }
 
-/* Light theme: cost labels in ink rather than mint. */
-[data-theme="light"] .costLabel {
+/* Light theme: cost labels and the itinerary link in ink rather than mint. */
+[data-theme="light"] .costLabel,
+[data-theme="light"] .itinLink:hover {
   color: var(--fg);
 }

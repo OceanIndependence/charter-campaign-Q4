@@ -26,6 +26,7 @@ import { suggestTier2Slug, tier2PublishProblems, tier2Warnings } from "@/lib/atl
 import { slugify } from "@/server/yachtfolio/normalise.mjs";
 import FleetSelect from "./FleetSelect";
 import ImagePicker from "./ImagePicker";
+import ConfirmDialog from "./ConfirmDialog";
 import styles from "./PortalForm.module.css";
 
 const AUTOSAVE_MS = 2500;
@@ -517,15 +518,22 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
     setOpenIds((s) => new Set(s).add(uid));
   }, [update]);
 
-  const removeYacht = useCallback(
-    (uid: string, name: string) => {
-      if (!window.confirm(`Remove ${name.trim() ? name.trim().toUpperCase() : "this yacht"} from the shortlist?`)) return;
-      dirtyFields.current.delete(uid);
-      fetchSeq.current.delete(uid);
-      update((d) => ({ ...d, yachts: d.yachts.filter((y) => y.uid !== uid) }));
-    },
-    [update]
-  );
+  /** The yacht awaiting removal confirmation, if any. */
+  const [pendingRemove, setPendingRemove] = useState<{ uid: string; label: string } | null>(null);
+
+  /** Ask first, in the portal's own dialog rather than the browser's. */
+  const removeYacht = useCallback((uid: string, name: string) => {
+    setPendingRemove({ uid, label: name.trim() ? name.trim().toUpperCase() : "this yacht" });
+  }, []);
+
+  const confirmRemoveYacht = useCallback(() => {
+    const uid = pendingRemove?.uid;
+    setPendingRemove(null);
+    if (!uid) return;
+    dirtyFields.current.delete(uid);
+    fetchSeq.current.delete(uid);
+    update((d) => ({ ...d, yachts: d.yachts.filter((y) => y.uid !== uid) }));
+  }, [pendingRemove, update]);
 
   const moveYacht = useCallback(
     (fromUid: string, toUid: string) => {
@@ -1252,6 +1260,16 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img className={styles.lightboxImg} src={lightbox.url} alt={lightbox.label} onClick={(e) => e.stopPropagation()} />
         </div>
+      )}
+
+      {pendingRemove && (
+        <ConfirmDialog
+          title="Remove this yacht?"
+          body={`${pendingRemove.label} will be taken out of the shortlist. Nothing is published until you publish again.`}
+          confirmLabel="REMOVE YACHT"
+          onConfirm={confirmRemoveYacht}
+          onCancel={() => setPendingRemove(null)}
+        />
       )}
     </>
   );

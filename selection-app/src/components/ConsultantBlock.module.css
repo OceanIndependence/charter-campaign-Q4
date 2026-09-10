@@ -91,3 +91,8 @@
 .exploreLink:hover {
   color: var(--mint);
 }
+
+/* Light theme: hover in ink rather than mint. */
+[data-theme="light"] .exploreLink:hover {
+  color: var(--fg);
+}
