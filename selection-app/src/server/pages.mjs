@@ -212,7 +212,7 @@ function emptyDraft(identity) {
     welcome: "",
     theme: "dark",
     yachts: [],
-    sections: { costs: true, itinerary: true, itineraryUrl: "", compare: true },
+    sections: { costs: true, itinerary: true, itineraryLinks: [], compare: true },
     consultant: consultantOf(identity),
   };
 }

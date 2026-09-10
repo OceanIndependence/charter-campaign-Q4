@@ -150,7 +150,12 @@ export default function SelectionPage({ config }: { config: PageConfig }) {
       )}
 
       {config.sections.costs && <CostsSection />}
-      {config.sections.itinerary && <ItinerarySection itineraryUrl={config.sections.itineraryUrl} />}
+      {config.sections.itinerary && (
+        <ItinerarySection
+          itineraryUrl={config.sections.itineraryUrl}
+          itineraryLinks={config.sections.itineraryLinks}
+        />
+      )}
 
       <ConsultantBlock consultant={config.consultant} atlasUrl={config.atlasUrl} />
 

@@ -70,10 +70,30 @@ export interface Consultant {
   photoUrl: string;
 }
 
+/** Button text used when the consultant names an itinerary link but not its button. */
+export const DEFAULT_ITINERARY_LABEL = "View your suggested itinerary";
+
+/** The most itinerary buttons one client page can carry. */
+export const MAX_ITINERARY_LINKS = 3;
+
+/** One itinerary button on the client page. */
+export interface ItineraryLink {
+  /** Button text, e.g. "Naples to Sicily"; rendered in capitals */
+  label?: string;
+  url: string;
+}
+
 export interface PageSections {
   costs: boolean;
   itinerary: boolean;
+  /**
+   * The single itinerary link of pages published before a selection could
+   * carry several. Still written as the first link's URL, and still rendered
+   * when itineraryLinks is absent, so old published pages keep their button.
+   */
   itineraryUrl?: string;
+  /** Up to MAX_ITINERARY_LINKS itinerary buttons, in the consultant's order */
+  itineraryLinks?: ItineraryLink[];
   compare: boolean;
 }
 

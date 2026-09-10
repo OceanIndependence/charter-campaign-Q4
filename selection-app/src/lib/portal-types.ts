@@ -135,9 +135,28 @@ export interface PortalDraft extends SelectionBase {
   sections: {
     costs: boolean;
     itinerary: boolean;
-    itineraryUrl: string;
+    /**
+     * Drafts saved before several itineraries were possible carry one URL
+     * here; the form upgrades it into itineraryLinks on load.
+     */
+    itineraryUrl?: string;
+    /** Up to MAX_ITINERARY_LINKS itinerary buttons, in the consultant's order */
+    itineraryLinks: DraftItineraryLink[];
     compare: boolean;
   };
+}
+
+/** One itinerary button being edited: its own text and its own URL. */
+export interface DraftItineraryLink {
+  /** Stable client key for the form's list */
+  uid: string;
+  /** Button text, e.g. "Naples to Sicily"; blank falls back to the default */
+  label: string;
+  url: string;
+}
+
+export function emptyItineraryLink(uid: string): DraftItineraryLink {
+  return { uid, label: "", url: "" };
 }
 
 /* ------------------------------------------------------------ Tier 2 */

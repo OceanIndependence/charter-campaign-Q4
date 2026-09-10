@@ -2,8 +2,17 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { DraftYacht, FleetCache, FleetDetail, FleetEntry, FleetImages, PortalDraft } from "@/lib/portal-types";
-import { emptyDraftYacht } from "@/lib/portal-types";
+import type {
+  DraftItineraryLink,
+  DraftYacht,
+  FleetCache,
+  FleetDetail,
+  FleetEntry,
+  FleetImages,
+  PortalDraft,
+} from "@/lib/portal-types";
+import { emptyDraftYacht, emptyItineraryLink } from "@/lib/portal-types";
+import { MAX_ITINERARY_LINKS } from "@/lib/types";
 import FleetSelect from "./FleetSelect";
 import ImagePicker from "./ImagePicker";
 import ConfirmDialog from "./ConfirmDialog";
@@ -154,6 +163,21 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
           };
         });
         if (next.yachts.length === 0) next.yachts = [emptyDraftYacht(crypto.randomUUID())];
+        // Drafts saved before several itineraries were possible carry one
+        // itineraryUrl; it becomes the first link. A stable uid per row keys
+        // the list, and one empty row is seeded so there is always a field.
+        const savedLinks = next.sections.itineraryLinks?.length
+          ? next.sections.itineraryLinks
+          : next.sections.itineraryUrl
+            ? [{ uid: "", label: "", url: next.sections.itineraryUrl }]
+            : [];
+        next.sections.itineraryLinks = savedLinks
+          .slice(0, MAX_ITINERARY_LINKS)
+          .map((l) => ({ ...l, uid: l.uid || crypto.randomUUID() }));
+        if (next.sections.itineraryLinks.length === 0) {
+          next.sections.itineraryLinks = [emptyItineraryLink(crypto.randomUUID())];
+        }
+        delete next.sections.itineraryUrl;
         setDraft(next);
         if (next.publishedSlug) {
           setPublished({ slug: next.publishedSlug, url: `/selection/${next.publishedSlug}` });
@@ -464,6 +488,40 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
     );
     setOpenIds((s) => new Set(s).add(uid));
   }, [update]);
+
+  /* ------------------------------------------------- itinerary links */
+
+  const setLinks = useCallback(
+    (mutate: (links: DraftItineraryLink[]) => DraftItineraryLink[]) => {
+      update((d) => ({
+        ...d,
+        sections: { ...d.sections, itineraryLinks: mutate(d.sections.itineraryLinks ?? []) },
+      }));
+    },
+    [update]
+  );
+
+  const addItineraryLink = useCallback(() => {
+    setLinks((links) =>
+      links.length >= MAX_ITINERARY_LINKS
+        ? links
+        : [...links, emptyItineraryLink(crypto.randomUUID())]
+    );
+  }, [setLinks]);
+
+  const editItineraryLink = useCallback(
+    (uid: string, patch: Partial<Omit<DraftItineraryLink, "uid">>) => {
+      setLinks((links) => links.map((l) => (l.uid === uid ? { ...l, ...patch } : l)));
+    },
+    [setLinks]
+  );
+
+  const removeItineraryLink = useCallback(
+    (uid: string) => {
+      setLinks((links) => links.filter((l) => l.uid !== uid));
+    },
+    [setLinks]
+  );
 
   /** Ask first, in the portal's own dialog rather than the browser's. */
   const removeYacht = useCallback((uid: string, name: string) => {
@@ -1177,16 +1235,49 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
               <span className={styles.checkLabel}>Suggested itinerary</span>
             </label>
             <div className={styles.checkChild}>
-              <span className={styles.fieldLabel}>ITINERARY LINK</span>
-              <input
-                type="url"
-                className={styles.input}
-                placeholder="https://... (client itinerary page)"
-                value={draft.sections.itineraryUrl}
-                onChange={(e) =>
-                  update((d) => ({ ...d, sections: { ...d.sections, itineraryUrl: e.target.value } }))
-                }
-              />
+              <span className={styles.fieldLabel}>
+                ITINERARY LINKS{" "}
+                <span className={styles.fieldLabelHint}>
+                  &mdash; up to {MAX_ITINERARY_LINKS}, each with its own button text
+                </span>
+              </span>
+              {(draft.sections.itineraryLinks ?? []).map((link, i) => (
+                <div key={link.uid} className={styles.linkRow}>
+                  <input
+                    type="text"
+                    className={styles.input}
+                    aria-label={`Itinerary ${i + 1} button text`}
+                    placeholder="Button text (e.g. Naples to Sicily)"
+                    value={link.label}
+                    onChange={(e) => editItineraryLink(link.uid, { label: e.target.value })}
+                  />
+                  <input
+                    type="url"
+                    className={styles.input}
+                    aria-label={`Itinerary ${i + 1} link`}
+                    placeholder="https://... (client itinerary page)"
+                    value={link.url}
+                    onChange={(e) => editItineraryLink(link.uid, { url: e.target.value })}
+                  />
+                  <button
+                    type="button"
+                    className={styles.removeBtn}
+                    title="Remove this itinerary link"
+                    onClick={() => removeItineraryLink(link.uid)}
+                  >
+                    REMOVE
+                  </button>
+                </div>
+              ))}
+              <span className={styles.linkHint}>
+                Blank button text reads &ldquo;View your suggested itinerary&rdquo; on the client
+                page. Links with no address are left off.
+              </span>
+              {(draft.sections.itineraryLinks ?? []).length < MAX_ITINERARY_LINKS && (
+                <button type="button" className={styles.addLinkBtn} onClick={addItineraryLink}>
+                  + ADD AN ITINERARY LINK
+                </button>
+              )}
             </div>
             <label className={styles.checkRow}>
               <input
