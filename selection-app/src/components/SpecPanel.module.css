@@ -220,6 +220,7 @@
 [data-theme="light"] .totalLabel,
 [data-theme="light"] .highlightsHeading,
 [data-theme="light"] .featureNum,
+[data-theme="light"] .brochureLink,
 [data-theme="light"] .brochureLink:hover {
   color: var(--fg);
 }
