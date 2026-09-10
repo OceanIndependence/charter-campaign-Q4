@@ -139,7 +139,7 @@
 }
 
 .highlights {
-  margin-top: 30px;
+  margin-top: 44px;
 }
 
 /* Same treatment as the cover eyebrow ("ONE YACHT, HELD FOR YOUR REVIEW"). */
@@ -211,8 +211,16 @@
 }
 
 /* Light theme: note, total and highlight text in ink rather than mint/dim. */
+/* Light theme: no mint text — TOTAL, the HIGHLIGHTS heading and the 01-04
+   markers all read in solid black, as does the broker note and the
+   highlight copy. */
 [data-theme="light"] .note,
 [data-theme="light"] .totalValue,
-[data-theme="light"] .featureText {
+[data-theme="light"] .featureText,
+[data-theme="light"] .totalLabel,
+[data-theme="light"] .highlightsHeading,
+[data-theme="light"] .featureNum,
+[data-theme="light"] .brochureLink,
+[data-theme="light"] .brochureLink:hover {
   color: var(--fg);
 }

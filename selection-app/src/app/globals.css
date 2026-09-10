@@ -113,17 +113,20 @@
   --scroll-track: #ededeb;
   --scroll-thumb: #c9c9c7;
 
+  /* Body copy is solid black. Labels, counters and secondary lines take the
+     brand's darker grey instead of a pale tint of black, so they stay
+     readable on white. The border and wash tiers below are unchanged. */
   --fg: #1d1d1d;
-  --fg-8: rgba(29, 29, 29, 0.8);
-  --fg-75: rgba(29, 29, 29, 0.75);
-  --fg-72: rgba(29, 29, 29, 0.72);
-  --fg-7: rgba(29, 29, 29, 0.7);
-  --fg-65: rgba(29, 29, 29, 0.65);
-  --fg-6: rgba(29, 29, 29, 0.6);
-  --fg-5: rgba(29, 29, 29, 0.5);
-  --fg-45: rgba(29, 29, 29, 0.45);
-  --fg-4: rgba(29, 29, 29, 0.4);
-  --fg-35: rgba(29, 29, 29, 0.35);
+  --fg-8: #1d1d1d;
+  --fg-75: #1d1d1d;
+  --fg-72: #1d1d1d;
+  --fg-7: #1d1d1d;
+  --fg-65: #1d1d1d;
+  --fg-6: #555759;
+  --fg-5: #555759;
+  --fg-45: #555759;
+  --fg-4: #555759;
+  --fg-35: #555759;
   --fg-3: rgba(29, 29, 29, 0.3);
   --fg-25: rgba(29, 29, 29, 0.25);
   --fg-12: rgba(29, 29, 29, 0.12);
@@ -169,6 +172,9 @@ a {
 }
 a:hover {
   color: var(--mint);
+}
+[data-theme="light"] a:hover {
+  color: var(--fg);
 }
 
 button {

@@ -54,7 +54,7 @@ const IMAGE_CONCURRENCY = 4;
 const IMAGE_START_DELAY_MS = 150;
 // Bump to invalidate cached facts / image manifests after a normalisation
 // change — old caches re-fetch.
-const DETAIL_SCHEMA_VERSION = 9;
+const DETAIL_SCHEMA_VERSION = 10;
 // The facts request fetches the brochure; the images request that follows a
 // moment later reuses it from here instead of calling Yachtfolio again.
 const BROCHURE_MEMO_MS = 5 * 60 * 1000;

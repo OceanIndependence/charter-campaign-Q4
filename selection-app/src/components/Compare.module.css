@@ -44,6 +44,11 @@
   cursor: default;
 }
 
+/* Light theme: the compare action in ink rather than mint. */
+[data-theme="light"] .barGo {
+  color: var(--fg);
+}
+
 .barClear {
   font-size: 14px;
   color: var(--fg-5);

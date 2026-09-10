@@ -6,6 +6,7 @@ import type { DraftYacht, FleetCache, FleetDetail, FleetEntry, FleetImages, Port
 import { emptyDraftYacht } from "@/lib/portal-types";
 import FleetSelect from "./FleetSelect";
 import ImagePicker from "./ImagePicker";
+import ConfirmDialog from "./ConfirmDialog";
 import styles from "./PortalForm.module.css";
 
 const MAX_YACHTS = 10;
@@ -453,6 +454,9 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
     }
   }, [draft, loadImages, setCard]);
 
+  /** The yacht awaiting removal confirmation, if any. */
+  const [pendingRemove, setPendingRemove] = useState<{ uid: string; label: string } | null>(null);
+
   const addYacht = useCallback(() => {
     const uid = crypto.randomUUID();
     update((d) =>
@@ -461,16 +465,19 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
     setOpenIds((s) => new Set(s).add(uid));
   }, [update]);
 
-  const removeYacht = useCallback(
-    (uid: string, name: string) => {
-      const label = name.trim() ? name.trim().toUpperCase() : "this yacht";
-      if (!window.confirm(`Remove ${label} from the selection?`)) return;
-      dirtyFields.current.delete(uid);
-      fetchSeq.current.delete(uid);
-      update((d) => ({ ...d, yachts: d.yachts.filter((y) => y.uid !== uid) }));
-    },
-    [update]
-  );
+  /** Ask first, in the portal's own dialog rather than the browser's. */
+  const removeYacht = useCallback((uid: string, name: string) => {
+    setPendingRemove({ uid, label: name.trim() ? name.trim().toUpperCase() : "this yacht" });
+  }, []);
+
+  const confirmRemoveYacht = useCallback(() => {
+    const uid = pendingRemove?.uid;
+    setPendingRemove(null);
+    if (!uid) return;
+    dirtyFields.current.delete(uid);
+    fetchSeq.current.delete(uid);
+    update((d) => ({ ...d, yachts: d.yachts.filter((y) => y.uid !== uid) }));
+  }, [pendingRemove, update]);
 
   /** Reorder: move `fromUid` to the position of `toUid` (ring order follows). */
   const moveYacht = useCallback(
@@ -646,7 +653,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
               <input
                 type="text"
                 className={styles.input}
-                placeholder={`Defaults to “${draft.yachts.length === 1 ? "ONE YACHT" : "N YACHTS"}, HELD FOR YOUR REVIEW”.`}
+                placeholder="Defaults to “TIME TO START PLANNING AHEAD”."
                 value={draft.subHeadline}
                 onChange={(e) => update((d) => ({ ...d, subHeadline: e.target.value }))}
               />
@@ -1281,6 +1288,16 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
             onClick={(e) => e.stopPropagation()}
           />
         </div>
+      )}
+
+      {pendingRemove && (
+        <ConfirmDialog
+          title="Remove this yacht?"
+          body={`${pendingRemove.label} will be taken out of the selection. Nothing is published until you publish again.`}
+          confirmLabel="REMOVE YACHT"
+          onConfirm={confirmRemoveYacht}
+          onCancel={() => setPendingRemove(null)}
+        />
       )}
     </>
   );

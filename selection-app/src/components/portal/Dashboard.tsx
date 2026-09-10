@@ -253,9 +253,9 @@ export default function Dashboard() {
               className={styles.select}
               value={tier}
               onChange={(e) => setTier(e.target.value as TierFilter)}
-              aria-label="Filter by tier"
+              aria-label="Filter by page type"
             >
-              <option value="all">All tiers</option>
+              <option value="all">All page types</option>
               <option value="2">{TIER_LABEL[2]}</option>
               <option value="3">{TIER_LABEL[3]}</option>
             </select>
@@ -325,7 +325,7 @@ export default function Dashboard() {
   );
 }
 
-/* --------------------------------------------------------- tier chooser */
+/* ------------------------------------------------------- format chooser */
 
 const TIER_CARDS: Array<{ tier: Tier; title: string; body: string; points: string[] }> = [
   {
@@ -346,18 +346,17 @@ function TierChooser({ busy, onPick, onCancel }: { busy: boolean; onPick: (tier:
   return (
     <section className={`${styles.card} ${styles.cardFirst} ${styles.chooser}`}>
       <div className={styles.sectionHeadRow}>
-        <div className={styles.sectionHead}>NEW SELECTION — CHOOSE A TIER</div>
+        <div className={styles.sectionHead}>NEW SELECTION — CHOOSE A FORMAT</div>
         {onCancel && (
           <button type="button" className={styles.actionBtn} onClick={onCancel}>
             CANCEL
           </button>
         )}
       </div>
-      <p className={styles.sectionNote}>The tier decides what the client page is and cannot be changed once the selection exists.</p>
+      <p className={styles.sectionNote}>This decides what the client page is and cannot be changed once the selection exists.</p>
       <div className={styles.tierGrid}>
         {TIER_CARDS.map((c) => (
           <button type="button" key={c.tier} className={styles.tierCard} onClick={() => onPick(c.tier)} disabled={busy}>
-            <span className={styles.tierEyebrow}>TIER {c.tier}</span>
             <span className={styles.tierTitle}>{c.title}</span>
             <span className={styles.tierBody}>{c.body}</span>
             <span className={styles.tierPoints}>
