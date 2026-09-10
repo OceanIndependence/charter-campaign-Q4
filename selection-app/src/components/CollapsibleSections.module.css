@@ -96,22 +96,24 @@
   text-wrap: pretty;
 }
 
+/* Styled to match VIEW BROCHURE in the spec panel: 2px mint underline,
+   the same size, tracking, weight and hover. */
 .itinLink {
   font-size: 10px;
   letter-spacing: 0.3em;
   font-weight: 500;
   color: var(--fg-6);
   text-decoration: none;
-  border-bottom: 1px solid var(--fg-3);
-  padding-bottom: 3px;
+  border-bottom: 2px solid var(--mint);
+  padding-bottom: 7px;
 }
 .itinLink:hover {
   color: var(--mint);
-  border-color: var(--mint);
 }
 
 /* Light theme: cost labels and the itinerary link in ink rather than mint. */
 [data-theme="light"] .costLabel,
+[data-theme="light"] .itinLink,
 [data-theme="light"] .itinLink:hover {
   color: var(--fg);
 }
