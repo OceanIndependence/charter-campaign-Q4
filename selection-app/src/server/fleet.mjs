@@ -46,6 +46,13 @@ const MANIFEST_KEY = "private/fleet-manifest.json";
 const MANIFEST_VERSION = 1;
 
 const FLEET_STALE_MS = 36 * 60 * 60 * 1000; // lazy re-sync if the cron hasn't run
+// Bump when the fleet list gains fields — a cached list from before is
+// re-synced on the next request instead of waiting for the nightly cron.
+const FLEET_SCHEMA_VERSION = 2;
+// Nightly fallback when the one-call basic list is unavailable: basic
+// records fetched one by one, this many per run, for yachts still lacking
+// their picker facts (builder, length, base port).
+const FACTS_PER_RUN = 120;
 const DETAIL_FRESH_MS = 6 * 60 * 60 * 1000; // rates change; don't serve stale for long
 // Download the whole gallery (capped per category) so the consultant can pick
 // which image fills each page slot; the default slot assignment takes the
@@ -247,36 +254,64 @@ async function writeIfChanged(run, key, value, recordedHash, record) {
  * basic list. When that call fails (or returns nothing) the values from the
  * previous cache are kept, so a transient error never blanks the picker.
  */
-async function fetchFleetFacts(passkey, previous, stats) {
+function factsFromBasic(row) {
+  return {
+    builder: String(row?.builder ?? "").trim(),
+    lengthM: parseMetres(row?.length_metric ?? row?.length_metres ?? row?.length) ?? null,
+    basePort: basePort(row?.summer_base_port) ?? "",
+  };
+}
+
+const hasFacts = (f) => Boolean(f && (f.builder || f.lengthM != null || f.basePort));
+
+async function fetchFleetFacts(passkey, previous, list, stats, { perYacht = false } = {}) {
   const facts = new Map();
   for (const y of previous?.yachts ?? []) {
-    if (y.builder || y.lengthM != null || y.basePort) {
-      facts.set(y.id, { builder: y.builder ?? "", lengthM: y.lengthM ?? null, basePort: y.basePort ?? "" });
-    }
+    const f = { builder: y.builder ?? "", lengthM: y.lengthM ?? null, basePort: y.basePort ?? "" };
+    if (hasFacts(f)) facts.set(y.id, f);
   }
+  let listed = 0;
   try {
     const rows = await fetchBasicList(passkey);
-    let seen = 0;
     for (const row of rows) {
-      const id = Number(row?.id_yacht ?? row?.id);
+      const id = Number(row?.id_yacht ?? row?.yacht_id ?? row?.id);
       if (!Number.isFinite(id)) continue;
-      seen += 1;
-      facts.set(id, {
-        builder: String(row.builder ?? "").trim(),
-        lengthM: parseMetres(row.length_metric ?? row.length_metres ?? row.length) ?? null,
-        basePort: basePort(row.summer_base_port) ?? "",
-      });
+      const f = factsFromBasic(row);
+      if (hasFacts(f)) {
+        facts.set(id, f);
+        listed += 1;
+      }
     }
-    if (!seen) stats.notes.push("basic yacht list returned no rows — picker facts (builder, length) kept from the previous sync.");
+    if (!listed) stats.notes.push("basic yacht list returned no usable rows — picker facts (builder, length) kept from the previous sync.");
   } catch (err) {
     const msg = redact(String(err?.message ?? err), passkey);
     stats.notes.push(`basic yacht list unavailable (${msg}) — picker facts (builder, length) kept from the previous sync.`);
     console.warn(`[fleet:sync] ${stats.notes[stats.notes.length - 1]}`);
   }
+  // Fallback for the nightly run only (a request-time re-sync must stay
+  // quick): fetch basic records one at a time for yachts still without facts.
+  if (perYacht && !listed) {
+    const pending = list.filter((y) => !facts.has(y.id)).slice(0, FACTS_PER_RUN);
+    let filled = 0;
+    for (const y of pending) {
+      await sleep(REQUEST_DELAY_MS);
+      try {
+        const f = factsFromBasic(await fetchBasicRecord(passkey, y.id));
+        if (hasFacts(f)) {
+          facts.set(y.id, f);
+          filled += 1;
+        }
+      } catch (err) {
+        console.warn(`[fleet:sync] basic record for ${y.id} failed: ${redact(String(err?.message ?? err), passkey)}`);
+      }
+    }
+    if (pending.length) stats.notes.push(`picker facts fetched one by one for ${filled} of ${pending.length} yachts (${list.length - facts.size} still to do).`);
+  }
+  stats.factsCount = list.filter((y) => facts.has(y.id)).length;
   return facts;
 }
 
-export async function syncFleet() {
+export async function syncFleet({ perYachtFacts = false } = {}) {
   if (isDemoFleet()) {
     // No passkey: nothing to sync. The demo set is served instead so the
     // portal keeps working; say so rather than failing the cron.
@@ -292,7 +327,7 @@ export async function syncFleet() {
   await sleep(REQUEST_DELAY_MS);
   const reference = await fetchReferenceData(passkey);
   await sleep(REQUEST_DELAY_MS);
-  const facts = await fetchFleetFacts(passkey, previous, run.stats);
+  const facts = await fetchFleetFacts(passkey, previous, list, run.stats, { perYacht: perYachtFacts });
 
   const currentIds = new Set(list.map((y) => y.id));
   const removed = { ...(previous?.removed ?? {}) };
@@ -306,6 +341,7 @@ export async function syncFleet() {
   }
 
   const fleet = {
+    schemaVersion: FLEET_SCHEMA_VERSION,
     syncedAt: new Date().toISOString(),
     count: list.length,
     yachts: list.map((y) => ({
@@ -346,6 +382,7 @@ export async function syncFleet() {
   const stats = await finishRun(run);
   return {
     count: fleet.count,
+    factsCount: stats.factsCount ?? 0,
     removedCount: Object.keys(removed).length,
     syncedAt: fleet.syncedAt,
     persisted: !stats.dryRun,
@@ -371,7 +408,8 @@ export async function getFleet() {
   } catch {
     /* manifest unavailable — fall back to the stored syncedAt */
   }
-  const stale = !fleet || Date.now() - Date.parse(checkedAt) > FLEET_STALE_MS;
+  const stale =
+    !fleet || fleet.schemaVersion !== FLEET_SCHEMA_VERSION || Date.now() - Date.parse(checkedAt) > FLEET_STALE_MS;
   if (stale) {
     try {
       await syncFleet();

@@ -47,6 +47,15 @@ export function useYachtReorder({ uids, onCommit }: Options) {
   /** Card tops measured just before a reorder, for the FLIP slide. */
   const prevTops = useRef<Map<string, number> | null>(null);
   const liveRef = useRef<string[] | null>(null);
+  /**
+   * The grabbed card's header top (viewport) and the page height at pick-up.
+   * Folding the bodies away shortens the page, which would let the browser
+   * clamp the scroll position and throw the consultant to the bottom of the
+   * form; these let the layout effect below hold the page still instead.
+   */
+  const anchor = useRef<{ uid: string; top: number; scrollHeight: number } | null>(null);
+  /** Last pointer position (viewport), for edge auto-scroll between events. */
+  const pointer = useRef({ x: 0, y: 0 });
 
   const order = liveOrder ?? uids;
 
@@ -98,6 +107,42 @@ export function useYachtReorder({ uids, onCommit }: Options) {
     };
   }, [liveOrder, cards]);
 
+  const cardEl = useCallback(
+    (uid: string): HTMLElement | null => listRef.current?.querySelector<HTMLElement>(`[data-yacht-uid="${uid}"]`) ?? null,
+    []
+  );
+  const headerTop = useCallback(
+    (uid: string): number | null => {
+      const card = cardEl(uid);
+      const header = card?.querySelector<HTMLElement>("[data-yacht-header]") ?? card;
+      return header ? header.getBoundingClientRect().top : null;
+    },
+    [cardEl]
+  );
+
+  // Hold the page still when the bodies fold away at pick-up and unfold at
+  // drop: keep the page's scroll range, then scroll so the grabbed header
+  // stays exactly where it was under the pointer.
+  useLayoutEffect(() => {
+    const a = anchor.current;
+    if (!a) return;
+    if (dragUid) {
+      document.body.style.minHeight = `${a.scrollHeight}px`;
+    } else {
+      anchor.current = null;
+      document.body.style.minHeight = "";
+    }
+    const top = headerTop(a.uid);
+    if (top != null && Math.abs(top - a.top) >= 1) window.scrollBy(0, top - a.top);
+  }, [dragUid, headerTop]);
+
+  useEffect(
+    () => () => {
+      document.body.style.minHeight = "";
+    },
+    []
+  );
+
   const reset = useCallback(() => {
     liveRef.current = null;
     setDragUid(null);
@@ -147,25 +192,31 @@ export function useYachtReorder({ uids, onCommit }: Options) {
       listeners.current = null;
       const drag = active.current;
       active.current = null;
+      if (drag && anchor.current) {
+        const top = headerTop(drag.uid);
+        if (top != null) anchor.current.top = top;
+      }
       const next = liveRef.current;
       if (commit && drag && next && next.some((u, i) => u !== uidsRef.current[i])) commitRef.current(next);
       reset();
     },
-    [reset]
+    [headerTop, reset]
   );
 
   endDragRef.current = endDrag;
 
   useEffect(() => () => listeners.current?.(), []);
 
-  const onWindowMove = useCallback(
-    (e: PointerEvent) => {
+  /** Move the ghost to the pointer and reorder if it has crossed another card. */
+  const updateFromPointer = useCallback(
+    (x: number, y: number) => {
       const drag = active.current;
-      if (!drag || e.pointerId !== drag.pointerId) return;
-      setGhost((g) => (g ? { ...g, x: e.clientX - grab.current.dx, y: e.clientY - grab.current.dy } : g));
+      if (!drag) return;
+      pointer.current = { x, y };
+      setGhost((g) => (g ? { ...g, x: x - grab.current.dx, y: y - grab.current.dy } : g));
       const current = liveRef.current;
       if (!current) return;
-      const over = cardAt(e.clientX, e.clientY);
+      const over = cardAt(x, y);
       const overUid = over?.dataset.yachtUid;
       if (!over || !overUid || overUid === drag.uid) return;
       const from = current.indexOf(drag.uid);
@@ -175,7 +226,7 @@ export function useYachtReorder({ uids, onCommit }: Options) {
       // the direction of travel — no flicker while hovering its edge.
       const rect = over.getBoundingClientRect();
       const mid = rect.top + rect.height / 2;
-      const crossed = to > from ? e.clientY > mid : e.clientY < mid;
+      const crossed = to > from ? y > mid : y < mid;
       if (!crossed) return;
       const next = [...current];
       next.splice(from, 1);
@@ -186,6 +237,38 @@ export function useYachtReorder({ uids, onCommit }: Options) {
     },
     [cardAt, measureTops]
   );
+
+  const onWindowMove = useCallback(
+    (e: PointerEvent) => {
+      const drag = active.current;
+      if (!drag || e.pointerId !== drag.pointerId) return;
+      updateFromPointer(e.clientX, e.clientY);
+    },
+    [updateFromPointer]
+  );
+
+  // Holding the ghost near the top or bottom edge scrolls the page, so a
+  // long list can be dragged across without letting go.
+  useEffect(() => {
+    if (!dragUid) return;
+    const ZONE = 90;
+    let frame = 0;
+    const tick = () => {
+      const { x, y } = pointer.current;
+      const h = window.innerHeight;
+      let dy = 0;
+      if (y < ZONE) dy = -Math.ceil((ZONE - y) / 5);
+      else if (y > h - ZONE) dy = Math.ceil((y - (h - ZONE)) / 5);
+      if (dy) {
+        const before = window.scrollY;
+        window.scrollBy(0, dy);
+        if (window.scrollY !== before) updateFromPointer(x, y);
+      }
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [dragUid, updateFromPointer]);
 
   const handleProps = useCallback(
     (uid: string) => ({
@@ -199,6 +282,8 @@ export function useYachtReorder({ uids, onCommit }: Options) {
         if (!card || !header) return;
         const rect = header.getBoundingClientRect();
         grab.current = { dx: e.clientX - rect.left, dy: e.clientY - rect.top };
+        pointer.current = { x: e.clientX, y: e.clientY };
+        anchor.current = { uid, top: rect.top, scrollHeight: document.documentElement.scrollHeight };
         active.current = { uid, pointerId: e.pointerId };
         liveRef.current = uidsRef.current;
         setDragUid(uid);
