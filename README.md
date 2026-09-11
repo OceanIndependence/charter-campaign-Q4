@@ -74,7 +74,7 @@ only (title, description, Open Graph image, canonical) and no analytics.
 ## Tier 2 production page (`selection-app/` → `/atlas/<slug>`)
 
 The Personalised Atlas is the 2027 Atlas for one client: the consultant chooses three
-destinations and a shortlist of two to eight yachts in the Charter Portal (choose
+destinations and a shortlist of two to 10 yachts in the Charter Portal (choose
 "Personalised Atlas" when creating a new selection); the client gets the globe with
 those three pinned bright, every other destination dimmed but clickable, a yacht rail
 and a Tier 3-style detail drawer. It composes the Tier 1 globe and content pipeline

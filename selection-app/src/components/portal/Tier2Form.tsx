@@ -18,7 +18,6 @@ import type {
 import {
   TIER2_DEFAULT_DISCLAIMER,
   TIER2_MAX_YACHTS,
-  TIER2_MIN_YACHTS,
   emptyTier2Destination,
   emptyTier2Yacht,
 } from "@/lib/portal-types";
@@ -913,7 +912,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
             </span>
           </div>
           <p className={styles.sectionNote}>
-            Between {TIER2_MIN_YACHTS === 2 ? "two" : TIER2_MIN_YACHTS} and eight yachts, in rail order — drag a yacht by the handle on its left (or use the arrows) to reorder. Facts, rates and images
+            Add up to {TIER2_MAX_YACHTS} yachts as a shortlist — drag a yacht by the handle on its left (or use the arrows) to reorder. Facts, rates and images
             arrive from Yachtfolio when a yacht is chosen; destinations are pre-ticked from its Yachtfolio location for you to confirm.
           </p>
           {fleetError && <p className={styles.fetchWarning}>{fleetError}</p>}

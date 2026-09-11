@@ -9,7 +9,7 @@
 
 import type { AtlasBlock, AtlasPageConfig, AtlasPageDestination, AtlasPageYacht } from "./types";
 import type { ContentBlock, Tier2Draft, Tier2DraftYacht } from "./portal-types";
-import { TIER2_DEFAULT_DISCLAIMER, TIER2_DEFAULT_VAT_TEXT, TIER2_MAX_YACHTS } from "./portal-types";
+import { TIER2_DEFAULT_DISCLAIMER, TIER2_DEFAULT_VAT_TEXT, TIER2_MAX_YACHTS, TIER2_MIN_YACHTS } from "./portal-types";
 import { CAMPAIGN_ATLAS_URL, mapDraftYacht } from "./portal-map";
 import { slugify } from "@/server/yachtfolio/normalise.mjs";
 
@@ -122,7 +122,7 @@ export function tier2PublishProblems(draft: Tier2Draft): string[] {
   if (chosen.length !== 3) problems.push("Choose three destinations.");
   if (new Set(chosen).size !== chosen.length) problems.push("Each destination may be chosen once.");
   const named = draft.yachts.filter((y) => (y.name ?? "").trim());
-  if (named.length < 2) problems.push("Add at least two yachts.");
+  if (named.length < TIER2_MIN_YACHTS) problems.push("Add at least two yachts.");
   if (named.length > TIER2_MAX_YACHTS) problems.push(`No more than ${TIER2_MAX_YACHTS} yachts.`);
   if (!(draft.clientNames ?? "").trim()) problems.push("Enter the client name.");
   return problems;

@@ -225,7 +225,7 @@ export const TIER2_DEFAULT_DISCLAIMER = "These vessels are offered subject to ch
 export const TIER2_DEFAULT_VAT_TEXT = "Varies by location";
 export const TIER2_DEFAULT_APA = "35";
 export const TIER2_MIN_YACHTS = 2;
-export const TIER2_MAX_YACHTS = 8;
+export const TIER2_MAX_YACHTS = 10;
 
 /** Tier 2 — Personalised Atlas. */
 export interface Tier2Draft extends SelectionBase {
