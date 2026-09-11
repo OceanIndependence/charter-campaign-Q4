@@ -282,7 +282,15 @@ async function fetchFleetFacts(passkey, previous, list, stats, { perYacht = fals
         listed += 1;
       }
     }
-    if (!listed) stats.notes.push("basic yacht list returned no usable rows — picker facts (builder, length) kept from the previous sync.");
+    if (!listed) {
+      // Field names only (never values): enough to see why nothing matched.
+      const keys = rows.length && rows[0] && typeof rows[0] === "object" ? Object.keys(rows[0]).slice(0, 40).join(", ") : "none";
+      stats.notes.push(
+        `basic yacht list returned ${rows.length} row(s) but no usable builder/length — picker facts kept from the previous sync. Row fields: ${keys}.`
+      );
+    } else {
+      stats.notes.push(`basic yacht list supplied builder/length for ${listed} yacht(s).`);
+    }
   } catch (err) {
     const msg = redact(String(err?.message ?? err), passkey);
     stats.notes.push(`basic yacht list unavailable (${msg}) — picker facts (builder, length) kept from the previous sync.`);
