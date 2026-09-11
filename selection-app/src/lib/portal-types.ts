@@ -356,6 +356,8 @@ export interface FleetEntry {
   builder?: string;
   lengthM?: number | null;
   basePort?: string;
+  /** When the basic record was read for these facts; null while still to read */
+  factsAt?: string | null;
 }
 
 export interface FleetCache {
