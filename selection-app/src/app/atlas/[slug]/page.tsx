@@ -18,7 +18,7 @@ export const revalidate = 0;
 
 // Client pages are private links — never index them.
 export const metadata: Metadata = {
-  title: "Your 2027 Atlas — Ocean Independence",
+  title: "Your 2027 Destinations — Ocean Independence",
   robots: { index: false, follow: false },
 };
 
