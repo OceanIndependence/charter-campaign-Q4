@@ -18,7 +18,6 @@ import type {
 import {
   TIER2_DEFAULT_DISCLAIMER,
   TIER2_MAX_YACHTS,
-  TIER2_MIN_YACHTS,
   emptyTier2Destination,
   emptyTier2Yacht,
 } from "@/lib/portal-types";
@@ -330,7 +329,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
     [setDestination]
   );
 
-  /** Choosing a destination pre-fills every block from the Atlas. */
+  /** Choosing a destination pre-fills every block from the website. */
   const pickDestination = useCallback(
     async (i: number, id: string) => {
       if (!id) {
@@ -346,7 +345,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
         const res = await fetch(`/api/atlas/destinations/${id}`);
         const body = await res.json().catch(() => null);
         if (destSeq.current.get(i) !== seq) return;
-        if (!res.ok) throw new Error(body?.error ?? "The Atlas content is unavailable.");
+        if (!res.ok) throw new Error(body?.error ?? "The destination content is unavailable.");
         const content: AtlasDestinationContent = body;
         const atlas = (v: string): ContentBlock => ({ value: v, source: "atlas" });
         setDestination(i, {
@@ -363,7 +362,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
         setDestState((s) => ({ ...s, [i]: { fetching: false, error: null } }));
       } catch (err) {
         if (destSeq.current.get(i) !== seq) return;
-        setDestState((s) => ({ ...s, [i]: { fetching: false, error: err instanceof Error ? err.message : "The Atlas content is unavailable." } }));
+        setDestState((s) => ({ ...s, [i]: { fetching: false, error: err instanceof Error ? err.message : "The destination content is unavailable." } }));
       }
     },
     [destOptions, setDestination]
@@ -686,11 +685,11 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
       <main className={styles.main}>
         <div>
           <div className={styles.eyebrow}>CLIENT PRESENTATION · TIER 2</div>
-          <h1 className={styles.title}>Personalised Atlas</h1>
+          <h1 className={styles.title}>Personalised destinations and shortlist</h1>
           <p className={styles.intro}>
-            The 2027 Atlas for one client. Choose three destinations and a shortlist of yachts; the client gets the globe with those three pinned
-            bright, the yachts in a rail beneath it and a detail drawer for each. Destination copy and imagery arrive from the Atlas and can be
-            edited or restored at any time.
+            Three destinations and a shortlist of yachts for one client. The client gets the globe with those three pinned bright, the yachts in
+            a rail beneath it and a detail drawer for each. Destination copy and imagery arrive from the website and can be edited or restored at
+            any time.
           </p>
         </div>
 
@@ -713,7 +712,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
             </label>
             <label className={styles.field}>
               <span className={styles.fieldLabel}>
-                PAGE ADDRESS <span className={styles.fieldLabelHint}>— /atlas/…</span>
+                PAGE ADDRESS <span className={styles.fieldLabelHint}>— the client page address</span>
               </span>
               <input
                 type="text"
@@ -747,7 +746,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
               <textarea
                 rows={3}
                 className={styles.textarea}
-                placeholder="Example – Last July you cruised the Amalfi Coast aboard SERENITY. I wanted you to see the 2027 season before we open it more widely."
+                placeholder="Example – Last summer you enquired about chartering in Sicily in July. I’ve put together three destinations for 2027, with the yachts I would consider for each. If none of it is quite right, I can find something else. Just let me know your requirements."
                 value={draft.introNote}
                 onChange={(e) => update((d) => ({ ...d, introNote: e.target.value }))}
               />
@@ -761,8 +760,8 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
             <span className={styles.counter}>{chosen.length} OF 3</span>
           </div>
           <p className={styles.sectionNote}>
-            Each destination is a page of the 2027 Atlas. Choosing one fills its copy and images from the Atlas; anything you edit is marked as
-            yours, and the client page labels each block accordingly. Images are cropped to 2000 x 1250 px (16:10).
+            Choosing a destination fills its copy and images automatically; anything you edit is marked as yours, and the client page labels each
+            block accordingly. Images are cropped to 2000 x 1250 px (16:10).
           </p>
           <div className={styles.yachtList}>
             {draft.destinations.map((slot, i) => {
@@ -773,19 +772,22 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                   <div className={styles.destSlotHead}>
                     <span className={styles.yachtNum}>{String(i + 1).padStart(2, "0")}</span>
                     <span className={styles.yachtTitle}>{slot.name ? slot.name.toUpperCase() : "CHOOSE A DESTINATION"}</span>
-                    {st.fetching && <span className={styles.headerNote}>Fetching from the Atlas…</span>}
+                    {st.fetching && <span className={styles.headerNote}>Fetching the destination…</span>}
                     {slot.atlas && !st.fetching && (
                       <span className={styles.destNote}>
-                        {slot.atlas.contentSource === "live" ? "Copy re-read from the website" : "Copy from the cached Atlas snapshot"}
+                        {slot.atlas.contentSource === "live" ? "Copy re-read from the website" : "Copy from the cached snapshot"}
                       </span>
                     )}
                   </div>
                   <label className={styles.field}>
-                    <span className={styles.fieldLabel}>
-                      ATLAS DESTINATION <span className={styles.fieldLabelHint}>— Mediterranean first</span>
-                    </span>
-                    <select className={styles.input} value={slot.destinationId ?? ""} onChange={(e) => pickDestination(i, e.target.value)}>
-                      <option value="">{destOptions.length ? "Choose…" : "Loading the Atlas…"}</option>
+                    {/* No label — the slot heading above already names it. */}
+                    <select
+                      className={styles.input}
+                      aria-label={`Destination ${i + 1}`}
+                      value={slot.destinationId ?? ""}
+                      onChange={(e) => pickDestination(i, e.target.value)}
+                    >
+                      <option value="">{destOptions.length ? "Choose…" : "Loading destinations…"}</option>
                       {grouped.map((g) => (
                         <optgroup key={g.region} label={g.region}>
                           {g.options.map((o) => (
@@ -814,10 +816,10 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                                 <span style={{ display: "inline-flex", gap: 10, alignItems: "baseline" }}>
                                   {edited && slot.atlas && (
                                     <button type="button" className={styles.restoreLink} onClick={() => restoreBlock(i, b.key)}>
-                                      Restore Atlas text
+                                      Restore the original text
                                     </button>
                                   )}
-                                  <span className={`${styles.sourceTag} ${edited ? styles.sourceTagEdited : ""}`}>{edited ? "Edited by you" : "From the Atlas"}</span>
+                                  <span className={`${styles.sourceTag} ${edited ? styles.sourceTagEdited : ""}`}>{edited ? "Edited by you" : "From the website"}</span>
                                 </span>
                               </span>
                               {b.rows ? (
@@ -835,7 +837,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                           <textarea
                             rows={2}
                             className={styles.textarea}
-                            placeholder="Example – I would expect SERENITY’s July weeks to be committed before Christmas."
+                            placeholder="Example – You were interested in cruising Sicily last year. I’ve included this as the first option in case these are still your plans for next summer."
                             value={slot.consultantNote.value}
                             onChange={(e) => editBlock(i, "consultantNote", e.target.value)}
                           />
@@ -854,7 +856,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                               <div key={n} className={styles.imageSlot}>
                                 <span className={styles.blockHead}>
                                   <span className={styles.fieldLabel}>IMAGE {n + 1}</span>
-                                  <span className={`${styles.sourceTag} ${fromAtlas ? "" : styles.sourceTagEdited}`}>{fromAtlas ? "From the Atlas" : "Edited by you"}</span>
+                                  <span className={`${styles.sourceTag} ${fromAtlas ? "" : styles.sourceTagEdited}`}>{fromAtlas ? "From the website" : "Edited by you"}</span>
                                 </span>
                                 <button
                                   type="button"
@@ -910,7 +912,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
             </span>
           </div>
           <p className={styles.sectionNote}>
-            Between {TIER2_MIN_YACHTS === 2 ? "two" : TIER2_MIN_YACHTS} and eight yachts, in rail order — drag a yacht by the handle on its left (or use the arrows) to reorder. Facts, rates and images
+            Add up to {TIER2_MAX_YACHTS} yachts as a shortlist — drag a yacht by the handle on its left (or use the arrows) to reorder. Facts, rates and images
             arrive from Yachtfolio when a yacht is chosen; destinations are pre-ticked from its Yachtfolio location for you to confirm.
           </p>
           {fleetError && <p className={styles.fetchWarning}>{fleetError}</p>}
@@ -1201,8 +1203,8 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                 ["NAME", "name", "Example – Lucy", "text"],
                 ["TITLE", "title", "Example – Charter Consultant, Ocean Independence", "text"],
                 ["PHONE", "phone", "Example – +41 44 000 00 00", "tel"],
-                ["EMAIL", "email", "Example – lucy@oceanindependence.com", "email"],
-                ["WHATSAPP NUMBER", "whatsapp", "Example – +41 44 000 00 00", "tel"],
+                ["EMAIL", "email", "Example – eleanor@ocyachts.com", "email"],
+                ["WHATSAPP NUMBER", "whatsapp", "Example – 41440000000", "tel"],
                 ["PHOTO URL", "photoUrl", "Example – https://…", "url"],
               ] as const
             ).map(([label, key, placeholder, type]) => (

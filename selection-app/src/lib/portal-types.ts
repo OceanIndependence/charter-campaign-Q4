@@ -165,14 +165,14 @@ export function emptyItineraryLink(uid: string): DraftItineraryLink {
  * One editable block of destination copy or imagery. Populated from the 2027
  * Atlas (source "atlas") when a destination is chosen; the first consultant
  * edit flips it to "consultant". The client page derives its attribution
- * label ("FROM THE 2027 ATLAS" / "CURATED FOR YOU BY <NAME>") from source.
+ * label ("FROM OCEAN INDEPENDENCE" / "CURATED FOR YOU BY <NAME>") from source.
  */
 export interface ContentBlock {
   value: string;
   source: "atlas" | "consultant";
 }
 
-/** The Atlas defaults for a destination, kept so "Restore Atlas text" works offline. */
+/** The website defaults for a destination, kept so "Restore the original text" works offline. */
 export interface AtlasDefaults {
   eyebrow: string;
   deckLine: string;
@@ -225,7 +225,7 @@ export const TIER2_DEFAULT_DISCLAIMER = "These vessels are offered subject to ch
 export const TIER2_DEFAULT_VAT_TEXT = "Varies by location";
 export const TIER2_DEFAULT_APA = "35";
 export const TIER2_MIN_YACHTS = 2;
-export const TIER2_MAX_YACHTS = 8;
+export const TIER2_MAX_YACHTS = 10;
 
 /** Tier 2 — Personalised Atlas. */
 export interface Tier2Draft extends SelectionBase {
@@ -316,7 +316,7 @@ export function selectionTitle(m: { headline?: string; clientNames?: string }): 
   return (m.headline ?? "").trim() || (m.clientNames ?? "").trim() || "Untitled selection";
 }
 
-export const TIER_LABEL: Record<Tier, string> = { 2: "Personalised Atlas", 3: "Yacht Selection" };
+export const TIER_LABEL: Record<Tier, string> = { 2: "Personalised destinations and shortlist", 3: "Yacht Selection" };
 
 /** Where a published selection lives: /atlas/<slug> for Tier 2, /selection/<slug> for Tier 3. */
 export function clientPagePath(tier: Tier, slug: string): string {

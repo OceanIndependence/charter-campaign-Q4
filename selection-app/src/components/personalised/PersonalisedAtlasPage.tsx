@@ -28,7 +28,7 @@ function yachtMeta(y: AtlasPageYacht): string {
 }
 
 function attribution(block: { source: "atlas" | "consultant" }, consultant: string): string {
-  return block.source === "consultant" ? `CURATED FOR YOU BY ${consultant.toUpperCase()}` : "FROM THE 2027 ATLAS";
+  return block.source === "consultant" ? `CURATED FOR YOU BY ${consultant.toUpperCase()}` : "FROM OCEAN INDEPENDENCE";
 }
 
 export default function PersonalisedAtlasPage({ config }: { config: AtlasPageConfig }) {
@@ -216,7 +216,7 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
       <header className={styles.header}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/assets/logo-white.png" alt="Ocean Independence" className={styles.logo} />
-        <span className={styles.headerLabel}>THE 2027 ATLAS · PERSONALISED</span>
+        <span className={styles.headerLabel}>PERSONALISED FOR YOU</span>
       </header>
 
       <section className={styles.intro} data-screen-label="Intro">
@@ -294,11 +294,11 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
                 <div className={styles.eyebrow}>BEYOND THE SHORTLIST</div>
                 <h3 className={styles.panelHeading}>{selectedOther.name.toUpperCase()}</h3>
                 <p className={styles.otherBody}>
-                  Not part of this shortlist, but if {selectedOther.name} appeals, {consultantFirst} can build it into your 2027 with the same care. The
-                  full guide lives in the 2027 Atlas.
+                  Not part of this shortlist, but if {selectedOther.name} appeals, {consultantFirst} can build it into your 2027 with the same
+                  care.
                 </p>
                 <a className={styles.textLink} href={`${config.atlasUrl}?destination=${encodeURIComponent(selectedOther.id)}`} target="_blank" rel="noopener">
-                  EXPLORE IT IN THE ATLAS →
+                  EXPLORE THIS DESTINATION →
                 </a>
                 <div className={styles.panelFoot}>
                   <a className={styles.btnOutline} href={askHref}>

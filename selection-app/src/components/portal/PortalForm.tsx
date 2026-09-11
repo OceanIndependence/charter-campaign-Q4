@@ -1288,8 +1288,8 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
                 ["NAME", "name", "Example – Lucy", "text"],
                 ["TITLE", "title", "Example – Charter Consultant", "text"],
                 ["PHONE", "phone", "Example – +41 44 000 00 00", "tel"],
-                ["EMAIL", "email", "Example – lucy@oceanindependence.com", "email"],
-                ["WHATSAPP NUMBER", "whatsapp", "Example – +41 44 000 00 00", "tel"],
+                ["EMAIL", "email", "Example – eleanor@ocyachts.com", "email"],
+                ["WHATSAPP NUMBER", "whatsapp", "Example – 41440000000", "tel"],
                 ["PHOTO URL", "photoUrl", "Example – https://…", "url"],
               ] as const
             ).map(([label, key, placeholder, type]) => (
