@@ -164,8 +164,9 @@ export function emptyItineraryLink(uid: string): DraftItineraryLink {
 /**
  * One editable block of destination copy or imagery. Populated from the 2027
  * Atlas (source "atlas") when a destination is chosen; the first consultant
- * edit flips it to "consultant". The client page derives its attribution
- * label ("FROM OCEAN INDEPENDENCE" / "CURATED FOR YOU BY <NAME>") from source.
+ * edit flips it to "consultant". The client page credits the consultant
+ * ("CURATED FOR YOU BY <NAME>") on an edited block, and leaves an unedited
+ * one unlabelled.
  */
 export interface ContentBlock {
   value: string;
