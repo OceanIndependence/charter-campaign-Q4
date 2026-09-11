@@ -781,10 +781,13 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                     )}
                   </div>
                   <label className={styles.field}>
-                    <span className={styles.fieldLabel}>
-                      ATLAS DESTINATION <span className={styles.fieldLabelHint}>— Mediterranean first</span>
-                    </span>
-                    <select className={styles.input} value={slot.destinationId ?? ""} onChange={(e) => pickDestination(i, e.target.value)}>
+                    {/* No label — the slot heading above already names it. */}
+                    <select
+                      className={styles.input}
+                      aria-label={`Atlas destination ${i + 1}`}
+                      value={slot.destinationId ?? ""}
+                      onChange={(e) => pickDestination(i, e.target.value)}
+                    >
                       <option value="">{destOptions.length ? "Choose…" : "Loading the Atlas…"}</option>
                       {grouped.map((g) => (
                         <optgroup key={g.region} label={g.region}>
