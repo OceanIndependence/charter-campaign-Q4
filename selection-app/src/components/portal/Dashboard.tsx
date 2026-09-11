@@ -327,18 +327,16 @@ export default function Dashboard() {
 
 /* ------------------------------------------------------- format chooser */
 
-const TIER_CARDS: Array<{ tier: Tier; title: string; body: string; points: string[] }> = [
+const TIER_CARDS: Array<{ tier: Tier; title: string; body: string }> = [
   {
     tier: 2,
     title: "Personalised Atlas",
     body: "The 2027 Atlas for one client: three destinations pinned bright on the globe, the yachts in a rail beneath it, and a detail drawer for each.",
-    points: ["Three destinations", "Yachts in a rail", "Client explores the globe"],
   },
   {
     tier: 3,
     title: "Yacht Selection",
     body: "A shortlist of specific yachts for a client whose destination is already settled: the ring carousel, specification panels and your contact details.",
-    points: ["Yachts only", "Destination already known", "Ring carousel and spec panels"],
   },
 ];
 
@@ -359,11 +357,6 @@ function TierChooser({ busy, onPick, onCancel }: { busy: boolean; onPick: (tier:
           <button type="button" key={c.tier} className={styles.tierCard} onClick={() => onPick(c.tier)} disabled={busy}>
             <span className={styles.tierTitle}>{c.title}</span>
             <span className={styles.tierBody}>{c.body}</span>
-            <span className={styles.tierPoints}>
-              {c.points.map((pt) => (
-                <span key={pt}>{pt}</span>
-              ))}
-            </span>
             <span className={styles.tierCta}>{busy ? "CREATING…" : `CREATE A ${c.title.toUpperCase()}`}</span>
           </button>
         ))}

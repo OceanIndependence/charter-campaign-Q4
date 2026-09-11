@@ -1540,24 +1540,6 @@
   font-weight: 300;
 }
 
-.tierPoints {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 4px;
-}
-
-.tierPoints span {
-  font-size: 9px;
-  letter-spacing: 0.2em;
-  font-weight: 500;
-  color: #555759;
-  border: 1px solid #e3e3e1;
-  border-radius: 999px;
-  padding: 4px 10px 4px calc(10px + 0.2em);
-  text-transform: uppercase;
-}
-
 .tierCta {
   margin-top: 8px;
   font-size: 10px;
