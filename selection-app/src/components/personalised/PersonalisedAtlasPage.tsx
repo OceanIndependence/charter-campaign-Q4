@@ -8,6 +8,7 @@ import AtlasGlobe, { type GlobeHandle } from "@/components/atlas/AtlasGlobe";
 import SpecPanel from "@/components/SpecPanel";
 import ConsultantBlock from "@/components/ConsultantBlock";
 import EnlargeableImage from "@/components/EnlargeableImage";
+import { SmallChevronIcon } from "@/components/icons";
 import styles from "./Personalised.module.css";
 
 /** Camera at rest: the Mediterranean, as in the design reference. */
@@ -25,10 +26,6 @@ function yachtMeta(y: AtlasPageYacht): string {
   if (y.guests != null) parts.push(`${y.guests} GUESTS`);
   if (y.staterooms) parts.push(`${y.staterooms.count} ${y.staterooms.count === 1 ? "STATEROOM" : "STATEROOMS"}`);
   return parts.join(" · ");
-}
-
-function attribution(block: { source: "atlas" | "consultant" }, consultant: string): string {
-  return block.source === "consultant" ? `CURATED FOR YOU BY ${consultant.toUpperCase()}` : "FROM OCEAN INDEPENDENCE";
 }
 
 export default function PersonalisedAtlasPage({ config }: { config: AtlasPageConfig }) {
@@ -93,6 +90,40 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
 
   const scrollPanelTop = useCallback(() => {
     panelRef.current?.scrollTo({ top: 0 });
+  }, []);
+
+  /* ---------------------------------------------------------- rail chevrons */
+
+  /** Which ends of the rail are reached, so the chevrons can dim at the limits. */
+  const [railEnds, setRailEnds] = useState({ start: true, end: true });
+
+  const syncRailEnds = useCallback(() => {
+    const rail = railRef.current;
+    if (!rail) return;
+    const max = rail.scrollWidth - rail.clientWidth;
+    setRailEnds({ start: rail.scrollLeft <= 1, end: rail.scrollLeft >= max - 1 });
+  }, []);
+
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail) return;
+    syncRailEnds();
+    rail.addEventListener("scroll", syncRailEnds, { passive: true });
+    window.addEventListener("resize", syncRailEnds);
+    return () => {
+      rail.removeEventListener("scroll", syncRailEnds);
+      window.removeEventListener("resize", syncRailEnds);
+    };
+  }, [syncRailEnds, yachts.length]);
+
+  /** One card per press; the rail snaps to the card edge. */
+  const stepRail = useCallback((d: 1 | -1) => {
+    const rail = railRef.current;
+    if (!rail) return;
+    const first = rail.children[0] as HTMLElement | undefined;
+    const second = rail.children[1] as HTMLElement | undefined;
+    const step = first && second ? second.offsetLeft - first.offsetLeft : rail.clientWidth * 0.8;
+    rail.scrollBy({ left: step * d, behavior: "smooth" });
   }, []);
 
   /** A chosen destination: fly in, open its panel, bring its first yacht into view. */
@@ -313,10 +344,36 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
 
       <section className={styles.railSection} id="pa-rail" data-screen-label="Yacht rail">
         <div className={styles.railHead}>
-          <div className={styles.eyebrow}>{railEyebrow}</div>
-          <h2 className={styles.h2}>YOUR SHORTLIST</h2>
+          <div>
+            <div className={styles.eyebrow}>{railEyebrow}</div>
+            <h2 className={styles.h2}>YOUR SHORTLIST</h2>
+          </div>
+          {!(railEnds.start && railEnds.end) && (
+            <div className={styles.railNav}>
+              <button
+                type="button"
+                className={styles.railNavBtn}
+                onClick={() => stepRail(-1)}
+                disabled={railEnds.start}
+                aria-controls="pa-rail-track"
+                aria-label="Previous yachts"
+              >
+                <SmallChevronIcon dir="left" />
+              </button>
+              <button
+                type="button"
+                className={styles.railNavBtn}
+                onClick={() => stepRail(1)}
+                disabled={railEnds.end}
+                aria-controls="pa-rail-track"
+                aria-label="Next yachts"
+              >
+                <SmallChevronIcon dir="right" />
+              </button>
+            </div>
+          )}
         </div>
-        <div className={styles.rail} ref={railRef}>
+        <div className={styles.rail} id="pa-rail-track" ref={railRef}>
           {yachts.map((y, i) => {
             const rate = fmtCardRate(y);
             const dim = Boolean(selectedDest) && !y.destinationIds.includes(selectedDest!.id);
@@ -403,9 +460,9 @@ function DestinationPanel({ dest, consultant, onSeeYachts }: { dest: AtlasPageDe
       {dest.eyebrow.value && <div className={styles.eyebrow}>{dest.eyebrow.value.toUpperCase()}</div>}
       <h3 className={styles.panelHeading}>{dest.name.toUpperCase()}</h3>
       {dest.deckLine.value && <div className={styles.deck}>{dest.deckLine.value}</div>}
-      <div className={`${styles.attribution} ${dest.description.source === "consultant" ? styles.attributionMint : ""}`}>
-        {attribution(dest.description, consultant)}
-      </div>
+      {dest.description.source === "consultant" && (
+        <div className={`${styles.attribution} ${styles.attributionMint}`}>CURATED FOR YOU BY {consultant.toUpperCase()}</div>
+      )}
       {dest.description.value && <p className={styles.description}>{dest.description.value}</p>}
       <button type="button" className={styles.textLink} onClick={onSeeYachts}>
         SEE THE YACHTS ↓
