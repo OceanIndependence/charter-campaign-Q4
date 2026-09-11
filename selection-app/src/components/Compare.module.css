@@ -109,11 +109,24 @@
 }
 
 .head {
+  display: grid;
+  gap: 12px;
+  align-content: start;
   font-size: 13px;
   letter-spacing: 0.24em;
   font-weight: 500;
   padding: 0 0 18px;
   text-align: left;
+}
+
+/* The lead image, under the yacht's name, so the columns read at a glance. */
+.headThumb {
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  background: var(--fg-12);
 }
 
 .row {

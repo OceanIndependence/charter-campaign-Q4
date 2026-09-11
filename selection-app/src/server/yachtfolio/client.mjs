@@ -79,6 +79,18 @@ export async function fetchFleetList(passkey) {
   return [...json.data].sort((a, b) => String(a.name).localeCompare(String(b.name)));
 }
 
+/**
+ * Fetch the basic record of every yacht in one call (the "yachts" type with
+ * no id filter). Used by the nightly sync to carry each yacht's builder,
+ * length and summer base port into the fleet list so the form's picker can
+ * tell two yachts of the same name apart. Returns [] when the endpoint
+ * answers with anything but a list.
+ */
+export async function fetchBasicList(passkey) {
+  const { json } = await apiGet(passkey, "api_basic.cgi", { type: "yachts" });
+  return Array.isArray(json?.data) ? json.data : [];
+}
+
 /** Fetch seasons + operating areas + equipments reference data. */
 export async function fetchReferenceData(passkey) {
   const seasons = (await apiGet(passkey, "api_basic.cgi", { type: "seasons" })).json.data;

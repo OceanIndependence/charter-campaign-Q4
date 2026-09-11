@@ -16,6 +16,7 @@ import { MAX_ITINERARY_LINKS } from "@/lib/types";
 import FleetSelect from "./FleetSelect";
 import ImagePicker from "./ImagePicker";
 import ConfirmDialog from "./ConfirmDialog";
+import { DragGhost, DragHandle, useYachtReorder } from "./useYachtReorder";
 import styles from "./PortalForm.module.css";
 
 const MAX_YACHTS = 10;
@@ -116,9 +117,6 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
   const [publishing, setPublishing] = useState(false);
   /** Full-size image shown in the lightbox popup, or null when closed. */
   const [lightbox, setLightbox] = useState<{ url: string; label: string } | null>(null);
-  /** Yacht card being dragged, and the card it is currently over. */
-  const [dragUid, setDragUid] = useState<string | null>(null);
-  const [overUid, setOverUid] = useState<string | null>(null);
 
   const saveTimer = useRef<number | undefined>(undefined);
   const draftRef = useRef<PortalDraft | null>(null);
@@ -573,6 +571,21 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
     });
   }, []);
 
+  /* Drag-to-reorder: a ghost follows the pointer and the list reorders live. */
+  const yachtUids = useMemo(() => draft?.yachts.map((y) => y.uid) ?? [], [draft]);
+  const commitOrder = useCallback(
+    (uids: string[]) => {
+      update((d) => {
+        const byUid = new Map(d.yachts.map((y) => [y.uid, y]));
+        const ordered = uids.map((u) => byUid.get(u)).filter((y): y is DraftYacht => Boolean(y));
+        const rest = d.yachts.filter((y) => !uids.includes(y.uid));
+        return { ...d, yachts: [...ordered, ...rest] };
+      });
+    },
+    [update]
+  );
+  const reorder = useYachtReorder({ uids: yachtUids, onCommit: commitOrder });
+
   /* --------------------------------------------------- preview / publish */
 
   const openPreview = useCallback(async () => {
@@ -669,7 +682,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
               <input
                 type="text"
                 className={styles.input}
-                placeholder="Mr and Mrs Harrington"
+                placeholder="Example – Mr and Mrs Harrington"
                 value={draft.clientNames}
                 onChange={(e) => update((d) => ({ ...d, clientNames: e.target.value }))}
               />
@@ -679,7 +692,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
               <input
                 type="text"
                 className={styles.input}
-                placeholder="Summer 2027"
+                placeholder="Example – Summer 2027"
                 value={draft.season}
                 onChange={(e) => update((d) => ({ ...d, season: e.target.value }))}
               />
@@ -689,7 +702,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
               <input
                 type="text"
                 className={styles.input}
-                placeholder="Mediterranean"
+                placeholder="Example – Mediterranean"
                 value={draft.region}
                 onChange={(e) => update((d) => ({ ...d, region: e.target.value }))}
               />
@@ -699,7 +712,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
               <input
                 type="text"
                 className={styles.input}
-                placeholder="Yacht Charter Selection"
+                placeholder="Example – Yacht Charter Selection"
                 value={draft.headline}
                 onChange={(e) => update((d) => ({ ...d, headline: e.target.value }))}
               />
@@ -711,7 +724,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
               <input
                 type="text"
                 className={styles.input}
-                placeholder="Defaults to “TIME TO START PLANNING AHEAD”."
+                placeholder="Example – Time to start planning ahead (the default when blank)"
                 value={draft.subHeadline}
                 onChange={(e) => update((d) => ({ ...d, subHeadline: e.target.value }))}
               />
@@ -723,7 +736,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
               <textarea
                 rows={2}
                 className={styles.textarea}
-                placeholder={`Optional. Defaults to “Prepared for ${draft.clientNames || "the client"} by ${draft.consultant.name || "you"}${draft.season ? ` — ${draft.season}` : ""}”.`}
+                placeholder={`Example – Prepared for ${draft.clientNames || "the client"} by ${draft.consultant.name || "you"}${draft.season ? ` — ${draft.season}` : ""} (the default when blank)`}
                 value={draft.welcome}
                 onChange={(e) => update((d) => ({ ...d, welcome: e.target.value }))}
               />
@@ -740,7 +753,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
             </span>
           </div>
           <p className={styles.sectionNote}>
-            Yachts appear on the ring in this order — drag a yacht’s grey bar (or use the arrows) to reorder. Images are prepared automatically at
+            Yachts appear on the ring in this order — drag a yacht by the handle on its left (or use the arrows) to reorder. Images are prepared automatically at
             2000 x 1250 px (16:10) when a yacht is selected from the fleet.
           </p>
           {fleetError && <p className={styles.fetchWarning}>{fleetError}</p>}
@@ -757,8 +770,10 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
               </p>
             ) : null;
           })()}
-          <div className={styles.yachtList}>
-            {draft.yachts.map((y, i) => {
+          <div className={reorder.listClassName} ref={reorder.listRef}>
+            {reorder.order.map((uid, i) => {
+              const y = draft.yachts.find((entry) => entry.uid === uid);
+              if (!y) return null;
               const open = openIds.has(y.uid);
               const card = cardState[y.uid] ?? { fetching: false, error: null, warnings: [], lastEntry: null };
               const fetching = card.fetching;
@@ -769,12 +784,11 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
                 <div
                   key={y.uid}
                   data-yacht-uid={y.uid}
-                  className={`${styles.yachtEntry} ${dragUid === y.uid ? styles.dragging : ""} ${
-                    overUid === y.uid && dragUid && dragUid !== y.uid ? styles.dropTarget : ""
-                  }`}
+                  className={`${styles.yachtEntry} ${reorder.dragUid === y.uid ? styles.dragging : ""}`}
                 >
                   <button
                     type="button"
+                    data-yacht-header
                     className={styles.yachtHeader}
                     onClick={(e) => {
                       // A press on the drag handle is not a toggle.
@@ -782,43 +796,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
                       toggleOpen(y.uid);
                     }}
                   >
-                    {/* Pointer-based reorder (mouse and touch): press the handle,
-                        move over another card, release. */}
-                    <span
-                      className={styles.dragHandle}
-                      data-drag-handle
-                      role="button"
-                      aria-label="Drag to change the order on the ring"
-                      title="Drag to change the order on the ring"
-                      onPointerDown={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        e.currentTarget.setPointerCapture(e.pointerId);
-                        setDragUid(y.uid);
-                        setOverUid(null);
-                      }}
-                      onPointerMove={(e) => {
-                        if (!e.currentTarget.hasPointerCapture(e.pointerId)) return;
-                        const uid = (document.elementFromPoint(e.clientX, e.clientY) as HTMLElement | null)
-                          ?.closest<HTMLElement>("[data-yacht-uid]")?.dataset.yachtUid ?? null;
-                        setOverUid((cur) => (cur === uid ? cur : uid));
-                      }}
-                      onPointerUp={(e) => {
-                        if (!e.currentTarget.hasPointerCapture(e.pointerId)) return;
-                        e.currentTarget.releasePointerCapture(e.pointerId);
-                        const uid = (document.elementFromPoint(e.clientX, e.clientY) as HTMLElement | null)
-                          ?.closest<HTMLElement>("[data-yacht-uid]")?.dataset.yachtUid;
-                        if (uid && uid !== y.uid) moveYacht(y.uid, uid);
-                        setDragUid(null);
-                        setOverUid(null);
-                      }}
-                      onPointerCancel={() => {
-                        setDragUid(null);
-                        setOverUid(null);
-                      }}
-                    >
-                      ⋮⋮
-                    </span>
+                    <DragHandle label="Drag to change the order on the ring" {...reorder.handleProps(y.uid)} />
                     <span className={styles.yachtNum}>{String(i + 1).padStart(2, "0")}</span>
                     <span className={styles.yachtTitle}>
                       {y.name.trim() ? y.name.trim().toUpperCase() : "UNTITLED YACHT"}
@@ -972,7 +950,10 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
                         />
                       </label>
                       <label className={styles.field}>
-                        <span className={styles.fieldLabel}>LOCATION</span>
+                        <span className={styles.fieldLabel}>
+                          LOCATION <span className={styles.checkTag}>check</span>
+                          <span className={styles.fieldLabelHint}> — the current summer base port</span>
+                        </span>
                         <input
                           type="text"
                           className={styles.input}
@@ -1042,21 +1023,26 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
                         </div>
                       </label>
                       <label className={styles.field}>
-                        <span className={styles.fieldLabel}>APA %</span>
+                        <span className={styles.fieldLabel}>
+                          APA % <span className={styles.checkTag}>check</span>
+                        </span>
                         <input
                           type="number"
                           className={styles.input}
-                          placeholder="35"
+                          placeholder="Example – 35"
                           value={y.apaPct}
                           onChange={(e) => setYacht(y.uid, { apaPct: e.target.value })}
                         />
                       </label>
                       <label className={styles.field}>
-                        <span className={styles.fieldLabel}>VAT %</span>
+                        <span className={styles.fieldLabel}>
+                          VAT % <span className={styles.checkTag}>check</span>
+                          <span className={styles.fieldLabelHint}> — blank reads TBC on the page</span>
+                        </span>
                         <input
                           type="number"
                           className={styles.input}
-                          placeholder="TBC"
+                          placeholder="Example – 22"
                           value={y.vatPct}
                           onChange={(e) => setYacht(y.uid, { vatPct: e.target.value })}
                         />
@@ -1105,14 +1091,14 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
                         <textarea
                           rows={2}
                           className={styles.textarea}
-                          placeholder="The yacht you know. I would expect her July weeks to be committed before Christmas."
+                          placeholder="Example – The yacht you know. I would expect her July weeks to be committed before Christmas."
                           value={y.notes}
                           onChange={(e) => setYacht(y.uid, { notes: e.target.value })}
                         />
                       </label>
                       <label className={`${styles.field} ${styles.fieldFull}`}>
                         <span className={styles.fieldLabel}>
-                          KEY FEATURES <span className={styles.fieldLabelHint}>— one per line</span>
+                          KEY FEATURES <span className={styles.fieldLabelHint}>— optional, one per line</span>
                         </span>
                         <textarea
                           rows={3}
@@ -1120,6 +1106,18 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
                           placeholder="Auto-filled from Yachtfolio — one feature per line, editable"
                           value={y.keyFeatures}
                           onChange={(e) => editAutoField(y.uid, "keyFeatures", e.target.value)}
+                        />
+                      </label>
+                      <label className={styles.field}>
+                        <span className={styles.fieldLabel}>
+                          BROCHURE LINK <span className={styles.fieldLabelHint}>— paste the Yachtfolio e-brochure link</span>
+                        </span>
+                        <input
+                          type="url"
+                          className={styles.input}
+                          placeholder="Example – https://www.yachtfolio.com/e-brochure/…"
+                          value={y.brochureUrl}
+                          onChange={(e) => setYacht(y.uid, { brochureUrl: e.target.value })}
                         />
                       </label>
                       <div className={`${styles.field} ${styles.fieldFull}`}>
@@ -1135,18 +1133,6 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
                           onExpand={(url, label) => setLightbox({ url, label })}
                         />
                       </div>
-                      <label className={styles.field}>
-                        <span className={styles.fieldLabel}>
-                          BROCHURE LINK <span className={styles.fieldLabelHint}>— paste the Yachtfolio e-brochure link</span>
-                        </span>
-                        <input
-                          type="url"
-                          className={styles.input}
-                          placeholder="https://www.yachtfolio.com/e-brochure/…"
-                          value={y.brochureUrl}
-                          onChange={(e) => setYacht(y.uid, { brochureUrl: e.target.value })}
-                        />
-                      </label>
                       {card.error && !fetching && (
                         <span className={styles.fetchWarning}>
                           {card.error}{" "}
@@ -1247,7 +1233,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
                     type="text"
                     className={styles.input}
                     aria-label={`Itinerary ${i + 1} button text`}
-                    placeholder="Button text (e.g. Naples to Sicily)"
+                    placeholder="Example – Naples to Sicily"
                     value={link.label}
                     onChange={(e) => editItineraryLink(link.uid, { label: e.target.value })}
                   />
@@ -1255,7 +1241,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
                     type="url"
                     className={styles.input}
                     aria-label={`Itinerary ${i + 1} link`}
-                    placeholder="https://... (client itinerary page)"
+                    placeholder="Example – https://… (the client itinerary page)"
                     value={link.url}
                     onChange={(e) => editItineraryLink(link.uid, { url: e.target.value })}
                   />
@@ -1299,12 +1285,12 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
           <div className={styles.grid}>
             {(
               [
-                ["NAME", "name", "Lucy", "text"],
-                ["TITLE", "title", "Charter Consultant", "text"],
-                ["PHONE", "phone", "+41 44 000 00 00", "tel"],
-                ["EMAIL", "email", "lucy@oceanindependence.com", "email"],
-                ["WHATSAPP NUMBER", "whatsapp", "+41 44 000 00 00", "tel"],
-                ["PHOTO URL", "photoUrl", "https://...", "url"],
+                ["NAME", "name", "Example – Lucy", "text"],
+                ["TITLE", "title", "Example – Charter Consultant", "text"],
+                ["PHONE", "phone", "Example – +41 44 000 00 00", "tel"],
+                ["EMAIL", "email", "Example – lucy@oceanindependence.com", "email"],
+                ["WHATSAPP NUMBER", "whatsapp", "Example – +41 44 000 00 00", "tel"],
+                ["PHOTO URL", "photoUrl", "Example – https://…", "url"],
               ] as const
             ).map(([label, key, placeholder, type]) => (
               <label key={key} className={styles.field}>
@@ -1354,6 +1340,12 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
           </button>
         </div>
       </div>
+
+      <DragGhost
+        ghost={reorder.ghost}
+        index={reorder.ghost ? reorder.order.indexOf(reorder.ghost.uid) : 0}
+        name={draft.yachts.find((y) => y.uid === reorder.ghost?.uid)?.name ?? ""}
+      />
 
       {lightbox && (
         <div

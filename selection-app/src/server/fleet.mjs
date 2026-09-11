@@ -9,6 +9,7 @@
 
 import {
   REQUEST_DELAY_MS,
+  fetchBasicList,
   fetchBasicRecord,
   fetchBrochure,
   fetchFleetList,
@@ -19,11 +20,13 @@ import {
 } from "./yachtfolio/client.mjs";
 import {
   TARGET_SEASON,
+  basePort,
   buildReference,
   checkBrochureShape,
   describeRawShape,
   extractRateOptions,
   extractYachtFacts,
+  parseMetres,
   pickSeason,
 } from "./yachtfolio/normalise.mjs";
 import { cropToSizes, selectGalleryImages } from "./yachtfolio/images.mjs";
@@ -43,6 +46,13 @@ const MANIFEST_KEY = "private/fleet-manifest.json";
 const MANIFEST_VERSION = 1;
 
 const FLEET_STALE_MS = 36 * 60 * 60 * 1000; // lazy re-sync if the cron hasn't run
+// Bump when the fleet list gains fields — a cached list from before is
+// re-synced on the next request instead of waiting for the nightly cron.
+const FLEET_SCHEMA_VERSION = 2;
+// Nightly fallback when the one-call basic list is unavailable: basic
+// records fetched one by one, this many per run, for yachts still lacking
+// their picker facts (builder, length, base port).
+const FACTS_PER_RUN = 120;
 const DETAIL_FRESH_MS = 6 * 60 * 60 * 1000; // rates change; don't serve stale for long
 // Download the whole gallery (capped per category) so the consultant can pick
 // which image fills each page slot; the default slot assignment takes the
@@ -54,7 +64,7 @@ const IMAGE_CONCURRENCY = 4;
 const IMAGE_START_DELAY_MS = 150;
 // Bump to invalidate cached facts / image manifests after a normalisation
 // change — old caches re-fetch.
-const DETAIL_SCHEMA_VERSION = 10;
+const DETAIL_SCHEMA_VERSION = 11;
 // The facts request fetches the brochure; the images request that follows a
 // moment later reuses it from here instead of calling Yachtfolio again.
 const BROCHURE_MEMO_MS = 5 * 60 * 1000;
@@ -239,7 +249,69 @@ async function writeIfChanged(run, key, value, recordedHash, record) {
   }
 }
 
-export async function syncFleet() {
+/**
+ * Builder, length and summer base port for every yacht, from the one-call
+ * basic list. When that call fails (or returns nothing) the values from the
+ * previous cache are kept, so a transient error never blanks the picker.
+ */
+function factsFromBasic(row) {
+  return {
+    builder: String(row?.builder ?? "").trim(),
+    lengthM: parseMetres(row?.length_metric ?? row?.length_metres ?? row?.length) ?? null,
+    basePort: basePort(row?.summer_base_port) ?? "",
+  };
+}
+
+const hasFacts = (f) => Boolean(f && (f.builder || f.lengthM != null || f.basePort));
+
+async function fetchFleetFacts(passkey, previous, list, stats, { perYacht = false } = {}) {
+  const facts = new Map();
+  for (const y of previous?.yachts ?? []) {
+    const f = { builder: y.builder ?? "", lengthM: y.lengthM ?? null, basePort: y.basePort ?? "" };
+    if (hasFacts(f)) facts.set(y.id, f);
+  }
+  let listed = 0;
+  try {
+    const rows = await fetchBasicList(passkey);
+    for (const row of rows) {
+      const id = Number(row?.id_yacht ?? row?.yacht_id ?? row?.id);
+      if (!Number.isFinite(id)) continue;
+      const f = factsFromBasic(row);
+      if (hasFacts(f)) {
+        facts.set(id, f);
+        listed += 1;
+      }
+    }
+    if (!listed) stats.notes.push("basic yacht list returned no usable rows — picker facts (builder, length) kept from the previous sync.");
+  } catch (err) {
+    const msg = redact(String(err?.message ?? err), passkey);
+    stats.notes.push(`basic yacht list unavailable (${msg}) — picker facts (builder, length) kept from the previous sync.`);
+    console.warn(`[fleet:sync] ${stats.notes[stats.notes.length - 1]}`);
+  }
+  // Fallback for the nightly run only (a request-time re-sync must stay
+  // quick): fetch basic records one at a time for yachts still without facts.
+  if (perYacht && !listed) {
+    const pending = list.filter((y) => !facts.has(y.id)).slice(0, FACTS_PER_RUN);
+    let filled = 0;
+    for (const y of pending) {
+      await sleep(REQUEST_DELAY_MS);
+      try {
+        const f = factsFromBasic(await fetchBasicRecord(passkey, y.id));
+        if (hasFacts(f)) {
+          facts.set(y.id, f);
+          filled += 1;
+        }
+      } catch (err) {
+        console.warn(`[fleet:sync] basic record for ${y.id} failed: ${redact(String(err?.message ?? err), passkey)}`);
+      }
+    }
+    if (pending.length) stats.notes.push(`picker facts fetched one by one for ${filled} of ${pending.length} yachts (${list.length - facts.size} still to do).`);
+  }
+  stats.factsCount = list.filter((y) => facts.has(y.id)).length;
+  return facts;
+}
+
+export async function syncFleet({ perYachtFacts = false } = {}) {
   if (isDemoFleet()) {
     // No passkey: nothing to sync. The demo set is served instead so the
     // portal keeps working; say so rather than failing the cron.
@@ -254,6 +326,8 @@ export async function syncFleet() {
   const list = await fetchFleetList(passkey);
   await sleep(REQUEST_DELAY_MS);
   const reference = await fetchReferenceData(passkey);
+  await sleep(REQUEST_DELAY_MS);
+  const facts = await fetchFleetFacts(passkey, previous, list, run.stats, { perYacht: perYachtFacts });
 
   const currentIds = new Set(list.map((y) => y.id));
   const removed = { ...(previous?.removed ?? {}) };
@@ -267,9 +341,19 @@ export async function syncFleet() {
   }
 
   const fleet = {
+    schemaVersion: FLEET_SCHEMA_VERSION,
     syncedAt: new Date().toISOString(),
     count: list.length,
-    yachts: list.map((y) => ({ id: y.id, name: y.name, registryPort: y.registry_port ?? "" })),
+    yachts: list.map((y) => ({
+      id: y.id,
+      name: y.name,
+      registryPort: y.registry_port ?? "",
+      // Builder, length and summer base port let the form's picker tell two
+      // yachts of the same name apart; "" / null when Yachtfolio has none.
+      builder: facts.get(y.id)?.builder ?? "",
+      lengthM: facts.get(y.id)?.lengthM ?? null,
+      basePort: facts.get(y.id)?.basePort ?? "",
+    })),
     removed,
   };
   memoryFleet = fleet;
@@ -298,6 +382,7 @@ export async function syncFleet() {
   const stats = await finishRun(run);
   return {
     count: fleet.count,
+    factsCount: stats.factsCount ?? 0,
     removedCount: Object.keys(removed).length,
     syncedAt: fleet.syncedAt,
     persisted: !stats.dryRun,
@@ -323,7 +408,8 @@ export async function getFleet() {
   } catch {
     /* manifest unavailable — fall back to the stored syncedAt */
   }
-  const stale = !fleet || Date.now() - Date.parse(checkedAt) > FLEET_STALE_MS;
+  const stale =
+    !fleet || fleet.schemaVersion !== FLEET_SCHEMA_VERSION || Date.now() - Date.parse(checkedAt) > FLEET_STALE_MS;
   if (stale) {
     try {
       await syncFleet();
@@ -403,7 +489,10 @@ export async function getYachtDetail(yfId, { forceRefresh = false, debug = false
         ? `${facts.staterooms.count} (${facts.staterooms.breakdown})`
         : String(facts.staterooms.count)
       : "",
-    cruisingArea: facts.cruisingArea ?? "",
+    // LOCATION on the form and the client pages is the summer base port;
+    // the season's operating areas are kept for the Tier 2 destination pre-tick.
+    cruisingArea: facts.location ?? "",
+    operatingAreas: facts.cruisingArea ?? "",
     // facts.notes carries the seasons_unavailable warning for the form to surface.
     // Currency carried through as-is; APA/VAT are the consultant's, not fetched.
     // Default auto-fill is summer 2027 low; the form can switch season/tier

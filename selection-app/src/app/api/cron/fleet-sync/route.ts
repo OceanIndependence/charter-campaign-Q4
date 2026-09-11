@@ -19,9 +19,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Not authorised." }, { status: 401 });
   }
   try {
-    const result = await syncFleet();
+    const result = await syncFleet({ perYachtFacts: true });
     console.log(
-      `[cron/fleet-sync] ${result.count} yachts, ${result.removedCount} recorded removals; ` +
+      `[cron/fleet-sync] ${result.count} yachts (${result.factsCount} with builder/length), ${result.removedCount} recorded removals; ` +
         `fleet ${result.fleetWritten ? "written" : "unchanged"}, reference ${result.referenceWritten ? "written" : "unchanged"}; ` +
         `manifest ${result.manifest}; Blob advanced operations ${result.blob?.advanced ?? "?"}` +
         (result.dryRun ? " (DRY RUN — nothing written)" : "")

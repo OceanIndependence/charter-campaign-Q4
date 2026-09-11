@@ -186,6 +186,21 @@
   letter-spacing: 0.1em;
 }
 
+/* "check" beside VAT, APA and Location — figures the consultant must confirm. */
+.checkTag {
+  display: inline-block;
+  vertical-align: middle;
+  margin: -2px 0 0 4px;
+  padding: 2px 6px 1px;
+  font-size: 8px;
+  letter-spacing: 0.2em;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #8a5a2b;
+  background: #fbf3e6;
+  border: 1px solid #e3c9a4;
+}
+
 .input,
 .textarea {
   border: 1px solid #d8d8d6;
@@ -206,10 +221,13 @@
   border-color: #1d1d1d;
 }
 
+/* Placeholders are examples ("Example – Mr and Mrs Harrington"), in italics
+   so they never read as a value already entered. */
 .input::placeholder,
 .textarea::placeholder {
   color: #555759;
   opacity: 1;
+  font-style: italic;
 }
 
 .textarea {
@@ -454,8 +472,28 @@
   background: #f4f4f2;
 }
 
-.comboOptionId {
+.comboOption {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.comboOptionName {
+  letter-spacing: 0.08em;
+}
+
+/* Builder and length, so two yachts of one name can be told apart. */
+.comboOptionMeta {
   color: #555759;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+.comboOptionId {
+  margin-left: auto;
+  color: #555759;
+  font-size: 11px;
   letter-spacing: 0.06em;
 }
 
@@ -1315,26 +1353,86 @@
 
 /* ---------------------------------------------------------- reordering */
 
+/* The six-dot grip on the left of every card — the obvious place to grab. */
 .dragHandle {
-  font-size: 12px;
-  letter-spacing: -0.2em;
-  color: #c9c9c7;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 22px;
+  height: 28px;
+  margin-left: -6px;
+  color: #8f8f8d;
   cursor: grab;
   user-select: none;
   touch-action: none;
-  padding: 6px 6px 6px 0;
+  border-radius: 2px;
+}
+
+.dragHandle svg {
+  fill: currentColor;
+}
+
+.yachtHeader:hover .dragHandle,
+.dragHandle:hover {
+  color: #1d1d1d;
+  background: #ececea;
 }
 
 .dragHandle:active {
   cursor: grabbing;
 }
 
-.dragging {
-  opacity: 0.45;
+/* While a card is being dragged: bodies fold away so the whole list fits
+   under the pointer, and nothing else in the list is clickable. */
+.reordering .yachtBody {
+  display: none;
 }
 
-.dropTarget {
-  box-shadow: inset 0 3px 0 #1d1d1d;
+.reordering .yachtHeader,
+.reordering .yachtHeader:hover {
+  cursor: grabbing;
+  background: #fafaf8;
+}
+
+.reordering .orderBtns,
+.reordering .removeBtn,
+.reordering .toggleIcon {
+  visibility: hidden;
+}
+
+/* The card being moved stays in the list as a placeholder — a dashed slot
+   that shows where the yacht will land — while its ghost follows the pointer. */
+.dragging {
+  border: 1px dashed #1d1d1d;
+  background: #f4f4f2;
+}
+
+.dragging .yachtHeader {
+  opacity: 0.35;
+}
+
+/* The lifted copy of the card header that follows the pointer. */
+.dragGhost {
+  position: fixed;
+  z-index: 200;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  box-sizing: border-box;
+  background: #ffffff;
+  border: 1px solid #1d1d1d;
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.18),
+    0 2px 6px rgba(0, 0, 0, 0.1);
+  transform: rotate(-0.6deg) scale(1.01);
+}
+
+.dragGhost .dragHandle {
+  color: #1d1d1d;
+  cursor: grabbing;
 }
 
 .orderBtns {
