@@ -837,7 +837,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                           <textarea
                             rows={2}
                             className={styles.textarea}
-                            placeholder="Example – I would expect SERENITY’s July weeks to be committed before Christmas."
+                            placeholder="Example – You were interested in cruising Sicily last year. I’ve included this as the first option in case these are still your plans for next summer."
                             value={slot.consultantNote.value}
                             onChange={(e) => editBlock(i, "consultantNote", e.target.value)}
                           />
