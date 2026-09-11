@@ -220,6 +220,20 @@ export default function RingCarousel(props: RingCarouselProps) {
                       {yacht.cruisingArea && (
                         <div className={styles.area}>LOCATION · {yacht.cruisingArea}</div>
                       )}
+                      {/* Only when the consultant pasted a brochure link; opens it directly. */}
+                      {yacht.brochureUrl && yacht.brochureUrl !== "#" && (
+                        <a
+                          href={yacht.brochureUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={styles.brochureBtn}
+                          style={{ pointerEvents: abs <= 1 ? "auto" : "none" }}
+                          aria-label={`View ${yacht.name}'s brochure`}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          VIEW BROCHURE
+                        </a>
+                      )}
                     </div>
                     <div className={isFront ? styles.dashActive : styles.dash} />
                   </div>
