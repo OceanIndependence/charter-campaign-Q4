@@ -21,12 +21,6 @@ const STATUS_LABEL: Record<SelectionStatus, string> = {
   unpublished: "Unpublished",
 };
 
-/** Yacht counts in prose: one–nine as words, 10 and above as numerals.
- *  Version numbers are never spelled out — they stay numerals at any size. */
-const WORDS = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
-const yachtCountWord = (n: number) => (n < WORDS.length ? WORDS[n] : String(n));
-
-
 export default function Dashboard() {
   const router = useRouter();
   const [items, setItems] = useState<SelectionMeta[] | null>(null);
@@ -438,7 +432,7 @@ function RowGroup(p: RowProps) {
   const published = m.status === "published";
   const subline = [
     TIER_LABEL[tier],
-    `${yachtCountWord(m.yachtCount)} ${m.yachtCount === 1 ? "yacht" : "yachts"}`,
+    `${m.yachtCount} ${m.yachtCount === 1 ? "yacht" : "yachts"}`,
     p.showOwner ? m.owner?.name || m.owner?.email || null : null,
   ]
     .filter(Boolean)
@@ -528,7 +522,7 @@ function RowGroup(p: RowProps) {
                       {v.rolledBackFrom && <span className={styles.versionNote}> — restored from version {v.rolledBackFrom}</span>}
                     </span>
                     <span className={styles.versionMeta}>
-                      {fmtDateShort(v.publishedAt)} · {yachtCountWord(v.yachtCount)} {v.yachtCount === 1 ? "yacht" : "yachts"}
+                      {fmtDateShort(v.publishedAt)} · {v.yachtCount} {v.yachtCount === 1 ? "yacht" : "yachts"}
                     </span>
                     {p.mine && !v.isCurrent && (
                       <button type="button" className={styles.actionBtn} onClick={() => p.onRollback(v)} disabled={p.isBusy}>
