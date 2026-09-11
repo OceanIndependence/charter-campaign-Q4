@@ -9,6 +9,7 @@
 
 import {
   REQUEST_DELAY_MS,
+  fetchBasicList,
   fetchBasicRecord,
   fetchBrochure,
   fetchFleetList,
@@ -19,11 +20,13 @@ import {
 } from "./yachtfolio/client.mjs";
 import {
   TARGET_SEASON,
+  basePort,
   buildReference,
   checkBrochureShape,
   describeRawShape,
   extractRateOptions,
   extractYachtFacts,
+  parseMetres,
   pickSeason,
 } from "./yachtfolio/normalise.mjs";
 import { cropToSizes, selectGalleryImages } from "./yachtfolio/images.mjs";
@@ -54,7 +57,7 @@ const IMAGE_CONCURRENCY = 4;
 const IMAGE_START_DELAY_MS = 150;
 // Bump to invalidate cached facts / image manifests after a normalisation
 // change — old caches re-fetch.
-const DETAIL_SCHEMA_VERSION = 10;
+const DETAIL_SCHEMA_VERSION = 11;
 // The facts request fetches the brochure; the images request that follows a
 // moment later reuses it from here instead of calling Yachtfolio again.
 const BROCHURE_MEMO_MS = 5 * 60 * 1000;
@@ -239,6 +242,40 @@ async function writeIfChanged(run, key, value, recordedHash, record) {
   }
 }
 
+/**
+ * Builder, length and summer base port for every yacht, from the one-call
+ * basic list. When that call fails (or returns nothing) the values from the
+ * previous cache are kept, so a transient error never blanks the picker.
+ */
+async function fetchFleetFacts(passkey, previous, stats) {
+  const facts = new Map();
+  for (const y of previous?.yachts ?? []) {
+    if (y.builder || y.lengthM != null || y.basePort) {
+      facts.set(y.id, { builder: y.builder ?? "", lengthM: y.lengthM ?? null, basePort: y.basePort ?? "" });
+    }
+  }
+  try {
+    const rows = await fetchBasicList(passkey);
+    let seen = 0;
+    for (const row of rows) {
+      const id = Number(row?.id_yacht ?? row?.id);
+      if (!Number.isFinite(id)) continue;
+      seen += 1;
+      facts.set(id, {
+        builder: String(row.builder ?? "").trim(),
+        lengthM: parseMetres(row.length_metric ?? row.length_metres ?? row.length) ?? null,
+        basePort: basePort(row.summer_base_port) ?? "",
+      });
+    }
+    if (!seen) stats.notes.push("basic yacht list returned no rows — picker facts (builder, length) kept from the previous sync.");
+  } catch (err) {
+    const msg = redact(String(err?.message ?? err), passkey);
+    stats.notes.push(`basic yacht list unavailable (${msg}) — picker facts (builder, length) kept from the previous sync.`);
+    console.warn(`[fleet:sync] ${stats.notes[stats.notes.length - 1]}`);
+  }
+  return facts;
+}
+
 export async function syncFleet() {
   if (isDemoFleet()) {
     // No passkey: nothing to sync. The demo set is served instead so the
@@ -254,6 +291,8 @@ export async function syncFleet() {
   const list = await fetchFleetList(passkey);
   await sleep(REQUEST_DELAY_MS);
   const reference = await fetchReferenceData(passkey);
+  await sleep(REQUEST_DELAY_MS);
+  const facts = await fetchFleetFacts(passkey, previous, run.stats);
 
   const currentIds = new Set(list.map((y) => y.id));
   const removed = { ...(previous?.removed ?? {}) };
@@ -269,7 +308,16 @@ export async function syncFleet() {
   const fleet = {
     syncedAt: new Date().toISOString(),
     count: list.length,
-    yachts: list.map((y) => ({ id: y.id, name: y.name, registryPort: y.registry_port ?? "" })),
+    yachts: list.map((y) => ({
+      id: y.id,
+      name: y.name,
+      registryPort: y.registry_port ?? "",
+      // Builder, length and summer base port let the form's picker tell two
+      // yachts of the same name apart; "" / null when Yachtfolio has none.
+      builder: facts.get(y.id)?.builder ?? "",
+      lengthM: facts.get(y.id)?.lengthM ?? null,
+      basePort: facts.get(y.id)?.basePort ?? "",
+    })),
     removed,
   };
   memoryFleet = fleet;
@@ -403,7 +451,10 @@ export async function getYachtDetail(yfId, { forceRefresh = false, debug = false
         ? `${facts.staterooms.count} (${facts.staterooms.breakdown})`
         : String(facts.staterooms.count)
       : "",
-    cruisingArea: facts.cruisingArea ?? "",
+    // LOCATION on the form and the client pages is the summer base port;
+    // the season's operating areas are kept for the Tier 2 destination pre-tick.
+    cruisingArea: facts.location ?? "",
+    operatingAreas: facts.cruisingArea ?? "",
     // facts.notes carries the seasons_unavailable warning for the form to surface.
     // Currency carried through as-is; APA/VAT are the consultant's, not fetched.
     // Default auto-fill is summer 2027 low; the form can switch season/tier

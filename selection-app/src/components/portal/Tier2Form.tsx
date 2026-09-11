@@ -27,6 +27,7 @@ import { slugify } from "@/server/yachtfolio/normalise.mjs";
 import FleetSelect from "./FleetSelect";
 import ImagePicker from "./ImagePicker";
 import ConfirmDialog from "./ConfirmDialog";
+import { DragGhost, DragHandle, useYachtReorder } from "./useYachtReorder";
 import styles from "./PortalForm.module.css";
 
 const AUTOSAVE_MS = 2500;
@@ -138,8 +139,6 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
   const [publishing, setPublishing] = useState(false);
   const [publishError, setPublishError] = useState<string | null>(null);
   const [lightbox, setLightbox] = useState<{ url: string; label: string } | null>(null);
-  const [dragUid, setDragUid] = useState<string | null>(null);
-  const [overUid, setOverUid] = useState<string | null>(null);
   /** True once the consultant has typed a slug by hand (auto-suggestion stops). */
   const slugTouched = useRef(false);
 
@@ -483,8 +482,11 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
           rateTier: detail.rateTier ?? "low",
           weeklyRate: detail.weeklyRate != null ? String(detail.weeklyRate) : "",
           weeklyRateIsFrom: detail.weeklyRateIsFrom,
-          // Pre-tick the destinations the Yachtfolio cruising areas point at.
-          destinationIds: mapCruisingArea(detail.cruisingArea, draftRef.current?.destinations ?? []),
+          // Pre-tick the destinations the Yachtfolio base port and operating areas point at.
+          destinationIds: mapCruisingArea(
+            [detail.cruisingArea, detail.operatingAreas].filter(Boolean).join(", "),
+            draftRef.current?.destinations ?? []
+          ),
         };
         setYacht(uid, patch);
         setCard(uid, { fetching: false, preparingImages: true, error: null, warnings: detail.warnings ?? [] });
@@ -569,6 +571,21 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
       return next;
     });
   }, []);
+
+  /* Drag-to-reorder: a ghost follows the pointer and the list reorders live. */
+  const yachtUids = useMemo(() => draft?.yachts.map((y) => y.uid) ?? [], [draft]);
+  const commitOrder = useCallback(
+    (uids: string[]) => {
+      update((d) => {
+        const byUid = new Map(d.yachts.map((y) => [y.uid, y]));
+        const ordered = uids.map((u) => byUid.get(u)).filter((y): y is Tier2DraftYacht => Boolean(y));
+        const rest = d.yachts.filter((y) => !uids.includes(y.uid));
+        return { ...d, yachts: [...ordered, ...rest] };
+      });
+    },
+    [update]
+  );
+  const reorder = useYachtReorder({ uids: yachtUids, onCommit: commitOrder });
 
   const toggleDestination = useCallback(
     (uid: string, id: string) => {
@@ -686,7 +703,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
               <input
                 type="text"
                 className={styles.input}
-                placeholder="Mr and Mrs Harrington"
+                placeholder="Example – Mr and Mrs Harrington"
                 value={draft.clientNames}
                 onChange={(e) => {
                   const v = e.target.value;
@@ -701,7 +718,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
               <input
                 type="text"
                 className={styles.input}
-                placeholder="harrington-summer-2027"
+                placeholder="Example – harrington-summer-2027"
                 value={draft.slug}
                 disabled={Boolean(draft.publishedSlug)}
                 title={draft.publishedSlug ? "The address is fixed once published." : undefined}
@@ -718,7 +735,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
               <input
                 type="text"
                 className={styles.input}
-                placeholder="Mr and Mrs Harrington, your summer 2027."
+                placeholder="Example – Mr and Mrs Harrington, your summer 2027."
                 value={draft.clientGreeting}
                 onChange={(e) => update((d) => ({ ...d, clientGreeting: e.target.value }))}
               />
@@ -730,7 +747,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
               <textarea
                 rows={3}
                 className={styles.textarea}
-                placeholder="Last July you cruised the Amalfi Coast aboard SERENITY. I wanted you to see the 2027 season before we open it more widely."
+                placeholder="Example – Last July you cruised the Amalfi Coast aboard SERENITY. I wanted you to see the 2027 season before we open it more widely."
                 value={draft.introNote}
                 onChange={(e) => update((d) => ({ ...d, introNote: e.target.value }))}
               />
@@ -818,7 +835,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                           <textarea
                             rows={2}
                             className={styles.textarea}
-                            placeholder="I would expect SERENITY’s July weeks to be committed before Christmas."
+                            placeholder="Example – I would expect SERENITY’s July weeks to be committed before Christmas."
                             value={slot.consultantNote.value}
                             onChange={(e) => editBlock(i, "consultantNote", e.target.value)}
                           />
@@ -893,7 +910,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
             </span>
           </div>
           <p className={styles.sectionNote}>
-            Between {TIER2_MIN_YACHTS === 2 ? "two" : TIER2_MIN_YACHTS} and eight yachts, in rail order — drag a yacht’s grey bar (or use the arrows) to reorder. Facts, rates and images
+            Between {TIER2_MIN_YACHTS === 2 ? "two" : TIER2_MIN_YACHTS} and eight yachts, in rail order — drag a yacht by the handle on its left (or use the arrows) to reorder. Facts, rates and images
             arrive from Yachtfolio when a yacht is chosen; destinations are pre-ticked from its Yachtfolio location for you to confirm.
           </p>
           {fleetError && <p className={styles.fetchWarning}>{fleetError}</p>}
@@ -905,8 +922,10 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
               ))}
             </ul>
           )}
-          <div className={styles.yachtList}>
-            {draft.yachts.map((y, i) => {
+          <div className={reorder.listClassName} ref={reorder.listRef}>
+            {reorder.order.map((uid, i) => {
+              const y = draft.yachts.find((entry) => entry.uid === uid);
+              if (!y) return null;
               const open = openIds.has(y.uid);
               const card = cardState[y.uid] ?? { fetching: false, preparingImages: false, error: null, warnings: [] };
               const fetching = card.fetching;
@@ -923,49 +942,18 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                 <div
                   key={y.uid}
                   data-yacht-uid={y.uid}
-                  className={`${styles.yachtEntry} ${dragUid === y.uid ? styles.dragging : ""} ${overUid === y.uid && dragUid && dragUid !== y.uid ? styles.dropTarget : ""}`}
+                  className={`${styles.yachtEntry} ${reorder.dragUid === y.uid ? styles.dragging : ""}`}
                 >
                   <button
                     type="button"
+                    data-yacht-header
                     className={styles.yachtHeader}
                     onClick={(e) => {
                       if ((e.target as HTMLElement).closest("[data-drag-handle]")) return;
                       toggleOpen(y.uid);
                     }}
                   >
-                    <span
-                      className={styles.dragHandle}
-                      data-drag-handle
-                      role="button"
-                      aria-label="Drag to change the order in the rail"
-                      title="Drag to change the order in the rail"
-                      onPointerDown={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        e.currentTarget.setPointerCapture(e.pointerId);
-                        setDragUid(y.uid);
-                        setOverUid(null);
-                      }}
-                      onPointerMove={(e) => {
-                        if (!e.currentTarget.hasPointerCapture(e.pointerId)) return;
-                        const uid = (document.elementFromPoint(e.clientX, e.clientY) as HTMLElement | null)?.closest<HTMLElement>("[data-yacht-uid]")?.dataset.yachtUid ?? null;
-                        setOverUid((cur) => (cur === uid ? cur : uid));
-                      }}
-                      onPointerUp={(e) => {
-                        if (!e.currentTarget.hasPointerCapture(e.pointerId)) return;
-                        e.currentTarget.releasePointerCapture(e.pointerId);
-                        const uid = (document.elementFromPoint(e.clientX, e.clientY) as HTMLElement | null)?.closest<HTMLElement>("[data-yacht-uid]")?.dataset.yachtUid;
-                        if (uid && uid !== y.uid) moveYacht(y.uid, uid);
-                        setDragUid(null);
-                        setOverUid(null);
-                      }}
-                      onPointerCancel={() => {
-                        setDragUid(null);
-                        setOverUid(null);
-                      }}
-                    >
-                      ⋮⋮
-                    </span>
+                    <DragHandle label="Drag to change the order in the rail" {...reorder.handleProps(y.uid)} />
                     <span className={styles.yachtNum}>{String(i + 1).padStart(2, "0")}</span>
                     <span className={styles.yachtTitle}>
                       {y.name.trim() ? y.name.trim().toUpperCase() : "UNTITLED YACHT"}
@@ -1023,7 +1011,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                         <span className={styles.fieldLabel}>
                           YOUR NOTE <span className={styles.fieldLabelHint}>— one line</span>
                         </span>
-                        <input type="text" className={styles.input} placeholder="Same Captain, same crew, and the corners you missed." value={y.consultantNote} onChange={(e) => setYacht(y.uid, { consultantNote: e.target.value })} />
+                        <input type="text" className={styles.input} placeholder="Example – Same Captain, same crew, and the corners you missed." value={y.consultantNote} onChange={(e) => setYacht(y.uid, { consultantNote: e.target.value })} />
                       </label>
 
                       {(
@@ -1037,7 +1025,16 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                         ] as Array<[string, AutoField]>
                       ).map(([label, key]) => (
                         <label key={key} className={styles.field}>
-                          <span className={styles.fieldLabel}>{label}</span>
+                          <span className={styles.fieldLabel}>
+                            {label}
+                            {key === "cruisingArea" && (
+                              <>
+                                {" "}
+                                <span className={styles.checkTag}>check</span>
+                                <span className={styles.fieldLabelHint}> — the current summer base port</span>
+                              </>
+                            )}
+                          </span>
                           <input type="text" className={styles.input} placeholder="Auto-filled on selection" value={y[key]} onChange={(e) => editAutoField(y.uid, key, e.target.value)} />
                         </label>
                       ))}
@@ -1078,12 +1075,16 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                         </div>
                       </label>
                       <label className={styles.field}>
-                        <span className={styles.fieldLabel}>APA %</span>
-                        <input type="number" className={styles.input} placeholder="35" value={y.apaPct} onChange={(e) => setYacht(y.uid, { apaPct: e.target.value })} />
+                        <span className={styles.fieldLabel}>
+                          APA % <span className={styles.checkTag}>check</span>
+                        </span>
+                        <input type="number" className={styles.input} placeholder="Example – 35" value={y.apaPct} onChange={(e) => setYacht(y.uid, { apaPct: e.target.value })} />
                       </label>
                       <label className={styles.field}>
-                        <span className={styles.fieldLabel}>VAT</span>
-                        <input type="text" className={styles.input} placeholder="Varies by location" value={y.vatText} onChange={(e) => setYacht(y.uid, { vatText: e.target.value })} />
+                        <span className={styles.fieldLabel}>
+                          VAT <span className={styles.checkTag}>check</span>
+                        </span>
+                        <input type="text" className={styles.input} placeholder="Example – Varies by location" value={y.vatText} onChange={(e) => setYacht(y.uid, { vatText: e.target.value })} />
                       </label>
                       <label className={styles.field}>
                         <span className={styles.fieldLabel}>
@@ -1096,12 +1097,6 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                           value={y.deliveryFee ?? ""}
                           onChange={(e) => setYacht(y.uid, { deliveryFee: e.target.value })}
                         />
-                      </label>
-                      <label className={styles.field}>
-                        <span className={styles.fieldLabel}>
-                          E-BROCHURE LINK <span className={styles.fieldLabelHint}>— Yachtfolio</span>
-                        </span>
-                        <input type="url" className={styles.input} placeholder="https://…" value={y.brochureUrl} onChange={(e) => setYacht(y.uid, { brochureUrl: e.target.value })} />
                       </label>
                       {rate != null && (
                         <div className={`${styles.priceReadout} ${styles.fieldFull}`}>
@@ -1119,7 +1114,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
 
                       <label className={`${styles.field} ${styles.fieldFull}`}>
                         <span className={styles.fieldLabel}>
-                          KEY FEATURES <span className={styles.fieldLabelHint}>— from Yachtfolio, one per line, editable; the drawer’s highlights</span>
+                          KEY FEATURES <span className={styles.fieldLabelHint}>— optional; from Yachtfolio, one per line, editable; the drawer’s highlights</span>
                         </span>
                         <textarea
                           rows={3}
@@ -1128,6 +1123,12 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                           value={y.keyFeatures}
                           onChange={(e) => editAutoField(y.uid, "keyFeatures", e.target.value)}
                         />
+                      </label>
+                      <label className={styles.field}>
+                        <span className={styles.fieldLabel}>
+                          E-BROCHURE LINK <span className={styles.fieldLabelHint}>— Yachtfolio</span>
+                        </span>
+                        <input type="url" className={styles.input} placeholder="Example – https://www.yachtfolio.com/e-brochure/…" value={y.brochureUrl} onChange={(e) => setYacht(y.uid, { brochureUrl: e.target.value })} />
                       </label>
                       <div className={`${styles.field} ${styles.fieldFull}`}>
                         <ImagePicker
@@ -1171,7 +1172,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                   <input
                     type="text"
                     className={styles.input}
-                    placeholder="A NOTE ON JULY"
+                    placeholder="Example – A NOTE ON JULY"
                     value={draft.seasonNote.eyebrow}
                     onChange={(e) => update((d) => ({ ...d, seasonNote: { eyebrow: e.target.value, body: d.seasonNote?.body ?? "" } }))}
                   />
@@ -1181,7 +1182,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                   <textarea
                     rows={3}
                     className={styles.textarea}
-                    placeholder="You chartered in the third week of July, consistently the most requested week of the Mediterranean season…"
+                    placeholder="Example – You chartered in the third week of July, consistently the most requested week of the Mediterranean season…"
                     value={draft.seasonNote.body}
                     onChange={(e) => update((d) => ({ ...d, seasonNote: { eyebrow: d.seasonNote?.eyebrow ?? "", body: e.target.value } }))}
                   />
@@ -1197,12 +1198,12 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
           <div className={styles.grid}>
             {(
               [
-                ["NAME", "name", "Lucy", "text"],
-                ["TITLE", "title", "Charter Consultant, Ocean Independence", "text"],
-                ["PHONE", "phone", "+41 44 000 00 00", "tel"],
-                ["EMAIL", "email", "lucy@oceanindependence.com", "email"],
-                ["WHATSAPP NUMBER", "whatsapp", "+41 44 000 00 00", "tel"],
-                ["PHOTO URL", "photoUrl", "https://...", "url"],
+                ["NAME", "name", "Example – Lucy", "text"],
+                ["TITLE", "title", "Example – Charter Consultant, Ocean Independence", "text"],
+                ["PHONE", "phone", "Example – +41 44 000 00 00", "tel"],
+                ["EMAIL", "email", "Example – lucy@oceanindependence.com", "email"],
+                ["WHATSAPP NUMBER", "whatsapp", "Example – +41 44 000 00 00", "tel"],
+                ["PHOTO URL", "photoUrl", "Example – https://…", "url"],
               ] as const
             ).map(([label, key, placeholder, type]) => (
               <label key={key} className={styles.field}>
@@ -1251,6 +1252,12 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
           </button>
         </div>
       </div>
+
+      <DragGhost
+        ghost={reorder.ghost}
+        index={reorder.ghost ? reorder.order.indexOf(reorder.ghost.uid) : 0}
+        name={draft.yachts.find((y) => y.uid === reorder.ghost?.uid)?.name ?? ""}
+      />
 
       {lightbox && (
         <div className={styles.lightbox} role="dialog" aria-modal="true" aria-label="Image preview" onClick={() => setLightbox(null)}>

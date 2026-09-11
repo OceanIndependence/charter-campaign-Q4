@@ -17,9 +17,21 @@ interface FleetSelectProps {
 
 const MAX_OPTIONS = 60;
 
+/** "Benetti · 45 m" — whatever of the builder and length the fleet list carries. */
+export function fleetEntryMeta(entry: FleetEntry): string {
+  const parts: string[] = [];
+  if (entry.builder?.trim()) parts.push(entry.builder.trim());
+  if (entry.lengthM != null && Number.isFinite(entry.lengthM) && entry.lengthM > 0) {
+    parts.push(`${entry.lengthM.toLocaleString("en-GB", { maximumFractionDigits: 1 })} m`);
+  }
+  return parts.join(" · ");
+}
+
 /**
  * Searchable dropdown over the full Yachtfolio charter fleet. Options render
- * as "NAME — YF-1234"; typing filters, arrows navigate, Enter picks.
+ * as "NAME · Builder · 45 m — YF-1234" so two yachts sharing a name can be
+ * told apart; typing filters (name, builder or id), arrows navigate, Enter
+ * picks.
  */
 export default function FleetSelect({ fleet, value, yfId, onPick, onNameChange, disabled }: FleetSelectProps) {
   const [open, setOpen] = useState(false);
@@ -33,7 +45,12 @@ export default function FleetSelect({ fleet, value, yfId, onPick, onNameChange, 
   const options = useMemo(() => {
     const q = (query ?? "").trim().toLowerCase();
     const matches = q
-      ? fleet.filter((f) => f.name.toLowerCase().includes(q) || String(f.id).includes(q))
+      ? fleet.filter(
+          (f) =>
+            f.name.toLowerCase().includes(q) ||
+            String(f.id).includes(q) ||
+            (f.builder ?? "").toLowerCase().includes(q)
+        )
       : fleet;
     return matches.slice(0, MAX_OPTIONS);
   }, [fleet, query]);
@@ -69,7 +86,7 @@ export default function FleetSelect({ fleet, value, yfId, onPick, onNameChange, 
         role="combobox"
         aria-expanded={open}
         aria-autocomplete="list"
-        placeholder={fleet.length ? "Type to search the fleet…" : "Loading the fleet list…"}
+        placeholder={fleet.length ? "Type to search the fleet by name, builder or YF id…" : "Loading the fleet list…"}
         value={shown}
         disabled={disabled}
         onFocus={() => setOpen(true)}
@@ -102,21 +119,26 @@ export default function FleetSelect({ fleet, value, yfId, onPick, onNameChange, 
       {open && (
         <ul className={styles.comboList} role="listbox" ref={listRef}>
           {options.length === 0 && <li className={styles.comboEmpty}>No yachts match that search.</li>}
-          {options.map((f, i) => (
-            <li
-              key={f.id}
-              role="option"
-              aria-selected={i === active || f.id === yfId}
-              className={styles.comboOption}
-              onMouseEnter={() => setActive(i)}
-              onMouseDown={(e) => {
-                e.preventDefault();
-                pick(f);
-              }}
-            >
-              {f.name.toUpperCase()} <span className={styles.comboOptionId}>— YF-{f.id}</span>
-            </li>
-          ))}
+          {options.map((f, i) => {
+            const meta = fleetEntryMeta(f);
+            return (
+              <li
+                key={f.id}
+                role="option"
+                aria-selected={i === active || f.id === yfId}
+                className={styles.comboOption}
+                onMouseEnter={() => setActive(i)}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  pick(f);
+                }}
+              >
+                <span className={styles.comboOptionName}>{f.name.toUpperCase()}</span>
+                {meta && <span className={styles.comboOptionMeta}>{meta}</span>}
+                <span className={styles.comboOptionId}>YF-{f.id}</span>
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>

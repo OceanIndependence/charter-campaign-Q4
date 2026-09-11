@@ -352,6 +352,10 @@ export interface FleetEntry {
   id: number;
   name: string;
   registryPort: string;
+  /** Builder, length and summer base port, so the picker can tell two yachts of one name apart */
+  builder?: string;
+  lengthM?: number | null;
+  basePort?: string;
 }
 
 export interface FleetCache {
@@ -388,7 +392,10 @@ export interface FleetDetail {
   crew: number | null;
   builder: string;
   staterooms: string;
+  /** The yacht's current summer base port — the LOCATION field */
   cruisingArea: string;
+  /** The season's Yachtfolio operating areas, used to pre-tick Tier 2 destinations */
+  operatingAreas?: string;
   currency: string;
   weeklyRate: number | null;
   weeklyRateIsFrom: boolean;

@@ -121,6 +121,13 @@ function capitaliseWord(word) {
   return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
 }
 
+/** A base port as Yachtfolio reports it ("ANTIBES") → "Antibes"; blank → undefined. */
+export function basePort(value) {
+  const text = String(value ?? "").trim();
+  if (!text) return undefined;
+  return titleCaseArea(text);
+}
+
 export function titleCaseArea(name) {
   const text = String(name ?? "").trim();
   if (!text) return text;
@@ -190,7 +197,10 @@ export function extractYachtFacts({ brochure, basic, reference, targetSeason }) 
   if (!staterooms) missing.push("staterooms");
   else if (!breakdown) missing.push("staterooms.breakdown");
 
-  const location = spec.summer_base_port ?? basic?.summer_base_port ?? undefined;
+  // The LOCATION field on the form and the client pages is the yacht's
+  // current summer base port, not its operating areas (those stay
+  // available as operatingAreas for the Tier 2 destination pre-tick).
+  const location = basePort(spec.summer_base_port ?? detail.summer_base_port ?? basic?.summer_base_port);
   if (!location) missing.push("location");
 
   let cruisingArea;

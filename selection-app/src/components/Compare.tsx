@@ -84,7 +84,11 @@ export function CompareOverlay({ yachts, onClose }: { yachts: Yacht[]; onClose: 
             <div />
             {yachts.map((y) => (
               <div key={y.id} className={styles.head}>
-                {y.name}
+                <span>{y.name}</span>
+                {y.leadImageUrl && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img className={styles.headThumb} src={y.leadImageUrl} alt="" loading="lazy" />
+                )}
               </div>
             ))}
           </div>

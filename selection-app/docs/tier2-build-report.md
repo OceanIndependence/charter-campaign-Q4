@@ -115,10 +115,16 @@ live run.
   `checkBrochureShape()` records "unexpected `general.data_source` value". Tier 2
   inherits this unchanged; the value is surfaced as `dataSource` on `GET /api/fleet/:yfId`.
 - **Cruising areas → destinations.** Yachtfolio's `operating_areas` resolve to area
-  names ("WEST MEDITERRANEAN, ITALY, …"). There is no Yachtfolio id for an Atlas
-  destination, so the form matches the area string against each chosen destination's
+  names ("WEST MEDITERRANEAN, ITALY, …"), surfaced as `operatingAreas` on
+  `GET /api/fleet/:yfId`. There is no Yachtfolio id for an Atlas destination, so the
+  form matches that string (and the base port) against each chosen destination's
   name, its places and its country, then against the region name. The consultant
   confirms or changes the ticks; a yacht with none ticked is warned about, not blocked.
+- **Location.** The LOCATION field on both forms (and the client pages) is the yacht's
+  current summer base port (`summer_base_port`, title-cased), not its operating areas;
+  it arrives as `cruisingArea` on `GET /api/fleet/:yfId`. The nightly fleet sync also
+  carries each yacht's builder, length and base port into the fleet list so the
+  picker can tell two yachts of the same name apart.
 - **E-brochure link.** Not in the API payloads the normaliser knows; pasted by the
   consultant as on Tier 3. The demo yachts have none, so their drawers hide VIEW BROCHURE.
 - **VAT.** Tier 2 shows free text ("Varies by location") and excludes VAT from the total;
