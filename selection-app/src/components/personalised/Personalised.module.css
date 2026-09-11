@@ -442,7 +442,13 @@
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-padding-left: 64px;
-  scrollbar-width: thin;
+  /* The chevrons carry the affordance; the scrollbar would only draw a line
+     under the cards. */
+  scrollbar-width: none;
+}
+
+.rail::-webkit-scrollbar {
+  display: none;
 }
 
 .card {
