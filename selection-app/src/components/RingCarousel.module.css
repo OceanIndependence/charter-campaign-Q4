@@ -219,6 +219,30 @@
   text-transform: uppercase;
 }
 
+/* Hollow VIEW BROCHURE button under the location — white on the dark theme,
+   ink on the light one — present only when the yacht has a brochure link. The card body swallows pointer events, so the
+   button opts back in (the card keeps it inert on the far cards). */
+.brochureBtn {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 8px 18px 7px calc(18px + 0.3em);
+  border: 1px solid var(--fg);
+  background: transparent;
+  color: var(--fg);
+  font-size: 8.5px;
+  letter-spacing: 0.3em;
+  font-weight: 500;
+  text-decoration: none;
+  pointer-events: auto;
+  transition:
+    background 160ms ease,
+    color 160ms ease;
+}
+.brochureBtn:hover {
+  background: var(--fg);
+  color: var(--ink);
+}
+
 .dash,
 .dashActive {
   width: 26px;
@@ -315,6 +339,11 @@
 [data-theme="light"] .price,
 [data-theme="light"] .soundLabelOn {
   color: var(--fg);
+}
+
+/* Light theme: the brochure button fills ink on hover with white text. */
+[data-theme="light"] .brochureBtn:hover {
+  color: var(--surface);
 }
 
 /* Light theme: the left/right chevrons are grey rather than mint, which is
