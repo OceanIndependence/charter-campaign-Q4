@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { SelectionMeta, SelectionStatus, Tier, VersionInfo } from "@/lib/portal-types";
 import { TIER_LABEL, clientPagePath, selectionTitle } from "@/lib/portal-types";
 import { fmtDateShort } from "@/lib/format";
+import ConfirmDialog from "./ConfirmDialog";
 import styles from "./PortalForm.module.css";
 
 type Scope = "mine" | "all";
@@ -20,7 +21,8 @@ const STATUS_LABEL: Record<SelectionStatus, string> = {
   unpublished: "Unpublished",
 };
 
-/** In prose (version history), one–nine as words, 10 and above as numerals. */
+/** Yacht counts in prose: one–nine as words, 10 and above as numerals.
+ *  Version numbers are never spelled out — they stay numerals at any size. */
 const WORDS = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
 const yachtCountWord = (n: number) => (n < WORDS.length ? WORDS[n] : String(n));
 
@@ -38,6 +40,10 @@ export default function Dashboard() {
   const [choosing, setChoosing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
+  /** Destructive action awaiting confirmation in the portal's own dialog. */
+  const [pending, setPending] = useState<
+    { title: string; body: string; confirmLabel: string; run: () => void } | null
+  >(null);
   const [versionsFor, setVersionsFor] = useState<string | null>(null);
   const [versions, setVersions] = useState<VersionInfo[] | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
@@ -131,16 +137,24 @@ export default function Dashboard() {
 
   const unpublish = useCallback(
     (m: SelectionMeta) => {
-      if (!window.confirm(`Take ${selectionTitle(m)} offline? The client link will stop working; the record and its versions are kept.`)) return;
-      act(m.id, () => fetch(`/api/selections/${m.id}/unpublish`, { method: "POST" }));
+      setPending({
+        title: "Take this page offline?",
+        body: `The client link for ${selectionTitle(m)} will stop working. The record and its versions are kept, so it can be published again.`,
+        confirmLabel: "TAKE OFFLINE",
+        run: () => act(m.id, () => fetch(`/api/selections/${m.id}/unpublish`, { method: "POST" })),
+      });
     },
     [act]
   );
 
   const remove = useCallback(
     (m: SelectionMeta) => {
-      if (!window.confirm(`Delete the draft ${selectionTitle(m)}? This cannot be undone.`)) return;
-      act(m.id, () => fetch(`/api/selections/${m.id}`, { method: "DELETE" }));
+      setPending({
+        title: "Delete this draft?",
+        body: `${selectionTitle(m)} will be deleted. This cannot be undone.`,
+        confirmLabel: "DELETE DRAFT",
+        run: () => act(m.id, () => fetch(`/api/selections/${m.id}`, { method: "DELETE" })),
+      });
     },
     [act]
   );
@@ -172,20 +186,25 @@ export default function Dashboard() {
 
   const rollback = useCallback(
     (m: SelectionMeta, v: VersionInfo) => {
-      if (!window.confirm(`Restore the client page to version ${v.version} (${fmtDateShort(v.publishedAt)})? A new version is recorded; your draft is not changed.`)) return;
-      act(
-        m.id,
-        () =>
-          fetch(`/api/selections/${m.id}/versions`, {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify({ version: v.version }),
-          }),
-        () => {
-          setVersionsFor(null);
-          setVersions(null);
-        }
-      );
+      setPending({
+        title: `Roll back to version ${v.version}?`,
+        body: `The client page returns to the version published on ${fmtDateShort(v.publishedAt)}. A new version is recorded; your draft is not changed.`,
+        confirmLabel: "ROLL BACK",
+        run: () =>
+          act(
+            m.id,
+            () =>
+              fetch(`/api/selections/${m.id}/versions`, {
+                method: "POST",
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify({ version: v.version }),
+              }),
+            () => {
+              setVersionsFor(null);
+              setVersions(null);
+            }
+          ),
+      });
     },
     [act]
   );
@@ -321,6 +340,19 @@ export default function Dashboard() {
           )}
         </section>
       )}
+      {pending && (
+        <ConfirmDialog
+          title={pending.title}
+          body={pending.body}
+          confirmLabel={pending.confirmLabel}
+          onConfirm={() => {
+            const run = pending.run;
+            setPending(null);
+            run();
+          }}
+          onCancel={() => setPending(null)}
+        />
+      )}
     </main>
   );
 }
@@ -435,7 +467,7 @@ function RowGroup(p: RowProps) {
           <span className={`${styles.status} ${styles[`status_${m.status}`]}`}>{STATUS_LABEL[m.status]}</span>
           {m.version > 1 && (
             <button type="button" className={styles.versionBtn} onClick={p.onToggleVersions} aria-expanded={p.versionsOpen} title="Version history">
-              {yachtCountWord(m.version)} versions {p.versionsOpen ? "▴" : "▾"}
+              {m.version} versions {p.versionsOpen ? "▴" : "▾"}
             </button>
           )}
         </td>
