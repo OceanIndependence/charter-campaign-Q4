@@ -747,7 +747,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
               <textarea
                 rows={3}
                 className={styles.textarea}
-                placeholder="Example – Last July you cruised the Amalfi Coast aboard SERENITY. I wanted you to see the 2027 season before we open it more widely."
+                placeholder="Example – Last summer you enquired about chartering in Sicily in July. I’ve put together three destinations for 2027, with the yachts I would consider for each. If none of it is quite right, I can find something else. Just let me know your requirements."
                 value={draft.introNote}
                 onChange={(e) => update((d) => ({ ...d, introNote: e.target.value }))}
               />
