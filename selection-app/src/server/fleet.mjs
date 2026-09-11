@@ -49,10 +49,13 @@ const FLEET_STALE_MS = 36 * 60 * 60 * 1000; // lazy re-sync if the cron hasn't r
 // Bump when the fleet list gains fields — a cached list from before is
 // re-synced on the next request instead of waiting for the nightly cron.
 const FLEET_SCHEMA_VERSION = 2;
-// Nightly fallback when the one-call basic list is unavailable: basic
-// records fetched one by one, this many per run, for yachts still lacking
-// their picker facts (builder, length, base port).
-const FACTS_PER_RUN = 120;
+// Yachtfolio's one-call basic list covers only the agency's own yachts (about
+// a hundred of the 2,400 in the charter list), so the rest get their picker
+// facts (builder, length, base port) from basic records fetched one at a
+// time. The cron route runs that pass for as long as its time budget allows
+// and chains follow-up runs until none remain.
+const DEFAULT_FACTS_BUDGET_MS = 85_000;
+export const factsBudgetMs = () => Number(process.env.FLEET_FACTS_BUDGET_MS) || DEFAULT_FACTS_BUDGET_MS;
 const DETAIL_FRESH_MS = 6 * 60 * 60 * 1000; // rates change; don't serve stale for long
 // Download the whole gallery (capped per category) so the consultant can pick
 // which image fills each page slot; the default slot assignment takes the
@@ -259,16 +262,23 @@ function factsFromBasic(row) {
     builder: String(row?.builder ?? "").trim(),
     lengthM: parseMetres(row?.length_metric ?? row?.length_metres ?? row?.length) ?? null,
     basePort: basePort(row?.summer_base_port) ?? "",
+    // When the record was read — a yacht Yachtfolio has no facts for is
+    // still marked as checked, so it is not fetched again every night.
+    factsAt: new Date().toISOString(),
   };
 }
 
 const hasFacts = (f) => Boolean(f && (f.builder || f.lengthM != null || f.basePort));
 
-async function fetchFleetFacts(passkey, previous, list, stats, { perYacht = false } = {}) {
+/**
+ * @param deadline  epoch ms after which no further per-yacht records are
+ *                  fetched (0 disables the per-yacht pass).
+ */
+async function fetchFleetFacts(passkey, previous, list, stats, { deadline = 0 } = {}) {
   const facts = new Map();
   for (const y of previous?.yachts ?? []) {
-    const f = { builder: y.builder ?? "", lengthM: y.lengthM ?? null, basePort: y.basePort ?? "" };
-    if (hasFacts(f)) facts.set(y.id, f);
+    const f = { builder: y.builder ?? "", lengthM: y.lengthM ?? null, basePort: y.basePort ?? "", factsAt: y.factsAt ?? null };
+    if (hasFacts(f) || f.factsAt) facts.set(y.id, f);
   }
   let listed = 0;
   try {
@@ -296,36 +306,43 @@ async function fetchFleetFacts(passkey, previous, list, stats, { perYacht = fals
     stats.notes.push(`basic yacht list unavailable (${msg}) — picker facts (builder, length) kept from the previous sync.`);
     console.warn(`[fleet:sync] ${stats.notes[stats.notes.length - 1]}`);
   }
-  // Fallback for the nightly run only (a request-time re-sync must stay
-  // quick): fetch basic records one at a time for yachts still without facts.
-  if (perYacht && !listed) {
-    const pending = list.filter((y) => !facts.has(y.id)).slice(0, FACTS_PER_RUN);
-    let filled = 0;
-    for (const y of pending) {
-      await sleep(REQUEST_DELAY_MS);
-      try {
-        const f = factsFromBasic(await fetchBasicRecord(passkey, y.id));
-        if (hasFacts(f)) {
-          facts.set(y.id, f);
-          filled += 1;
-        }
-      } catch (err) {
-        console.warn(`[fleet:sync] basic record for ${y.id} failed: ${redact(String(err?.message ?? err), passkey)}`);
-      }
+  // The rest, one basic record at a time, for as long as the budget allows.
+  // Only the cron/manual run has a budget; a request-time re-sync stays quick.
+  const pending = list.filter((y) => !facts.has(y.id));
+  let fetched = 0;
+  let filled = 0;
+  for (const y of pending) {
+    if (!deadline || Date.now() + REQUEST_DELAY_MS + 3000 > deadline) break;
+    await sleep(REQUEST_DELAY_MS);
+    try {
+      const f = factsFromBasic(await fetchBasicRecord(passkey, y.id));
+      facts.set(y.id, f);
+      fetched += 1;
+      if (hasFacts(f)) filled += 1;
+    } catch (err) {
+      console.warn(`[fleet:sync] basic record for ${y.id} failed: ${redact(String(err?.message ?? err), passkey)}`);
     }
-    if (pending.length) stats.notes.push(`picker facts fetched one by one for ${filled} of ${pending.length} yachts (${list.length - facts.size} still to do).`);
   }
-  stats.factsCount = list.filter((y) => facts.has(y.id)).length;
+  stats.factsFilled = filled;
+  stats.factsRemaining = list.filter((y) => !facts.has(y.id)).length;
+  stats.factsCount = list.filter((y) => hasFacts(facts.get(y.id))).length;
+  if (fetched) {
+    stats.notes.push(
+      `basic records read for ${fetched} yacht(s) this run (${filled} with builder/length); ${stats.factsRemaining} still to read.`
+    );
+  } else if (deadline && pending.length) {
+    stats.notes.push(`${pending.length} yacht(s) still to read — no time left in this run.`);
+  }
   return facts;
 }
 
-export async function syncFleet({ perYachtFacts = false } = {}) {
+export async function syncFleet({ factsDeadline = 0 } = {}) {
   if (isDemoFleet()) {
     // No passkey: nothing to sync. The demo set is served instead so the
     // portal keeps working; say so rather than failing the cron.
     const fleet = demoFleet();
     console.warn("[fleet:sync] YACHTFOLIO_PASSKEY is not configured — serving the demo fleet, nothing synced.");
-    return { count: fleet.count, removedCount: 0, syncedAt: fleet.syncedAt, persisted: false, demo: true, notes: ["demo fleet — no passkey"] };
+    return { count: fleet.count, factsCount: fleet.count, factsFilled: 0, factsRemaining: 0, removedCount: 0, syncedAt: fleet.syncedAt, persisted: false, demo: true, notes: ["demo fleet — no passkey"] };
   }
   const passkey = await passkeyOrThrow();
   const run = await startRun("sync");
@@ -335,7 +352,7 @@ export async function syncFleet({ perYachtFacts = false } = {}) {
   await sleep(REQUEST_DELAY_MS);
   const reference = await fetchReferenceData(passkey);
   await sleep(REQUEST_DELAY_MS);
-  const facts = await fetchFleetFacts(passkey, previous, list, run.stats, { perYacht: perYachtFacts });
+  const facts = await fetchFleetFacts(passkey, previous, list, run.stats, { deadline: factsDeadline });
 
   const currentIds = new Set(list.map((y) => y.id));
   const removed = { ...(previous?.removed ?? {}) };
@@ -361,6 +378,7 @@ export async function syncFleet({ perYachtFacts = false } = {}) {
       builder: facts.get(y.id)?.builder ?? "",
       lengthM: facts.get(y.id)?.lengthM ?? null,
       basePort: facts.get(y.id)?.basePort ?? "",
+      factsAt: facts.get(y.id)?.factsAt ?? null,
     })),
     removed,
   };
@@ -391,6 +409,8 @@ export async function syncFleet({ perYachtFacts = false } = {}) {
   return {
     count: fleet.count,
     factsCount: stats.factsCount ?? 0,
+    factsFilled: stats.factsFilled ?? 0,
+    factsRemaining: stats.factsRemaining ?? 0,
     removedCount: Object.keys(removed).length,
     syncedAt: fleet.syncedAt,
     persisted: !stats.dryRun,
