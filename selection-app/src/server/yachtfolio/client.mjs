@@ -17,8 +17,47 @@ export const API_BASE = process.env.YACHTFOLIO_API_BASE ?? "https://www.yachtfol
 
 export const REQUEST_DELAY_MS = 400;
 const RETRY_DELAY_MS = 1500;
+/**
+ * Back-off after a 429 or a rate-limit error body: three waits, then give
+ * up with a RateLimitError. The passkey is shared with the overnight
+ * Yachtfolio-to-CRM sync (800 calls per five minutes across both), so an
+ * overlap must degrade into a slower catch-up, not a broken night.
+ * (Overridable only so tests need not wait 40 seconds.)
+ */
+const RATE_LIMIT_DELAYS_MS = (process.env.YACHTFOLIO_RATE_LIMIT_DELAYS_MS ?? "2000,8000,30000").split(",").map(Number);
 
 export const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+/* ------------------------------------------------------------- accounting */
+
+/**
+ * Every call to Yachtfolio made through this module — API calls and media
+ * (image) downloads alike — is counted here so a run can report exactly how
+ * much of the shared allowance it used.
+ */
+const ops = { api: 0, media: 0, retries: 0, rateLimited: 0 };
+
+/** Snapshot of the Yachtfolio call counters for this process. */
+export function yachtfolioOps() {
+  return { ...ops, total: ops.api + ops.media };
+}
+
+export function resetYachtfolioOps() {
+  for (const k of Object.keys(ops)) ops[k] = 0;
+}
+
+/** Thrown once the back-off is spent; code "RATE_LIMIT" lets callers stop cleanly. */
+export class RateLimitError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "RateLimitError";
+    this.code = "RATE_LIMIT";
+  }
+}
+
+export const isRateLimitError = (err) => err?.code === "RATE_LIMIT";
+
+const RATE_LIMIT_BODY = /rate.?limit|too many (requests|calls)|limit exceeded/i;
 
 /**
  * Resolve the passkey. `envFileRoots` (script use only) are directories whose
@@ -44,33 +83,73 @@ export function redact(text, passkey) {
 /**
  * GET a Yachtfolio endpoint. Retries once on network failure, HTTP error or
  * a non-empty `errors` array; throws (with the passkey redacted) after that.
- * Returns { json, raw }.
+ * A 429, or an `errors` entry naming the rate limit, backs off 2 s, 8 s and
+ * 30 s before a RateLimitError. Returns { json, raw }.
  */
 export async function apiGet(passkey, script, params) {
   const url = new URL(`${API_BASE}/${script}`);
   for (const [k, v] of Object.entries(params)) url.searchParams.set(k, String(v));
   url.searchParams.set("passkey", passkey);
+  const label = `${script}?${redact(url.searchParams.toString(), passkey).replace(/passkey=[^&]*/, "passkey=…")}`;
 
   let lastError;
+  let limited = 0;
   for (let attempt = 1; attempt <= 2; attempt++) {
     try {
+      ops.api += 1;
       const res = await fetch(url);
       const raw = await res.text();
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const json = JSON.parse(raw);
-      if (Array.isArray(json?.errors) && json.errors.length > 0) {
-        throw new Error(`API errors: ${json.errors.join("; ")}`);
+      let json = null;
+      try {
+        json = JSON.parse(raw);
+      } catch {
+        json = null;
       }
+      const errors = Array.isArray(json?.errors) ? json.errors : [];
+      if (res.status === 429 || errors.some((e) => RATE_LIMIT_BODY.test(String(e)))) {
+        ops.rateLimited += 1;
+        if (limited >= RATE_LIMIT_DELAYS_MS.length) throw new RateLimitError(`${label} rate-limited by Yachtfolio after ${limited} back-off wait(s).`);
+        await sleep(RATE_LIMIT_DELAYS_MS[limited]);
+        limited += 1;
+        attempt -= 1; // a rate-limited call does not spend a retry
+        continue;
+      }
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (json === null) throw new Error("response was not JSON");
+      if (errors.length > 0) throw new Error(`API errors: ${errors.join("; ")}`);
       return { json, raw };
     } catch (err) {
+      if (isRateLimitError(err)) throw err;
       lastError = err;
-      if (attempt === 1) await sleep(RETRY_DELAY_MS);
+      if (attempt === 1) {
+        ops.retries += 1;
+        await sleep(RETRY_DELAY_MS);
+      }
     }
   }
-  throw new Error(
-    `${script}?${redact(url.searchParams.toString(), passkey).replace(/passkey=[^&]*/, "passkey=…")} ` +
-      `failed twice: ${redact(String(lastError?.message ?? lastError), passkey)}`
-  );
+  throw new Error(`${label} failed twice: ${redact(String(lastError?.message ?? lastError), passkey)}`);
+}
+
+/**
+ * Download a Yachtfolio media file (a gallery image; the URL carries the
+ * passkey). Counted as a Yachtfolio call; a 429 backs off like apiGet.
+ * Returns { bytes, contentType }.
+ */
+export async function fetchMedia(url, passkey) {
+  let limited = 0;
+  for (;;) {
+    ops.media += 1;
+    const res = await fetch(url);
+    if (res.status === 429) {
+      ops.rateLimited += 1;
+      if (limited >= RATE_LIMIT_DELAYS_MS.length) throw new RateLimitError(`media download rate-limited by Yachtfolio after ${limited} back-off wait(s).`);
+      await sleep(RATE_LIMIT_DELAYS_MS[limited]);
+      limited += 1;
+      continue;
+    }
+    if (!res.ok) throw new Error(`HTTP ${res.status} downloading ${redact(url, passkey)}`);
+    return { bytes: Buffer.from(await res.arrayBuffer()), contentType: res.headers.get("content-type") ?? "" };
+  }
 }
 
 /** Fetch the public charter fleet list: [{ id, name, registry_port }]. */
