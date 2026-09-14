@@ -103,7 +103,9 @@ The portal keeps two stores, deliberately separate:
   `selections/in-use.json` (`{ "<yfId>": ["<selectionId>", …] }`), which is
   how the nightly refresh knows which yachts anyone is using. Only yachts a
   consultant has picked, or that appear in a selection, ever have a record
-  or images prepared; nothing loops over the whole fleet.
+  or images prepared; the picker facts (builder, length, base port) for the
+  rest are read once from the brochure, in bounded batches, into
+  `fleet.json`. Nothing loops over the whole fleet in one go.
 - **Sirv for imagery** (`IMAGE_STORE=sirv`) — one untouched original per
   gallery image at `/yachtfolio_images/<yfId>/<yfId>.<pos>.<ext>`, cropped
   at request time by the `charter-hero` (2000 × 1250) and `charter-thumb`

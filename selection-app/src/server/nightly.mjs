@@ -12,14 +12,16 @@
  *      refresh always runs first and is never starved by this.
  *   4. Write fleet.json once, if it changed.
  *
- * Yachts not in use are never fetched in detail or have images prepared.
+ * Yachts not in use never get a record or images; the only call ever made
+ * for one is a single brochure read for its three picker facts (step 3).
  * A Yachtfolio rate limit stops the run cleanly (curtailed: true, with the
  * number of candidates left for the next night's oldest-first ordering); a
  * storage failure is reported so the cron answers 503.
  */
 
-import { REQUEST_DELAY_MS, fetchBasicList, fetchBasicRecordDetailed, isRateLimitError, redact, sleep, yachtfolioOps } from "./yachtfolio/client.mjs";
-import { applyFacts, factsFromBasic, fetchFleetSnapshot, getYachtDetail, hasFacts, persistFleet, recordFacts, recordFactsAttempt, storageFailure } from "./fleet.mjs";
+import { REQUEST_DELAY_MS, fetchBasicList, fetchBrochure, isRateLimitError, redact, sleep, yachtfolioOps } from "./yachtfolio/client.mjs";
+import { factsFromBrochure } from "./yachtfolio/normalise.mjs";
+import { applyFacts, factsPending, fetchFleetSnapshot, getYachtDetail, hasFacts, persistFleet, recordFacts, recordFactsAttempt, storageFailure } from "./fleet.mjs";
 import { inUseYachtIds } from "./in-use.mjs";
 import { readYachtRecord } from "./yacht-records.mjs";
 import { getImageStore } from "./image-store/index.mjs";
@@ -35,75 +37,50 @@ export const RECHECK_AFTER_MS = 7 * 24 * 60 * 60 * 1000;
 /** A yacht refresh costs at least the brochure and the basic record. */
 const MIN_CALLS_PER_YACHT = 2;
 
+/** Stop starting new work this long after a run began (routes allow 120 s). */
+export const TIME_BUDGET_MS = 85_000;
+
 /**
- * Fill picker-facts gaps: yachts in the snapshot's list with no facts read
- * yet. One basic-list call first (it covers the agency's own yachts; rows
- * for yachts not on the charter list are ignored and never count), then
- * one basic record per pending yacht — least recently attempted first — up
- * to `cap` records and `budget` calls. A record that fails or comes back
- * empty is stamped factsTriedAt so the queue moves past it and returns to
- * it later. Mutates the snapshot's facts and factsAdded. Returns
- * { filled, fromList, recordsFetched, recordsFailed, offListIgnored,
- * remaining, curtailed }.
+ * Fill picker-facts gaps from the brochure — the one Yachtfolio endpoint
+ * that answers for every yacht on the charter list. Pending: listed yachts
+ * with no facts, plus those stamped by the retired basic-record path with
+ * empty facts (re-queued once; an empty brochure answer is final). Least
+ * recently attempted first, up to `cap` yachts, `budget` calls and the
+ * `deadline`. A brochure that fails is stamped factsTriedAt so the queue
+ * moves past it. Mutates the snapshot's facts and factsAdded. Returns
+ * { filled, recordsFetched, recordsFailed, remaining, curtailed, timedOut,
+ * firstFailure, error }. With `debug`, adds a ten-row sample of the agency
+ * basic list reporting only whether `builder` / `other_builder` are filled.
  */
-export async function fillFactsGaps(snapshot, { cap = FACTS_PER_RUN, budget = CALL_BUDGET, debug = false } = {}) {
+export async function fillFactsGaps(snapshot, { cap = FACTS_PER_RUN, budget = CALL_BUDGET, deadline = Date.now() + TIME_BUDGET_MS, debug = false } = {}) {
   const { passkey, list, facts } = snapshot;
-  const listed = new Set(list.map((y) => y.id));
-  const pending = () => list.filter((y) => !facts.get(y.id)?.factsAt);
+  const pending = () => list.filter((y) => factsPending(facts.get(y.id)));
   const before = yachtfolioOps().total;
   const used = () => yachtfolioOps().total - before;
-  // firstFailure: what Yachtfolio answered for the first record that could
+  // firstFailure: what Yachtfolio answered for the first brochure that could
   // not be used (status, redacted URL, message; the body only with debug).
-  const out = { filled: 0, fromList: 0, recordsFetched: 0, recordsFailed: 0, offListIgnored: 0, remaining: pending().length, curtailed: false, firstFailure: null };
-  if (debug) out.debug = { basicList: null };
-  const fill = (id, f) => {
-    const hadFacts = Boolean(facts.get(id)?.factsAt);
-    if (recordFacts(facts, id, f)) snapshot.factsAdded += 1;
-    if (!hadFacts) out.filled += 1;
-    return !hadFacts;
-  };
+  const out = { filled: 0, recordsFetched: 0, recordsFailed: 0, remaining: pending().length, curtailed: false, timedOut: false, firstFailure: null, error: null };
+  if (debug) out.debug = await sampleAgencyBuilders(passkey);
   if (!out.remaining || budget < 1 || cap < 1) return out;
   try {
-    const rows = await fetchBasicList(passkey);
-    if (debug) {
-      // Field-name check for the agency rows: which keys they carry and what
-      // any builder- or length-like key holds on the first row (no other values).
-      const first = rows.find((r) => r && typeof r === "object") ?? null;
-      const pick = (re) => Object.fromEntries(Object.entries(first ?? {}).filter(([k]) => re.test(k)));
-      const ids = rows.map((r) => Number(r?.id_yacht ?? r?.yacht_id ?? r?.id)).filter(Number.isFinite);
-      out.debug.basicList = {
-        rows: rows.length,
-        listedRows: ids.filter((id) => listed.has(id)).length,
-        offListIds: ids.filter((id) => !listed.has(id)),
-        firstRowKeys: Object.keys(first ?? {}),
-        firstRowId: first ? Number(first.id_yacht ?? first.yacht_id ?? first.id) : null,
-        builderLike: pick(/build|brand|shipyard|yard|manufact/i),
-        lengthLike: pick(/length|loa/i),
-        portLike: pick(/port|base/i),
-      };
-    }
-    for (const row of rows) {
-      const id = Number(row?.id_yacht ?? row?.yacht_id ?? row?.id);
-      if (!Number.isFinite(id)) continue;
-      if (!listed.has(id)) {
-        out.offListIgnored += 1;
-        continue;
-      }
-      const f = factsFromBasic(row);
-      if (hasFacts(f) && fill(id, f)) out.fromList += 1;
-    }
     // Oldest attempt first, never-attempted before that; the list order
     // (alphabetical) breaks ties, so a yacht that keeps failing does not
     // hold the queue.
     const queue = pending().sort((a, b) => Date.parse(facts.get(a.id)?.factsTriedAt ?? 0) - Date.parse(facts.get(b.id)?.factsTriedAt ?? 0));
     for (const y of queue) {
       if (out.recordsFetched + out.recordsFailed >= cap || used() + 1 > budget) break;
+      if (Date.now() > deadline) {
+        out.timedOut = true;
+        break;
+      }
       await sleep(REQUEST_DELAY_MS);
       let wire = null;
       try {
-        wire = await fetchBasicRecordDetailed(passkey, y.id);
-        if (!wire.row) throw new Error("no basic record returned");
-        fill(y.id, factsFromBasic(wire.row));
+        wire = await fetchBrochure(passkey, y.id);
+        if (!wire.json || typeof wire.json !== "object" || !Object.keys(wire.json).length) throw new Error("empty brochure");
+        const wasPending = factsPending(facts.get(y.id));
+        if (recordFacts(facts, y.id, { ...factsFromBrochure(wire.json), factsAt: new Date().toISOString(), factsSource: "brochure" })) snapshot.factsAdded += 1;
+        if (wasPending) out.filled += 1;
         out.recordsFetched += 1;
       } catch (err) {
         if (isRateLimitError(err)) throw err;
@@ -111,15 +88,15 @@ export async function fillFactsGaps(snapshot, { cap = FACTS_PER_RUN, budget = CA
         snapshot.factsAdded += 1;
         out.recordsFailed += 1;
         const message = redact(String(err?.message ?? err), passkey);
-        console.warn(`[nightly] basic record for ${y.id} failed: ${message}`);
+        console.warn(`[nightly] brochure for ${y.id} failed: ${message}`);
         if (!out.firstFailure) {
           out.firstFailure = {
             yfId: y.id,
             name: y.name,
-            status: wire?.status ?? null,
-            url: wire?.url ?? `api_basic.cgi?type=yachts&id_yacht=${y.id}&passkey=…`,
+            status: wire?.status ?? err?.status ?? null,
+            url: wire?.url ?? err?.url ?? `api_brochure.cgi?id_yacht=${y.id}&passkey=…`,
             error: message,
-            ...(debug ? { body: redact(String(wire?.raw ?? ""), passkey).slice(0, 500) } : {}),
+            ...(debug ? { body: redact(String(wire?.raw ?? err?.raw ?? ""), passkey).slice(0, 500) } : {}),
           };
         }
       }
@@ -131,7 +108,36 @@ export async function fillFactsGaps(snapshot, { cap = FACTS_PER_RUN, budget = CA
   }
   applyFacts(snapshot);
   out.remaining = pending().length;
+  // A batch in which every attempt failed is an error, not a quiet 200.
+  if (out.recordsFailed > 0 && out.recordsFetched === 0) {
+    out.error = `every brochure fetched this batch failed (${out.recordsFailed}); first: ${out.firstFailure?.error ?? "unknown"}`;
+  }
   return out;
+}
+
+/**
+ * Diagnostic only (?debug=1): does the agency basic list carry a builder?
+ * Reads `builder` and `other_builder` from the first ten rows and reports
+ * counts and the distinct non-empty values — nothing else from the rows,
+ * which carry internal and personal data, is read, kept or logged.
+ */
+async function sampleAgencyBuilders(passkey) {
+  try {
+    const rows = (await fetchBasicList(passkey)).slice(0, 10);
+    const val = (v) => (v == null ? "" : String(v).trim());
+    const sample = rows.map((r) => ({ builder: val(r?.builder), other: val(r?.other_builder) }));
+    return {
+      agencyBuilderSample: {
+        rows: sample.length,
+        withBuilder: sample.filter((r) => r.builder).length,
+        withOtherBuilder: sample.filter((r) => r.other).length,
+        withEither: sample.filter((r) => r.builder || r.other).length,
+        distinctValues: [...new Set(sample.flatMap((r) => [r.builder, r.other]).filter(Boolean))],
+      },
+    };
+  } catch (err) {
+    return { agencyBuilderSample: { error: redact(String(err?.message ?? err), passkey) } };
+  }
 }
 
 /** Candidates for tonight, oldest lastCheckedAt first. Reads every in-use record (reads are free). */
@@ -154,6 +160,7 @@ export async function runNightlySync({ maxYachts = MAX_YACHTS_PER_RUN, callBudge
     return { demo: true, fleet: { count: fleet.count, changed: 0, fleetWritten: false, referenceWritten: false, stateWritten: false }, inUse: 0, candidates: 0, processed: 0, skipped: 0, imagesPrepared: 0, curtailed: false, candidatesRemaining: 0, facts: { filled: 0, remaining: 0, curtailed: false }, yachtfolioCalls: 0, sirvUploads: 0, blob: null, storageError: null, notes: ["demo fleet — no passkey"] };
   }
   const runStartedAt = Date.now();
+  const deadline = runStartedAt + TIME_BUDGET_MS;
   const yfBefore = yachtfolioOps().total;
   const sirvBefore = sirvOps().uploads;
   const blobBefore = blobOps();
@@ -188,6 +195,10 @@ export async function runNightlySync({ maxYachts = MAX_YACHTS_PER_RUN, callBudge
       notes.push(`call budget of ${callBudget} would be exceeded — stopping the in-use refresh.`);
       break;
     }
+    if (Date.now() > deadline) {
+      notes.push("time budget reached — stopping the in-use refresh; the rest is picked up tomorrow.");
+      break;
+    }
     const { yfId, reason } = candidates[index];
     try {
       const detail = await getYachtDetail(yfId, { forceRefresh: true });
@@ -202,7 +213,7 @@ export async function runNightlySync({ maxYachts = MAX_YACHTS_PER_RUN, callBudge
         }
       }
       // The refreshed yacht's facts belong in the picker list too.
-      if (detail.facts && hasFacts(detail.facts) && recordFacts(snapshot.facts, yfId, { ...detail.facts, factsAt: detail.facts.fetchedAt })) snapshot.factsAdded += 1;
+      if (detail.facts && hasFacts(detail.facts) && recordFacts(snapshot.facts, yfId, { ...detail.facts, factsAt: detail.facts.fetchedAt, factsSource: "detail" })) snapshot.factsAdded += 1;
       console.log(`[nightly] ${yfId} (${reason}): specs ${detail.blob?.yachtsWritten ? "changed" : "unchanged"}; Yachtfolio calls so far ${used()}`);
     } catch (err) {
       if (isRateLimitError(err)) {
@@ -222,11 +233,12 @@ export async function runNightlySync({ maxYachts = MAX_YACHTS_PER_RUN, callBudge
   if (curtailed) notes.push(`Yachtfolio rate limit — ${candidatesRemaining} candidate(s) left for the next run.`);
 
   // 3. Facts gaps from what is left, unless the night is already curtailed or broken.
-  let facts = { filled: 0, fromList: 0, recordsFetched: 0, recordsFailed: 0, offListIgnored: 0, remaining: snapshot.list.filter((y) => !snapshot.facts.get(y.id)?.factsAt).length, curtailed: false };
+  let facts = { filled: 0, recordsFetched: 0, recordsFailed: 0, remaining: snapshot.list.filter((y) => factsPending(snapshot.facts.get(y.id))).length, curtailed: false, timedOut: false, firstFailure: null, error: null };
   if (!curtailed && !storageError) {
     const remainingBudget = callBudget - used();
-    if (remainingBudget > 1) facts = await fillFactsGaps(snapshot, { cap: factsCap, budget: remainingBudget });
-    else notes.push("no call budget left for the facts gap fill tonight.");
+    if (remainingBudget > 1 && Date.now() < deadline) facts = await fillFactsGaps(snapshot, { cap: factsCap, budget: remainingBudget, deadline });
+    else notes.push("no call or time budget left for the facts gap fill tonight.");
+    if (facts.error) notes.push(`facts gap fill: ${facts.error}`);
   }
 
   // 4. One fleet.json write, if anything changed.

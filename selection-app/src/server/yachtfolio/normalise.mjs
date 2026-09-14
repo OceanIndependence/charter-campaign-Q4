@@ -156,6 +156,21 @@ export function buildReference({ seasons, operating_areas }) {
 }
 
 /**
+ * The picker facts alone — builder, length in metres, summer base port —
+ * from a brochure, reading the same fields extractYachtFacts() does. The
+ * brochure endpoint answers for every yacht on the charter list, which the
+ * per-id basic record does not, so this is the one source for facts.
+ */
+export function factsFromBrochure(brochure) {
+  const { detail, spec } = specBlocks(brochure);
+  return {
+    builder: String(spec.builder ?? detail.builder ?? "").trim(),
+    lengthM: parseMetres(spec.length_metres) ?? parseMetres(detail.length) ?? null,
+    basePort: basePort(spec.summer_base_port ?? detail.summer_base_port) ?? "",
+  };
+}
+
+/**
  * Extract the Tier 3 facts for one yacht from its brochure (+ optional basic
  * record fallback). Pure; returns undefined for anything genuinely missing,
  * with the misses listed in `missing`.

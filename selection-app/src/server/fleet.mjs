@@ -254,10 +254,17 @@ const sameFacts = (a, b) => a && b && a.builder === b.builder && a.lengthM === b
 export function recordFacts(facts, id, next) {
   const prev = facts.get(id);
   if (sameFacts(prev, next) && prev.factsAt) next = { ...next, factsAt: prev.factsAt };
-  const changed = !prev || !sameFacts(prev, next) || prev.factsAt !== next.factsAt;
+  const changed = !prev || !sameFacts(prev, next) || prev.factsAt !== next.factsAt || (prev.factsSource ?? null) !== (next.factsSource ?? null);
   facts.set(id, { ...next, factsTriedAt: null });
   return changed;
 }
+
+/**
+ * Still to read: no facts yet, or an empty result from the retired
+ * basic-record path (no factsSource). An empty result from the brochure is
+ * final — Yachtfolio has nothing for that yacht.
+ */
+export const factsPending = (f) => !f?.factsAt || (!hasFacts(f) && f.factsSource !== "brochure" && f.factsSource !== "detail");
 
 /**
  * Note a failed basic-record fetch for a listed yacht so the gap fill moves
@@ -300,14 +307,15 @@ export async function fetchFleetSnapshot() {
 
   const facts = new Map();
   for (const y of previous?.yachts ?? []) {
-    const f = { builder: y.builder ?? "", lengthM: y.lengthM ?? null, basePort: y.basePort ?? "", factsAt: y.factsAt ?? null, factsTriedAt: y.factsTriedAt ?? null };
+    const f = { builder: y.builder ?? "", lengthM: y.lengthM ?? null, basePort: y.basePort ?? "", factsAt: y.factsAt ?? null, factsTriedAt: y.factsTriedAt ?? null, factsSource: y.factsSource ?? null };
     if (hasFacts(f) || f.factsAt || f.factsTriedAt) facts.set(y.id, f);
   }
   // A corrected builder or length in the list response is picked up here
-  // without a call; the per-yacht follow-up is only for rows without them.
+  // without a call (only those three fields are read from the row); the
+  // per-yacht follow-up is only for rows without them.
   let fromList = 0;
   for (const row of list) {
-    const f = factsFromBasic(row);
+    const f = { ...factsFromBasic(row), factsSource: "list" };
     if (hasFacts(f)) {
       recordFacts(facts, row.id, f);
       fromList += 1;
@@ -349,6 +357,7 @@ function fleetRow(y, facts) {
     lengthM: f?.lengthM ?? null,
     basePort: f?.basePort ?? "",
     factsAt: f?.factsAt ?? null,
+    ...(f?.factsSource ? { factsSource: f.factsSource } : {}),
     ...(f?.factsTriedAt && !f?.factsAt ? { factsTriedAt: f.factsTriedAt } : {}),
   };
 }
@@ -390,7 +399,7 @@ export async function persistFleet(snapshot) {
     count: fleet.count,
     changedCount: snapshot.changedIds.length,
     factsCount: withFacts,
-    factsRemaining: fleet.yachts.filter((y) => !facts.get(y.id)?.factsAt).length,
+    factsRemaining: fleet.yachts.filter((y) => factsPending(facts.get(y.id))).length,
     removedCount: Object.keys(removed).length,
     syncedAt: fleet.syncedAt,
     persisted: !stats.dryRun,

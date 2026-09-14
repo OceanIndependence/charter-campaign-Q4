@@ -126,8 +126,10 @@ that leaves to confirm on first deploy.
 
 - `src/server/nightly.mjs` — `runNightlySync()`: list diff → in-use refresh
   (changed or seven days unchecked, oldest first, at most 40, within 300
-  calls) → facts gap fill (at most 100, from the budget left) → one
-  `fleet.json` write. `fetchFleetFacts()` and the cron route's chained
+  calls and an 85-second time budget) → facts gap fill from the brochure
+  (at most 100, from the call and time budget left) → one `fleet.json`
+  write. Yachts not in use never get a record or images; the one call ever
+  made for one is a brochure read for its three picker facts. `fetchFleetFacts()` and the cron route's chained
   follow-up runs are removed. `RateLimitError` curtails the run
   (`curtailed: true`, still 200); a storage failure answers 503.
 - `src/server/fleet.mjs` — `fetchFleetSnapshot()` / `persistFleet()`;
@@ -199,14 +201,19 @@ Test-only overrides, never set in Vercel: `SIRV_API_BASE` (mock Sirv),
    minutes between calls if the CRM sync could be running. `/api/health`
    and the record (`yachts/<id>.json`) show `store: "sirv"` afterwards.
 7. **Run the facts backfill** until `remaining: 0`:
-   `POST /api/admin/backfill-facts?limit=100`. Roughly 2,300 basic records
-   from cold (about a second each, one call each), so around 23 calls of
-   100 — or leave it to the nightly gap fill of 100 a night. The picker
-   works either way; facts are only builder, length and base port. Each
-   response reports `filled`, `fromList` (from the one agency basic-list
-   call), `recordsFetched`, `recordsFailed`, `offListIgnored` (basic-list
-   rows for yachts not on the charter list, never counted), `remaining`
-   and `fleetWritten`; `remaining` must fall by `filled` on every call.
+   `POST /api/admin/backfill-facts?limit=50`, one call a minute. Facts come
+   from the brochure (`api_brochure.cgi?id_yacht=`), one call per yacht,
+   for every yacht including the agency's 97: about 2,300 calls from cold,
+   so 47 calls of 50 — under an hour at that pacing, or leave it to the
+   nightly gap fill of 100 a night. Each response reports `filled`,
+   `recordsFetched`, `recordsFailed`, `remaining`, `curtailed`, `timedOut`,
+   `fleetWritten`, `elapsedMs` and, when something failed, `firstFailure`
+   (HTTP status, passkey-redacted URL, message). A batch in which every
+   brochure failed answers 502 with `error`. `remaining` must fall by
+   `filled` on every call. Pacing: 50 brochures plus the 4 fixed calls a
+   minute is 270 per five minutes, a third of the 800 shared with the CRM
+   sync; the batch stops itself at 85 s and reports `timedOut` if Yachtfolio
+   is slow, so `limit` can never outrun the function.
 8. **Confirm with Markus** that 03:00 UTC does not overlap the existing
    Yachtfolio-to-CRM sync. The schedule is unchanged by this work, and the
    429 curtailment means an overlap degrades into a slower catch-up rather
@@ -300,13 +307,29 @@ Yachtfolio" is the way to pull a corrected photo through today.
   night), not in per-yacht records — a record per listed yacht would cost
   2,398 Blob operations, more than a month's allowance, for yachts nobody
   has picked. `fleet.json` is written whenever facts were added in a run,
-  independently of the list's content hash (fixed 14 September 2026 after
-  the backfill was seen returning `filled: 10, remaining: 1313` on three
-  consecutive calls: agency basic-list rows for yachts not on the charter
-  list were being counted against the per-yacht limit and were never
-  persisted, so the same call repeated). A basic record that fails or
-  comes back empty is stamped `factsTriedAt` in `fleet.json` and goes to
-  the back of the queue rather than blocking it.
+  independently of the list's content hash. A brochure that fails is
+  stamped `factsTriedAt` and goes to the back of the queue rather than
+  blocking it; a batch in which every brochure failed is an error.
+- **Facts come from the brochure, not the basic record.** Confirmed on the
+  preview on 14 September 2026: `api_basic.cgi?type=yachts&id_yacht=<id>`
+  answers `HTTP 200 {"data":[],"errors":[]}` for a charter-list yacht — it
+  has never returned a record. The earlier whole-fleet pass (`d4ba9b0`) had
+  stamped 989 yachts with a read time and empty facts on the strength of
+  that empty answer; those stamps are re-queued once (`factsPending()`,
+  keyed on a missing `factsSource`) and an empty answer from the brochure
+  is final. The agency basic list (`type=yachts`, no id) is no longer read
+  on any scheduled path; `?debug=1` on the backfill samples ten of its rows
+  for `builder` / `other_builder` counts only. The basic record remains a
+  silent fallback inside `getYachtDetail()` (one call per detail fetch, no
+  data ever); removing it is a separate decision.
+- **The agency basic-list row carries internal and personal data**
+  (`yacht_admin_email`, `yacht_admin_phone`, `captain`, `crew_profiles`,
+  `notes`, `rate_det` and more). Rule: read only `builder`, `length_metric`
+  and `summer_base_port` from it (`factsFromBasic()`), never persist, cache
+  or log a row whole, and never let any of it reach a per-yacht record, a
+  published snapshot or a client-facing response. The list row from
+  `type=list` and the brochure are the only Yachtfolio payloads the app
+  stores anything from, and only their normalised fields.
 
 ## 6. Unverified in the build session, and how to verify on first deploy
 

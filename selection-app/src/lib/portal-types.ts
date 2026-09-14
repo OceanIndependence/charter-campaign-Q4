@@ -359,7 +359,9 @@ export interface FleetEntry {
   basePort?: string;
   /** When the basic record was read for these facts; null while still to read */
   factsAt?: string | null;
-  /** Last failed attempt to read the basic record (present only while factsAt is null) */
+  /** Where the facts came from: "brochure", "list" or "detail"; absent on the retired basic-record path */
+  factsSource?: "brochure" | "list" | "detail" | null;
+  /** Last failed attempt to read the facts (present only while factsAt is null) */
   factsTriedAt?: string | null;
 }
 

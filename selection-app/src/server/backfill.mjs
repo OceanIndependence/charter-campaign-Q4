@@ -8,9 +8,11 @@
  *    yet on Sirv gets prepareYachtImages(yfId, { force: true }), at most
  *    `limit` yachts per call. It never reads fleet.json to choose yachts and
  *    deletes nothing from the Blob IMAGES store.
- *  - backfillFacts: picker facts (builder, length, base port) for listed
- *    yachts that have none yet, at most `limit` per call — the same gap fill
- *    the nightly run does from its leftover budget, without waiting for it.
+ *  - backfillFacts: picker facts (builder, length, base port) from the
+ *    brochure for listed yachts that have none yet, at most `limit` per call
+ *    — the same gap fill the nightly run does from its leftover budget,
+ *    without waiting for it. A batch in which every brochure failed is
+ *    reported as an error (HTTP 502 from the route).
  */
 
 import { inUseYachtIds } from "./in-use.mjs";
@@ -20,7 +22,7 @@ import { prepareYachtImages } from "./image-store/sirv-pipeline.mjs";
 import { sirvOps } from "./image-store/sirv-client.mjs";
 import { isRateLimitError, redact, yachtfolioOps } from "./yachtfolio/client.mjs";
 import { fetchFleetSnapshot, persistFleet, storageFailure } from "./fleet.mjs";
-import { fillFactsGaps } from "./nightly.mjs";
+import { TIME_BUDGET_MS, fillFactsGaps } from "./nightly.mjs";
 
 export const DEFAULT_SIRV_BATCH = 10;
 export const DEFAULT_FACTS_BATCH = 100;
@@ -88,14 +90,16 @@ export async function backfillSirv({ limit = DEFAULT_SIRV_BATCH } = {}) {
 }
 
 export async function backfillFacts({ limit = DEFAULT_FACTS_BATCH, debug = false } = {}) {
+  const startedAt = Date.now();
   const yfBefore = yachtfolioOps().total;
   const snapshot = await fetchFleetSnapshot();
   const cap = Math.max(0, Number(limit) || DEFAULT_FACTS_BATCH);
-  // Budget: the one basic-list call plus two calls per yacht, since a record
-  // that fails is retried once by the client before it counts as failed.
-  const facts = await fillFactsGaps(snapshot, { cap, budget: cap * 2 + 1, debug });
+  // Budget: two calls per yacht, since a brochure that fails is retried
+  // once by the client before it counts as failed; and the route's time
+  // limit, so a large limit stops cleanly instead of being cut off.
+  const facts = await fillFactsGaps(snapshot, { cap, budget: cap * 2, deadline: startedAt + TIME_BUDGET_MS, debug });
   const sync = await persistFleet(snapshot);
-  const out = { ...facts, fleetWritten: sync.fleetWritten, yachtfolioCalls: yachtfolioOps().total - yfBefore, blob: sync.blob };
-  console.log(`[backfill-facts] filled ${facts.filled}, remaining ${facts.remaining}${facts.curtailed ? " (curtailed by a Yachtfolio rate limit)" : ""}; fleet.json ${sync.fleetWritten ? "written" : "unchanged"}; Yachtfolio calls ${out.yachtfolioCalls}`);
+  const out = { ...facts, fleetWritten: sync.fleetWritten, yachtfolioCalls: yachtfolioOps().total - yfBefore, elapsedMs: Date.now() - startedAt, blob: sync.blob };
+  console.log(`[backfill-facts] filled ${facts.filled} (${facts.recordsFetched} brochures, ${facts.recordsFailed} failed), remaining ${facts.remaining}${facts.curtailed ? " (curtailed by a Yachtfolio rate limit)" : ""}${facts.timedOut ? " (time budget reached)" : ""}; fleet.json ${sync.fleetWritten ? "written" : "unchanged"}; Yachtfolio calls ${out.yachtfolioCalls}${facts.error ? `; ERROR ${facts.error}` : ""}`);
   return out;
 }

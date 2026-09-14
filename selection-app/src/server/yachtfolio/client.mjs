@@ -93,12 +93,16 @@ export async function apiGet(passkey, script, params) {
   const label = `${script}?${redact(url.searchParams.toString(), passkey).replace(/passkey=[^&]*/, "passkey=…")}`;
 
   let lastError;
+  let lastStatus = null;
+  let lastRaw = "";
   let limited = 0;
   for (let attempt = 1; attempt <= 2; attempt++) {
     try {
       ops.api += 1;
       const res = await fetch(url);
       const raw = await res.text();
+      lastStatus = res.status;
+      lastRaw = raw;
       let json = null;
       try {
         json = JSON.parse(raw);
@@ -127,7 +131,13 @@ export async function apiGet(passkey, script, params) {
       }
     }
   }
-  throw new Error(`${label} failed twice: ${redact(String(lastError?.message ?? lastError), passkey)}`);
+  // The wire evidence rides on the error so a diagnostic can report the
+  // status and (redacted) body Yachtfolio answered with.
+  throw Object.assign(new Error(`${label} failed twice: ${redact(String(lastError?.message ?? lastError), passkey)}`), {
+    status: lastStatus,
+    url: label,
+    raw: redact(lastRaw, passkey),
+  });
 }
 
 /**
