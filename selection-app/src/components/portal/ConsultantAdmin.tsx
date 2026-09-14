@@ -84,9 +84,14 @@ export default function ConsultantAdmin() {
             phone and WhatsApp numbers stay with each consultant on their profile.
           </p>
         </div>
-        <button type="button" className={styles.publishBtn} onClick={() => setAdding((a) => !a)}>
-          {adding ? "CANCEL" : "ADD CONSULTANT"}
-        </button>
+        <span style={{ display: "flex", gap: 12 }}>
+          <a href="/portal/admin/import-consultants" className={styles.previewBtn}>
+            IMPORT SEED LIST
+          </a>
+          <button type="button" className={styles.publishBtn} onClick={() => setAdding((a) => !a)}>
+            {adding ? "CANCEL" : "ADD CONSULTANT"}
+          </button>
+        </span>
       </div>
 
       {error && <p className={styles.dashError}>{error}</p>}

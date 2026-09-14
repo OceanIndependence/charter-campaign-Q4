@@ -25,8 +25,9 @@ admin screen and the admin-created record.
 
 ## A seeded consultant
 
-Record created by the one-off import from `data/consultants-seed.csv`
-(`source: "csv"`), claimed at first sign-in by email.
+Record created by the seed import (`source: "csv"`), run from the button
+at `/portal/admin/import-consultants` against the app's own Blob store,
+and claimed at first sign-in by email.
 
 The client page shows, in the existing type scale and spacing of the block:
 

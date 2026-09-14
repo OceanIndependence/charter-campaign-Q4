@@ -96,16 +96,20 @@ adaptations, the destination ids and a sample page config.
 Consultants are records at `consultants/<id>.json` in the private DATA store
 (same pattern as the per-yacht records), with a summary index at
 `consultants/index.json` for look-ups by email or Entra object ID. The
-initial set comes from `data/consultants-seed.csv`, imported once by hand:
+initial set comes from `data/consultants-seed.csv`, the editable source in
+the repo. A build step (`prebuild`, also `npm run consultants:seed:build`)
+compiles it into the committed module `src/data/consultants-seed.ts`, so the
+deployed app never reads the CSV from disk. Edit the CSV, regenerate, commit
+both.
 
-```
-npm run consultants:import                  # import; skips emails that already have a record
-npm run consultants:import -- --dry-run     # read and HEAD-check photos, write nothing
-npm run consultants:import -- --rebuild-index
-```
-
-The import never updates or deletes an existing record and never runs on
-build or deploy. Each run writes `docs/consultants-import-report.md`.
+The import runs inside the deployed app: `/portal/admin/import-consultants`
+has one button, guarded server-side by `PORTAL_ACCESS_KEY` (closed when the
+key is unset; to move behind `PORTAL_ADMIN_EMAILS` once Microsoft sign-in
+lands). It writes to the same Blob store the app already uses and shows how
+many records were created, how many rows were skipped, and which photos did
+not resolve. It skips any email that already has a record, never updates or
+deletes, and is safe to press again. `npm run consultants:import` is a local
+test harness that calls the same function.
 
 On each portal request the signed-in identity is resolved to its record in
 `src/server/consultant-session.ts`: matched on Entra object ID, then on

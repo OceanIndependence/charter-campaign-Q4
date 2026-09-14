@@ -1,5 +1,7 @@
 # Consultant seed import report
 
+> Local test run only. The deployed store is seeded from the portal at `/portal/admin/import-consultants`, which runs the same import function and shows its own outcome on screen. This file is rewritten by `npm run consultants:import` and records the last local run.
+
 Run on 14 September 2026 at 14:59:07 UTC by `npm run consultants:import`.
 Storage backend: filesystem. Source: `data/consultants-seed.csv` (20 rows).
 
