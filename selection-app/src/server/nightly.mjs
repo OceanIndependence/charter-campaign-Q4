@@ -18,7 +18,7 @@
  * storage failure is reported so the cron answers 503.
  */
 
-import { REQUEST_DELAY_MS, fetchBasicList, fetchBasicRecord, isRateLimitError, redact, sleep, yachtfolioOps } from "./yachtfolio/client.mjs";
+import { REQUEST_DELAY_MS, fetchBasicList, fetchBasicRecordDetailed, isRateLimitError, redact, sleep, yachtfolioOps } from "./yachtfolio/client.mjs";
 import { applyFacts, factsFromBasic, fetchFleetSnapshot, getYachtDetail, hasFacts, persistFleet, recordFacts, recordFactsAttempt, storageFailure } from "./fleet.mjs";
 import { inUseYachtIds } from "./in-use.mjs";
 import { readYachtRecord } from "./yacht-records.mjs";
@@ -46,13 +46,16 @@ const MIN_CALLS_PER_YACHT = 2;
  * { filled, fromList, recordsFetched, recordsFailed, offListIgnored,
  * remaining, curtailed }.
  */
-export async function fillFactsGaps(snapshot, { cap = FACTS_PER_RUN, budget = CALL_BUDGET } = {}) {
+export async function fillFactsGaps(snapshot, { cap = FACTS_PER_RUN, budget = CALL_BUDGET, debug = false } = {}) {
   const { passkey, list, facts } = snapshot;
   const listed = new Set(list.map((y) => y.id));
   const pending = () => list.filter((y) => !facts.get(y.id)?.factsAt);
   const before = yachtfolioOps().total;
   const used = () => yachtfolioOps().total - before;
-  const out = { filled: 0, fromList: 0, recordsFetched: 0, recordsFailed: 0, offListIgnored: 0, remaining: pending().length, curtailed: false };
+  // firstFailure: what Yachtfolio answered for the first record that could
+  // not be used (status, redacted URL, message; the body only with debug).
+  const out = { filled: 0, fromList: 0, recordsFetched: 0, recordsFailed: 0, offListIgnored: 0, remaining: pending().length, curtailed: false, firstFailure: null };
+  if (debug) out.debug = { basicList: null };
   const fill = (id, f) => {
     const hadFacts = Boolean(facts.get(id)?.factsAt);
     if (recordFacts(facts, id, f)) snapshot.factsAdded += 1;
@@ -62,6 +65,23 @@ export async function fillFactsGaps(snapshot, { cap = FACTS_PER_RUN, budget = CA
   if (!out.remaining || budget < 1 || cap < 1) return out;
   try {
     const rows = await fetchBasicList(passkey);
+    if (debug) {
+      // Field-name check for the agency rows: which keys they carry and what
+      // any builder- or length-like key holds on the first row (no other values).
+      const first = rows.find((r) => r && typeof r === "object") ?? null;
+      const pick = (re) => Object.fromEntries(Object.entries(first ?? {}).filter(([k]) => re.test(k)));
+      const ids = rows.map((r) => Number(r?.id_yacht ?? r?.yacht_id ?? r?.id)).filter(Number.isFinite);
+      out.debug.basicList = {
+        rows: rows.length,
+        listedRows: ids.filter((id) => listed.has(id)).length,
+        offListIds: ids.filter((id) => !listed.has(id)),
+        firstRowKeys: Object.keys(first ?? {}),
+        firstRowId: first ? Number(first.id_yacht ?? first.yacht_id ?? first.id) : null,
+        builderLike: pick(/build|brand|shipyard|yard|manufact/i),
+        lengthLike: pick(/length|loa/i),
+        portLike: pick(/port|base/i),
+      };
+    }
     for (const row of rows) {
       const id = Number(row?.id_yacht ?? row?.yacht_id ?? row?.id);
       if (!Number.isFinite(id)) continue;
@@ -79,17 +99,29 @@ export async function fillFactsGaps(snapshot, { cap = FACTS_PER_RUN, budget = CA
     for (const y of queue) {
       if (out.recordsFetched + out.recordsFailed >= cap || used() + 1 > budget) break;
       await sleep(REQUEST_DELAY_MS);
+      let wire = null;
       try {
-        const row = await fetchBasicRecord(passkey, y.id);
-        if (!row) throw new Error("no basic record returned");
-        fill(y.id, factsFromBasic(row));
+        wire = await fetchBasicRecordDetailed(passkey, y.id);
+        if (!wire.row) throw new Error("no basic record returned");
+        fill(y.id, factsFromBasic(wire.row));
         out.recordsFetched += 1;
       } catch (err) {
         if (isRateLimitError(err)) throw err;
         recordFactsAttempt(facts, y.id);
         snapshot.factsAdded += 1;
         out.recordsFailed += 1;
-        console.warn(`[nightly] basic record for ${y.id} failed: ${redact(String(err?.message ?? err), passkey)}`);
+        const message = redact(String(err?.message ?? err), passkey);
+        console.warn(`[nightly] basic record for ${y.id} failed: ${message}`);
+        if (!out.firstFailure) {
+          out.firstFailure = {
+            yfId: y.id,
+            name: y.name,
+            status: wire?.status ?? null,
+            url: wire?.url ?? `api_basic.cgi?type=yachts&id_yacht=${y.id}&passkey=…`,
+            error: message,
+            ...(debug ? { body: redact(String(wire?.raw ?? ""), passkey).slice(0, 500) } : {}),
+          };
+        }
       }
     }
   } catch (err) {

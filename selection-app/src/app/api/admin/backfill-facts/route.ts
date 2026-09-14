@@ -17,8 +17,11 @@ export async function POST(request: NextRequest) {
   const denied = requireCronSecret(request);
   if (denied) return denied;
   const limit = Number.parseInt(request.nextUrl.searchParams.get("limit") ?? "", 10);
+  // ?debug=1 adds the first failing record's response body (passkey
+  // redacted) and a field-name check of the agency basic-list rows.
+  const debug = request.nextUrl.searchParams.get("debug") === "1";
   try {
-    return NextResponse.json(await backfillFacts({ limit: Number.isInteger(limit) && limit > 0 ? limit : undefined }));
+    return NextResponse.json(await backfillFacts({ limit: Number.isInteger(limit) && limit > 0 ? limit : undefined, debug }));
   } catch (err) {
     const code = (err as { code?: string })?.code;
     if (code === "STORAGE") noteStorageError("backfill-facts", err);

@@ -87,13 +87,13 @@ export async function backfillSirv({ limit = DEFAULT_SIRV_BATCH } = {}) {
   return out;
 }
 
-export async function backfillFacts({ limit = DEFAULT_FACTS_BATCH } = {}) {
+export async function backfillFacts({ limit = DEFAULT_FACTS_BATCH, debug = false } = {}) {
   const yfBefore = yachtfolioOps().total;
   const snapshot = await fetchFleetSnapshot();
   const cap = Math.max(0, Number(limit) || DEFAULT_FACTS_BATCH);
   // Budget: the one basic-list call plus two calls per yacht, since a record
   // that fails is retried once by the client before it counts as failed.
-  const facts = await fillFactsGaps(snapshot, { cap, budget: cap * 2 + 1 });
+  const facts = await fillFactsGaps(snapshot, { cap, budget: cap * 2 + 1, debug });
   const sync = await persistFleet(snapshot);
   const out = { ...facts, fleetWritten: sync.fleetWritten, yachtfolioCalls: yachtfolioOps().total - yfBefore, blob: sync.blob };
   console.log(`[backfill-facts] filled ${facts.filled}, remaining ${facts.remaining}${facts.curtailed ? " (curtailed by a Yachtfolio rate limit)" : ""}; fleet.json ${sync.fleetWritten ? "written" : "unchanged"}; Yachtfolio calls ${out.yachtfolioCalls}`);

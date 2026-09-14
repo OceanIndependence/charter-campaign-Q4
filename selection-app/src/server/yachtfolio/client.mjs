@@ -117,7 +117,7 @@ export async function apiGet(passkey, script, params) {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       if (json === null) throw new Error("response was not JSON");
       if (errors.length > 0) throw new Error(`API errors: ${errors.join("; ")}`);
-      return { json, raw };
+      return { json, raw, status: res.status, url: label };
     } catch (err) {
       if (isRateLimitError(err)) throw err;
       lastError = err;
@@ -187,6 +187,15 @@ export function fetchBrochure(passkey, yfId) {
 
 /** Fetch one yacht's basic record (fallback for anything the brochure lacks). */
 export async function fetchBasicRecord(passkey, yfId) {
-  const { json } = await apiGet(passkey, "api_basic.cgi", { type: "yachts", id_yacht: yfId });
-  return Array.isArray(json.data) ? json.data[0] : json.data;
+  return (await fetchBasicRecordDetailed(passkey, yfId)).row;
+}
+
+/**
+ * The basic record with what the wire said: { row, status, url, raw } —
+ * url with the passkey redacted, raw the response body. Diagnostic use, so
+ * an empty answer can be reported with its status and body.
+ */
+export async function fetchBasicRecordDetailed(passkey, yfId) {
+  const { json, raw, status, url } = await apiGet(passkey, "api_basic.cgi", { type: "yachts", id_yacht: yfId });
+  return { row: Array.isArray(json.data) ? json.data[0] : json.data, status, url, raw };
 }
