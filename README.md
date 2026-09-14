@@ -91,6 +91,22 @@ See `selection-app/docs/tier2-build-report.md` for the modules reused, the globe
 adaptations, the destination ids and a sample page config.
 
 
+## Consultant profiles (`selection-app/`)
+
+Consultants are records at `consultants/<id>.json` in the private DATA store
+(same pattern as the per-yacht records), with a summary index at
+`consultants/index.json` for look-ups by email or Entra object ID. The
+initial set comes from `data/consultants-seed.csv`, imported once by hand:
+
+```
+npm run consultants:import                  # import; skips emails that already have a record
+npm run consultants:import -- --dry-run     # read and HEAD-check photos, write nothing
+npm run consultants:import -- --rebuild-index
+```
+
+The import never updates or deletes an existing record and never runs on
+build or deploy. Each run writes `docs/consultants-import-report.md`.
+
 ## Storage and imagery (`selection-app/`)
 
 The portal keeps two stores, deliberately separate:
