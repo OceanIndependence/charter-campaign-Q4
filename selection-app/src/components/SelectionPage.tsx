@@ -157,19 +157,22 @@ export default function SelectionPage({ config }: { config: PageConfig }) {
         />
       )}
 
-      <ConsultantBlock consultant={config.consultant} atlasUrl={config.atlasUrl} />
+      {/* Like the header, the end of the page keeps the dark theme's look on
+          both themes: the consultant block, the disclaimer and the footer
+          are one black band with the white logo. */}
+      <div className={styles.footerBand} data-theme="dark">
+        <ConsultantBlock consultant={config.consultant} atlasUrl={config.atlasUrl} />
 
-      <div className={styles.disclaimer}>
-        These vessels are offered subject to change, price change, and owners&rsquo; final approval.
+        <div className={styles.disclaimer}>
+          These vessels are offered subject to change, price change, and owners&rsquo; final approval.
+        </div>
+
+        <footer className={styles.footer}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/assets/logo-white.png" alt="Ocean Independence" className={styles.footerLogo} />
+          <span className={styles.footerTagline}>EXPLORE A WORLD OF POSSIBILITY</span>
+        </footer>
       </div>
-
-      {/* Like the header, the footer keeps the dark theme's look on both
-          themes: a black band with the white logo. */}
-      <footer className={styles.footer} data-theme="dark">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/assets/logo-white.png" alt="Ocean Independence" className={styles.footerLogo} />
-        <span className={styles.footerTagline}>EXPLORE A WORLD OF POSSIBILITY</span>
-      </footer>
     </div>
   );
 }

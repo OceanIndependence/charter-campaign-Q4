@@ -41,8 +41,13 @@
   font-weight: 500;
 }
 
-/* Light theme: the footer stays black, as on the dark theme (the band carries
-   data-theme="dark" for its tokens). */
-[data-theme="light"] .footer {
+/* Wraps the consultant block, the disclaimer and the footer: a dark band on
+   both themes (it carries data-theme="dark" for its tokens). On the dark
+   theme it is transparent over the page gradient. */
+.footerBand {
+  background: transparent;
+}
+
+[data-theme="light"] .footerBand {
   background: var(--ink);
 }
