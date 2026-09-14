@@ -94,6 +94,7 @@ export function tier2DraftToConfig(draft: Tier2Draft, slug: string, atlas: Atlas
       photoUrl: str(draft.consultant.photoUrl) ?? "",
     },
     atlasUrl: CAMPAIGN_ATLAS_URL,
+    theme: draft.theme === "light" ? "light" : "dark",
     contentSources: Object.fromEntries(
       draft.destinations.filter((d) => d.destinationId && d.atlas).map((d) => [d.destinationId as string, d.atlas!.contentSource])
     ),

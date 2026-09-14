@@ -163,9 +163,11 @@ export default function SelectionPage({ config }: { config: PageConfig }) {
         These vessels are offered subject to change, price change, and owners&rsquo; final approval.
       </div>
 
-      <footer className={styles.footer}>
+      {/* Like the header, the footer keeps the dark theme's look on both
+          themes: a black band with the white logo. */}
+      <footer className={styles.footer} data-theme="dark">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={theme === "light" ? "/assets/logo-black.png" : "/assets/logo-white.png"} alt="Ocean Independence" className={styles.footerLogo} />
+        <img src="/assets/logo-white.png" alt="Ocean Independence" className={styles.footerLogo} />
         <span className={styles.footerTagline}>EXPLORE A WORLD OF POSSIBILITY</span>
       </footer>
     </div>

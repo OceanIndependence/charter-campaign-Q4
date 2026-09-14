@@ -182,6 +182,8 @@ export interface AtlasPageConfig {
   consultant: Consultant;
   /** The public Tier 1 page */
   atlasUrl: string;
+  /** Colour theme; absent means dark (pages published before the light theme existed) */
+  theme?: PageTheme;
   /** Diagnostic: which destinations resolved from the live website vs the snapshot */
   contentSources?: Record<string, "live" | "cache">;
 }

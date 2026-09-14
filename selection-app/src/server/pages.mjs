@@ -179,6 +179,7 @@ function emptyTier2Draft(identity) {
     introNote: "",
     seasonNote: null,
     footerDisclaimer: TIER2_DISCLAIMER,
+    theme: "dark",
     destinations: [emptyDestination(), emptyDestination(), emptyDestination()],
     yachts: [],
     consultant: consultantOf(identity),

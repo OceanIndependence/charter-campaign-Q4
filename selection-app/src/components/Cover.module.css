@@ -75,3 +75,9 @@
 [data-theme="light"] .eyebrow {
   color: var(--fg-6);
 }
+
+/* Light theme: the header stays black, as on the dark theme. The band carries
+   data-theme="dark" so its label and hairline use the dark tokens. */
+[data-theme="light"] .header {
+  background: var(--ink);
+}

@@ -40,3 +40,9 @@
   color: var(--fg-35);
   font-weight: 500;
 }
+
+/* Light theme: the footer stays black, as on the dark theme (the band carries
+   data-theme="dark" for its tokens). */
+[data-theme="light"] .footer {
+  background: var(--ink);
+}

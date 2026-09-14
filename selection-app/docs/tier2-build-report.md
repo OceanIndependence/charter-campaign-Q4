@@ -222,6 +222,7 @@ rate plus APA, both computed by `mapDraftYacht`.
     "photoUrl": "/assets/demo/lucy-photo.jpg"
   },
   "atlasUrl": "/2027-charter-season",
+  "theme": "dark",
   "contentSources": {
     "mediterranean/italy/amalfi-coast": "cache",
     "mediterranean/italy/sardinia": "cache",

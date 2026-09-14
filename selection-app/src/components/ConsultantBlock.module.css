@@ -96,3 +96,8 @@
 [data-theme="light"] .exploreLink:hover {
   color: var(--fg);
 }
+
+/* As a dark band inside a light page (Tier 2) the block keeps the mint hover. */
+[data-theme="dark"] .exploreLink:hover {
+  color: var(--mint);
+}

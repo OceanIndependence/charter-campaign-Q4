@@ -36,9 +36,13 @@
   font-display: swap;
 }
 
-:root {
+:root,
+[data-theme="dark"] {
   /* OI design tokens — dark theme (default). The light theme overrides the
-     surface/ink tokens under [data-theme="light"]; mint is #A7E6D7 in both. */
+     surface/ink tokens under [data-theme="light"]; mint is #A7E6D7 in both.
+     The same set is declared on [data-theme="dark"] so a band inside a light
+     page (the header, the consultant block, the globe stage) can be marked
+     dark and pick the dark tokens back up. */
   --ink: #04080a;
   --ink-lift: #0a1214;
   /* Tier 1 atlas page ground (the globe sits on a slightly lifted black) */
@@ -99,6 +103,11 @@
   --btn-fg: #ffffff;
   --btn-hover-bg: #ffffff;
   --btn-hover-fg: #000000;
+
+  /* Re-resolve the text colour at a theme boundary: `color` inherits as a
+     computed value, so a dark band inside a light page would otherwise keep
+     the page's ink. */
+  color: var(--fg);
 }
 
 [data-theme="light"] {
@@ -108,6 +117,8 @@
   --page-base: #fafaf8;
   --page-bg: #fafaf8;
   --surface: #ffffff;
+  /* Tier 2 destination panel and yacht drawer */
+  --panel: #ffffff;
   --overlay-bg: rgba(250, 250, 248, 0.98);
   --bar-shadow: 0 12px 40px rgba(29, 29, 29, 0.15);
   --scroll-track: #ededeb;
@@ -144,6 +155,8 @@
   --btn-fg: #1d1d1d;
   --btn-hover-bg: #1d1d1d;
   --btn-hover-fg: #ffffff;
+
+  color: var(--fg);
 }
 
 *,
@@ -175,6 +188,10 @@ a:hover {
 }
 [data-theme="light"] a:hover {
   color: var(--fg);
+}
+/* A dark band inside a light page keeps the mint hover. */
+[data-theme="dark"] a:hover {
+  color: var(--mint);
 }
 
 button {

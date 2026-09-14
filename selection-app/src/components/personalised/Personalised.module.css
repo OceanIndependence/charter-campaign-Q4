@@ -1,6 +1,12 @@
 /* Tier 2 — Personalised Atlas. Values from the Tier 2 design export
    (personalised-atlas/index.html) on the shared dark tokens (globals.css):
-   ground #060809, panel #0B0E10, hairline rgba(255,255,255,0.14), mint. */
+   ground #060809, panel #0B0E10, hairline rgba(255,255,255,0.14), mint.
+
+   The light theme (the Tier 3 light palette: #FAFAF8 ground, white surfaces,
+   #1D1D1D ink, #555759 grey, mint accents replaced by ink) is a set of
+   [data-theme="light"] overrides at the end of the file. The header, the
+   globe stage and the consultant block are data-theme="dark" bands and keep
+   the dark look on both themes. */
 
 .page {
   min-height: 100svh;
@@ -620,6 +626,11 @@
 
 /* ------------------------------------------------------------ disclaimer */
 
+/* Wraps the consultant block and the disclaimer: a dark band on both themes. */
+.footerBand {
+  background: transparent;
+}
+
 .disclaimer {
   border-top: 1px solid var(--hairline);
   padding: 22px clamp(24px, 6vw, 72px) 32px;
@@ -628,6 +639,71 @@
   letter-spacing: 0.14em;
   color: var(--fg-4);
   line-height: 1.8;
+}
+
+/* ----------------------------------------------------------- light theme */
+
+/* The page ground; the header, stage and footer bands below stay black. */
+[data-theme="light"] .page {
+  background: var(--page-bg);
+}
+
+[data-theme="light"] .header,
+[data-theme="light"] .footerBand {
+  background: var(--ink);
+}
+
+/* The globe is drawn for a dark ground (ocean #10171A, mint halo, white pin
+   labels) and covers the stage at the resting zoom, so the stage keeps the
+   dark ground and the dark tokens for the hint and zoom control. The
+   destination panel that slides over it carries the page theme. */
+[data-theme="light"] .stage {
+  background: var(--atlas-ink);
+}
+
+/* Mint accents read in ink on the light page, as on Tier 3. */
+[data-theme="light"] .tabActive {
+  border-bottom-color: var(--fg);
+}
+
+[data-theme="light"] .deck {
+  color: var(--fg-6);
+}
+
+[data-theme="light"] .attributionMint,
+[data-theme="light"] .textLink:hover,
+[data-theme="light"] .cardRate {
+  color: var(--fg);
+}
+
+[data-theme="light"] .note {
+  border-left-color: var(--fg-3);
+}
+
+[data-theme="light"] .panelClose:hover,
+[data-theme="light"] .drawerClose:hover {
+  border-color: var(--fg);
+}
+
+[data-theme="light"] .railNavBtn:hover:not(:disabled) {
+  border-color: var(--fg);
+  background: var(--fg-05);
+}
+
+/* Rail cards on white, lifted from the ground like the Tier 3 ring cards. */
+[data-theme="light"] .card {
+  background: var(--surface);
+  box-shadow: 0 8px 24px rgba(29, 29, 29, 0.06);
+}
+
+[data-theme="light"] .chipActive {
+  color: var(--fg);
+  border-color: var(--fg);
+}
+
+/* The drawer scrim: ink over the light page rather than near-black. */
+[data-theme="light"] .drawerScrim {
+  background: rgba(29, 29, 29, 0.45);
 }
 
 /* ---------------------------------------------------------------- mobile */

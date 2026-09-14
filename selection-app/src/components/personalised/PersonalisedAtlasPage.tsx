@@ -44,13 +44,18 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
   const railRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const fadeTimer = useRef<number | undefined>(undefined);
+  const theme = config.theme === "light" ? "light" : "dark";
 
+  // The page root carries the theme for its own tokens; the document root
+  // carries it too so html/body background and scrollbars follow. The
+  // header, the globe stage and the consultant block stay dark on both
+  // themes — each is its own data-theme="dark" band (Personalised.module.css).
   useEffect(() => {
-    document.documentElement.dataset.theme = "dark";
+    document.documentElement.dataset.theme = theme;
     return () => {
       delete document.documentElement.dataset.theme;
     };
-  }, []);
+  }, [theme]);
 
   /* --------------------------------------------------------------- globe */
 
@@ -243,8 +248,8 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
   const askHref = `mailto:${consultant.email}?subject=${encodeURIComponent("Summer 2027 options")}`;
 
   return (
-    <div className={styles.page} data-theme="dark">
-      <header className={styles.header}>
+    <div className={styles.page} data-theme={theme}>
+      <header className={styles.header} data-theme="dark">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/assets/logo-white.png" alt="Ocean Independence" className={styles.logo} />
         <span className={styles.headerLabel}>PERSONALISED FOR YOU</span>
@@ -280,7 +285,7 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
           })}
         </div>
 
-        <div className={`${styles.stage} ${panelOpen ? styles.stagePanelOpen : ""}`}>
+        <div className={`${styles.stage} ${panelOpen ? styles.stagePanelOpen : ""}`} data-theme="dark">
           <AtlasGlobe
             ref={globeRef}
             className={styles.globe}
@@ -305,7 +310,7 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
             </button>
           </div>
 
-          <aside className={`${styles.panel} ${panelOpen ? styles.panelOpen : ""}`} ref={panelRef} aria-hidden={!panelOpen}>
+          <aside className={`${styles.panel} ${panelOpen ? styles.panelOpen : ""}`} ref={panelRef} aria-hidden={!panelOpen} data-theme={theme}>
             <button type="button" className={styles.panelClose} onClick={closePanel} aria-label="Close and return to your three destinations">
               ✕
             </button>
@@ -419,9 +424,10 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
         </section>
       )}
 
-      <ConsultantBlock consultant={consultant} atlasUrl={config.atlasUrl} />
-
-      <div className={styles.disclaimer}>{config.footerDisclaimer}</div>
+      <div className={styles.footerBand} data-theme="dark">
+        <ConsultantBlock consultant={consultant} atlasUrl={config.atlasUrl} />
+        <div className={styles.disclaimer}>{config.footerDisclaimer}</div>
+      </div>
 
       {drawerYacht && (
         <div className={styles.drawerScrim} onClick={closeDrawer} role="presentation">

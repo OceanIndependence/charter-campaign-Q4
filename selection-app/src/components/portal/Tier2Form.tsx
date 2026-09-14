@@ -751,6 +751,28 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                 onChange={(e) => update((d) => ({ ...d, introNote: e.target.value }))}
               />
             </label>
+            <div className={`${styles.field} ${styles.fieldFull}`}>
+              <span className={styles.fieldLabel}>
+                THEME <span className={styles.fieldLabelHint}>— the client page&rsquo;s colour scheme</span>
+              </span>
+              <div className={styles.segmented} role="radiogroup" aria-label="Client page theme" style={{ justifySelf: "start" }}>
+                {(["dark", "light"] as const).map((t) => {
+                  const on = (draft.theme ?? "dark") === t;
+                  return (
+                    <button
+                      key={t}
+                      type="button"
+                      role="radio"
+                      aria-checked={on}
+                      className={`${styles.segment} ${on ? styles.segmentOn : ""}`}
+                      onClick={() => update((d) => ({ ...d, theme: t }))}
+                    >
+                      {t.toUpperCase()}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </section>
         {/* 02 — DESTINATIONS */}

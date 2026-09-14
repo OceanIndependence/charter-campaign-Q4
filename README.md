@@ -84,6 +84,9 @@ with the Tier 3 Yachtfolio, image, publishing and auth modules; nothing is dupli
   (live from the website where it answers, else the checked-in snapshot); each block
   records whether it is Atlas text or the consultant's edit, and the page labels it.
 - Published pages freeze destination content, pins and yacht data at publish time.
+- Like Tier 3, the page has a dark theme (the default) and a light theme, chosen in the
+  form's THEME control. On both tiers the light theme keeps the header black; Tier 2
+  also keeps the globe stage and the consultant block black, and Tier 3 the footer.
 - Without `YACHTFOLIO_PASSKEY` the fleet is served from a six-yacht demo set, and
   `/atlas/harrington-summer-2027` renders the demo page (`DEMO_PAGES=false` disables it).
 

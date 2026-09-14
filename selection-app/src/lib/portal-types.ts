@@ -239,6 +239,8 @@ export interface Tier2Draft extends SelectionBase {
   introNote: string;
   seasonNote: SeasonNote | null;
   footerDisclaimer: string;
+  /** Client page theme; absent means dark */
+  theme?: "dark" | "light";
   /** Always three slots */
   destinations: [Tier2DestinationDraft, Tier2DestinationDraft, Tier2DestinationDraft];
   yachts: Tier2DraftYacht[];

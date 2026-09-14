@@ -14,9 +14,11 @@ export default function Cover({ config }: { config: PageConfig }) {
   const eyebrow = subHeadline && subHeadline.trim() ? subHeadline.trim() : DEFAULT_EYEBROW;
   return (
     <section className={styles.cover}>
-      <header className={styles.header}>
+      {/* The header keeps the dark theme's look on both themes: a black band
+          with the white logo (Cover.module.css paints it on the light page). */}
+      <header className={styles.header} data-theme="dark">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={config.theme === "light" ? "/assets/logo-black.png" : "/assets/logo-white.png"} alt="Ocean Independence" className={styles.logo} />
+        <img src="/assets/logo-white.png" alt="Ocean Independence" className={styles.logo} />
         <span className={styles.headerLabel}>{headerLabel}</span>
       </header>
       <div className={styles.centre}>
