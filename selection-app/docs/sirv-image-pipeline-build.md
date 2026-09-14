@@ -202,7 +202,11 @@ Test-only overrides, never set in Vercel: `SIRV_API_BASE` (mock Sirv),
    `POST /api/admin/backfill-facts?limit=100`. Roughly 2,300 basic records
    from cold (about a second each, one call each), so around 23 calls of
    100 — or leave it to the nightly gap fill of 100 a night. The picker
-   works either way; facts are only builder, length and base port.
+   works either way; facts are only builder, length and base port. Each
+   response reports `filled`, `fromList` (from the one agency basic-list
+   call), `recordsFetched`, `recordsFailed`, `offListIgnored` (basic-list
+   rows for yachts not on the charter list, never counted), `remaining`
+   and `fleetWritten`; `remaining` must fall by `filled` on every call.
 8. **Confirm with Markus** that 03:00 UTC does not overlap the existing
    Yachtfolio-to-CRM sync. The schedule is unchanged by this work, and the
    429 curtailment means an overlap degrades into a slower catch-up rather
@@ -295,7 +299,14 @@ Yachtfolio" is the way to pull a corrected photo through today.
 - **Facts for yachts not in use** live only in `fleet.json` (one write per
   night), not in per-yacht records — a record per listed yacht would cost
   2,398 Blob operations, more than a month's allowance, for yachts nobody
-  has picked.
+  has picked. `fleet.json` is written whenever facts were added in a run,
+  independently of the list's content hash (fixed 14 September 2026 after
+  the backfill was seen returning `filled: 10, remaining: 1313` on three
+  consecutive calls: agency basic-list rows for yachts not on the charter
+  list were being counted against the per-yacht limit and were never
+  persisted, so the same call repeated). A basic record that fails or
+  comes back empty is stamped `factsTriedAt` in `fleet.json` and goes to
+  the back of the queue rather than blocking it.
 
 ## 6. Unverified in the build session, and how to verify on first deploy
 

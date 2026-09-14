@@ -19,7 +19,7 @@
  */
 
 import { REQUEST_DELAY_MS, fetchBasicList, fetchBasicRecord, isRateLimitError, redact, sleep, yachtfolioOps } from "./yachtfolio/client.mjs";
-import { applyFacts, factsFromBasic, fetchFleetSnapshot, getYachtDetail, hasFacts, persistFleet, recordFacts, storageFailure } from "./fleet.mjs";
+import { applyFacts, factsFromBasic, fetchFleetSnapshot, getYachtDetail, hasFacts, persistFleet, recordFacts, recordFactsAttempt, storageFailure } from "./fleet.mjs";
 import { inUseYachtIds } from "./in-use.mjs";
 import { readYachtRecord } from "./yacht-records.mjs";
 import { getImageStore } from "./image-store/index.mjs";
@@ -37,46 +37,69 @@ const MIN_CALLS_PER_YACHT = 2;
 
 /**
  * Fill picker-facts gaps: yachts in the snapshot's list with no facts read
- * yet. One basic-list call first (it covers the agency's own yachts), then
- * one basic record per remaining yacht, oldest-listed first, up to `cap`
- * yachts and `budget` calls. Mutates the snapshot's facts. Returns
- * { filled, remaining, curtailed }.
+ * yet. One basic-list call first (it covers the agency's own yachts; rows
+ * for yachts not on the charter list are ignored and never count), then
+ * one basic record per pending yacht — least recently attempted first — up
+ * to `cap` records and `budget` calls. A record that fails or comes back
+ * empty is stamped factsTriedAt so the queue moves past it and returns to
+ * it later. Mutates the snapshot's facts and factsAdded. Returns
+ * { filled, fromList, recordsFetched, recordsFailed, offListIgnored,
+ * remaining, curtailed }.
  */
 export async function fillFactsGaps(snapshot, { cap = FACTS_PER_RUN, budget = CALL_BUDGET } = {}) {
   const { passkey, list, facts } = snapshot;
+  const listed = new Set(list.map((y) => y.id));
   const pending = () => list.filter((y) => !facts.get(y.id)?.factsAt);
   const before = yachtfolioOps().total;
   const used = () => yachtfolioOps().total - before;
-  let filled = 0;
-  let curtailed = false;
-  if (!pending().length || budget < 1 || cap < 1) return { filled, remaining: pending().length, curtailed };
+  const out = { filled: 0, fromList: 0, recordsFetched: 0, recordsFailed: 0, offListIgnored: 0, remaining: pending().length, curtailed: false };
+  const fill = (id, f) => {
+    const hadFacts = Boolean(facts.get(id)?.factsAt);
+    if (recordFacts(facts, id, f)) snapshot.factsAdded += 1;
+    if (!hadFacts) out.filled += 1;
+    return !hadFacts;
+  };
+  if (!out.remaining || budget < 1 || cap < 1) return out;
   try {
     const rows = await fetchBasicList(passkey);
     for (const row of rows) {
       const id = Number(row?.id_yacht ?? row?.yacht_id ?? row?.id);
       if (!Number.isFinite(id)) continue;
+      if (!listed.has(id)) {
+        out.offListIgnored += 1;
+        continue;
+      }
       const f = factsFromBasic(row);
-      if (hasFacts(f) && !facts.get(id)?.factsAt) filled += 1;
-      if (hasFacts(f)) recordFacts(facts, id, f);
+      if (hasFacts(f) && fill(id, f)) out.fromList += 1;
     }
-    for (const y of pending()) {
-      if (filled >= cap || used() + 1 > budget) break;
+    // Oldest attempt first, never-attempted before that; the list order
+    // (alphabetical) breaks ties, so a yacht that keeps failing does not
+    // hold the queue.
+    const queue = pending().sort((a, b) => Date.parse(facts.get(a.id)?.factsTriedAt ?? 0) - Date.parse(facts.get(b.id)?.factsTriedAt ?? 0));
+    for (const y of queue) {
+      if (out.recordsFetched + out.recordsFailed >= cap || used() + 1 > budget) break;
       await sleep(REQUEST_DELAY_MS);
       try {
-        recordFacts(facts, y.id, factsFromBasic(await fetchBasicRecord(passkey, y.id)));
-        filled += 1;
+        const row = await fetchBasicRecord(passkey, y.id);
+        if (!row) throw new Error("no basic record returned");
+        fill(y.id, factsFromBasic(row));
+        out.recordsFetched += 1;
       } catch (err) {
         if (isRateLimitError(err)) throw err;
+        recordFactsAttempt(facts, y.id);
+        snapshot.factsAdded += 1;
+        out.recordsFailed += 1;
         console.warn(`[nightly] basic record for ${y.id} failed: ${redact(String(err?.message ?? err), passkey)}`);
       }
     }
   } catch (err) {
     if (!isRateLimitError(err)) throw err;
-    curtailed = true;
+    out.curtailed = true;
     console.warn("[nightly] facts gap fill curtailed by a Yachtfolio rate limit.");
   }
   applyFacts(snapshot);
-  return { filled, remaining: pending().length, curtailed };
+  out.remaining = pending().length;
+  return out;
 }
 
 /** Candidates for tonight, oldest lastCheckedAt first. Reads every in-use record (reads are free). */
@@ -147,7 +170,7 @@ export async function runNightlySync({ maxYachts = MAX_YACHTS_PER_RUN, callBudge
         }
       }
       // The refreshed yacht's facts belong in the picker list too.
-      if (detail.facts && hasFacts(detail.facts)) recordFacts(snapshot.facts, yfId, { ...detail.facts, factsAt: detail.facts.fetchedAt });
+      if (detail.facts && hasFacts(detail.facts) && recordFacts(snapshot.facts, yfId, { ...detail.facts, factsAt: detail.facts.fetchedAt })) snapshot.factsAdded += 1;
       console.log(`[nightly] ${yfId} (${reason}): specs ${detail.blob?.yachtsWritten ? "changed" : "unchanged"}; Yachtfolio calls so far ${used()}`);
     } catch (err) {
       if (isRateLimitError(err)) {
@@ -167,7 +190,7 @@ export async function runNightlySync({ maxYachts = MAX_YACHTS_PER_RUN, callBudge
   if (curtailed) notes.push(`Yachtfolio rate limit — ${candidatesRemaining} candidate(s) left for the next run.`);
 
   // 3. Facts gaps from what is left, unless the night is already curtailed or broken.
-  let facts = { filled: 0, remaining: snapshot.list.filter((y) => !snapshot.facts.get(y.id)?.factsAt).length, curtailed: false };
+  let facts = { filled: 0, fromList: 0, recordsFetched: 0, recordsFailed: 0, offListIgnored: 0, remaining: snapshot.list.filter((y) => !snapshot.facts.get(y.id)?.factsAt).length, curtailed: false };
   if (!curtailed && !storageError) {
     const remainingBudget = callBudget - used();
     if (remainingBudget > 1) facts = await fillFactsGaps(snapshot, { cap: factsCap, budget: remainingBudget });

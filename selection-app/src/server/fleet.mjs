@@ -254,7 +254,19 @@ const sameFacts = (a, b) => a && b && a.builder === b.builder && a.lengthM === b
 export function recordFacts(facts, id, next) {
   const prev = facts.get(id);
   if (sameFacts(prev, next) && prev.factsAt) next = { ...next, factsAt: prev.factsAt };
-  facts.set(id, next);
+  const changed = !prev || !sameFacts(prev, next) || prev.factsAt !== next.factsAt;
+  facts.set(id, { ...next, factsTriedAt: null });
+  return changed;
+}
+
+/**
+ * Note a failed basic-record fetch for a listed yacht so the gap fill moves
+ * on to other yachts before coming back to it (pending yachts are tried
+ * oldest attempt first). Written to fleet.json like any other fact change.
+ */
+export function recordFactsAttempt(facts, id, at = new Date().toISOString()) {
+  const prev = facts.get(id) ?? { builder: "", lengthM: null, basePort: "", factsAt: null };
+  facts.set(id, { ...prev, factsTriedAt: at });
 }
 
 /** The headline fields the nightly diff compares per yacht. */
@@ -288,8 +300,8 @@ export async function fetchFleetSnapshot() {
 
   const facts = new Map();
   for (const y of previous?.yachts ?? []) {
-    const f = { builder: y.builder ?? "", lengthM: y.lengthM ?? null, basePort: y.basePort ?? "", factsAt: y.factsAt ?? null };
-    if (hasFacts(f) || f.factsAt) facts.set(y.id, f);
+    const f = { builder: y.builder ?? "", lengthM: y.lengthM ?? null, basePort: y.basePort ?? "", factsAt: y.factsAt ?? null, factsTriedAt: y.factsTriedAt ?? null };
+    if (hasFacts(f) || f.factsAt || f.factsTriedAt) facts.set(y.id, f);
   }
   // A corrected builder or length in the list response is picked up here
   // without a call; the per-yacht follow-up is only for rows without them.
@@ -314,33 +326,36 @@ export async function fetchFleetSnapshot() {
     }
   }
   const previousById = new Map((previous?.yachts ?? []).map((y) => [y.id, y]));
-  const yachts = list.map((y) => ({
-    id: y.id,
-    name: y.name,
-    registryPort: y.registry_port ?? "",
-    // Builder, length and summer base port let the form's picker tell two
-    // yachts of the same name apart; "" / null when Yachtfolio has none.
-    builder: facts.get(y.id)?.builder ?? "",
-    lengthM: facts.get(y.id)?.lengthM ?? null,
-    basePort: facts.get(y.id)?.basePort ?? "",
-    factsAt: facts.get(y.id)?.factsAt ?? null,
-  }));
+  const yachts = list.map((y) => fleetRow(y, facts));
   // New yachts and yachts whose headline fields changed since the last list.
   const changedIds = yachts.filter((y) => hashJson(headline(previousById.get(y.id))) !== hashJson(headline(y))).map((y) => y.id);
   const fleet = { schemaVersion: FLEET_SCHEMA_VERSION, syncedAt: new Date().toISOString(), count: list.length, yachts, removed };
-  return { run, passkey, state, previous, list, reference, facts, fleet, changedIds };
+  // factsAdded counts listed yachts whose facts changed after this point
+  // (gap fill, in-use refresh); persistFleet writes fleet.json for them
+  // whatever the content hash says.
+  return { run, passkey, state, previous, list, reference, facts, fleet, changedIds, factsAdded: 0 };
+}
+
+/** One fleet.json row: the list row plus whatever facts are known for it. */
+function fleetRow(y, facts) {
+  const f = facts.get(y.id);
+  return {
+    id: y.id,
+    name: y.name,
+    registryPort: y.registry_port ?? y.registryPort ?? "",
+    // Builder, length and summer base port let the form's picker tell two
+    // yachts of the same name apart; "" / null when Yachtfolio has none.
+    builder: f?.builder ?? "",
+    lengthM: f?.lengthM ?? null,
+    basePort: f?.basePort ?? "",
+    factsAt: f?.factsAt ?? null,
+    ...(f?.factsTriedAt && !f?.factsAt ? { factsTriedAt: f.factsTriedAt } : {}),
+  };
 }
 
 /** Rebuild fleet.yachts from the facts map after a gap fill. */
 export function applyFacts(snapshot) {
-  const { facts } = snapshot;
-  snapshot.fleet.yachts = snapshot.fleet.yachts.map((y) => ({
-    ...y,
-    builder: facts.get(y.id)?.builder ?? "",
-    lengthM: facts.get(y.id)?.lengthM ?? null,
-    basePort: facts.get(y.id)?.basePort ?? "",
-    factsAt: facts.get(y.id)?.factsAt ?? null,
-  }));
+  snapshot.fleet.yachts = snapshot.fleet.yachts.map((y) => fleetRow(y, snapshot.facts));
 }
 
 /**
@@ -357,7 +372,10 @@ export async function persistFleet(snapshot) {
   const fleetContentHash = hashJson(fleetContent);
   const next = { ...state };
   let fleetWritten = false;
-  if (fleetContentHash !== state.fleetHash) {
+  // Facts added this run are a write in their own right: the picker list is
+  // where facts for yachts nobody has picked live, and a fill that is not
+  // written is a fill that will be repeated tomorrow.
+  if (fleetContentHash !== state.fleetHash || (snapshot.factsAdded ?? 0) > 0) {
     fleetWritten = await writeStoredJson(FLEET_KEY, fleet);
     if (fleetWritten) next.fleetHash = fleetContentHash;
   }
