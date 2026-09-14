@@ -23,7 +23,7 @@
 import { fetchMedia, isRateLimitError, loadPasskey, redact, yachtfolioOps } from "../yachtfolio/client.mjs";
 import { selectGalleryImages } from "../yachtfolio/images.mjs";
 import { brochureFor, defaultSlots, galleryFileOf, mapLimit, orderWithLead, stripSecret } from "../yachtfolio/gallery.mjs";
-import { finishPreparing, isPreparingFresh, loadYachtRecord, startPreparing, writeYachtRecord } from "../yacht-records.mjs";
+import { claimImages, finishPreparing, writeYachtRecord } from "../yacht-records.mjs";
 import { noteStorageError } from "../storage.mjs";
 import { sirvConfig, sirvImageUrl } from "./index.mjs";
 import * as sirv from "./sirv-client.mjs";
@@ -119,32 +119,38 @@ async function writeRecordOrThrow(record, context) {
 }
 
 /**
- * Prepare a yacht's images on Sirv. Returns { record, claimed, stats,
- * rateLimited }: claimed is false when another caller's job is under five
- * minutes old (the current record is returned and nothing is done). With
- * `force` every position is re-downloaded and re-uploaded. A Yachtfolio
- * rate limit stops the remaining positions, leaves the record "partial"
- * and is reported as rateLimited: true so a cron run can stop cleanly.
+ * Prepare a yacht's images on Sirv: claim the record, then run. Returns
+ * { record, claimed, stats, rateLimited }: claimed is false when another
+ * caller's job is under five minutes old (the current record is returned
+ * and nothing is done). With `force` every position is re-downloaded and
+ * re-uploaded. A Yachtfolio rate limit stops the remaining positions,
+ * leaves the record "partial" and is reported as rateLimited: true so a
+ * cron run can stop cleanly.
  */
-export async function prepareYachtImages(yfId, { force = false, passkey: givenPasskey } = {}) {
+export async function prepareYachtImages(yfId, { force = false, passkey } = {}) {
+  let claim;
+  try {
+    claim = await claimImages(Number(yfId));
+  } catch (err) {
+    throw storageFailure(`claim images for yacht ${yfId}`, err);
+  }
+  if (!claim.claimed) return { record: claim.record, claimed: false, stats: null, rateLimited: false };
+  return runPreparation(yfId, { record: claim.record, force, passkey });
+}
+
+/**
+ * The work after a successful claim (the routes claim, respond, then run
+ * this in the same invocation once the response is sent). `record` must be
+ * the claimed record.
+ */
+export async function runPreparation(yfId, { record, force = false, passkey: givenPasskey }) {
   yfId = Number(yfId);
   const passkey = givenPasskey ?? (await loadPasskey([process.cwd()]));
   if (!passkey) throw new Error("YACHTFOLIO_PASSKEY is not configured on the server.");
 
-  let loaded;
-  try {
-    loaded = await loadYachtRecord(yfId);
-  } catch (err) {
-    throw storageFailure(`read record for yacht ${yfId}`, err);
-  }
-  const { record } = loaded;
-  if (isPreparingFresh(record)) return { record, claimed: false, stats: null, rateLimited: false };
-
   const yfBefore = yachtfolioOps();
   const sirvBefore = sirv.sirvOps();
   const previous = [...record.images.order].sort((a, b) => a.pos - b.pos);
-  startPreparing(record);
-  await writeRecordOrThrow(record, `write record for yacht ${yfId} (preparing)`);
 
   const stats = { positions: 0, skipped: 0, uploaded: 0, overwritten: 0, deleted: 0, failed: 0 };
   const failures = [];

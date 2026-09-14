@@ -183,3 +183,29 @@ export function finishPreparing(record, { order, failures = [], store, now = Dat
   record.images.startedAt = null;
   record.images.updatedAt = new Date(now).toISOString();
 }
+
+/**
+ * Load a yacht's record and claim its image job in one step, writing the
+ * claim so other callers see it. Returns { record, claimed, created }; when
+ * claimed is false another job under five minutes old owns the record.
+ * Storage errors propagate; the caller must not write past them.
+ */
+export async function claimImages(yfId) {
+  const { record, created } = await loadYachtRecord(yfId);
+  if (!startPreparing(record)) return { record, claimed: false, created };
+  await writeYachtRecord(record);
+  return { record, claimed: true, created };
+}
+
+/**
+ * Release a claim after a failure the pipeline could not turn into a
+ * per-position result: the previous order stays, the failure is recorded
+ * and the status becomes "partial" (or "none" when nothing was ever
+ * prepared) so the portal stops polling and can offer a retry.
+ */
+export function releaseClaim(record, error) {
+  const message = String(error?.message ?? error);
+  const order = [...record.images.order];
+  finishPreparing(record, { order, failures: [{ pos: null, yfImageId: null, category: null, error: message }], store: record.images.store });
+  if (!order.length) record.images.status = "none";
+}

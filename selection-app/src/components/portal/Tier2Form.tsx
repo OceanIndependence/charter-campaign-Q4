@@ -27,6 +27,7 @@ import FleetSelect from "./FleetSelect";
 import ImagePicker from "./ImagePicker";
 import ConfirmDialog from "./ConfirmDialog";
 import { DragGhost, DragHandle, useYachtReorder } from "./useYachtReorder";
+import { POLL_TIMEOUT_NOTE, fetchDetail, fmtUpdated, pollImages, progressLabel, readImages, refreshYacht as refreshYachtApi, staleNote, startPrepare } from "./fleetApi";
 import styles from "./PortalForm.module.css";
 
 const AUTOSAVE_MS = 2500;
@@ -109,6 +110,12 @@ interface CardFetchState {
   preparingImages: boolean;
   error: string | null;
   warnings: string[];
+  /** "Preparing images, 4 of 20" while the record is preparing */
+  progress?: string | null;
+  /** When the specifications shown were read from Yachtfolio */
+  updatedAt?: string | null;
+  /** Set when Yachtfolio could not be reached and the record's data is shown */
+  stale?: boolean;
 }
 
 interface DestFetchState {
@@ -424,32 +431,103 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
     });
   }, []);
 
+  /**
+   * The gallery and default slot images: start preparation (POST) and poll
+   * the read-only images route every three seconds while the record says
+   * "preparing", rendering thumbnails as they arrive. In "read" mode the
+   * record is read first and preparation started only if nothing has been
+   * prepared yet. Slots the consultant has edited are left alone; with
+   * onlyEmpty filled slots are too.
+   */
   const loadImages = useCallback(
-    async (uid: string, yfId: number, seq: number, onlyEmpty = false) => {
-      try {
-        const res = await fetch(`/api/fleet/${yfId}/images`);
-        const body = await res.json().catch(() => null);
-        if (fetchSeq.current.get(uid) !== seq) return;
-        if (!res.ok) throw new Error(body?.error ?? "Yachtfolio did not return this yacht's images.");
-        const imgs: FleetImages = body;
+    async (uid: string, yfId: number, seq: number, onlyEmpty = false, mode: "prepare" | "read" = "prepare") => {
+      const applyImages = (imgs: FleetImages) => {
         const dirtyNow = dirtyFields.current.get(uid) ?? new Set<AutoField>();
         const current = draftRef.current?.yachts.find((y) => y.uid === uid);
-        const patch: Partial<Tier2DraftYacht> = { gallery: imgs.gallery ?? [] };
+        const patch: Partial<Tier2DraftYacht> = {};
+        if (imgs.gallery?.length || imgs.status === "ready" || imgs.status === "partial") patch.gallery = imgs.gallery ?? [];
         for (const key of IMAGE_SLOT_KEYS) {
           const keep = dirtyNow.has(key) || (onlyEmpty && (current?.[key] ?? "").trim() !== "");
-          if (!keep) patch[key] = imgs[key] ?? "";
+          if (!keep && imgs[key]) patch[key] = imgs[key];
         }
-        setYacht(uid, patch);
+        if (Object.keys(patch).length) setYacht(uid, patch);
+        setCard(uid, { progress: imgs.status === "preparing" ? progressLabel(imgs) : null });
+      };
+      try {
+        let imgs = mode === "read" ? await readImages(yfId) : await startPrepare(yfId);
+        if (fetchSeq.current.get(uid) !== seq) return;
+        if (mode === "read" && imgs.status === "none") imgs = await startPrepare(yfId);
+        if (fetchSeq.current.get(uid) !== seq) return;
+        applyImages(imgs);
+        let final: FleetImages | null = imgs;
+        if (imgs.status === "preparing") {
+          final = await pollImages(yfId, (tick) => {
+            if (fetchSeq.current.get(uid) !== seq) return false;
+            applyImages(tick);
+            return true;
+          });
+          if (fetchSeq.current.get(uid) !== seq) return;
+        }
+        const warnings = [...(final?.warnings ?? [])];
+        if (final === null) warnings.push(POLL_TIMEOUT_NOTE);
         setCardState((s) => {
           const base = s[uid] ?? { fetching: false, preparingImages: false, error: null, warnings: [] };
-          return { ...s, [uid]: { ...base, preparingImages: false, warnings: [...base.warnings, ...(imgs.warnings ?? [])] } };
+          return { ...s, [uid]: { ...base, preparingImages: false, progress: null, warnings: [...base.warnings, ...warnings] } };
         });
       } catch (err) {
         if (fetchSeq.current.get(uid) !== seq) return;
-        setCard(uid, { preparingImages: false, error: err instanceof Error ? err.message : "Yachtfolio did not return this yacht's images." });
+        setCard(uid, { preparingImages: false, progress: null, error: err instanceof Error ? err.message : "Yachtfolio did not return this yacht's images." });
       }
     },
     [setCard, setYacht]
+  );
+
+  /** The auto-fill patch for a detail response (a pick resets every auto field). */
+  const detailPatch = useCallback((yfId: number, entryName: string, detail: FleetDetail): Partial<Tier2DraftYacht> => ({
+    yfId,
+    name: detail.name || entryName.toUpperCase(),
+    lengthM: detail.lengthM != null ? String(detail.lengthM) : "",
+    yearRefit: detail.yearRefit,
+    guests: detail.guests != null ? String(detail.guests) : "",
+    crew: detail.crew != null ? String(detail.crew) : "",
+    staterooms: detail.staterooms,
+    cruisingArea: detail.cruisingArea,
+    currency: detail.currency || "EUR",
+    keyFeatures: (detail.keyFeatures ?? []).join("\n"),
+    rateOptions: detail.rateOptions,
+    rateSeason: detail.rateSeason ?? "summer",
+    rateTier: detail.rateTier ?? "low",
+    weeklyRate: detail.weeklyRate != null ? String(detail.weeklyRate) : "",
+    weeklyRateIsFrom: detail.weeklyRateIsFrom,
+    // Pre-tick the destinations the Yachtfolio base port and operating areas point at.
+    destinationIds: mapCruisingArea(
+      [detail.cruisingArea, detail.operatingAreas].filter(Boolean).join(", "),
+      draftRef.current?.destinations ?? []
+    ),
+  }), []);
+
+  /** Refresh from Yachtfolio: specifications now, then every image re-prepared. */
+  const refreshYacht = useCallback(
+    async (uid: string, yfId: number, name: string) => {
+      const seq = (fetchSeq.current.get(uid) ?? 0) + 1;
+      fetchSeq.current.set(uid, seq);
+      setCard(uid, { fetching: true, preparingImages: false, progress: null, error: null, warnings: [] });
+      try {
+        const { detail, images } = await refreshYachtApi(yfId);
+        if (fetchSeq.current.get(uid) !== seq) return;
+        const current = draftRef.current?.yachts.find((y) => y.uid === uid);
+        // Keep the consultant's destination ticks on a refresh.
+        const { destinationIds: _d, ...patch } = detailPatch(yfId, name, detail);
+        setYacht(uid, current?.destinationIds?.length ? patch : { ...patch, destinationIds: _d });
+        setCard(uid, { fetching: false, preparingImages: true, updatedAt: detail.specsFetchedAt ?? detail.fetchedAt, stale: false, warnings: detail.warnings ?? [] });
+        if (images.status === "preparing") await loadImages(uid, yfId, seq, false, "read");
+        else setCard(uid, { preparingImages: false, progress: null });
+      } catch (err) {
+        if (fetchSeq.current.get(uid) !== seq) return;
+        setCard(uid, { fetching: false, preparingImages: false, progress: null, error: err instanceof Error ? err.message : "This yacht could not be refreshed from Yachtfolio." });
+      }
+    },
+    [detailPatch, loadImages, setCard, setYacht]
   );
 
   const pickYacht = useCallback(
@@ -458,44 +536,19 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
       const seq = (fetchSeq.current.get(uid) ?? 0) + 1;
       fetchSeq.current.set(uid, seq);
       setYacht(uid, { yfId: entry.id, name: entry.name.toUpperCase() });
-      setCard(uid, { fetching: true, preparingImages: false, error: null, warnings: [] });
+      setCard(uid, { fetching: true, preparingImages: false, progress: null, error: null, warnings: [], updatedAt: null, stale: false });
       try {
-        const res = await fetch(`/api/fleet/${entry.id}`);
-        const body = await res.json().catch(() => null);
-        if (!res.ok) throw new Error(body?.error ?? "Yachtfolio did not return this yacht's details.");
+        const detail = await fetchDetail(entry.id);
         if (fetchSeq.current.get(uid) !== seq) return;
-        const detail: FleetDetail = body;
-        const patch: Partial<Tier2DraftYacht> = {
-          yfId: entry.id,
-          name: detail.name || entry.name.toUpperCase(),
-          lengthM: detail.lengthM != null ? String(detail.lengthM) : "",
-          yearRefit: detail.yearRefit,
-          guests: detail.guests != null ? String(detail.guests) : "",
-          crew: detail.crew != null ? String(detail.crew) : "",
-          staterooms: detail.staterooms,
-          cruisingArea: detail.cruisingArea,
-          currency: detail.currency || "EUR",
-          keyFeatures: (detail.keyFeatures ?? []).join("\n"),
-          rateOptions: detail.rateOptions,
-          rateSeason: detail.rateSeason ?? "summer",
-          rateTier: detail.rateTier ?? "low",
-          weeklyRate: detail.weeklyRate != null ? String(detail.weeklyRate) : "",
-          weeklyRateIsFrom: detail.weeklyRateIsFrom,
-          // Pre-tick the destinations the Yachtfolio base port and operating areas point at.
-          destinationIds: mapCruisingArea(
-            [detail.cruisingArea, detail.operatingAreas].filter(Boolean).join(", "),
-            draftRef.current?.destinations ?? []
-          ),
-        };
-        setYacht(uid, patch);
-        setCard(uid, { fetching: false, preparingImages: true, error: null, warnings: detail.warnings ?? [] });
+        setYacht(uid, detailPatch(entry.id, entry.name, detail));
+        setCard(uid, { fetching: false, preparingImages: true, error: null, warnings: detail.warnings ?? [], updatedAt: detail.specsFetchedAt ?? detail.fetchedAt, stale: Boolean(detail.stale) });
         await loadImages(uid, entry.id, seq);
       } catch (err) {
         if (fetchSeq.current.get(uid) !== seq) return;
         setCard(uid, { fetching: false, error: err instanceof Error ? err.message : "Yachtfolio did not return this yacht's details." });
       }
     },
-    [loadImages, setCard, setYacht]
+    [detailPatch, loadImages, setCard, setYacht]
   );
 
   // Heal yachts saved before their images arrived.
@@ -508,7 +561,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
         const seq = (fetchSeq.current.get(y.uid) ?? 0) + 1;
         fetchSeq.current.set(y.uid, seq);
         setCard(y.uid, { preparingImages: true });
-        void loadImages(y.uid, y.yfId, seq, true);
+        void loadImages(y.uid, y.yfId, seq, true, "read");
       }
     }
   }, [draft, loadImages, setCard]);
@@ -964,7 +1017,9 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                       {(fetching || preparing) && (
                         <span className={styles.headerNote} aria-live="polite">
                           {" "}
-                          {fetching ? "Fetching" : "Preparing"} {y.name.trim() ? y.name.trim().toUpperCase() : "this yacht"}&rsquo;s {fetching ? "details…" : "images…"}
+                          {fetching
+                            ? `Fetching ${y.name.trim() ? y.name.trim().toUpperCase() : "this yacht"}’s details…`
+                            : card.progress ?? `Preparing ${y.name.trim() ? y.name.trim().toUpperCase() : "this yacht"}’s images…`}
                         </span>
                       )}
                     </span>
@@ -1140,6 +1195,26 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                           onExpand={(url, label) => setLightbox({ url, label })}
                         />
                       </div>
+                      {y.yfId != null && (
+                        <div className={styles.metaRow}>
+                          <span className={styles.updatedLine}>
+                            {card.stale
+                              ? <span className={styles.staleNote}>{staleNote(card.updatedAt)}</span>
+                              : card.updatedAt
+                                ? `Updated ${fmtUpdated(card.updatedAt)}`
+                                : ""}
+                          </span>
+                          <button
+                            type="button"
+                            className={styles.retryBtn}
+                            disabled={fetching || preparing}
+                            title="Fetch this yacht's details and images from Yachtfolio again"
+                            onClick={() => refreshYacht(y.uid, y.yfId as number, y.name)}
+                          >
+                            REFRESH FROM YACHTFOLIO
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>

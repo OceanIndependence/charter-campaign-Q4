@@ -17,6 +17,7 @@ import FleetSelect from "./FleetSelect";
 import ImagePicker from "./ImagePicker";
 import ConfirmDialog from "./ConfirmDialog";
 import { DragGhost, DragHandle, useYachtReorder } from "./useYachtReorder";
+import { POLL_TIMEOUT_NOTE, fetchDetail, fmtUpdated, pollImages, progressLabel, readImages, refreshYacht as refreshYachtApi, staleNote, startPrepare } from "./fleetApi";
 import styles from "./PortalForm.module.css";
 
 const MAX_YACHTS = 10;
@@ -95,6 +96,12 @@ interface CardFetchState {
   error: string | null;
   warnings: string[];
   lastEntry: FleetEntry | null;
+  /** "Preparing images, 4 of 20" while the record is preparing */
+  progress?: string | null;
+  /** When the specifications shown were read from Yachtfolio */
+  updatedAt?: string | null;
+  /** Set when Yachtfolio could not be reached and the record's data is shown */
+  stale?: boolean;
 }
 
 export default function PortalForm({ selectionId }: { selectionId: string }) {
@@ -354,38 +361,109 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
 
   /**
    * Second, slower half of a pick: the prepared gallery and default slot
-   * images. Slots the consultant has edited are left alone; with onlyEmpty
-   * (healing a draft saved before its images arrived) filled slots are too.
+   * images. Starts preparation (POST) and polls the read-only images route
+   * every three seconds while the record says "preparing", rendering
+   * thumbnails as they arrive; the consultant may keep editing throughout.
+   * Slots the consultant has edited are left alone; with onlyEmpty (healing a
+   * draft saved before its images arrived) filled slots are too. In "read"
+   * mode the record is read first and preparation started only if nothing
+   * has been prepared yet.
    */
   const loadImages = useCallback(
-    async (uid: string, yfId: number, seq: number, onlyEmpty = false) => {
-      try {
-        const res = await fetch(`/api/fleet/${yfId}/images`);
-        const body = await res.json().catch(() => null);
-        if (fetchSeq.current.get(uid) !== seq) return;
-        if (!res.ok) throw new Error(body?.error ?? "Yachtfolio did not return this yacht's images.");
-        const imgs: FleetImages = body;
+    async (uid: string, yfId: number, seq: number, onlyEmpty = false, mode: "prepare" | "read" = "prepare") => {
+      const applyImages = (imgs: FleetImages) => {
         const dirtyNow = dirtyFields.current.get(uid) ?? new Set<AutoField>();
         const current = draftRef.current?.yachts.find((y) => y.uid === uid);
-        const patch: Partial<DraftYacht> = { gallery: imgs.gallery ?? [] };
+        const patch: Partial<DraftYacht> = {};
+        if (imgs.gallery?.length || imgs.status === "ready" || imgs.status === "partial") patch.gallery = imgs.gallery ?? [];
         for (const key of IMAGE_SLOT_KEYS) {
           const keep = dirtyNow.has(key) || (onlyEmpty && (current?.[key] ?? "").trim() !== "");
-          if (!keep) patch[key] = imgs[key] ?? "";
+          if (!keep && imgs[key]) patch[key] = imgs[key];
         }
-        setYacht(uid, patch);
+        if (Object.keys(patch).length) setYacht(uid, patch);
+        setCard(uid, { progress: imgs.status === "preparing" ? progressLabel(imgs) : null });
+      };
+      try {
+        let imgs = mode === "read" ? await readImages(yfId) : await startPrepare(yfId);
+        if (fetchSeq.current.get(uid) !== seq) return;
+        if (mode === "read" && imgs.status === "none") imgs = await startPrepare(yfId);
+        if (fetchSeq.current.get(uid) !== seq) return;
+        applyImages(imgs);
+        let final: FleetImages | null = imgs;
+        if (imgs.status === "preparing") {
+          final = await pollImages(yfId, (tick) => {
+            if (fetchSeq.current.get(uid) !== seq) return false;
+            applyImages(tick);
+            return true;
+          });
+          if (fetchSeq.current.get(uid) !== seq) return;
+        }
+        const warnings = [...(final?.warnings ?? [])];
+        if (final === null) warnings.push(POLL_TIMEOUT_NOTE);
         setCardState((s) => {
           const base = s[uid] ?? { fetching: false, preparingImages: false, error: null, warnings: [], lastEntry: null };
-          return { ...s, [uid]: { ...base, preparingImages: false, warnings: [...base.warnings, ...(imgs.warnings ?? [])] } };
+          return { ...s, [uid]: { ...base, preparingImages: false, progress: null, warnings: [...base.warnings, ...warnings] } };
         });
       } catch (err) {
         if (fetchSeq.current.get(uid) !== seq) return;
         setCard(uid, {
           preparingImages: false,
+          progress: null,
           error: err instanceof Error && err.message ? err.message : "Yachtfolio did not return this yacht's images.",
         });
       }
     },
     [setCard, setYacht]
+  );
+
+  /** The auto-fill patch for a detail response, skipping anything the consultant has edited. */
+  const detailPatch = useCallback((uid: string, yfId: number, detail: FleetDetail) => {
+    // Fields Yachtfolio does not return become empty, never a guess;
+    // notes is consultant-voice and stays untouched.
+    const dirtyNow = dirtyFields.current.get(uid) ?? new Set<AutoField>();
+    const patch: Partial<PortalDraft["yachts"][number]> = { yfId };
+    const apply = (field: AutoField, value: string) => {
+      if (!dirtyNow.has(field)) Object.assign(patch, { [field]: value });
+    };
+    if (detail.name) apply("name", detail.name);
+    apply("lengthM", detail.lengthM != null ? String(detail.lengthM) : "");
+    apply("yearRefit", detail.yearRefit);
+    apply("guests", detail.guests != null ? String(detail.guests) : "");
+    apply("crew", detail.crew != null ? String(detail.crew) : "");
+    apply("staterooms", detail.staterooms);
+    apply("cruisingArea", detail.cruisingArea);
+    apply("currency", detail.currency || "EUR");
+    apply("keyFeatures", (detail.keyFeatures ?? []).join("\n"));
+    // Rate matrix + selection reset to the default (summer / low) on a pick.
+    patch.rateOptions = detail.rateOptions;
+    patch.rateSeason = detail.rateSeason ?? "summer";
+    patch.rateTier = detail.rateTier ?? "low";
+    if (!dirtyNow.has("weeklyRate")) {
+      patch.weeklyRate = detail.weeklyRate != null ? String(detail.weeklyRate) : "";
+      patch.weeklyRateIsFrom = detail.weeklyRateIsFrom;
+    }
+    return patch;
+  }, []);
+
+  /** Refresh from Yachtfolio: specifications now, then every image re-prepared. */
+  const refreshYacht = useCallback(
+    async (uid: string, yfId: number) => {
+      const seq = (fetchSeq.current.get(uid) ?? 0) + 1;
+      fetchSeq.current.set(uid, seq);
+      setCard(uid, { fetching: true, preparingImages: false, progress: null, error: null, warnings: [] });
+      try {
+        const { detail, images } = await refreshYachtApi(yfId);
+        if (fetchSeq.current.get(uid) !== seq) return;
+        setYacht(uid, detailPatch(uid, yfId, detail));
+        setCard(uid, { fetching: false, preparingImages: true, updatedAt: detail.specsFetchedAt ?? detail.fetchedAt, stale: false, warnings: detail.warnings ?? [] });
+        if (images.status === "preparing") await loadImages(uid, yfId, seq, false, "read");
+        else setCard(uid, { preparingImages: false, progress: null });
+      } catch (err) {
+        if (fetchSeq.current.get(uid) !== seq) return;
+        setCard(uid, { fetching: false, preparingImages: false, progress: null, error: err instanceof Error && err.message ? err.message : "This yacht could not be refreshed from Yachtfolio." });
+      }
+    },
+    [detailPatch, loadImages, setCard, setYacht]
   );
 
   const pickYacht = useCallback(
@@ -406,45 +484,21 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
       fetchSeq.current.set(uid, seq);
 
       setYacht(uid, { yfId: entry.id, name: entry.name.toUpperCase() });
-      setCard(uid, { fetching: true, preparingImages: false, error: null, warnings: [], lastEntry: entry });
+      setCard(uid, { fetching: true, preparingImages: false, progress: null, error: null, warnings: [], lastEntry: entry, updatedAt: null, stale: false });
       try {
-        const res = await fetch(`/api/fleet/${entry.id}`);
-        const body = await res.json().catch(() => null);
-        if (!res.ok) {
-          throw new Error(body?.error ?? "Yachtfolio did not return this yacht's details.");
-        }
+        const detail = await fetchDetail(entry.id);
         if (fetchSeq.current.get(uid) !== seq) return; // superseded by a newer pick
-        const detail: FleetDetail = body;
-
-        // Apply fetched values, skipping anything edited while the fetch ran.
-        // Fields Yachtfolio does not return become empty, never a guess;
-        // notes is consultant-voice and stays untouched.
-        const dirtyNow = dirtyFields.current.get(uid) ?? new Set<AutoField>();
-        const patch: Partial<PortalDraft["yachts"][number]> = { yfId: entry.id };
-        const apply = (field: AutoField, value: string) => {
-          if (!dirtyNow.has(field)) Object.assign(patch, { [field]: value });
-        };
-        if (detail.name) apply("name", detail.name);
-        apply("lengthM", detail.lengthM != null ? String(detail.lengthM) : "");
-        apply("yearRefit", detail.yearRefit);
-        apply("guests", detail.guests != null ? String(detail.guests) : "");
-        apply("crew", detail.crew != null ? String(detail.crew) : "");
-        apply("staterooms", detail.staterooms);
-        apply("cruisingArea", detail.cruisingArea);
-        apply("currency", detail.currency || "EUR");
-        apply("keyFeatures", (detail.keyFeatures ?? []).join("\n"));
-        // Rate matrix + selection reset to the default (summer / low) on a pick.
-        patch.rateOptions = detail.rateOptions;
-        patch.rateSeason = detail.rateSeason ?? "summer";
-        patch.rateTier = detail.rateTier ?? "low";
-        if (!dirtyNow.has("weeklyRate")) {
-          patch.weeklyRate = detail.weeklyRate != null ? String(detail.weeklyRate) : "";
-          patch.weeklyRateIsFrom = detail.weeklyRateIsFrom;
-        }
-        // Facts first — the form fills now; the gallery follows in a second
-        // request while the card header says so.
-        setYacht(uid, patch);
-        setCard(uid, { fetching: false, preparingImages: true, error: null, warnings: detail.warnings ?? [] });
+        // Facts first — the form fills now, with the date they were read; the
+        // gallery follows while the card header shows its progress.
+        setYacht(uid, detailPatch(uid, entry.id, detail));
+        setCard(uid, {
+          fetching: false,
+          preparingImages: true,
+          error: null,
+          warnings: detail.warnings ?? [],
+          updatedAt: detail.specsFetchedAt ?? detail.fetchedAt,
+          stale: Boolean(detail.stale),
+        });
         await loadImages(uid, entry.id, seq);
       } catch (err) {
         if (fetchSeq.current.get(uid) !== seq) return;
@@ -457,7 +511,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
         });
       }
     },
-    [loadImages, setCard, setYacht]
+    [detailPatch, loadImages, setCard, setYacht]
   );
 
   // Heal yachts saved before their images arrived (or from older drafts):
@@ -471,7 +525,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
         const seq = (fetchSeq.current.get(y.uid) ?? 0) + 1;
         fetchSeq.current.set(y.uid, seq);
         setCard(y.uid, { preparingImages: true });
-        void loadImages(y.uid, y.yfId, seq, true);
+        void loadImages(y.uid, y.yfId, seq, true, "read");
       }
     }
   }, [draft, loadImages, setCard]);
@@ -812,9 +866,9 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
                         <>
                           {" "}
                           <span className={styles.headerNote} aria-live="polite">
-                            {fetching ? "Fetching" : "Preparing"}{" "}
-                            {y.name.trim() ? y.name.trim().toUpperCase() : "this yacht"}
-                            &rsquo;s {fetching ? "details…" : "images…"}
+                            {fetching
+                              ? `Fetching ${y.name.trim() ? y.name.trim().toUpperCase() : "this yacht"}’s details…`
+                              : card.progress ?? `Preparing ${y.name.trim() ? y.name.trim().toUpperCase() : "this yacht"}’s images…`}
                           </span>
                         </>
                       )}
@@ -1133,6 +1187,26 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
                           onExpand={(url, label) => setLightbox({ url, label })}
                         />
                       </div>
+                      {y.yfId != null && (
+                        <div className={styles.metaRow}>
+                          <span className={styles.updatedLine}>
+                            {card.stale
+                              ? <span className={styles.staleNote}>{staleNote(card.updatedAt)}</span>
+                              : card.updatedAt
+                                ? `Updated ${fmtUpdated(card.updatedAt)}`
+                                : ""}
+                          </span>
+                          <button
+                            type="button"
+                            className={styles.retryBtn}
+                            disabled={fetching || preparing}
+                            title="Fetch this yacht's details and images from Yachtfolio again"
+                            onClick={() => refreshYacht(y.uid, y.yfId as number)}
+                          >
+                            REFRESH FROM YACHTFOLIO
+                          </button>
+                        </div>
+                      )}
                       {card.error && !fetching && (
                         <span className={styles.fetchWarning}>
                           {card.error}{" "}

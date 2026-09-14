@@ -35,7 +35,7 @@ import {
 import { cropToSizes, selectGalleryImages } from "./yachtfolio/images.mjs";
 import { blobOps, getJson, hashBytes, hashJson, isDryRun, lastStorageError, noteStorageError, putFile, putJson, putJsonIfChanged } from "./storage.mjs";
 import { demoDetail, demoFleet, demoImages, isDemoFleet } from "./demo/fleet.mjs";
-import { applySpecs, factsFrom, finishPreparing, loadYachtRecord, writeYachtRecord } from "./yacht-records.mjs";
+import { applySpecs, factsFrom, finishPreparing, loadYachtRecord, readYachtRecord, writeYachtRecord } from "./yacht-records.mjs";
 import { brochureFor, defaultSlots, galleryFileOf, mapLimit, rememberBrochure, stripSecret } from "./yachtfolio/gallery.mjs";
 
 export { brochureFor, defaultSlots, galleryFileOf, mapLimit, stripSecret };
@@ -460,6 +460,15 @@ async function writeRecord(record) {
     noteStorageError(`write record for yacht ${record.yfId}`, err);
     return false;
   }
+}
+
+/**
+ * The specifications already on a yacht's record, or null when it has none.
+ * Served when Yachtfolio cannot be reached; a storage failure propagates.
+ */
+export async function getStoredYachtDetail(yfId) {
+  const record = await readYachtRecord(yfId);
+  return record?.specs ? detailFromRecord(record) : null;
 }
 
 /** The detail document a record's stored specifications stand for. */

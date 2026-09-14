@@ -4,7 +4,7 @@
  * to undefined rather than empty strings.
  */
 
-import { MAX_ITINERARY_LINKS, type ItineraryLink, type PageConfig, type Yacht } from "./types";
+import { IMAGE_SLOTS, MAX_ITINERARY_LINKS, type ItineraryLink, type PageConfig, type Yacht } from "./types";
 import type { DraftYacht, PortalDraft } from "./portal-types";
 import { slugify } from "@/server/yachtfolio/normalise.mjs";
 
@@ -84,7 +84,48 @@ export function mapDraftYacht(y: DraftYacht): Yacht | null {
     interiorImageUrl: str(y.interiorImageUrl) ?? str(y.leadImageUrl) ?? "",
     exteriorImageUrl: str(y.exteriorImageUrl) ?? str(y.leadImageUrl) ?? "",
     lifestyleImageUrl: str(y.lifestyleImageUrl) ?? str(y.leadImageUrl) ?? "",
+    ...imageRefsOf(y),
     brochureUrl: str(y.brochureUrl) ?? "#",
+  };
+}
+
+/**
+ * Which gallery image (by Yachtfolio image id) fills each slot, so the
+ * published page can show that image's current file. A slot holding a URL
+ * that is not in the gallery (pasted by the consultant) has no reference.
+ */
+function imageRefsOf(y: DraftYacht): { imageRefs?: Yacht["imageRefs"] } {
+  const refs: NonNullable<Yacht["imageRefs"]> = {};
+  const gallery = y.gallery ?? [];
+  const fallbackLead = str(y.leadImageUrl);
+  for (const [slot, field] of IMAGE_SLOTS) {
+    const url = str(y[field]) ?? (slot === "lead" ? undefined : fallbackLead);
+    if (!url) continue;
+    const match = gallery.find((g) => g.url === url || g.smallUrl === url);
+    if (match && Number.isFinite(Number(match.id))) refs[slot] = Number(match.id);
+  }
+  return Object.keys(refs).length ? { imageRefs: refs } : {};
+}
+
+/**
+ * Applied by the publish route to either tier's config: keep a copy of the
+ * slot URLs as they were at publish, for reference. The client page resolves
+ * the live URLs from each yacht's record at render time (see
+ * src/server/live-images.mjs) and never renders this copy when a record
+ * exists.
+ */
+export function freezeImagesAtPublish<T extends { yachts: Yacht[] }>(config: T): T {
+  return {
+    ...config,
+    yachts: config.yachts.map((y) => ({
+      ...y,
+      imagesAtPublish: {
+        leadImageUrl: y.leadImageUrl,
+        interiorImageUrl: y.interiorImageUrl,
+        exteriorImageUrl: y.exteriorImageUrl,
+        lifestyleImageUrl: y.lifestyleImageUrl,
+      },
+    })),
   };
 }
 

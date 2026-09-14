@@ -50,6 +50,13 @@ function resolveProvider(): AuthProvider {
   // Single fixed consultant — a deliberate staging/internal choice, allowed
   // in production because it is one real person, not the fake dev stub.
   if (choice === "solo") {
+    if (!process.env.PORTAL_ACCESS_KEY) {
+      // Not a lock-out (that would close production until the variable is
+      // set), but every visitor is now the solo consultant: say so once.
+      console.warn(
+        "[auth] PORTAL_AUTH_PROVIDER=solo with no PORTAL_ACCESS_KEY — the portal and its API accept every visitor as the solo consultant. Set PORTAL_ACCESS_KEY in Production."
+      );
+    }
     return soloProvider;
   }
 

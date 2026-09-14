@@ -14,6 +14,15 @@ export interface Staterooms {
  * Fields sourced from Yachtfolio may be absent for a given yacht; the UI
  * hides the corresponding row instead of rendering a null.
  */
+export type ImageSlot = "lead" | "interior" | "exterior" | "lifestyle";
+export type ImageSlotField = "leadImageUrl" | "interiorImageUrl" | "exteriorImageUrl" | "lifestyleImageUrl";
+export const IMAGE_SLOTS: ReadonlyArray<[ImageSlot, ImageSlotField]> = [
+  ["lead", "leadImageUrl"],
+  ["interior", "interiorImageUrl"],
+  ["exterior", "exteriorImageUrl"],
+  ["lifestyle", "lifestyleImageUrl"],
+];
+
 export interface Yacht {
   id: string;
   /** Yachtfolio internal id, when the yacht came from the API */
@@ -47,11 +56,22 @@ export interface Yacht {
   totalAmount?: number;
   /** Consultant's personal note, rendered signed with the consultant name */
   notes?: string;
-  /** All yacht imagery is 16:10, source 2000×1250 (Yachtfolio, cropped at build time) */
+  /**
+   * All yacht imagery is 16:10. On a published page these four are resolved
+   * at render time from the yacht's current record (specs are frozen at
+   * publish; images are live) — the stored values are the URLs at publish.
+   */
   leadImageUrl: string;
   interiorImageUrl: string;
   exteriorImageUrl: string;
   lifestyleImageUrl: string;
+  /**
+   * The Yachtfolio image id chosen for each slot at publish; a slot the
+   * consultant filled with a pasted URL has no entry and keeps that URL.
+   */
+  imageRefs?: Partial<Record<ImageSlot, number>>;
+  /** The slot URLs as they were at publish — reference only, never rendered when a record exists */
+  imagesAtPublish?: Record<ImageSlotField, string>;
   brochureUrl: string;
   /** Plain-text description from the Yachtfolio brochure (HTML stripped) */
   description?: string;
