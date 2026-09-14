@@ -93,7 +93,7 @@ as, their first sign-in finds no active record by email and creates a stray
 `source: "sso"` record. The admin reconciles the two from the list:
 
 1. Set the stray record inactive. Its details leave every client page at
-   once (charter desk instead), and its numbers become read-only.
+   once, and its numbers become read-only.
 2. Correct the seeded record's email to the sign-in address, ticking
    "release for re-claiming" if the seeded record had been claimed by the
    wrong sign-in. This is allowed while the stray holds the same address
@@ -113,14 +113,13 @@ An admin has set `status: "inactive"` on `/portal/admin/consultants`.
 - The consultant's details are suppressed entirely: no name, title, photo,
   number or address of theirs appears on any page, published before or
   after the change.
-- The block shows the generic charter desk contact instead, held in one
-  place: `src/lib/charter-desk.ts`, overridable with the `CHARTER_DESK_NAME`,
-  `CHARTER_DESK_TITLE`, `CHARTER_DESK_EMAIL`, `CHARTER_DESK_PHONE` and
-  `CHARTER_DESK_WHATSAPP` environment variables.
-- The desk's email and phone are deliberately blank in the code until
-  marketing confirms them, so today the fallback block reads OCEAN
-  INDEPENDENCE / Charter Desk with no contact rows. Set the two variables
-  before any consultant is marked inactive.
+- The contact block disappears completely; nothing takes its place. On the
+  Tier 3 cover the default subline reads "Prepared for <client>" with no
+  name. On the Tier 2 page the intro note and destination notes lose their
+  signature, the CURATED FOR YOU BY line is dropped, the "ask" button on
+  other destinations is hidden, and the disclaimer follows the season note
+  directly. The Tier 2 EXPLORE ALL 2027 DESTINATIONS link, which lives
+  inside the block, goes with it.
 - The consultant's own phone and WhatsApp become read-only everywhere: the
   profile page renders them as text, and the API refuses changes.
 - Publishing a selection assigned to an inactive consultant is not blocked
@@ -165,7 +164,7 @@ and `updatedBy` as `admin:<email>`; there is no audit log beyond this.
 Against the filesystem store with the stub identities: publish refused
 without a phone (422, with the profile link); published with one; the page
 followed a phone correction without republish; the preview matched; the
-inactive record gave way to the charter desk; the demo page kept its frozen
+inactive record removed the block entirely; the demo page kept its frozen
 block. Phase 4: a non-admin got 403 from the API and a redirect from the
 page; an admin added a record, was refused a duplicate address, could not
 set a phone, saw a wrong photo URL come back "missing (HTTP 404)" and a

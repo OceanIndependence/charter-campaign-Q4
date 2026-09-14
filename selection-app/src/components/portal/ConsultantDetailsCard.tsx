@@ -69,7 +69,7 @@ export default function ConsultantDetailsCard({ sectionHead }: { sectionHead: st
       )}
       {inactive && (
         <p className={styles.fetchWarning} style={{ marginTop: 22 }}>
-          Your profile is inactive: client pages show the charter desk in place of your details, and your numbers are read-only.
+          Your profile is inactive: client pages show no contact block for you, and your numbers are read-only.
         </p>
       )}
     </section>

@@ -19,7 +19,7 @@ import { CAMPAIGN_ATLAS_URL } from "@/lib/portal-map";
  * specifications, rate and notes are the snapshot's, the photographs are
  * resolved from each yacht's current record at render time, and the
  * contact block from the consultant's current record (an inactive
- * consultant gives way to the charter desk). If the snapshot or a record
+ * consultant has no block at all). If the snapshot or a record
  * cannot be read, a calm holding page with the consultant's contact details
  * is rendered instead of a 500.
  */

@@ -292,7 +292,7 @@ function EditForm({ r, onSaved, onClose }: { r: ConsultantSummary; onSaved: (nex
             <span className={styles.fieldLabel}>STATUS</span>
             <select className={styles.select} value={status} onChange={(e) => setStatus(e.target.value as ConsultantSummary["status"])}>
               <option value="active">Active</option>
-              <option value="inactive">Inactive — client pages show the charter desk</option>
+              <option value="inactive">Inactive — client pages show no contact block</option>
             </select>
           </label>
           <label className={`${styles.field} ${styles.fieldFull}`}>

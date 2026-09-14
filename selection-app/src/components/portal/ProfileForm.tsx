@@ -120,7 +120,7 @@ export default function ProfileForm({ initial, gated }: { initial: ConsultantRec
               {readOnly("WHATSAPP", record.whatsapp, "None")}
             </div>
             <p className={styles.sectionNote} style={{ margin: "28px 0 0" }}>
-              This profile is inactive, so its numbers are read-only and client pages show the charter desk instead. Contact marketing if
+              This profile is inactive, so its numbers are read-only and client pages show no contact block for you. Contact marketing if
               that is wrong.
             </p>
           </>

@@ -157,7 +157,8 @@ export default function SelectionPage({ config }: { config: PageConfig }) {
         />
       )}
 
-      <ConsultantBlock consultant={config.consultant} atlasUrl={config.atlasUrl} />
+      {/* No block at all when the consultant is inactive. */}
+      {config.consultant && <ConsultantBlock consultant={config.consultant} atlasUrl={config.atlasUrl} />}
 
       <div className={styles.disclaimer}>
         These vessels are offered subject to change, price change, and owners&rsquo; final approval.

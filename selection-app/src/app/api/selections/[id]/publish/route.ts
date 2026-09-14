@@ -51,8 +51,8 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         { status: 422 }
       );
     }
-    const consultant: Consultant = consultantForRecord(record);
-    const withConsultant = <T extends { consultant: Consultant }>(config: T): T => ({ ...config, consultant });
+    const consultant: Consultant | null = consultantForRecord(record);
+    const withConsultant = <T extends { consultant: Consultant | null }>(config: T): T => ({ ...config, consultant });
     // Selections created before records existed get their id stamped now.
     if (!draft.consultantId) draft.consultantId = record.id;
     let slugBase: string;

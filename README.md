@@ -118,8 +118,7 @@ else on the record belongs to the admin screen.
 Client pages resolve the consultant live: a selection carries the record id
 from creation, and every render of `/selection/<slug>` or `/atlas/<slug>`
 reads the current record (`src/server/consultant-render.ts`). An inactive
-consultant gives way to the charter desk block in `src/lib/charter-desk.ts`
-(`CHARTER_DESK_*` variables). Publishing is blocked while the assigned
+consultant's page carries no contact block at all. Publishing is blocked while the assigned
 consultant has no phone number. See `docs/consultant-profiles-report.md`.
 
 Admin: `PORTAL_ADMIN_EMAILS` (comma-separated, compared lowercase against
