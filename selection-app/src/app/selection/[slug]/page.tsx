@@ -6,6 +6,7 @@ import SelectionPage from "@/components/SelectionPage";
 import HoldingPage from "@/components/HoldingPage";
 import { getPublishedPage } from "@/server/pages.mjs";
 import { resolveLiveImages } from "@/server/live-images.mjs";
+import { consultantForPage } from "@/server/consultant-render";
 import { noteStorageError } from "@/server/storage.mjs";
 import { CAMPAIGN_ATLAS_URL } from "@/lib/portal-map";
 
@@ -14,11 +15,13 @@ import { CAMPAIGN_ATLAS_URL } from "@/lib/portal-map";
  * stored page config (the publish route revalidates the path on each new
  * version); unpublished or unknown slugs are 404s.
  *
- * Specs are frozen at publish; images are live: the specifications, rate
- * and notes are the snapshot's, the photographs are resolved from each
- * yacht's current record at render time. If the snapshot or a record cannot
- * be read, a calm holding page with the consultant's contact details is
- * rendered instead of a 500.
+ * Specs are frozen at publish; images and the consultant are live: the
+ * specifications, rate and notes are the snapshot's, the photographs are
+ * resolved from each yacht's current record at render time, and the
+ * contact block from the consultant's current record (an inactive
+ * consultant gives way to the charter desk). If the snapshot or a record
+ * cannot be read, a calm holding page with the consultant's contact details
+ * is rendered instead of a 500.
  */
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -31,9 +34,9 @@ export const metadata: Metadata = {
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
-  let published: { config?: PageConfig } | null;
+  let published: { config?: PageConfig; consultantId?: string } | null;
   try {
-    published = (await getPublishedPage(slug)) as { config?: PageConfig } | null;
+    published = (await getPublishedPage(slug)) as { config?: PageConfig; consultantId?: string } | null;
   } catch (err) {
     noteStorageError(`read published page ${slug}`, err);
     return <HoldingPage />;
@@ -56,7 +59,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   };
   let config: PageConfig;
   try {
-    config = (await resolveLiveImages(frozen)) as PageConfig;
+    const consultant = await consultantForPage(published.consultantId, frozen.consultant);
+    config = { ...((await resolveLiveImages(frozen)) as PageConfig), consultant };
   } catch (err) {
     noteStorageError(`resolve live images for ${slug}`, err);
     return <HoldingPage consultant={frozen.consultant} atlasUrl={frozen.atlasUrl} />;

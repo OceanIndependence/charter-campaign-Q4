@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { deleteSelection, getSelection, saveSelection } from "@/server/pages.mjs";
-import { requirePortalSession } from "@/server/auth";
+import { requireConsultantSession, requirePortalSession } from "@/server/auth";
 import { errorResponse } from "@/server/http";
 import { clientIp, rateLimit } from "@/server/rate-limit";
 
@@ -40,7 +40,11 @@ export async function PUT(request: NextRequest, { params }: Params) {
     return NextResponse.json({ error: "Invalid JSON." }, { status: 400 });
   }
   try {
-    const stored = await saveSelection(session.identity, id, incoming);
+    // Selections created before consultant records existed take the
+    // session consultant's id on their next save.
+    const consultant = await requireConsultantSession(request);
+    if (!consultant.ok) return consultant.response;
+    const stored = await saveSelection(session.identity, id, incoming, { consultantId: consultant.consultant.id });
     return NextResponse.json({ ok: true, id: stored.id, updatedAt: stored.updatedAt });
   } catch (err) {
     return errorResponse(err);

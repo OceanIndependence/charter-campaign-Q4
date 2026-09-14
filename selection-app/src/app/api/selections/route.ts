@@ -64,7 +64,11 @@ export async function POST(request: NextRequest) {
   const duplicateOf = typeof body?.duplicateOf === "string" ? body.duplicateOf : undefined;
   const tier = Number(body?.tier) === 2 ? 2 : 3;
   try {
-    const draft = await createSelection(session.identity, { duplicateOf, tier });
+    // The consultant record whose details the client page will show is
+    // attached at creation and resolved live at render.
+    const consultant = await requireConsultantSession(request);
+    if (!consultant.ok) return consultant.response;
+    const draft = await createSelection(session.identity, { duplicateOf, tier, consultantId: consultant.consultant.id });
     return NextResponse.json({ id: draft.id }, { status: 201 });
   } catch (err) {
     return errorResponse(err);

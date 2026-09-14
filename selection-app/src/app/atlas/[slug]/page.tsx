@@ -6,6 +6,7 @@ import PersonalisedAtlasPage from "@/components/personalised/PersonalisedAtlasPa
 import HoldingPage from "@/components/HoldingPage";
 import { getPublishedPage } from "@/server/pages.mjs";
 import { resolveLiveImages } from "@/server/live-images.mjs";
+import { consultantForPage } from "@/server/consultant-render";
 import { noteStorageError } from "@/server/storage.mjs";
 import { CAMPAIGN_ATLAS_URL } from "@/lib/portal-map";
 import { DEMO_TIER2_SLUG, demoAtlasConfig, demoPagesEnabled } from "@/server/demo/harrington";
@@ -13,8 +14,9 @@ import { DEMO_TIER2_SLUG, demoAtlasConfig, demoPagesEnabled } from "@/server/dem
 /**
  * Tier 2 client pages — a Personalised Atlas published from the Charter
  * Portal, rendered on demand from the stored (frozen) page config with the
- * yachts' images resolved live from their records (specs are frozen at
- * publish; images are live). Unknown or unpublished slugs, and Tier 3
+ * yachts' images resolved live from their records and the consultant block
+ * from the consultant's current record (specs are frozen at publish;
+ * images and the consultant are live). Unknown or unpublished slugs, and Tier 3
  * slugs, are 404s. The Harrington demo page renders when nothing has been
  * published under its slug. A storage failure renders a holding page.
  */
@@ -29,9 +31,9 @@ export const metadata: Metadata = {
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  let published: { config?: AtlasPageConfig } | null;
+  let published: { config?: AtlasPageConfig; consultantId?: string } | null;
   try {
-    published = (await getPublishedPage(slug)) as { config?: AtlasPageConfig } | null;
+    published = (await getPublishedPage(slug)) as { config?: AtlasPageConfig; consultantId?: string } | null;
   } catch (err) {
     noteStorageError(`read published page ${slug}`, err);
     return <HoldingPage />;
@@ -44,7 +46,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   const frozen: AtlasPageConfig = { ...config, atlasUrl: CAMPAIGN_ATLAS_URL };
   let live: AtlasPageConfig;
   try {
-    live = (await resolveLiveImages(frozen)) as AtlasPageConfig;
+    const consultant = await consultantForPage(published?.consultantId, frozen.consultant);
+    live = { ...((await resolveLiveImages(frozen)) as AtlasPageConfig), consultant };
   } catch (err) {
     noteStorageError(`resolve live images for ${slug}`, err);
     return <HoldingPage consultant={frozen.consultant} atlasUrl={frozen.atlasUrl} />;

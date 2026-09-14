@@ -16,6 +16,9 @@
  * `owner` is stamped server-side from the session, never from the request
  * body; every key is owner-namespaced so isolation is structural. The layout
  * is the same whether owner.id comes from the dev stub or from Microsoft.
+ * `consultantId` — the consultant RECORD whose details the client page shows
+ * — is stamped the same way at creation and copied onto the published
+ * record; client pages resolve it live at render (consultant-render.ts).
  *
  * The earlier single working draft (portal/drafts/<ownerId>/working.json) is
  * imported as a selection on the consultant's first dashboard load.
@@ -191,12 +194,13 @@ function emptyDestination() {
 const TIER2_DISCLAIMER = "These vessels are offered subject to change, price change, and owners’ final approval.";
 
 /** A new Personalised Atlas: three empty destination slots, no yachts yet. */
-function emptyTier2Draft(identity) {
+function emptyTier2Draft(identity, consultantId) {
   const now = new Date().toISOString();
   return {
     id: randomUUID(),
     tier: 2,
     owner: ownerOf(identity),
+    ...(consultantId ? { consultantId } : {}),
     createdAt: now,
     updatedAt: now,
     clientNames: "",
@@ -222,12 +226,13 @@ function consultantOf(identity) {
   };
 }
 
-function emptyDraft(identity) {
+function emptyDraft(identity, consultantId) {
   const now = new Date().toISOString();
   return {
     id: randomUUID(),
     tier: 3,
     owner: ownerOf(identity),
+    ...(consultantId ? { consultantId } : {}),
     createdAt: now,
     updatedAt: now,
     clientNames: "",
@@ -313,20 +318,23 @@ export async function getSelection(identity, id) {
  * Create an empty selection, or duplicate one of the consultant's own as a
  * fresh draft for a new client: the yachts (and their images, rates and
  * highlights) carry across; the client name, welcome greeting, per-yacht
- * notes to the client and any publish state are cleared.
+ * notes to the client and any publish state are cleared. `consultantId` is
+ * the session consultant's record id, attached at creation (a duplicate is
+ * attached to whoever duplicates it).
  */
-export async function createSelection(identity, { duplicateOf, tier } = {}) {
+export async function createSelection(identity, { duplicateOf, tier, consultantId } = {}) {
   const ownerId = requireOwnerId(identity);
-  let draft = Number(tier) === 2 ? emptyTier2Draft(identity) : emptyDraft(identity);
+  let draft = Number(tier) === 2 ? emptyTier2Draft(identity, consultantId) : emptyDraft(identity, consultantId);
   if (duplicateOf) {
     const src = await getSelection(identity, duplicateOf);
     // A duplicate keeps its source's tier — the tier is fixed once created.
-    const base = tierOf(src) === 2 ? emptyTier2Draft(identity) : emptyDraft(identity);
+    const base = tierOf(src) === 2 ? emptyTier2Draft(identity, consultantId) : emptyDraft(identity, consultantId);
     draft = {
       ...src,
       id: base.id,
       tier: tierOf(src),
       owner: ownerOf(identity),
+      ...(consultantId ? { consultantId } : {}),
       createdAt: base.createdAt,
       updatedAt: base.updatedAt,
       clientNames: "",
@@ -349,10 +357,12 @@ export async function createSelection(identity, { duplicateOf, tier } = {}) {
 }
 
 /**
- * Save a selection. Owner, creation date and publish state are always taken
- * from the stored record, so nothing in the request body can forge them.
+ * Save a selection. Owner, creation date, consultant id and publish state
+ * are always taken from the stored record, so nothing in the request body
+ * can forge them. A selection created before consultant records existed
+ * takes the session consultant's id on its next save.
  */
-export async function saveSelection(identity, id, incoming) {
+export async function saveSelection(identity, id, incoming, { consultantId } = {}) {
   const ownerId = requireOwnerId(identity);
   const existing = await getSelection(identity, id);
   const stored = {
@@ -360,11 +370,13 @@ export async function saveSelection(identity, id, incoming) {
     id: existing.id,
     tier: tierOf(existing),
     owner: ownerOf(identity),
+    consultantId: existing.consultantId ?? consultantId,
     createdAt: existing.createdAt,
     publishedSlug: existing.publishedSlug,
     published: existing.published,
     updatedAt: new Date().toISOString(),
   };
+  if (!stored.consultantId) delete stored.consultantId;
   if (!stored.publishedSlug) delete stored.publishedSlug;
   if (!stored.published) delete stored.published;
   return store(ownerId, stored);
@@ -416,9 +428,12 @@ function publishStateOf(record) {
  * republish; otherwise claims slugBase, suffixing -2, -3… past any slug owned
  * by someone else.
  */
-export async function publishSelection({ identity, id, slugBase, buildConfig }) {
+export async function publishSelection({ identity, id, slugBase, buildConfig, consultantId }) {
   const ownerId = requireOwnerId(identity);
   const draft = await getSelection(identity, id);
+  // A selection created before consultant records existed is attached to
+  // the publishing consultant's record from this publish onwards.
+  if (!draft.consultantId && consultantId) draft.consultantId = consultantId;
 
   let slug = draft.publishedSlug && isValidSlug(draft.publishedSlug) ? draft.publishedSlug : null;
   if (slug) {
@@ -439,6 +454,9 @@ export async function publishSelection({ identity, id, slugBase, buildConfig }) 
     version: (current?.version ?? 0) + 1,
     owner: ownerOf(identity),
     draftId: draft.id,
+    // Resolved live on every render of the client page; absent on pages
+    // whose selection predates consultant records (they keep config.consultant).
+    ...(draft.consultantId ? { consultantId: draft.consultantId } : {}),
     publishedAt: new Date().toISOString(),
     config: buildConfig(slug),
   };
@@ -509,6 +527,7 @@ export async function rollbackSelection(identity, id, toVersion) {
     version: current.version + 1,
     owner: ownerOf(identity),
     draftId: draft.id,
+    ...(draft.consultantId ? { consultantId: draft.consultantId } : {}),
     publishedAt: new Date().toISOString(),
     rolledBackFrom: n,
     unpublished: false,

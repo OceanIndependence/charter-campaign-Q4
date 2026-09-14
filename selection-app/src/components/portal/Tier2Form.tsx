@@ -26,6 +26,7 @@ import { slugify } from "@/server/yachtfolio/normalise.mjs";
 import FleetSelect from "./FleetSelect";
 import ImagePicker from "./ImagePicker";
 import ConfirmDialog from "./ConfirmDialog";
+import ConsultantDetailsCard from "./ConsultantDetailsCard";
 import { DragGhost, DragHandle, useYachtReorder } from "./useYachtReorder";
 import { POLL_TIMEOUT_NOTE, fetchDetail, fmtUpdated, pollImages, progressLabel, readImages, refreshYacht as refreshYachtApi, staleNote, startPrepare } from "./fleetApi";
 import styles from "./PortalForm.module.css";
@@ -144,6 +145,8 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
   const [publishFlash, setPublishFlash] = useState(false);
   const [publishing, setPublishing] = useState(false);
   const [publishError, setPublishError] = useState<string | null>(null);
+  /** Link offered with a publish refusal, e.g. the profile page when a phone number is missing. */
+  const [publishErrorHref, setPublishErrorHref] = useState<string | null>(null);
   const [lightbox, setLightbox] = useState<{ url: string; label: string } | null>(null);
   /** True once the consultant has typed a slug by hand (auto-suggestion stops). */
   const slugTouched = useRef(false);
@@ -668,11 +671,15 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
     if (!d || publishing) return;
     setPublishing(true);
     setPublishError(null);
+    setPublishErrorHref(null);
     try {
       if (!(await flushSave())) throw new Error("The draft could not be saved — check the connection.");
       const res = await fetch(`${api}/publish`, { method: "POST", headers: { "content-type": "application/json" }, body: "{}" });
       const body = await res.json().catch(() => null);
-      if (!res.ok) throw new Error(body?.error ?? "Publishing failed — please try again.");
+      if (!res.ok) {
+        if (typeof body?.profileUrl === "string") setPublishErrorHref(body.profileUrl);
+        throw new Error(body?.error ?? "Publishing failed — please try again.");
+      }
       setPublished({ slug: body.slug, url: body.url });
       update((prev) => ({ ...prev, publishedSlug: body.slug }));
       setPublishFlash(true);
@@ -1269,25 +1276,13 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
           </div>
         </section>
 
-        {/* 05 — YOUR DETAILS */}
+        {/* 05 — YOUR DETAILS: read-only, from the consultant record */}
+        <ConsultantDetailsCard sectionHead="05 — YOUR DETAILS" />
+
+        {/* 06 — FOOTER */}
         <section className={styles.card}>
-          <div className={styles.sectionHead}>05 — YOUR DETAILS</div>
+          <div className={styles.sectionHead}>06 — FOOTER</div>
           <div className={styles.grid}>
-            {(
-              [
-                ["NAME", "name", "Example – Lucy", "text"],
-                ["TITLE", "title", "Example – Charter Consultant, Ocean Independence", "text"],
-                ["PHONE", "phone", "Example – +41 44 000 00 00", "tel"],
-                ["EMAIL", "email", "Example – eleanor@ocyachts.com", "email"],
-                ["WHATSAPP NUMBER", "whatsapp", "Example – 41440000000", "tel"],
-                ["PHOTO URL", "photoUrl", "Example – https://…", "url"],
-              ] as const
-            ).map(([label, key, placeholder, type]) => (
-              <label key={key} className={styles.field}>
-                <span className={styles.fieldLabel}>{label}</span>
-                <input type={type} className={styles.input} placeholder={placeholder} value={draft.consultant[key]} onChange={(e) => update((d) => ({ ...d, consultant: { ...d.consultant, [key]: e.target.value } }))} />
-              </label>
-            ))}
             <label className={`${styles.field} ${styles.fieldFull}`}>
               <span className={styles.fieldLabel}>
                 FOOTER DISCLAIMER <span className={styles.fieldLabelHint}>— the last line of the page, under your details</span>
@@ -1307,7 +1302,15 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
       <div className={styles.publishBar}>
         <span className={styles.statusLine}>
           {publishError ? publishError : statusLine}
-          {published && (
+          {publishError && publishErrorHref && (
+            <>
+              {" "}
+              <a className={styles.statusLink} href={publishErrorHref}>
+                Open your profile →
+              </a>
+            </>
+          )}
+          {published && !publishError && (
             <>
               {" "}
               <a className={styles.statusLink} href={published.url} target="_blank" rel="noopener noreferrer">

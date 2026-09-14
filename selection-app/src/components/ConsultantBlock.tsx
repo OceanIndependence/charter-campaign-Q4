@@ -3,6 +3,11 @@ import { whatsappHref } from "@/lib/format";
 import { MailIcon, PhoneIcon } from "./icons";
 import styles from "./ConsultantBlock.module.css";
 
+/**
+ * The contact block at the foot of every client page. Renders what is
+ * present: a blank photo lets the text stand alone (no placeholder on a
+ * client page), a blank phone or WhatsApp hides that row.
+ */
 export default function ConsultantBlock({
   consultant,
   atlasUrl,
@@ -19,18 +24,24 @@ export default function ConsultantBlock({
         ) : null}
         <div className={styles.details}>
           <div className={styles.name}>{consultant.name.toUpperCase()}</div>
-          <div className={styles.title}>{consultant.title}</div>
+          {consultant.title && <div className={styles.title}>{consultant.title}</div>}
           <div className={styles.rows}>
-            <div className={styles.row}>
-              <PhoneIcon />
-              <span>{consultant.phone}</span>
-            </div>
-            <div className={styles.row}>
-              <MailIcon />
-              <a href={`mailto:${consultant.email}`} className={styles.email}>
-                {consultant.email}
-              </a>
-            </div>
+            {consultant.phone && (
+              <div className={styles.row}>
+                <PhoneIcon />
+                <a href={`tel:${consultant.phone.replace(/[^\d+]/g, "")}`} className={styles.email}>
+                  {consultant.phone}
+                </a>
+              </div>
+            )}
+            {consultant.email && (
+              <div className={styles.row}>
+                <MailIcon />
+                <a href={`mailto:${consultant.email}`} className={styles.email}>
+                  {consultant.email}
+                </a>
+              </div>
+            )}
           </div>
           {whatsappHref(consultant.whatsapp) && (
             <a href={whatsappHref(consultant.whatsapp)} className={styles.whatsapp} target="_blank" rel="noopener">

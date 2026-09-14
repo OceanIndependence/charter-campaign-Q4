@@ -8,6 +8,7 @@ import type { AnySelection, PortalDraft, Tier2Draft } from "@/lib/portal-types";
 import { atlasResolutionFor } from "@/server/atlas/content";
 import { getSelection, tierOf } from "@/server/pages.mjs";
 import { getPortalPageState } from "@/server/auth";
+import { consultantForPage } from "@/server/consultant-render";
 
 export const dynamic = "force-dynamic";
 
@@ -49,9 +50,12 @@ export default async function PreviewPage({
   } catch {
     return <Message text="This selection does not exist or is not yours." />;
   }
+  // The consultant block exactly as the published page resolves it, live.
+  const consultantId = draft.consultantId ?? state.consultant.id;
   if (tierOf(draft) === 2) {
     const d = draft as Tier2Draft;
-    const config = tier2DraftToConfig(d, d.publishedSlug ?? (d.slug || "preview"), atlasResolutionFor(chosenDestinationIds(d)));
+    const base = tier2DraftToConfig(d, d.publishedSlug ?? (d.slug || "preview"), atlasResolutionFor(chosenDestinationIds(d)));
+    const config = { ...base, consultant: await consultantForPage(consultantId, base.consultant) };
     if (config.destinations.length === 0) {
       return <Message text="Choose at least one destination to preview the client page." />;
     }
@@ -61,7 +65,8 @@ export default async function PreviewPage({
     return <PersonalisedAtlasPage config={config} />;
   }
   const t3 = draft as PortalDraft;
-  const config = draftToPageConfig(t3, t3.publishedSlug ?? "preview");
+  const base3 = draftToPageConfig(t3, t3.publishedSlug ?? "preview");
+  const config = { ...base3, consultant: await consultantForPage(consultantId, base3.consultant) };
   if (config.yachts.length === 0) {
     return <Message text="Add at least one named yacht to preview the client page." />;
   }

@@ -97,8 +97,20 @@ export interface SelectionBase {
   tier?: Tier;
   /** Consultant identity that owns this draft (stamped server-side) */
   owner?: PageOwner;
+  /**
+   * The consultant RECORD (consultants/<id>.json) whose details the client
+   * page shows, stamped server-side at creation and resolved live at render.
+   * Absent on selections created before consultant records existed: their
+   * pages keep the block frozen at publish.
+   */
+  consultantId?: string;
   updatedAt: string;
   clientNames: string;
+  /**
+   * The contact block as last snapshotted from the consultant record. Kept
+   * on the draft for the form's read-only "YOUR DETAILS" card and as the
+   * holding-page fallback; the live record wins on every client render.
+   */
   consultant: {
     name: string;
     title: string;
