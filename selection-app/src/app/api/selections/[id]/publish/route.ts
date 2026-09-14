@@ -1,6 +1,6 @@
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
-import { draftSlugBase, draftToPageConfig } from "@/lib/portal-map";
+import { draftSlugBase, draftToPageConfig, freezeImagesAtPublish } from "@/lib/portal-map";
 import { chosenDestinationIds, tier2DraftToConfig, tier2PublishProblems, tier2SlugBase } from "@/lib/atlas-map";
 import type { AnySelection, PortalDraft, Tier2Draft } from "@/lib/portal-types";
 import { atlasResolutionFor } from "@/server/atlas/content";
@@ -33,14 +33,16 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       // now, yacht facts are the auto-filled Yachtfolio values in the draft.
       const atlas = atlasResolutionFor(chosenDestinationIds(d));
       slugBase = tier2SlugBase(d);
-      buildConfig = (slug: string) => tier2DraftToConfig(d, slug, atlas);
+      buildConfig = (slug: string) => freezeImagesAtPublish(tier2DraftToConfig(d, slug, atlas));
     } else {
       const d = draft as PortalDraft;
       if (!d.yachts?.some((y) => (y.name ?? "").trim())) {
         return NextResponse.json({ error: "Add at least one named yacht before publishing." }, { status: 422 });
       }
       slugBase = draftSlugBase(d);
-      buildConfig = (slug: string) => draftToPageConfig(d, slug);
+      // Specs are frozen here; images are live — the page resolves them from
+      // each yacht's record at render time, keyed by the imageRefs mapped above.
+      buildConfig = (slug: string) => freezeImagesAtPublish(draftToPageConfig(d, slug));
     }
     const { slug, version } = await publishSelection({ identity: session.identity, id, slugBase, buildConfig });
     const url = clientPathFor(tier, slug);

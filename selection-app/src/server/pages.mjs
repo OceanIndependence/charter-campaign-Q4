@@ -20,6 +20,10 @@
  * The earlier single working draft (portal/drafts/<ownerId>/working.json) is
  * imported as a selection on the consultant's first dashboard load.
  *
+ * Every save, publish, unpublish, rollback and delete also updates the
+ * in-use index (in-use.mjs) so the nightly refresh knows which yachts are
+ * referenced by a draft or a live page.
+ *
  * Tiers: a selection is Tier 3 (Yacht Selection, the original shape) or
  * Tier 2 (Personalised Atlas). The tier is fixed at creation; everything
  * here is shared, and the few places that depend on the shape branch on
@@ -27,7 +31,8 @@
  */
 
 import { randomUUID } from "node:crypto";
-import { deleteJson, getJson, hashJson, listKeys, putJson } from "./storage.mjs";
+import { deleteJson, getJson, hashJson, listKeys, noteStorageError, putJson } from "./storage.mjs";
+import { removeSelection as removeFromInUse, setSelectionYachts, yachtIdsOf } from "./in-use.mjs";
 
 const OWNER_RE = /^[A-Za-z0-9._@:-]{1,128}$/;
 const SLUG_RE = /^[a-z0-9-]{1,120}$/;
@@ -139,11 +144,32 @@ async function removeIndexEntry(ownerId, id) {
   await putJson(indexKey(ownerId), idx);
 }
 
-/** Persist a draft and its index row together. */
+/** Persist a draft and its index row together, then the in-use index. */
 async function store(ownerId, draft) {
   await putJson(selectionKey(ownerId, draft.id), draft);
   await writeIndexEntry(ownerId, metaOf(draft));
+  await syncInUse(draft);
   return draft;
+}
+
+/**
+ * Keep selections/in-use.json pointing at this selection's yachts: those in
+ * the draft plus, when it is published, those frozen on the live page (a
+ * yacht removed from the draft is still in use while the page shows it).
+ * A storage failure here is logged and reported through /api/health; the
+ * save itself has already succeeded and the index is rebuilt on demand.
+ */
+async function syncInUse(draft) {
+  try {
+    let config = null;
+    if (draft.publishedSlug && isValidSlug(draft.publishedSlug)) {
+      const current = await getJson(currentKey(draft.publishedSlug));
+      if (current?.config && current.draftId === draft.id && !current.unpublished) config = current.config;
+    }
+    await setSelectionYachts(draft.id, yachtIdsOf(draft, config));
+  } catch (err) {
+    noteStorageError(`in-use index for selection ${draft.id}`, err);
+  }
 }
 
 /* ---------------------------------------------------------- selections */
@@ -353,6 +379,11 @@ export async function deleteSelection(identity, id) {
   }
   await deleteJson(selectionKey(ownerId, existing.id));
   await removeIndexEntry(ownerId, existing.id);
+  try {
+    await removeFromInUse(existing.id);
+  } catch (err) {
+    noteStorageError(`in-use index for deleted selection ${existing.id}`, err);
+  }
 }
 
 /* ---------------------------------------------------------- publishing */

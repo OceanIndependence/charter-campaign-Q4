@@ -387,7 +387,7 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
               >
                 <div className={styles.cardMedia}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  {y.leadImageUrl && <img src={y.leadImageUrl} alt={`${y.name} — exterior profile`} loading="lazy" />}
+                  {y.leadImageUrl && <img src={y.imageThumbs?.lead ?? y.leadImageUrl} alt={`${y.name} — exterior profile`} loading="lazy" />}
                 </div>
                 <div className={styles.cardBody}>
                   <div className={styles.cardName}>{y.name}</div>

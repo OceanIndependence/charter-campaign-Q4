@@ -359,6 +359,10 @@ export interface FleetEntry {
   basePort?: string;
   /** When the basic record was read for these facts; null while still to read */
   factsAt?: string | null;
+  /** Where the facts came from: "brochure", "list" or "detail"; absent on the retired basic-record path */
+  factsSource?: "brochure" | "list" | "detail" | null;
+  /** Last failed attempt to read the facts (present only while factsAt is null) */
+  factsTriedAt?: string | null;
 }
 
 export interface FleetCache {
@@ -369,16 +373,30 @@ export interface FleetCache {
   removed: Record<string, { name: string; removedAt: string }>;
 }
 
-/** Response of GET /api/fleet/:yfId/images — the gallery and default slots. */
+export type ImageStatus = "none" | "preparing" | "ready" | "partial";
+
+/**
+ * Response of GET /api/fleet/:yfId/images (read-only) and of
+ * POST /api/fleet/:yfId/images/prepare: the record's image status, counts,
+ * gallery and default slots. While status is "preparing" the portal polls
+ * the GET every three seconds and renders thumbnails as they arrive.
+ */
 export interface FleetImages {
   yfId: number;
-  fetchedAt: string;
+  status: ImageStatus;
+  store: "blob" | "sirv" | "demo" | null;
+  startedAt?: string | null;
+  updatedAt?: string | null;
+  counts: { ready: number; failed: number; expected: number | null };
   gallery: GalleryImage[];
   leadImageUrl: string;
   interiorImageUrl: string;
   exteriorImageUrl: string;
   lifestyleImageUrl: string;
   warnings: string[];
+  /** True on a prepare response when this call started the job */
+  claimed?: boolean;
+  fetchedAt?: string;
   /** Blob-operation accounting for this request (diagnostic) */
   blob?: Record<string, unknown>;
 }
@@ -387,6 +405,12 @@ export interface FleetImages {
 export interface FleetDetail {
   yfId: number;
   fetchedAt: string;
+  /** When these specifications were read from Yachtfolio — shown as "Updated 09 September 2026" */
+  specsFetchedAt?: string;
+  /** True when Yachtfolio could not be reached and the record's data is being shown */
+  stale?: boolean;
+  yachtfolioError?: string;
+  facts?: { builder: string; lengthM: number | null; basePort: string; fetchedAt: string | null } | null;
   targetSeason: string;
   name: string;
   lengthM: number | null;
