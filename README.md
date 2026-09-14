@@ -89,3 +89,30 @@ with the Tier 3 Yachtfolio, image, publishing and auth modules; nothing is dupli
 
 See `selection-app/docs/tier2-build-report.md` for the modules reused, the globe API
 adaptations, the destination ids and a sample page config.
+
+
+## Storage and imagery (`selection-app/`)
+
+The portal keeps two stores, deliberately separate:
+
+- **Private Blob for JSON** — drafts, versioned published page configs,
+  the fleet list and reference data, the fleet-level state
+  (`private/fleet-state.json`), one record per picked yacht at
+  `yachts/<yfId>.json` (specifications with a hash and fetch time, picker
+  facts, the prepared images in display order) and the in-use index at
+  `selections/in-use.json` (`{ "<yfId>": ["<selectionId>", …] }`), which is
+  how the nightly refresh knows which yachts anyone is using. Only yachts a
+  consultant has picked, or that appear in a selection, ever have a record
+  or images prepared; nothing loops over the whole fleet.
+- **Sirv for imagery** (`IMAGE_STORE=sirv`) — one untouched original per
+  gallery image at `/yachtfolio_images/<yfId>/<yfId>.<pos>.<ext>`, cropped
+  at request time by the `charter-hero` (2000 × 1250) and `charter-thumb`
+  (1000 × 625) profiles. Each yacht has its own subfolder; the filename
+  repeats the yacht id so it matches the convention of the CRM images
+  already in the same Sirv folder. Position 0 is the main image. The
+  earlier public Blob IMAGES store still serves pages published before the
+  switch (`IMAGE_STORE=blob` keeps that pipeline).
+
+Specs are frozen at publish; images are live: a published page shows the
+specifications, rate and notes as published and the yacht's current photos.
+See `selection-app/docs/sirv-image-pipeline-build.md`.
