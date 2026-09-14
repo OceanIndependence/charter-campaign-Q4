@@ -1,29 +1,30 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import PortalHeader from "@/components/portal/PortalHeader";
-import ProfileForm from "@/components/portal/ProfileForm";
+import ConsultantAdmin from "@/components/portal/ConsultantAdmin";
 import styles from "@/components/portal/PortalForm.module.css";
 import { authProviderInfo, getPortalPageState } from "@/server/auth";
-import { ADMIN_CONSULTANTS_PATH, PROFILE_PATH, consultantNeedsPhone } from "@/lib/consultant-types";
+import { ADMIN_CONSULTANTS_PATH, PROFILE_PATH } from "@/lib/consultant-types";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Charter Portal — Your Profile",
+  title: "Charter Portal — Consultants",
   robots: { index: false, follow: false },
 };
 
 /**
- * The consultant's own profile: name, job title, email and photo read-only
- * (owned by marketing through the admin screen), phone and WhatsApp
- * editable. The dashboard sends a consultant here until a phone number is
- * filled in, since it appears on every client page they publish.
+ * Consultant admin, for identities listed in PORTAL_ADMIN_EMAILS. The
+ * guard is server-side here and on every /api/admin/consultants route; the
+ * header link is only a convenience. It checks the env var alone, never the
+ * admin's own record status, so marking oneself inactive cannot lock the
+ * screen.
  */
-export default async function ProfilePage() {
+export default async function ConsultantAdminPage() {
   const state = await getPortalPageState();
   if ("redirect" in state) redirect(state.redirect === "login" ? "/portal/login" : "/portal/sign-in");
-  const { identity, consultant, isAdmin } = state;
-  const gated = consultantNeedsPhone(consultant);
+  if (!state.isAdmin) redirect("/portal");
+  const { identity, consultant } = state;
   const showSignOut = !authProviderInfo().singleConsultant;
   return (
     <div className={styles.page}>
@@ -32,11 +33,11 @@ export default async function ProfilePage() {
         initial={(consultant.displayName || identity.name || identity.email || "?").slice(0, 1).toUpperCase()}
         photoUrl={consultant.photoStatus === "ok" ? consultant.photoUrl : undefined}
         profileHref={PROFILE_PATH}
-        adminHref={isAdmin ? ADMIN_CONSULTANTS_PATH : undefined}
+        adminHref={ADMIN_CONSULTANTS_PATH}
         showSignOut={showSignOut}
-        backHref={gated ? undefined : "/portal"}
+        backHref="/portal"
       />
-      <ProfileForm initial={consultant} gated={gated} />
+      <ConsultantAdmin />
     </div>
   );
 }

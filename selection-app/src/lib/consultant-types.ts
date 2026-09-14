@@ -4,7 +4,8 @@
  */
 
 export type ConsultantStatus = "active" | "inactive";
-export type ConsultantSource = "csv" | "sso";
+/** csv: the seed import; sso: created from a sign-in; admin: added on the admin screen before first sign-in */
+export type ConsultantSource = "csv" | "sso" | "admin";
 export type PhotoStatus = "ok" | "missing";
 
 export interface ConsultantRecord {
@@ -34,6 +35,8 @@ export type ConsultantSummary = Omit<ConsultantRecord, "phone" | "whatsapp" | "v
 
 /** Where a consultant edits their phone and WhatsApp numbers. */
 export const PROFILE_PATH = "/portal/profile";
+/** The consultant admin screen (PORTAL_ADMIN_EMAILS only). */
+export const ADMIN_CONSULTANTS_PATH = "/portal/admin/consultants";
 
 /** True while an active consultant has no phone number: the dashboard redirects to the profile until it is filled. */
 export function consultantNeedsPhone(c: Pick<ConsultantRecord, "status" | "phone"> | null | undefined): boolean {

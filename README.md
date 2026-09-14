@@ -122,6 +122,14 @@ consultant gives way to the charter desk block in `src/lib/charter-desk.ts`
 (`CHARTER_DESK_*` variables). Publishing is blocked while the assigned
 consultant has no phone number. See `docs/consultant-profiles-report.md`.
 
+Admin: `PORTAL_ADMIN_EMAILS` (comma-separated, compared lowercase against
+the signed-in email, in `src/server/auth/index.ts` only) opens
+`/portal/admin/consultants` and the `/api/admin/consultants` routes, guarded
+server-side. Admins edit display name, job title, email, photo URL (HEAD
+re-checked on change) and status, add a consultant ahead of their first
+sign-in, and release a record for re-claiming; never phone or WhatsApp,
+never deletion. Every change stamps `updatedAt` and `updatedBy`.
+
 ## Storage and imagery (`selection-app/`)
 
 The portal keeps two stores, deliberately separate:

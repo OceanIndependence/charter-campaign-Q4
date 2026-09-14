@@ -27,7 +27,7 @@
  *     displayName, jobTitle,
  *     phone, whatsapp,                consultant-editable
  *     photoUrl, photoStatus,          "ok" | "missing" (HEAD-checked)
- *     source,         "csv" | "sso"
+ *     source,         "csv" (seed import) | "sso" (created at sign-in) | "admin" (added on the admin screen)
  *     status,         "active" | "inactive"
  *     updatedAt, updatedBy
  *   }
@@ -39,6 +39,13 @@
  * Every record write rewrites its index row. Two admins saving at once can
  * race on the index; rebuildConsultantIndex() (the import script's
  * --rebuild-index) puts it right from the records.
+ *
+ * Uniqueness of email and objectId is enforced among ACTIVE records only,
+ * and every look-up prefers an active record. That is what lets an admin
+ * reconcile a stray "sso" record with a seeded one: mark the stray
+ * inactive, correct the seeded record's email, and the next sign-in claims
+ * the seeded record (consultant-session.ts) even though the inactive stray
+ * still carries the same address and, until then, the same objectId.
  */
 
 import { randomUUID } from "node:crypto";
@@ -51,7 +58,7 @@ export const recordKey = (id) => `${RECORDS_PREFIX}${id}.json`;
 
 const ID_RE = /^[A-Za-z0-9-]{8,64}$/;
 export const STATUSES = ["active", "inactive"];
-export const SOURCES = ["csv", "sso"];
+export const SOURCES = ["csv", "sso", "admin"];
 export const PHOTO_STATUSES = ["ok", "missing"];
 
 /** Team photos live here; the space in the folder name is already encoded. */
@@ -156,20 +163,24 @@ async function writeIndexRow(record) {
 }
 
 /**
- * Persist a record and its index row. Rejects an email another record
- * already carries: an address must resolve to exactly one consultant at
- * sign-in. Callers stamp updatedAt/updatedBy first (stampConsultant).
+ * Persist a record and its index row. An ACTIVE record may not share its
+ * email or objectId with another active record: an address must resolve to
+ * exactly one active consultant at sign-in. Inactive records are outside
+ * the check, so a stray can be retired while the seeded record takes over
+ * its address. Callers stamp updatedAt/updatedBy first (stampConsultant).
  */
 export async function writeConsultantRecord(record) {
   const rec = normaliseRecord(record.id, record);
   if (!isValidConsultantId(rec.id)) throw fail("INVALID", "Invalid consultant id.");
-  if (rec.email) {
-    const other = await findConsultantIdByEmail(rec.email);
-    if (other && other !== rec.id) throw fail("CONFLICT", `Another consultant record already uses ${rec.email}.`);
-  }
-  if (rec.objectId) {
-    const other = await findConsultantIdByObjectId(rec.objectId);
-    if (other && other !== rec.id) throw fail("CONFLICT", "Another consultant record is already claimed by this sign-in.");
+  if (rec.status === "active") {
+    if (rec.email) {
+      const other = await findConsultantIdByEmail(rec.email, { activeOnly: true });
+      if (other && other !== rec.id) throw fail("CONFLICT", `Another active consultant record already uses ${rec.email}.`);
+    }
+    if (rec.objectId) {
+      const other = await findConsultantIdByObjectId(rec.objectId, { activeOnly: true });
+      if (other && other !== rec.id) throw fail("CONFLICT", "Another active consultant record is already claimed by this sign-in.");
+    }
   }
   await putJson(recordKey(rec.id), rec);
   await writeIndexRow(rec);
@@ -182,27 +193,33 @@ export async function listConsultants() {
   return Object.values(idx.items).sort((a, b) => String(a.displayName).localeCompare(String(b.displayName), "en-GB"));
 }
 
-export async function findConsultantIdByEmail(email) {
+/** The active match if there is one, else (unless activeOnly) an inactive match, else null. */
+function pickPreferringActive(rows, matches, { activeOnly = false } = {}) {
+  const hits = rows.filter(matches);
+  return hits.find((r) => r.status === "active") ?? (activeOnly ? null : hits[0]) ?? null;
+}
+
+/** Id of the record with this email — an active one first. */
+export async function findConsultantIdByEmail(email, opts = {}) {
   const wanted = normaliseEmail(email);
   if (!wanted) return null;
-  const rows = await listConsultants();
-  return rows.find((r) => normaliseEmail(r.email) === wanted)?.id ?? null;
+  return pickPreferringActive(await listConsultants(), (r) => normaliseEmail(r.email) === wanted, opts)?.id ?? null;
 }
 
-export async function findConsultantIdByObjectId(objectId) {
+/** Id of the record claimed by this objectId — an active one first. */
+export async function findConsultantIdByObjectId(objectId, opts = {}) {
   const wanted = str(objectId);
   if (!wanted) return null;
-  const rows = await listConsultants();
-  return rows.find((r) => str(r.objectId) === wanted)?.id ?? null;
+  return pickPreferringActive(await listConsultants(), (r) => str(r.objectId) === wanted, opts)?.id ?? null;
 }
 
-export async function findConsultantByEmail(email) {
-  const id = await findConsultantIdByEmail(email);
+export async function findConsultantByEmail(email, opts = {}) {
+  const id = await findConsultantIdByEmail(email, opts);
   return id ? readConsultantRecord(id) : null;
 }
 
-export async function findConsultantByObjectId(objectId) {
-  const id = await findConsultantIdByObjectId(objectId);
+export async function findConsultantByObjectId(objectId, opts = {}) {
+  const id = await findConsultantIdByObjectId(objectId, opts);
   return id ? readConsultantRecord(id) : null;
 }
 

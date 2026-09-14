@@ -12,6 +12,12 @@
  * requireConsultantSession(); routes that only need the identity keep the
  * synchronous requirePortalSession().
  *
+ * Admin: PORTAL_ADMIN_EMAILS (comma-separated) compared lowercase against
+ * the signed-in identity's email, here and nowhere else, so moving to an
+ * Entra group claim later is a change to isAdmin() alone. It checks the
+ * environment variable only — never the consultant record's status — so an
+ * admin who marks themself inactive cannot be locked out.
+ *
  * Provider selection is fail-closed in production:
  *   - PORTAL_AUTH_PROVIDER=microsoft → the real provider, or a LOCKED
  *     provider if its env vars are missing.
@@ -110,6 +116,19 @@ export function stubSignInCookie(id: string): { name: string; value: string } | 
   return p.isStub ? p.makeSessionCookie(id) : null;
 }
 
+/** True when the identity's email is listed in PORTAL_ADMIN_EMAILS. Env var only; never the record. */
+export function isAdmin(identity: ConsultantIdentity | null | undefined): boolean {
+  const raw = process.env.PORTAL_ADMIN_EMAILS;
+  if (!raw || !raw.trim()) return false;
+  const email = String(identity?.email ?? "").trim().toLowerCase();
+  if (!email) return false;
+  return raw
+    .split(",")
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean)
+    .includes(email);
+}
+
 export function identityCookieName(): string {
   return authProvider().cookieName;
 }
@@ -132,7 +151,7 @@ export type PortalSession =
   | { ok: false; response: NextResponse };
 
 export type ConsultantSession =
-  | { ok: true; identity: ConsultantIdentity; consultant: ConsultantRecord }
+  | { ok: true; identity: ConsultantIdentity; consultant: ConsultantRecord; isAdmin: boolean }
   | { ok: false; response: NextResponse };
 
 /**
@@ -159,7 +178,20 @@ export async function requireConsultantSession(request: NextRequest): Promise<Co
   const session = requirePortalSession(request);
   if (!session.ok) return session;
   const consultant = await resolveConsultant(session.identity);
-  return { ok: true, identity: session.identity, consultant };
+  return { ok: true, identity: session.identity, consultant, isAdmin: isAdmin(session.identity) };
+}
+
+/**
+ * Server-side guard for the admin routes: staging gate, identity, and the
+ * identity listed in PORTAL_ADMIN_EMAILS. Hiding navigation is not a guard.
+ */
+export async function requireAdminSession(request: NextRequest): Promise<ConsultantSession> {
+  const session = await requireConsultantSession(request);
+  if (!session.ok) return session;
+  if (!session.isAdmin) {
+    return { ok: false, response: NextResponse.json({ error: "Admin access required." }, { status: 403 }) };
+  }
+  return session;
 }
 
 /**
@@ -168,11 +200,11 @@ export async function requireConsultantSession(request: NextRequest): Promise<Co
  * when both pass.
  */
 export async function getPortalPageState(): Promise<
-  { redirect: "login" | "signin" } | { identity: ConsultantIdentity; consultant: ConsultantRecord }
+  { redirect: "login" | "signin" } | { identity: ConsultantIdentity; consultant: ConsultantRecord; isAdmin: boolean }
 > {
   if (!(await isPortalAuthedServer())) return { redirect: "login" };
   const identity = await getIdentityServer();
   if (!identity) return { redirect: "signin" };
   const consultant = await resolveConsultant(identity);
-  return { identity, consultant };
+  return { identity, consultant, isAdmin: isAdmin(identity) };
 }

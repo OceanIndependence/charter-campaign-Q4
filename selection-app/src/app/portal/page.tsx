@@ -4,7 +4,7 @@ import Dashboard from "@/components/portal/Dashboard";
 import PortalHeader from "@/components/portal/PortalHeader";
 import styles from "@/components/portal/PortalForm.module.css";
 import { authProviderInfo, getPortalPageState } from "@/server/auth";
-import { PROFILE_PATH, consultantNeedsPhone } from "@/lib/consultant-types";
+import { ADMIN_CONSULTANTS_PATH, PROFILE_PATH, consultantNeedsPhone } from "@/lib/consultant-types";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 export default async function PortalPage() {
   const state = await getPortalPageState();
   if ("redirect" in state) redirect(state.redirect === "login" ? "/portal/login" : "/portal/sign-in");
-  const { identity, consultant } = state;
+  const { identity, consultant, isAdmin } = state;
   // A client page carries the consultant's phone number: until it is filled
   // in, the profile is the only place to go.
   if (consultantNeedsPhone(consultant)) redirect(PROFILE_PATH);
@@ -29,6 +29,7 @@ export default async function PortalPage() {
         initial={(consultant.displayName || identity.name || identity.email || "?").slice(0, 1).toUpperCase()}
         photoUrl={consultant.photoStatus === "ok" ? consultant.photoUrl : undefined}
         profileHref={PROFILE_PATH}
+        adminHref={isAdmin ? ADMIN_CONSULTANTS_PATH : undefined}
         showSignOut={showSignOut}
       />
       <Dashboard />

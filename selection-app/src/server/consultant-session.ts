@@ -10,13 +10,18 @@
  * Resolution order, on every portal request (reads are free; writes happen
  * only on the first sign-in that claims or creates a record):
  *
- *   1. Match on objectId (ConsultantIdentity.id).
- *   2. Match on email, lowercase on both sides. A record not yet claimed
- *      takes this objectId. A record already claimed by a DIFFERENT
- *      objectId is left alone — claims never overwrite — and step 3 runs.
- *   3. No match: create a record with source "sso", taking displayName and
- *      jobTitle from the claims, the email from the token, and a photo URL
- *      derived from the display name and HEAD-checked.
+ *   1. Match on objectId (ConsultantIdentity.id). An ACTIVE match is the
+ *      answer. An inactive match is kept as the fallback and step 2 runs,
+ *      so a retired stray record does not stop the seeded one being claimed.
+ *   2. Match on email, lowercase on both sides, among active records. One
+ *      not yet claimed takes this objectId (and the objectId is cleared from
+ *      the inactive record of step 1, if any). One already claimed by a
+ *      DIFFERENT objectId is left alone — claims never overwrite.
+ *   3. The inactive record from step 1, if there was one: the consultant
+ *      sees their inactive profile rather than gaining a new stray record.
+ *   4. No match anywhere: create a record with source "sso", taking
+ *      displayName and jobTitle from the claims, the email from the token,
+ *      and a photo URL derived from the display name and HEAD-checked.
  *
  * Claims are used to create, never to update: a seeded displayName,
  * jobTitle or email is never touched by what the token says.
@@ -44,33 +49,44 @@ export async function resolveConsultant(identity: ConsultantIdentity): Promise<C
   const objectId = String(identity.id ?? "").trim();
   if (!objectId) throw Object.assign(new Error("Signed-in identity has no object ID."), { code: "FORBIDDEN" });
 
-  // 1. Already claimed.
+  // 1. Already claimed. Active wins outright; inactive is only the fallback.
   const byOid = (await findConsultantByObjectId(objectId)) as ConsultantRecord | null;
-  if (byOid) return byOid;
+  if (byOid?.status === "active") return byOid;
+  const inactiveByOid = byOid; // null or an inactive record carrying this objectId
 
-  // 2. Seeded or admin-created, not yet claimed.
+  // 2. Seeded or admin-created, active, not yet claimed.
   const email = normaliseEmail(identity.email);
   if (email) {
-    const byEmail = (await findConsultantByEmail(email)) as ConsultantRecord | null;
+    const byEmail = (await findConsultantByEmail(email, { activeOnly: true })) as ConsultantRecord | null;
     if (byEmail && !byEmail.objectId) {
+      if (inactiveByOid) {
+        // The objectId moves to the record being claimed; the retired stray
+        // keeps everything else, so the reconciliation stays visible.
+        inactiveByOid.objectId = null;
+        stampConsultant(inactiveByOid, signInStamp(identity));
+        await writeConsultantRecord(inactiveByOid);
+      }
       byEmail.objectId = objectId;
       stampConsultant(byEmail, signInStamp(identity));
       return (await writeConsultantRecord(byEmail)) as ConsultantRecord;
     }
     // byEmail claimed by another objectId: the seeded address is not the one
-    // Microsoft signs this person in as. Fall through and create a stray
-    // "sso" record; the admin screen's release flow reconciles the two.
+    // Microsoft signs this person in as. Fall through; a stray "sso" record
+    // is created and the admin screen's release flow reconciles the two.
   }
 
-  // 3. Unseeded: create from the claims.
+  // 3. Retired: the consultant keeps resolving to their inactive record.
+  if (inactiveByOid) return inactiveByOid;
+
+  // 4. Unseeded: create from the claims.
   const displayName = String(identity.name ?? "").trim();
   const photoUrl = derivedPhotoUrl(displayName);
   const record: ConsultantRecord = {
     ...(emptyConsultantRecord(newConsultantId()) as ConsultantRecord),
     objectId,
-    // An address another record already carries cannot be stored twice; the
-    // stray record then has no email until an admin sorts it out.
-    email: email && !(await findConsultantByEmail(email)) ? email : "",
+    // An address another ACTIVE record already carries cannot be stored
+    // twice; the stray record then has no email until an admin sorts it out.
+    email: email && !(await findConsultantByEmail(email, { activeOnly: true })) ? email : "",
     displayName,
     jobTitle: String(identity.jobTitle ?? "").trim(),
     photoUrl,
