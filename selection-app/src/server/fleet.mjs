@@ -11,7 +11,6 @@
 
 import {
   REQUEST_DELAY_MS,
-  fetchBasicList,
   fetchBasicRecord,
   fetchBrochure,
   fetchFleetList,
@@ -60,13 +59,12 @@ const FLEET_STALE_MS = 36 * 60 * 60 * 1000; // lazy re-sync if the cron hasn't r
 // Bump when the fleet list gains fields — a cached list from before is
 // re-synced on the next request instead of waiting for the nightly cron.
 const FLEET_SCHEMA_VERSION = 2;
-// Yachtfolio's one-call basic list covers only the agency's own yachts (about
-// a hundred of the 2,400 in the charter list), so the rest get their picker
-// facts (builder, length, base port) from basic records fetched one at a
-// time. The cron route runs that pass for as long as its time budget allows
-// and chains follow-up runs until none remain.
-const DEFAULT_FACTS_BUDGET_MS = 85_000;
-export const factsBudgetMs = () => Number(process.env.FLEET_FACTS_BUDGET_MS) || DEFAULT_FACTS_BUDGET_MS;
+// Picker facts (builder, length, summer base port) are effectively
+// immutable, so they are fetched once and cached: Yachtfolio's one-call
+// basic list covers the agency's own yachts (about a hundred of the 2,400 in
+// the charter list); the rest are filled in nightly, a bounded number at a
+// time from whatever call budget the in-use refresh leaves (nightly.mjs), or
+// in batches by the backfill route. There is no whole-fleet pass.
 const DETAIL_FRESH_MS = 6 * 60 * 60 * 1000; // rates change; don't serve stale for long
 // Download the whole gallery (capped per category) so the consultant can pick
 // which image fills each page slot; the default slot assignment takes the
@@ -233,102 +231,43 @@ async function writeIfChanged(key, value, recordedHash, record) {
   }
 }
 
-/**
- * Builder, length and summer base port for every yacht, from the one-call
- * basic list. When that call fails (or returns nothing) the values from the
- * previous cache are kept, so a transient error never blanks the picker.
- */
-function factsFromBasic(row) {
+/** Picker facts from a basic record (or a fleet-list row that carries them). */
+export function factsFromBasic(row, fetchedAt = new Date().toISOString()) {
   return {
     builder: String(row?.builder ?? "").trim(),
     lengthM: parseMetres(row?.length_metric ?? row?.length_metres ?? row?.length) ?? null,
     basePort: basePort(row?.summer_base_port) ?? "",
     // When the record was read — a yacht Yachtfolio has no facts for is
-    // still marked as checked, so it is not fetched again every night.
-    factsAt: new Date().toISOString(),
+    // still marked as checked, so it is not fetched again.
+    factsAt: fetchedAt,
   };
 }
 
-const hasFacts = (f) => Boolean(f && (f.builder || f.lengthM != null || f.basePort));
+export const hasFacts = (f) => Boolean(f && (f.builder || f.lengthM != null || f.basePort));
+const sameFacts = (a, b) => a && b && a.builder === b.builder && a.lengthM === b.lengthM && a.basePort === b.basePort;
 
 /**
- * @param deadline  epoch ms after which no further per-yacht records are
- *                  fetched (0 disables the per-yacht pass).
+ * Set a yacht's facts in the map, keeping the original read time when the
+ * values are unchanged so a night that learns nothing new does not rewrite
+ * fleet.json for a timestamp.
  */
-async function fetchFleetFacts(passkey, previous, list, stats, { deadline = 0 } = {}) {
-  const facts = new Map();
-  for (const y of previous?.yachts ?? []) {
-    const f = { builder: y.builder ?? "", lengthM: y.lengthM ?? null, basePort: y.basePort ?? "", factsAt: y.factsAt ?? null };
-    if (hasFacts(f) || f.factsAt) facts.set(y.id, f);
-  }
-  let listed = 0;
-  try {
-    const rows = await fetchBasicList(passkey);
-    for (const row of rows) {
-      const id = Number(row?.id_yacht ?? row?.yacht_id ?? row?.id);
-      if (!Number.isFinite(id)) continue;
-      const f = factsFromBasic(row);
-      if (hasFacts(f)) {
-        // Unchanged facts keep their original read time, so a night that
-        // learns nothing new does not rewrite fleet.json for a timestamp.
-        const prev = facts.get(id);
-        if (prev && prev.builder === f.builder && prev.lengthM === f.lengthM && prev.basePort === f.basePort && prev.factsAt) f.factsAt = prev.factsAt;
-        facts.set(id, f);
-        listed += 1;
-      }
-    }
-    if (!listed) {
-      // Field names only (never values): enough to see why nothing matched.
-      const keys = rows.length && rows[0] && typeof rows[0] === "object" ? Object.keys(rows[0]).slice(0, 40).join(", ") : "none";
-      stats.notes.push(
-        `basic yacht list returned ${rows.length} row(s) but no usable builder/length — picker facts kept from the previous sync. Row fields: ${keys}.`
-      );
-    } else {
-      stats.notes.push(`basic yacht list supplied builder/length for ${listed} yacht(s).`);
-    }
-  } catch (err) {
-    const msg = redact(String(err?.message ?? err), passkey);
-    stats.notes.push(`basic yacht list unavailable (${msg}) — picker facts (builder, length) kept from the previous sync.`);
-    console.warn(`[fleet:sync] ${stats.notes[stats.notes.length - 1]}`);
-  }
-  // The rest, one basic record at a time, for as long as the budget allows.
-  // Only the cron/manual run has a budget; a request-time re-sync stays quick.
-  const pending = list.filter((y) => !facts.has(y.id));
-  let fetched = 0;
-  let filled = 0;
-  for (const y of pending) {
-    if (!deadline || Date.now() + REQUEST_DELAY_MS + 3000 > deadline) break;
-    await sleep(REQUEST_DELAY_MS);
-    try {
-      const f = factsFromBasic(await fetchBasicRecord(passkey, y.id));
-      facts.set(y.id, f);
-      fetched += 1;
-      if (hasFacts(f)) filled += 1;
-    } catch (err) {
-      console.warn(`[fleet:sync] basic record for ${y.id} failed: ${redact(String(err?.message ?? err), passkey)}`);
-    }
-  }
-  stats.factsFilled = filled;
-  stats.factsRemaining = list.filter((y) => !facts.has(y.id)).length;
-  stats.factsCount = list.filter((y) => hasFacts(facts.get(y.id))).length;
-  if (fetched) {
-    stats.notes.push(
-      `basic records read for ${fetched} yacht(s) this run (${filled} with builder/length); ${stats.factsRemaining} still to read.`
-    );
-  } else if (deadline && pending.length) {
-    stats.notes.push(`${pending.length} yacht(s) still to read — no time left in this run.`);
-  }
-  return facts;
+export function recordFacts(facts, id, next) {
+  const prev = facts.get(id);
+  if (sameFacts(prev, next) && prev.factsAt) next = { ...next, factsAt: prev.factsAt };
+  facts.set(id, next);
 }
 
-export async function syncFleet({ factsDeadline = 0 } = {}) {
-  if (isDemoFleet()) {
-    // No passkey: nothing to sync. The demo set is served instead so the
-    // portal keeps working; say so rather than failing the cron.
-    const fleet = demoFleet();
-    console.warn("[fleet:sync] YACHTFOLIO_PASSKEY is not configured — serving the demo fleet, nothing synced.");
-    return { count: fleet.count, factsCount: fleet.count, factsFilled: 0, factsRemaining: 0, removedCount: 0, syncedAt: fleet.syncedAt, persisted: false, demo: true, notes: ["demo fleet — no passkey"] };
-  }
+/** The headline fields the nightly diff compares per yacht. */
+const headline = (y) => [y?.name ?? "", y?.registryPort ?? "", y?.builder ?? "", y?.lengthM ?? null, y?.basePort ?? ""];
+
+/**
+ * Fetch the fleet list and reference data and build the next fleet.json
+ * without writing anything. Facts are carried from the previous list and
+ * refreshed for free from any list row that carries builder or length.
+ * Returns { fleet, reference, facts, changedIds, state, previous } for
+ * persistFleet(); the nightly run fills facts gaps in between.
+ */
+export async function fetchFleetSnapshot() {
   const passkey = await passkeyOrThrow();
   const run = startRun("sync");
   // Fail closed: if the state or the previous list cannot be read, nothing
@@ -346,8 +285,23 @@ export async function syncFleet({ factsDeadline = 0 } = {}) {
   const list = await fetchFleetList(passkey);
   await sleep(REQUEST_DELAY_MS);
   const reference = await fetchReferenceData(passkey);
-  await sleep(REQUEST_DELAY_MS);
-  const facts = await fetchFleetFacts(passkey, previous, list, run.stats, { deadline: factsDeadline });
+
+  const facts = new Map();
+  for (const y of previous?.yachts ?? []) {
+    const f = { builder: y.builder ?? "", lengthM: y.lengthM ?? null, basePort: y.basePort ?? "", factsAt: y.factsAt ?? null };
+    if (hasFacts(f) || f.factsAt) facts.set(y.id, f);
+  }
+  // A corrected builder or length in the list response is picked up here
+  // without a call; the per-yacht follow-up is only for rows without them.
+  let fromList = 0;
+  for (const row of list) {
+    const f = factsFromBasic(row);
+    if (hasFacts(f)) {
+      recordFacts(facts, row.id, f);
+      fromList += 1;
+    }
+  }
+  if (fromList) run.stats.notes.push(`fleet list carried builder/length for ${fromList} yacht(s).`);
 
   const currentIds = new Set(list.map((y) => y.id));
   const removed = { ...(previous?.removed ?? {}) };
@@ -359,30 +313,46 @@ export async function syncFleet({ factsDeadline = 0 } = {}) {
       removed[String(y.id)] ??= { name: y.name, removedAt: new Date().toISOString() };
     }
   }
+  const previousById = new Map((previous?.yachts ?? []).map((y) => [y.id, y]));
+  const yachts = list.map((y) => ({
+    id: y.id,
+    name: y.name,
+    registryPort: y.registry_port ?? "",
+    // Builder, length and summer base port let the form's picker tell two
+    // yachts of the same name apart; "" / null when Yachtfolio has none.
+    builder: facts.get(y.id)?.builder ?? "",
+    lengthM: facts.get(y.id)?.lengthM ?? null,
+    basePort: facts.get(y.id)?.basePort ?? "",
+    factsAt: facts.get(y.id)?.factsAt ?? null,
+  }));
+  // New yachts and yachts whose headline fields changed since the last list.
+  const changedIds = yachts.filter((y) => hashJson(headline(previousById.get(y.id))) !== hashJson(headline(y))).map((y) => y.id);
+  const fleet = { schemaVersion: FLEET_SCHEMA_VERSION, syncedAt: new Date().toISOString(), count: list.length, yachts, removed };
+  return { run, passkey, state, previous, list, reference, facts, fleet, changedIds };
+}
 
-  const fleet = {
-    schemaVersion: FLEET_SCHEMA_VERSION,
-    syncedAt: new Date().toISOString(),
-    count: list.length,
-    yachts: list.map((y) => ({
-      id: y.id,
-      name: y.name,
-      registryPort: y.registry_port ?? "",
-      // Builder, length and summer base port let the form's picker tell two
-      // yachts of the same name apart; "" / null when Yachtfolio has none.
-      builder: facts.get(y.id)?.builder ?? "",
-      lengthM: facts.get(y.id)?.lengthM ?? null,
-      basePort: facts.get(y.id)?.basePort ?? "",
-      factsAt: facts.get(y.id)?.factsAt ?? null,
-    })),
-    removed,
-  };
+/** Rebuild fleet.yachts from the facts map after a gap fill. */
+export function applyFacts(snapshot) {
+  const { facts } = snapshot;
+  snapshot.fleet.yachts = snapshot.fleet.yachts.map((y) => ({
+    ...y,
+    builder: facts.get(y.id)?.builder ?? "",
+    lengthM: facts.get(y.id)?.lengthM ?? null,
+    basePort: facts.get(y.id)?.basePort ?? "",
+    factsAt: facts.get(y.id)?.factsAt ?? null,
+  }));
+}
+
+/**
+ * Persist a snapshot: fleet.json and reference.json only when their content
+ * hash changed, the fleet state only when a hash changed or its check time
+ * is over 12 hours old. Returns the sync summary.
+ */
+export async function persistFleet(snapshot) {
+  const { run, state, fleet, reference, facts, removed = fleet.removed } = snapshot;
+  applyFacts(snapshot);
   memoryFleet = fleet;
   memoryReference = reference;
-
-  // Persist only what changed. The hash excludes syncedAt so an unchanged
-  // fleet costs no write; the check time is recorded in the fleet state so
-  // the cached list still counts as fresh.
   const { syncedAt: _syncedAt, ...fleetContent } = fleet;
   const fleetContentHash = hashJson(fleetContent);
   const next = { ...state };
@@ -397,11 +367,12 @@ export async function syncFleet({ factsDeadline = 0 } = {}) {
   next.fleetCheckedAt = fleet.syncedAt;
   const stateWritten = await writeFleetState(state, next, { hashChanged: fleetWritten || referenceWritten });
   const stats = finishRun(run);
+  const withFacts = fleet.yachts.filter((y) => hasFacts(facts.get(y.id))).length;
   return {
     count: fleet.count,
-    factsCount: stats.factsCount ?? 0,
-    factsFilled: stats.factsFilled ?? 0,
-    factsRemaining: stats.factsRemaining ?? 0,
+    changedCount: snapshot.changedIds.length,
+    factsCount: withFacts,
+    factsRemaining: fleet.yachts.filter((y) => !facts.get(y.id)?.factsAt).length,
     removedCount: Object.keys(removed).length,
     syncedAt: fleet.syncedAt,
     persisted: !stats.dryRun,
@@ -412,6 +383,22 @@ export async function syncFleet({ factsDeadline = 0 } = {}) {
     dryRun: stats.dryRun,
     notes: stats.notes,
   };
+}
+
+/**
+ * Pull the charter fleet list from Yachtfolio into the cache (list and
+ * reference data only — no per-yacht work). Used by the lazy re-sync in
+ * getFleet() and the fetch CLI; the nightly cron runs nightly.mjs instead.
+ */
+export async function syncFleet() {
+  if (isDemoFleet()) {
+    // No passkey: nothing to sync. The demo set is served instead so the
+    // portal keeps working; say so rather than failing the cron.
+    const fleet = demoFleet();
+    console.warn("[fleet:sync] YACHTFOLIO_PASSKEY is not configured — serving the demo fleet, nothing synced.");
+    return { count: fleet.count, changedCount: 0, factsCount: fleet.count, factsRemaining: 0, removedCount: 0, syncedAt: fleet.syncedAt, persisted: false, demo: true, notes: ["demo fleet — no passkey"] };
+  }
+  return persistFleet(await fetchFleetSnapshot());
 }
 
 /** The cached fleet list; bootstraps from the live API when missing/stale. */
