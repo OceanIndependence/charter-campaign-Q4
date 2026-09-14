@@ -6,6 +6,11 @@
  *   1. Staging gate  — the shared PORTAL_ACCESS_KEY cookie (portal-auth.ts).
  *   2. Identity      — a ConsultantIdentity from the active provider, which
  *                      is what ownership is recorded and checked against.
+ * Once both pass, the identity is resolved to its consultant RECORD
+ * (consultant-session.ts): matched on object ID, then email, else created.
+ * Pages and the routes that need the record use getPortalPageState() and
+ * requireConsultantSession(); routes that only need the identity keep the
+ * synchronous requirePortalSession().
  *
  * Provider selection is fail-closed in production:
  *   - PORTAL_AUTH_PROVIDER=microsoft → the real provider, or a LOCKED
@@ -20,6 +25,8 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import type { AuthProvider, ConsultantIdentity } from "./types";
+import type { ConsultantRecord } from "@/lib/consultant-types";
+import { resolveConsultant } from "../consultant-session";
 import { stubProvider } from "./stub";
 import { soloProvider } from "./solo";
 import { microsoftProvider } from "./microsoft";
@@ -124,6 +131,10 @@ export type PortalSession =
   | { ok: true; identity: ConsultantIdentity }
   | { ok: false; response: NextResponse };
 
+export type ConsultantSession =
+  | { ok: true; identity: ConsultantIdentity; consultant: ConsultantRecord }
+  | { ok: false; response: NextResponse };
+
 /**
  * Require BOTH the staging gate and a valid identity for an API route.
  * Returns the identity on success, or a JSON error response.
@@ -141,14 +152,27 @@ export function requirePortalSession(request: NextRequest): PortalSession {
 }
 
 /**
+ * Staging gate, identity AND the resolved consultant record, for API routes
+ * that read or write the record. Storage errors propagate to errorResponse.
+ */
+export async function requireConsultantSession(request: NextRequest): Promise<ConsultantSession> {
+  const session = requirePortalSession(request);
+  if (!session.ok) return session;
+  const consultant = await resolveConsultant(session.identity);
+  return { ok: true, identity: session.identity, consultant };
+}
+
+/**
  * Server-component gate: returns where to redirect ('login' for the staging
- * gate, 'signin' for identity) or the identity when both pass.
+ * gate, 'signin' for identity) or the identity and its consultant record
+ * when both pass.
  */
 export async function getPortalPageState(): Promise<
-  { redirect: "login" | "signin" } | { identity: ConsultantIdentity }
+  { redirect: "login" | "signin" } | { identity: ConsultantIdentity; consultant: ConsultantRecord }
 > {
   if (!(await isPortalAuthedServer())) return { redirect: "login" };
   const identity = await getIdentityServer();
   if (!identity) return { redirect: "signin" };
-  return { identity };
+  const consultant = await resolveConsultant(identity);
+  return { identity, consultant };
 }

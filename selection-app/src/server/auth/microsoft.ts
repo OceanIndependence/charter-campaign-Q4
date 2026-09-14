@@ -3,8 +3,11 @@
  *
  * This is the one module that gets implemented to go live. It must produce a
  * ConsultantIdentity whose `id` is the token's `oid` (object ID) claim,
- * `email` the `preferred_username`/`email`, and `name` the `name` claim, and
- * store a signed/validated session cookie. Nothing else in the app changes:
+ * `email` the `preferred_username`/`email`, `name` the `name` claim and,
+ * where available, `jobTitle` (Graph /me or an optional claim), and store a
+ * signed/validated session cookie. The consultant RECORD is then resolved
+ * from that identity by src/server/consultant-session.ts — objectId first,
+ * then email, else created — so nothing about records changes here. Nothing else in the app changes:
  * ownership is already keyed on ConsultantIdentity.id and drafts are already
  * namespaced by it.
  *

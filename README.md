@@ -107,6 +107,14 @@ npm run consultants:import -- --rebuild-index
 The import never updates or deletes an existing record and never runs on
 build or deploy. Each run writes `docs/consultants-import-report.md`.
 
+On each portal request the signed-in identity is resolved to its record in
+`src/server/consultant-session.ts`: matched on Entra object ID, then on
+email (which claims an unclaimed record), else created with `source: "sso"`
+from the token claims. Claims never overwrite a stored value. Consultants
+edit only their phone and WhatsApp numbers, at `/portal/profile`; the
+dashboard redirects there until a phone number is filled in. Everything
+else on the record belongs to the admin screen.
+
 ## Storage and imagery (`selection-app/`)
 
 The portal keeps two stores, deliberately separate:

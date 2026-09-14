@@ -5,11 +5,17 @@ import SignOutButton from "./SignOutButton";
 export default function PortalHeader({
   consultant = "CHARTER PORTAL",
   initial = "OI",
+  photoUrl,
+  profileHref,
   showSignOut = false,
   backHref,
 }: {
   consultant?: string;
   initial?: string;
+  /** The consultant's resolved team photo; the initial is shown without one */
+  photoUrl?: string;
+  /** When set, a link to the consultant's own profile page */
+  profileHref?: string;
   showSignOut?: boolean;
   /** When set, a persistent way back (e.g. to the dashboard) */
   backHref?: string;
@@ -27,8 +33,18 @@ export default function PortalHeader({
         )}
       </div>
       <div className={styles.headerRight}>
+        {profileHref && (
+          <a href={profileHref} className={styles.headerLink}>
+            PROFILE
+          </a>
+        )}
         <span className={styles.consultantTag}>{consultant}</span>
-        <span className={styles.avatar}>{initial}</span>
+        {photoUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={photoUrl} alt="" className={`${styles.avatar} ${styles.avatarImg}`} />
+        ) : (
+          <span className={styles.avatar}>{initial}</span>
+        )}
         {showSignOut && <SignOutButton />}
       </div>
     </header>

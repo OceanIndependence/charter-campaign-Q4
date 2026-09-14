@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import type { SelectionMeta, SelectionStatus, Tier, VersionInfo } from "@/lib/portal-types";
 import { TIER_LABEL, clientPagePath, selectionTitle } from "@/lib/portal-types";
 import { fmtDateShort } from "@/lib/format";
+import { PROFILE_PATH } from "@/lib/consultant-types";
+import type { DashboardConsultant } from "@/app/api/selections/route";
 import ConfirmDialog from "./ConfirmDialog";
 import styles from "./PortalForm.module.css";
 
@@ -27,6 +29,9 @@ export default function Dashboard() {
   const [scope, setScope] = useState<Scope>("mine");
   const [canViewAll, setCanViewAll] = useState(false);
   const [me, setMe] = useState<string>("");
+  /** Consultant records behind the rows' owners, keyed by owner id. */
+  const [consultants, setConsultants] = useState<Record<string, DashboardConsultant>>({});
+  const [myConsultant, setMyConsultant] = useState<DashboardConsultant | null>(null);
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<StatusFilter>("all");
   const [tier, setTier] = useState<TierFilter>("all");
@@ -66,6 +71,8 @@ export default function Dashboard() {
       setItems(body.items ?? []);
       setCanViewAll(Boolean(body.canViewAll));
       setMe(body.me ?? "");
+      setConsultants(body.consultants ?? {});
+      setMyConsultant(body.myConsultant ?? null);
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "The selection list is unavailable.");
@@ -236,6 +243,13 @@ export default function Dashboard() {
 
       {error && <p className={styles.dashError}>{error}</p>}
 
+      {myConsultant?.source === "sso" && (
+        <p className={styles.dashNote}>
+          Your profile was created from your sign-in rather than the seed list, so your job title and photo may be incomplete.{" "}
+          <a href={PROFILE_PATH}>Check your profile</a> and contact marketing if anything needs correcting.
+        </p>
+      )}
+
       {(choosing || nothingYet) && (
         <TierChooser busy={busy === "new"} onPick={(t) => createNew({ tier: t })} onCancel={nothingYet ? undefined : () => setChoosing(false)} />
       )}
@@ -312,6 +326,7 @@ export default function Dashboard() {
                         m={m}
                         mine={mine}
                         showOwner={scope === "all"}
+                        ownerConsultant={m.owner?.id ? consultants[m.owner.id] ?? null : null}
                         isBusy={isBusy}
                         copied={copied === m.id}
                         menuOpen={menuFor === m.id}
@@ -399,6 +414,8 @@ interface RowProps {
   m: SelectionMeta;
   mine: boolean;
   showOwner: boolean;
+  /** The consultant record behind the row's owner, when one has claimed that identity */
+  ownerConsultant: DashboardConsultant | null;
   isBusy: boolean;
   copied: boolean;
   menuOpen: boolean;
@@ -433,10 +450,12 @@ function RowGroup(p: RowProps) {
   const subline = [
     TIER_LABEL[tier],
     `${m.yachtCount} ${m.yachtCount === 1 ? "yacht" : "yachts"}`,
-    p.showOwner ? m.owner?.name || m.owner?.email || null : null,
+    p.showOwner ? p.ownerConsultant?.displayName || m.owner?.name || m.owner?.email || null : null,
   ]
     .filter(Boolean)
     .join(" · ");
+  // A record created at sign-in rather than seeded: visible to whoever views all consultants.
+  const unseeded = p.showOwner && p.ownerConsultant?.source === "sso";
   const menuItem = (label: string, onClick: () => void, danger = false) => (
     <button
       type="button"
@@ -455,7 +474,14 @@ function RowGroup(p: RowProps) {
       <tr className={`${styles.row} ${p.isBusy ? styles.rowBusy : ""}`} data-id={m.id}>
         <td className={styles.tdWrap}>
           <span className={styles.rowClient}>{m.clientNames.trim() || title}</span>
-          <span className={styles.rowSub}>{subline}</span>
+          <span className={styles.rowSub}>
+            {subline}
+            {unseeded && (
+              <span className={styles.ssoTag} title="This consultant's record was created from their sign-in, not the seed list">
+                CREATED AT SIGN-IN
+              </span>
+            )}
+          </span>
         </td>
         <td>
           <span className={`${styles.status} ${styles[`status_${m.status}`]}`}>{STATUS_LABEL[m.status]}</span>

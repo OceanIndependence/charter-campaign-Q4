@@ -18,11 +18,16 @@ import type { AuthProvider, ConsultantIdentity } from "./types";
 
 export const STUB_COOKIE = "oi_portal_identity";
 
-/** Fixed fake consultants. ids stand in for Microsoft object IDs. */
+/**
+ * Fixed fake consultants. ids stand in for Microsoft object IDs. The
+ * addresses are deliberately NOT real Ocean Independence ones: sign-in
+ * matches consultant records on email, and a stub must never claim a
+ * seeded colleague's record.
+ */
 export const STUB_IDENTITIES: ConsultantIdentity[] = [
-  { id: "stub-lucy", email: "lucy@ocyachts.com", name: "Lucy Harrington" },
-  { id: "stub-james", email: "james@ocyachts.com", name: "James Fenwick" },
-  { id: "stub-priya", email: "priya@ocyachts.com", name: "Priya Anand" },
+  { id: "stub-lucy", email: "lucy.harrington@example.com", name: "Lucy Harrington", jobTitle: "Charter Consultant" },
+  { id: "stub-james", email: "james.fenwick@example.com", name: "James Fenwick", jobTitle: "Senior Charter Consultant" },
+  { id: "stub-priya", email: "priya.anand@example.com", name: "Priya Anand", jobTitle: "Charter Director" },
 ];
 
 function isProduction(): boolean {

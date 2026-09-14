@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import Dashboard from "@/components/portal/Dashboard";
 import PortalHeader from "@/components/portal/PortalHeader";
+import ProfileForm from "@/components/portal/ProfileForm";
 import styles from "@/components/portal/PortalForm.module.css";
 import { authProviderInfo, getPortalPageState } from "@/server/auth";
 import { PROFILE_PATH, consultantNeedsPhone } from "@/lib/consultant-types";
@@ -9,18 +9,21 @@ import { PROFILE_PATH, consultantNeedsPhone } from "@/lib/consultant-types";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Charter Portal — Your Selections",
+  title: "Charter Portal — Your Profile",
   robots: { index: false, follow: false },
 };
 
-/** Login → dashboard: the consultant's selections, before any form. */
-export default async function PortalPage() {
+/**
+ * The consultant's own profile: name, job title, email and photo read-only
+ * (owned by marketing through the admin screen), phone and WhatsApp
+ * editable. The dashboard sends a consultant here until a phone number is
+ * filled in, since it appears on every client page they publish.
+ */
+export default async function ProfilePage() {
   const state = await getPortalPageState();
   if ("redirect" in state) redirect(state.redirect === "login" ? "/portal/login" : "/portal/sign-in");
   const { identity, consultant } = state;
-  // A client page carries the consultant's phone number: until it is filled
-  // in, the profile is the only place to go.
-  if (consultantNeedsPhone(consultant)) redirect(PROFILE_PATH);
+  const gated = consultantNeedsPhone(consultant);
   const showSignOut = !authProviderInfo().singleConsultant;
   return (
     <div className={styles.page}>
@@ -30,8 +33,9 @@ export default async function PortalPage() {
         photoUrl={consultant.photoStatus === "ok" ? consultant.photoUrl : undefined}
         profileHref={PROFILE_PATH}
         showSignOut={showSignOut}
+        backHref={gated ? undefined : "/portal"}
       />
-      <Dashboard />
+      <ProfileForm initial={consultant} gated={gated} />
     </div>
   );
 }
