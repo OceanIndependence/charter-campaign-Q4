@@ -155,10 +155,37 @@
   color: var(--fg);
 }
 
+/* The fade starts higher and follows an eased curve (the stops trace a
+   smoothstep), so there is no visible line where the image begins to go and
+   the last of it dissolves into the white card rather than stopping. */
 [data-theme="light"] .cardImage {
   background: transparent;
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 72%, transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 0%, #000 72%, transparent 100%);
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 52%,
+    rgba(0, 0, 0, 0.97) 58%,
+    rgba(0, 0, 0, 0.9) 64%,
+    rgba(0, 0, 0, 0.76) 70%,
+    rgba(0, 0, 0, 0.58) 76%,
+    rgba(0, 0, 0, 0.38) 82%,
+    rgba(0, 0, 0, 0.2) 88%,
+    rgba(0, 0, 0, 0.07) 94%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 0%,
+    #000 52%,
+    rgba(0, 0, 0, 0.97) 58%,
+    rgba(0, 0, 0, 0.9) 64%,
+    rgba(0, 0, 0, 0.76) 70%,
+    rgba(0, 0, 0, 0.58) 76%,
+    rgba(0, 0, 0, 0.38) 82%,
+    rgba(0, 0, 0, 0.2) 88%,
+    rgba(0, 0, 0, 0.07) 94%,
+    transparent 100%
+  );
 }
 
 [data-theme="light"] .cardScrim {
