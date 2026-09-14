@@ -87,7 +87,7 @@ export function CompareOverlay({ yachts, onClose }: { yachts: Yacht[]; onClose: 
                 <span>{y.name}</span>
                 {y.leadImageUrl && (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img className={styles.headThumb} src={y.leadImageUrl} alt="" loading="lazy" />
+                  <img className={styles.headThumb} src={y.imageThumbs?.lead ?? y.leadImageUrl} alt="" loading="lazy" />
                 )}
               </div>
             ))}

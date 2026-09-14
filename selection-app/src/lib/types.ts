@@ -72,6 +72,13 @@ export interface Yacht {
   imageRefs?: Partial<Record<ImageSlot, number>>;
   /** The slot URLs as they were at publish — reference only, never rendered when a record exists */
   imagesAtPublish?: Record<ImageSlotField, string>;
+  /**
+   * Thumb-profile URL (charter-thumb, 1000 × 625) for each slot resolved from
+   * the yacht's record at render time. Components rendering small images
+   * (the Compare head, the Tier 2 rail card) use these and fall back to the
+   * hero URL when absent (pasted URLs, hand-entered yachts, pre-records pages).
+   */
+  imageThumbs?: Partial<Record<ImageSlot, string>>;
   brochureUrl: string;
   /** Plain-text description from the Yachtfolio brochure (HTML stripped) */
   description?: string;

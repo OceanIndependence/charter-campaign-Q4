@@ -243,9 +243,10 @@ Test-only overrides, never set in Vercel: `SIRV_API_BASE` (mock Sirv),
   PORTAL_ACCESS_KEY …`, `[storage] <context>: <message>`.
 - **A published page** — view source: image `src` attributes on
   `https://<account>.sirv.com/yachtfolio_images/<yfId>/<yfId>.<pos>.jpg?profile=charter-hero`
-  (thumbnails in the portal picker end `?profile=charter-thumb`). No
-  `imagesAtPublish` in the page. A page published before the switch keeps
-  its Blob URLs.
+  for the cover, ring card and spec panel, and `?profile=charter-thumb` for
+  the small renders (the Compare head at 200 px, the Tier 2 rail card at
+  340 px; the portal picker thumbnails likewise). No `imagesAtPublish` in
+  the page. A page published before the switch keeps its Blob URLs.
 - **Portal** — pick a yacht: specs fill at once with "Updated <date>", the
   header counts "Preparing images, 4 of 20", thumbnails appear as they
   arrive; "Refresh from Yachtfolio" re-runs both.

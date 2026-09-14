@@ -14,7 +14,8 @@
  * consultant pasted, or a page published before references existed) keeps
  * its stored URL. A yacht with no record keeps its stored URLs. A storage
  * failure propagates so the page can show a holding page instead of stale
- * or broken images.
+ * or broken images. Each resolved slot also gets a thumb-profile URL in
+ * imageThumbs for the components that render small images.
  */
 
 import { readYachtRecord } from "./yacht-records.mjs";
@@ -33,13 +34,21 @@ export function resolveYachtImages(yacht, record) {
   if (!yacht?.imageRefs || !record?.images?.order?.length) return yacht;
   const gallery = galleryOf(record);
   const slots = defaultSlots(gallery, record.yfId);
-  const byId = new Map(record.images.order.map((e) => [String(e.yfImageId), entryUrls(e).url]));
-  const out = { ...yacht };
+  const byId = new Map(record.images.order.map((e) => [String(e.yfImageId), entryUrls(e)]));
+  const thumbByHero = new Map(gallery.map((g) => [g.url, g.smallUrl]));
+  const out = { ...yacht, imageThumbs: {} };
   for (const [slot, field] of SLOTS) {
     const ref = yacht.imageRefs[slot];
     if (ref == null) continue;
-    out[field] = byId.get(String(ref)) ?? slots[field] ?? yacht[field];
+    const chosen = byId.get(String(ref));
+    // The chosen image's current files; if it has left the gallery, the
+    // record's default for the slot (hero URL, thumb looked up from it).
+    const url = chosen?.url ?? slots[field] ?? yacht[field];
+    const thumb = chosen?.smallUrl ?? thumbByHero.get(url);
+    out[field] = url;
+    if (thumb) out.imageThumbs[slot] = thumb;
   }
+  if (!Object.keys(out.imageThumbs).length) delete out.imageThumbs;
   return out;
 }
 

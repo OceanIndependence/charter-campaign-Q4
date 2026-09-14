@@ -181,6 +181,8 @@ export default function RingCarousel(props: RingCarouselProps) {
                   <div className={styles.cardBody}>
                     <div className={styles.cardImage}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
+                      {/* The ring card is 420 × 546 and object-fit cover: on a retina screen the
+                          1000 × 625 thumb would be upscaled, so the card keeps the hero profile. */}
                       <img src={yacht.leadImageUrl} alt={yacht.name} className={styles.cardImg} />
                       <div className={styles.cardScrim}>
                         <div className={styles.cardName}>{yacht.name}</div>
