@@ -3,6 +3,7 @@ import { fleetDiagnostics, getFleet } from "@/server/fleet.mjs";
 import { requirePortalSession } from "@/server/auth";
 import { authProviderInfo } from "@/server/auth";
 import { storageMode } from "@/server/storage.mjs";
+import { imageStoreDiagnostics } from "@/server/image-store/index.mjs";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -10,8 +11,10 @@ export const maxDuration = 60;
 /**
  * One-URL health check for the portal's moving parts (consultant-authed).
  * Reports, without exposing any secret: whether the passkey and storage are
- * configured, which storage backend is active, the last storage error, and
- * whether the fleet cache can be served right now.
+ * configured, which storage backend is active, which image store is in use
+ * (Blob or Sirv) and whether Sirv is fully configured, whether the portal
+ * access gate is on, the last storage error, and whether the fleet cache can
+ * be served right now.
  */
 export async function GET(request: NextRequest) {
   const session = requirePortalSession(request);
@@ -30,6 +33,10 @@ export async function GET(request: NextRequest) {
     imagesStoreConfigured: imagesConfigured,
     dataStoreConfigured: dataConfigured,
     cronSecretConfigured: Boolean(process.env.CRON_SECRET),
+    // Off means every visitor passes the staging gate; with the solo
+    // provider that makes the whole portal API anonymous.
+    portalAccessKeyConfigured: Boolean(process.env.PORTAL_ACCESS_KEY),
+    ...imageStoreDiagnostics(),
     ...fleetDiagnostics(),
   };
 
