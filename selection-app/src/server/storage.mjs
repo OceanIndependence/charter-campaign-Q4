@@ -78,6 +78,32 @@ export function isDryRun() {
   return String(process.env.FLEET_REFRESH_DRY_RUN ?? "").toLowerCase() === "true";
 }
 
+/* ------------------------------------------------------- error reporting */
+
+let lastError = null; // { message, context, at }
+
+/**
+ * Record a storage failure for /api/health. Callers that cannot tell a
+ * missing document from a broken store must fail closed: log here, write
+ * nothing, and serve the last known data or a clear failure.
+ */
+export function noteStorageError(context, err) {
+  const message = String(err?.message ?? err);
+  lastError = { message, context, at: new Date().toISOString() };
+  console.warn(`[storage] ${context}: ${message}`);
+  return message;
+}
+
+/** The most recent storage failure in this process, or null. */
+export function lastStorageError() {
+  return lastError;
+}
+
+/** True for a "no such document" error from either backend (never a storage failure). */
+export function isNotFoundError(err) {
+  return err?.code === "ENOENT" || err?.name === "BlobNotFoundError";
+}
+
 /** Deterministic JSON (sorted keys) so equal content always hashes equal. */
 export function stableStringify(value) {
   const seen = new WeakSet();

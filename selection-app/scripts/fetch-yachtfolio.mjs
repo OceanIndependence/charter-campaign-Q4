@@ -38,12 +38,11 @@ async function main() {
 
   const lines = ["# Yachtfolio fetch report", "", `Generated: ${new Date().toISOString()}`, ""];
   const passkey = await loadPasskey([ROOT, path.join(ROOT, "..")]);
-  const totals = { yachtsChecked: 0, yachtsWritten: 0, yachtsSkipped: 0, imagesChecked: 0, imagesWritten: 0, imagesSkipped: 0, imagesRemoved: [], manifest: null, notes: [] };
+  const totals = { yachtsChecked: 0, yachtsWritten: 0, yachtsSkipped: 0, imagesChecked: 0, imagesWritten: 0, imagesSkipped: 0, imagesRemoved: [], notes: [] };
   const absorb = (b) => {
     if (!b) return;
     for (const k of ["yachtsChecked", "yachtsWritten", "yachtsSkipped", "imagesChecked", "imagesWritten", "imagesSkipped"]) totals[k] += b[k] ?? 0;
     totals.imagesRemoved.push(...(b.imagesRemoved ?? []));
-    totals.manifest ??= b.manifest;
     for (const n of b.notes ?? []) if (!totals.notes.includes(n)) totals.notes.push(n);
   };
 
@@ -57,12 +56,11 @@ async function main() {
     process.env.YACHTFOLIO_PASSKEY ??= passkey;
     try {
       const sync = await syncFleet();
-      totals.manifest = sync.manifest;
       for (const n of sync.notes ?? []) totals.notes.push(n);
       lines.push("## Fleet sync", "", `- Yachts in the public list: ${sync.count}`);
       lines.push(`- Recorded removals (no longer listed): ${sync.removedCount}`);
       lines.push(`- Synced at: ${sync.syncedAt}`);
-      lines.push(`- Fleet list: ${sync.fleetWritten ? "changed — written" : "unchanged — not written"}; reference data: ${sync.referenceWritten ? "changed — written" : "unchanged — not written"}`, "");
+      lines.push(`- Fleet list: ${sync.fleetWritten ? "changed — written" : "unchanged — not written"}; reference data: ${sync.referenceWritten ? "changed — written" : "unchanged — not written"}; fleet state: ${sync.stateWritten ? "written" : "not rewritten"}`, "");
       const fleet = await getJson("yachtfolio/fleet.json");
       const removed = Object.entries(fleet?.removed ?? {});
       if (removed.length) {
@@ -107,7 +105,7 @@ async function main() {
           }`
         );
         lines.push(`- Data source: ${detail.dataSource ?? "missing"}`);
-        lines.push(`- Images prepared: ${images.gallery.length} (${images.blob?.imagesWritten ?? 0} newly written, ${images.blob?.imagesSkipped ?? 0} reused)`);
+        lines.push(`- Images prepared: ${images.gallery.length} (${images.blob?.imagesWritten ?? 0} newly written, ${images.blob?.imagesSkipped ?? 0} reused; store ${images.store ?? "blob"})`);
         lines.push(`- Missing fields: ${detail.missing.length ? detail.missing.join(", ") : "none"}`);
         for (const w of [...detail.warnings, ...images.warnings]) lines.push(`- Note: ${w}`);
       } catch (err) {
@@ -122,7 +120,7 @@ async function main() {
   const ops = blobOps();
   lines.push("## Blob operations", "");
   if (isDryRun()) lines.push("- DRY RUN (FLEET_REFRESH_DRY_RUN=true): comparisons made, nothing written.");
-  lines.push(`- Manifest: ${totals.manifest ?? "not loaded"}`);
+  lines.push("- Per-yacht records: yachts/<yfId>.json (specs, facts and image order); fleet state: private/fleet-state.json");
   lines.push(`- Yachts checked: ${totals.yachtsChecked}; written: ${totals.yachtsWritten}; skipped (unchanged): ${totals.yachtsSkipped}`);
   lines.push(`- Images checked: ${totals.imagesChecked}; written: ${totals.imagesWritten}; skipped (already stored): ${totals.imagesSkipped}`);
   lines.push(`- Images no longer in Yachtfolio (kept, not deleted): ${totals.imagesRemoved.length ? totals.imagesRemoved.join(", ") : "none"}`);

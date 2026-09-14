@@ -55,12 +55,16 @@ export async function GET(request: NextRequest) {
     console.log(
       `[cron/fleet-sync${followUp ? ` +${followUp}` : ""}] ${result.count} yachts (${result.factsCount} with builder/length, ${result.factsRemaining} still to read), ${result.removedCount} recorded removals; ` +
         `fleet ${result.fleetWritten ? "written" : "unchanged"}, reference ${result.referenceWritten ? "written" : "unchanged"}; ` +
-        `manifest ${result.manifest}; Blob advanced operations ${result.blob?.advanced ?? "?"}` +
+        `fleet state ${result.stateWritten ? "written" : "not rewritten"}; Blob advanced operations ${result.blob?.advanced ?? "?"}` +
         (result.dryRun ? " (DRY RUN — nothing written)" : "")
     );
     return NextResponse.json(result);
   } catch (err) {
     console.error("[cron/fleet-sync]", err);
+    // A storage failure is a failed night and must be visible as one.
+    if ((err as { code?: string })?.code === "STORAGE") {
+      return NextResponse.json({ error: "Fleet sync failed: storage could not be read.", detail: String((err as Error).message) }, { status: 503 });
+    }
     return NextResponse.json({ error: "Fleet sync failed." }, { status: 502 });
   }
 }
