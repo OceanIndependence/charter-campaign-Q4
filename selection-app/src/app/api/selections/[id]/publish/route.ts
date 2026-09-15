@@ -4,7 +4,7 @@ import { draftSlugBase, draftToPageConfig, freezeImagesAtPublish } from "@/lib/p
 import { chosenDestinationIds, tier2DraftToConfig, tier2PublishProblems, tier2SlugBase } from "@/lib/atlas-map";
 import type { AnySelection, PortalDraft, Tier2Draft } from "@/lib/portal-types";
 import { atlasResolutionFor } from "@/server/atlas/content";
-import { clientPathFor, getSelection, publishSelection, tierOf } from "@/server/pages.mjs";
+import { clientPathFor, getSelection, publishSelection, scopingEnabled, tierOf } from "@/server/pages.mjs";
 import { requireConsultantSession, selectionAccess } from "@/server/auth";
 import { getConsultantRecord } from "@/server/consultant-session";
 import { consultantForRecord } from "@/server/consultant-render";
@@ -37,14 +37,19 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     const draft = (await getSelection(access, id)) as AnySelection;
     const tier = tierOf(draft);
 
-    if (!draft.consultantId) {
+    // No consultant on the selection: with CONSULTANT_SCOPING off this is an
+    // ordinary pre-records selection and publishes with the block frozen in
+    // its draft; with scoping on it cannot be published.
+    let record = null;
+    if (draft.consultantId) {
+      record = draft.consultantId === session.consultant.id ? session.consultant : await getConsultantRecord(draft.consultantId);
+      if (!record) {
+        return NextResponse.json({ error: "The consultant assigned to this selection no longer has a record. Contact marketing." }, { status: 422 });
+      }
+    } else if (scopingEnabled()) {
       return NextResponse.json({ error: "This selection has no consultant attached and cannot be published." }, { status: 422 });
     }
-    const record = draft.consultantId === session.consultant.id ? session.consultant : await getConsultantRecord(draft.consultantId);
-    if (!record) {
-      return NextResponse.json({ error: "The consultant assigned to this selection no longer has a record. Contact marketing." }, { status: 422 });
-    }
-    if (consultantNeedsPhone(record)) {
+    if (record && consultantNeedsPhone(record)) {
       const self = record.id === session.consultant.id;
       return NextResponse.json(
         {
@@ -54,8 +59,9 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
         { status: 422 }
       );
     }
-    const consultant: Consultant | null = consultantForRecord(record);
-    const withConsultant = <T extends { consultant: Consultant | null }>(config: T): T => ({ ...config, consultant });
+    // With a record, the block frozen into the config is that record now (the
+    // holding-page fallback); without one, the draft's own block stands.
+    const withConsultant = <T extends { consultant: Consultant | null }>(config: T): T => (record ? { ...config, consultant: consultantForRecord(record) } : config);
     let slugBase: string;
     let buildConfig: (slug: string) => unknown;
     if (tier === 2) {

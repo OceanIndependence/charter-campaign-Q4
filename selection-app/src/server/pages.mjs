@@ -23,6 +23,16 @@
  * be forgotten. Every entry point takes an `access` object built by
  * selectionAccess() in the auth module: { consultantId, identity }.
  *
+ * CONSULTANT_SCOPING feature flag — OFF by default until real sign-in lands.
+ * While off, every signed-in user sees every selection and no route checks
+ * ownership: the dashboard lists every index, and a selection is found by
+ * id through portal/selection-locations.json ({ id: namespace }), which
+ * store() maintains and which heals itself from a one-off scan of
+ * portal/selections/ for any id it does not know (selections written before
+ * the file existed). Selections without a consultantId are read, saved and
+ * published as before records existed. Set CONSULTANT_SCOPING=on to switch
+ * the namespace-bound behaviour above back on; nothing here is removed.
+ *
  * `owner` is the signed-in identity that created the record, stamped
  * server-side for audit only. Client pages resolve consultantId live at
  * render (consultant-render.ts): specs freeze at publish, the consultant
@@ -56,8 +66,15 @@ const INDEX_PREFIX = "portal/index/";
 const legacyWorkingKey = (identityId) => `portal/drafts/${identityId}/working.json`;
 export const currentKey = (slug) => `portal/pages/${slug}/current.json`;
 const versionKey = (slug, n) => `portal/pages/${slug}/versions/${n}.json`;
+/** { [selectionId]: namespace } — how a selection is found by id while scoping is off. */
+export const LOCATIONS_KEY = "portal/selection-locations.json";
 
 const fail = (code, message) => Object.assign(new Error(message), { code });
+
+/** CONSULTANT_SCOPING=on|true|1|yes enables consultant scoping. Anything else, or unset, is off. */
+export function scopingEnabled() {
+  return /^(on|true|1|yes)$/i.test(String(process.env.CONSULTANT_SCOPING ?? "").trim());
+}
 
 /** 2 for a Personalised Atlas, 3 for a Yacht Selection (and for anything saved before tiers). */
 export function tierOf(record) {
@@ -78,6 +95,60 @@ function requireConsultantId(access) {
   const id = access?.consultantId;
   if (!id || !NAMESPACE_RE.test(id)) throw fail("FORBIDDEN", "No consultant record for this session.");
   return id;
+}
+
+/* ------------------------------------------------ locating by id (scoping off) */
+
+async function readLocations() {
+  const doc = await getJson(LOCATIONS_KEY);
+  return doc && typeof doc === "object" && doc.items && typeof doc.items === "object" ? doc : { updatedAt: null, items: {} };
+}
+
+async function recordLocation(id, namespace) {
+  const doc = await readLocations();
+  if (doc.items[id] === namespace) return;
+  doc.items[id] = namespace;
+  doc.updatedAt = new Date().toISOString();
+  await putJson(LOCATIONS_KEY, doc);
+}
+
+export async function forgetLocation(id) {
+  const doc = await readLocations();
+  if (!(id in doc.items)) return;
+  delete doc.items[id];
+  doc.updatedAt = new Date().toISOString();
+  await putJson(LOCATIONS_KEY, doc);
+}
+
+/**
+ * The namespace a selection lives under, whatever it is (a consultant id, or
+ * the identity id of a selection written before records). The locations
+ * file answers with one free read; an unknown id costs one list() of
+ * portal/selections/, after which it is recorded. Null when no such
+ * selection exists anywhere.
+ */
+export async function locateSelection(id) {
+  const known = (await readLocations()).items[id];
+  if (known && (await getJson(selectionKey(known, id)))) return known;
+  const suffix = `/${id}.json`;
+  const key = (await listKeys(SELECTIONS_PREFIX)).find((k) => k.endsWith(suffix));
+  if (!key) return null;
+  const namespace = key.slice(SELECTIONS_PREFIX.length, -suffix.length);
+  if (!NAMESPACE_RE.test(namespace)) return null;
+  await recordLocation(id, namespace);
+  return namespace;
+}
+
+/**
+ * Where to read a selection from: the session consultant's namespace when
+ * scoping is on (a shared URL to someone else's is then simply not found);
+ * wherever it lives when scoping is off.
+ */
+async function namespaceFor(access, id) {
+  if (scopingEnabled()) return requireConsultantId(access);
+  const ns = await locateSelection(id);
+  if (!ns) throw fail("NOT_FOUND", "This selection does not exist.");
+  return ns;
 }
 
 function requireId(id) {
@@ -159,11 +230,16 @@ export async function removeIndexEntry(consultantId, id) {
   await putJson(indexKey(consultantId), idx);
 }
 
-/** Persist a draft under its consultant and its index row together, then the in-use index. */
-export async function store(draft) {
-  const consultantId = requireConsultantId({ consultantId: draft.consultantId });
-  await putJson(selectionKey(consultantId, draft.id), draft);
-  await writeIndexEntry(consultantId, metaOf(draft));
+/**
+ * Persist a draft under `namespace` (its consultant's id, or, for a selection
+ * that predates records, wherever it already lives) with its index row, its
+ * location, then the in-use index.
+ */
+export async function store(draft, namespace = draft.consultantId) {
+  const ns = requireConsultantId({ consultantId: namespace });
+  await putJson(selectionKey(ns, draft.id), draft);
+  await writeIndexEntry(ns, metaOf(draft));
+  await recordLocation(draft.id, ns);
   await syncInUse(draft);
   return draft;
 }
@@ -310,33 +386,49 @@ async function migrateLegacyDraft(access) {
   await deleteJson(legacyWorkingKey(identityId));
 }
 
-/** Dashboard rows, newest edited first. scope "all" needs canViewAll. */
+/** Every index's rows, across all namespaces (one list() per thousand indexes). */
+async function allRows() {
+  const keys = await listKeys(INDEX_PREFIX);
+  const indexes = await Promise.all(keys.map((k) => getJson(k)));
+  return indexes.flatMap((idx) => Object.values(idx?.items ?? {}));
+}
+
+/**
+ * Dashboard rows, newest edited first. Scoping on: the session consultant's
+ * own rows, or everyone's for scope "all" with canViewAll. Scoping off:
+ * everyone's rows for every signed-in user, whatever the scope asked for.
+ */
 export async function listSelections(access, { scope = "mine" } = {}) {
   const consultantId = requireConsultantId(access);
   await migrateLegacyDraft(access);
   let items;
-  if (scope === "all") {
+  if (!scopingEnabled()) {
+    items = await allRows();
+  } else if (scope === "all") {
     if (!canViewAll(access.identity)) throw fail("FORBIDDEN", "You may only view your own selections.");
-    const keys = await listKeys(INDEX_PREFIX);
-    const indexes = await Promise.all(keys.map((k) => getJson(k)));
-    items = indexes.flatMap((idx) => Object.values(idx?.items ?? {}));
+    items = await allRows();
   } else {
     items = Object.values((await readIndex(consultantId)).items);
   }
   return items.sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)));
 }
 
+/** The draft and the namespace it lives under; every read and write goes through this. */
+async function load(access, id) {
+  const ns = await namespaceFor(access, requireId(id));
+  const draft = await getJson(selectionKey(ns, id));
+  if (!draft) throw fail("NOT_FOUND", scopingEnabled() ? "This selection does not exist or is not yours." : "This selection does not exist.");
+  return { ns, draft };
+}
+
 /**
- * One of the session consultant's own selections, or NOT_FOUND. The key is
- * namespaced by consultantId, so another consultant's id (from a shared
+ * A selection, or NOT_FOUND. With scoping on the key is namespaced by the
+ * session consultant's id, so another consultant's selection (from a shared
  * URL) simply does not exist here — view, edit, publish and every other
- * route go through this.
+ * route go through this. With scoping off any selection is found by id.
  */
 export async function getSelection(access, id) {
-  const consultantId = requireConsultantId(access);
-  const draft = await getJson(selectionKey(consultantId, requireId(id)));
-  if (!draft) throw fail("NOT_FOUND", "This selection does not exist or is not yours.");
-  return draft;
+  return (await load(access, id)).draft;
 }
 
 /**
@@ -349,17 +441,20 @@ export async function getSelection(access, id) {
  */
 export async function createSelection(access, { duplicateOf, tier, consultant } = {}) {
   let draft;
+  let namespace;
   if (duplicateOf) {
-    const src = await getSelection(access, duplicateOf);
+    const { ns, draft: src } = await load(access, duplicateOf);
+    // A duplicate stays with its source's consultant (or, for a selection
+    // that predates records, wherever the source lives) and keeps its tier.
+    namespace = src.consultantId ?? ns;
     const owningConsultant = consultant?.id === src.consultantId ? consultant : { id: src.consultantId };
-    // A duplicate keeps its source's tier — the tier is fixed once created.
     const base = tierOf(src) === 2 ? emptyTier2Draft(access.identity, owningConsultant) : emptyDraft(access.identity, owningConsultant);
     draft = {
       ...src,
       id: base.id,
       tier: tierOf(src),
       owner: ownerOf(access.identity),
-      consultantId: src.consultantId,
+      ...(src.consultantId ? { consultantId: src.consultantId } : {}),
       createdAt: base.createdAt,
       updatedAt: base.updatedAt,
       clientNames: "",
@@ -377,11 +472,13 @@ export async function createSelection(access, { duplicateOf, tier, consultant } 
     };
     delete draft.publishedSlug;
     delete draft.published;
+    if (!src.consultantId) delete draft.consultantId;
   } else {
     if (!consultant?.id) throw fail("INVALID", "Choose the consultant this selection belongs to.");
     draft = Number(tier) === 2 ? emptyTier2Draft(access.identity, consultant) : emptyDraft(access.identity, consultant);
+    namespace = consultant.id;
   }
-  return store(draft);
+  return store(draft, namespace);
 }
 
 /**
@@ -391,7 +488,7 @@ export async function createSelection(access, { duplicateOf, tier, consultant } 
  * rejected outright rather than silently ignored.
  */
 export async function saveSelection(access, id, incoming) {
-  const existing = await getSelection(access, id);
+  const { ns, draft: existing } = await load(access, id);
   if (incoming?.consultantId != null && incoming.consultantId !== existing.consultantId) {
     throw fail("FORBIDDEN", "A selection cannot be moved to another consultant.");
   }
@@ -406,20 +503,21 @@ export async function saveSelection(access, id, incoming) {
     published: existing.published,
     updatedAt: new Date().toISOString(),
   };
+  if (!stored.consultantId) delete stored.consultantId;
   if (!stored.publishedSlug) delete stored.publishedSlug;
   if (!stored.published) delete stored.published;
-  return store(stored);
+  return store(stored, ns);
 }
 
 /** Delete a never-published draft. Published selections are unpublished instead. */
 export async function deleteSelection(access, id) {
-  const consultantId = requireConsultantId(access);
-  const existing = await getSelection(access, id);
+  const { ns, draft: existing } = await load(access, id);
   if (existing.published) {
     throw fail("CONFLICT", "Published selections are unpublished, never deleted, so the version history survives.");
   }
-  await deleteJson(selectionKey(consultantId, existing.id));
-  await removeIndexEntry(consultantId, existing.id);
+  await deleteJson(selectionKey(ns, existing.id));
+  await removeIndexEntry(ns, existing.id);
+  await forgetLocation(existing.id);
   try {
     await removeFromInUse(existing.id);
   } catch (err) {
@@ -435,8 +533,12 @@ export async function getPublishedPage(slug) {
   return record && !record.unpublished ? record : null;
 }
 
-/** The consultant a published record belongs to: consultantId, else (pre-records pages) the owner identity. */
+/**
+ * The consultant a published record belongs to: consultantId, else
+ * (pre-records pages) the owner identity. Always true while scoping is off.
+ */
 function belongsTo(current, access) {
+  if (!scopingEnabled()) return true;
   if (current?.consultantId) return current.consultantId === access.consultantId;
   return !current?.owner?.id || current.owner.id === access.identity?.id;
 }
@@ -464,7 +566,7 @@ function publishStateOf(record) {
  * belongs to someone else.
  */
 export async function publishSelection({ access, id, slugBase, buildConfig }) {
-  const draft = await getSelection(access, id);
+  const { ns, draft } = await load(access, id);
 
   let slug = draft.publishedSlug && isValidSlug(draft.publishedSlug) ? draft.publishedSlug : null;
   if (slug) {
@@ -484,8 +586,9 @@ export async function publishSelection({ access, id, slugBase, buildConfig }) {
     slug,
     version: (current?.version ?? 0) + 1,
     owner: ownerOf(access.identity),
-    // Resolved live on every render of the client page.
-    consultantId: draft.consultantId,
+    // Resolved live on every render of the client page; absent on a
+    // selection with no consultant, whose page keeps config.consultant.
+    ...(draft.consultantId ? { consultantId: draft.consultantId } : {}),
     draftId: draft.id,
     publishedAt: new Date().toISOString(),
     config: buildConfig(slug),
@@ -493,20 +596,20 @@ export async function publishSelection({ access, id, slugBase, buildConfig }) {
   await putJson(versionKey(slug, record.version), record);
   await putJson(currentKey(slug), record);
 
-  await store({ ...draft, publishedSlug: slug, published: publishStateOf(record) });
+  await store({ ...draft, publishedSlug: slug, published: publishStateOf(record) }, ns);
   return { slug, version: record.version };
 }
 
 /** Take the client page offline; the record and every version are kept. */
 export async function unpublishSelection(access, id) {
-  const draft = await getSelection(access, id);
+  const { ns, draft } = await load(access, id);
   if (!draft.publishedSlug) throw fail("CONFLICT", "This selection has not been published.");
   const current = await ownedCurrent(access, draft.publishedSlug);
   if (!current) throw fail("NOT_FOUND", "The published page no longer exists.");
   if (!current.unpublished) {
     const record = { ...current, unpublished: true, unpublishedAt: new Date().toISOString() };
     await putJson(currentKey(draft.publishedSlug), record);
-    await store({ ...draft, published: publishStateOf(record) });
+    await store({ ...draft, published: publishStateOf(record) }, ns);
   }
   return { slug: draft.publishedSlug };
 }
@@ -540,7 +643,7 @@ export async function listVersions(access, id) {
  * The editable draft is left untouched.
  */
 export async function rollbackSelection(access, id, toVersion) {
-  const draft = await getSelection(access, id);
+  const { ns, draft } = await load(access, id);
   if (!draft.publishedSlug) throw fail("CONFLICT", "This selection has not been published.");
   const slug = draft.publishedSlug;
   const current = await ownedCurrent(access, slug);
@@ -554,15 +657,16 @@ export async function rollbackSelection(access, id, toVersion) {
     ...target,
     version: current.version + 1,
     owner: ownerOf(access.identity),
-    consultantId: draft.consultantId,
+    ...(draft.consultantId ? { consultantId: draft.consultantId } : {}),
     draftId: draft.id,
     publishedAt: new Date().toISOString(),
     rolledBackFrom: n,
     unpublished: false,
     unpublishedAt: null,
   };
+  if (!draft.consultantId) delete record.consultantId;
   await putJson(versionKey(slug, record.version), record);
   await putJson(currentKey(slug), record);
-  await store({ ...draft, published: publishStateOf(record) });
+  await store({ ...draft, published: publishStateOf(record) }, ns);
   return { slug, version: record.version, rolledBackFrom: n };
 }

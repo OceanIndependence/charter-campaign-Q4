@@ -40,7 +40,11 @@ export default function ConsultantDetailsCard({ sectionHead, consultant }: { sec
         corrected on the profile page updates pages already published. {CONTACT_MARKETING}
       </p>
       {consultant === undefined && <p className={styles.sectionNote}>Loading…</p>}
-      {consultant === null && <p className={styles.fetchWarning}>This selection has no consultant record attached. It cannot be published until it does.</p>}
+      {consultant === null && (
+        <p className={styles.sectionNote}>
+          This selection has no consultant record attached, so its client page shows the contact details frozen when it was published.
+        </p>
+      )}
       {consultant && (
         <div className={styles.profileRow}>
           {consultant.photoStatus === "ok" && consultant.photoUrl ? (

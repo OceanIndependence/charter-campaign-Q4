@@ -122,13 +122,19 @@ else on the record belongs to the admin screen.
 A selection belongs to one consultant record, chosen from a picker when it
 is created and never reassigned. Selections are stored under that record
 (`portal/selections/<consultantId>/…`), so a consultant's dashboard and every
-selection route are scoped structurally. Client pages resolve the consultant
+selection route CAN be scoped structurally — behind the `CONSULTANT_SCOPING`
+flag, which is OFF by default until Microsoft sign-in lands. While off, every
+signed-in user sees every selection, no route checks ownership, selections
+are found by id through `portal/selection-locations.json`, and a selection
+with no consultant publishes with the block frozen in its draft. Set
+`CONSULTANT_SCOPING=on` to enable scoping. Client pages resolve the consultant
 live: every render of `/selection/<slug>` or `/atlas/<slug>` reads the
 current record (`src/server/consultant-render.ts`). An inactive consultant's
 page carries no contact block at all. Publishing is blocked while the
-selection's consultant has no phone number. The pre-existing test selections
-are attached to the Eleanor Bartoli Turner fixture by a button on the import
-page. See `docs/consultant-profiles-report.md` and
+selection's consultant has no phone number. The import page also carries a
+one-off CLEAR CONSULTANT FROM ALL SELECTIONS action, which removes the
+consultant from every existing selection and its published page (undoing an
+earlier fixture attachment); the attach action remains as code only. See `docs/consultant-profiles-report.md` and
 `docs/consultant-pages-phase3-report.md`.
 
 Admin: `PORTAL_ADMIN_EMAILS` (comma-separated, compared lowercase against

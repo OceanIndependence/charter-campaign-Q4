@@ -20,6 +20,55 @@ import { findConsultantByEmail } from "./consultants.mjs";
 import { importConsultantSeed } from "./consultant-import.mjs";
 import { SELECTIONS_PREFIX, currentKey, metaOf, readIndex, removeIndexEntry, selectionKey, indexKey } from "./pages.mjs";
 
+/**
+ * Undo of the attachment above, and of any consultantId on any existing
+ * selection: every selection in the store loses its consultantId (kept
+ * where it lives, index row rewritten) and its published record loses the
+ * stamp, so the client page falls back to the block frozen at publish. The
+ * consultant records themselves are untouched. Idempotent. One list().
+ */
+export async function detachConsultantsFromAll() {
+  const keys = (await listKeys(SELECTIONS_PREFIX)).filter((k) => k.endsWith(".json"));
+  const cleared = [];
+  const untouched = [];
+  const skipped = [];
+  const pagesUpdated = [];
+  for (const key of keys) {
+    const rel = key.slice(SELECTIONS_PREFIX.length);
+    const parts = rel.split("/");
+    if (parts.length !== 2) {
+      skipped.push({ key, reason: "Unexpected key shape." });
+      continue;
+    }
+    const [namespace] = parts;
+    const draft = await getJson(key);
+    if (!draft?.id) {
+      skipped.push({ key, reason: "Not a selection document." });
+      continue;
+    }
+    if (draft.consultantId) {
+      const { consultantId: _c, ...next } = draft;
+      await putJson(key, next);
+      const idx = await readIndex(namespace);
+      idx.items[draft.id] = metaOf(next);
+      idx.updatedAt = new Date().toISOString();
+      await putJson(indexKey(namespace), idx);
+      cleared.push({ id: draft.id, clientNames: draft.clientNames ?? "", namespace });
+    } else {
+      untouched.push({ id: draft.id, clientNames: draft.clientNames ?? "" });
+    }
+    if (draft.publishedSlug) {
+      const current = await getJson(currentKey(draft.publishedSlug));
+      if (current && current.draftId === draft.id && current.consultantId) {
+        const { consultantId: _c, ...rest } = current;
+        await putJson(currentKey(draft.publishedSlug), rest);
+        pagesUpdated.push({ slug: draft.publishedSlug, live: !current.unpublished });
+      }
+    }
+  }
+  return { ranAt: new Date().toISOString(), selectionsFound: keys.length, cleared, untouched, skipped, pagesUpdated };
+}
+
 export const FIXTURE_EMAIL = "eleanor@ocyachts.com";
 
 /**

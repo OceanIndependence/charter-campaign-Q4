@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import type { ConsultantImportResult, FixtureResult } from "@/lib/consultant-seed-types";
+import type { ConsultantImportResult, DetachResult } from "@/lib/consultant-seed-types";
 import type { ImportStatus } from "@/app/api/admin/import-consultants/route";
 import { ADMIN_CONSULTANTS_PATH } from "@/lib/consultant-types";
 import styles from "./PortalForm.module.css";
@@ -20,25 +20,24 @@ export default function ConsultantImport() {
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<ConsultantImportResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [fixtureRunning, setFixtureRunning] = useState(false);
-  const [fixture, setFixture] = useState<FixtureResult | null>(null);
-  const [fixtureError, setFixtureError] = useState<string | null>(null);
+  const [detachRunning, setDetachRunning] = useState(false);
+  const [detach, setDetach] = useState<DetachResult | null>(null);
+  const [detachError, setDetachError] = useState<string | null>(null);
 
-  const runFixture = async () => {
-    if (fixtureRunning) return;
-    setFixtureRunning(true);
-    setFixtureError(null);
-    setFixture(null);
+  const runDetach = async () => {
+    if (detachRunning) return;
+    setDetachRunning(true);
+    setDetachError(null);
+    setDetach(null);
     try {
-      const res = await fetch("/api/admin/attach-fixture", { method: "POST" });
+      const res = await fetch("/api/admin/detach-consultants", { method: "POST" });
       const body = await res.json().catch(() => null);
-      if (!res.ok) throw new Error(body?.error ?? "The backfill did not run.");
-      setFixture(body.result as FixtureResult);
-      await loadStatus();
+      if (!res.ok) throw new Error(body?.error ?? "The action did not run.");
+      setDetach(body.result as DetachResult);
     } catch (err) {
-      setFixtureError(err instanceof Error ? err.message : "The backfill did not run.");
+      setDetachError(err instanceof Error ? err.message : "The action did not run.");
     } finally {
-      setFixtureRunning(false);
+      setDetachRunning(false);
     }
   };
 
@@ -174,34 +173,28 @@ export default function ConsultantImport() {
 
       <section className={styles.card}>
         <div className={styles.sectionHeadRow}>
-          <div className={styles.sectionHead}>03 — ATTACH THE TEST FIXTURE</div>
-          <button type="button" className={styles.publishBtn} onClick={runFixture} disabled={fixtureRunning || !status}>
-            {fixtureRunning ? "ATTACHING…" : fixture ? "RUN AGAIN" : "ATTACH ALL SELECTIONS TO ELEANOR"}
+          <div className={styles.sectionHead}>03 — CLEAR CONSULTANT ASSIGNMENTS</div>
+          <button type="button" className={styles.publishBtn} onClick={runDetach} disabled={detachRunning || !status}>
+            {detachRunning ? "CLEARING…" : detach ? "RUN AGAIN" : "CLEAR CONSULTANT FROM ALL SELECTIONS"}
           </button>
         </div>
         <p className={styles.sectionNote}>
-          One-off backfill for the test selections already in the store. Creates the Eleanor Bartoli Turner record from her seed row if it does
-          not exist, then moves every selection into her namespace and stamps her on its published page. Selections created from now on take
-          their consultant from the picker; this is a fixture, not a default. Safe to press again: nothing already attached is touched.
+          One-off: removes the consultant from every existing selection and its published page, undoing the Eleanor Bartoli Turner attachment.
+          Every selection then renders the contact block frozen when it was published, as before consultant records existed. Consultant records
+          are not touched. Safe to press again. Selections created from the picker after this will carry a consultant again.
         </p>
-        {fixtureError && <p className={styles.dashError}>{fixtureError}</p>}
-        {fixture && (
+        {detachError && <p className={styles.dashError}>{detachError}</p>}
+        {detach && (
           <>
             <div className={styles.grid} style={{ marginTop: 8 }}>
-              <Value label="FIXTURE RECORD" value={`${fixture.fixture.displayName} · ${fixture.fixture.status}`} hint={fixture.fixtureCreated ? "created this run" : "already existed"} />
-              <Value label="FIXTURE PHOTO" value={fixture.fixture.photoStatus} warn={fixture.fixture.photoStatus !== "ok"} />
-              <Value label="SELECTIONS FOUND" value={String(fixture.selectionsFound)} />
-              <Value label="ATTACHED THIS RUN" value={String(fixture.moved.length)} />
-              <Value label="ALREADY ATTACHED" value={String(fixture.alreadyAttached.length)} />
-              <Value label="PUBLISHED PAGES UPDATED" value={String(fixture.pagesUpdated.length)} />
+              <Value label="SELECTIONS IN STORE" value={String(detach.selectionsFound)} />
+              <Value label="CLEARED THIS RUN" value={String(detach.cleared.length)} />
+              <Value label="ALREADY WITHOUT A CONSULTANT" value={String(detach.untouched.length)} />
+              <Value label="PUBLISHED PAGES UPDATED" value={String(detach.pagesUpdated.length)} />
             </div>
-            {fixture.moved.length > 0 && (
-              <Table title="Selections attached" head={["Selection", "Client", "Moved from"]} rows={fixture.moved.map((m) => [m.id, m.clientNames || "—", m.from])} />
-            )}
-            {fixture.pagesUpdated.length > 0 && (
-              <Table title="Published pages now rendering the fixture" head={["Slug", "Live"]} rows={fixture.pagesUpdated.map((p) => [p.slug, p.live ? "yes" : "unpublished"])} />
-            )}
-            {fixture.skipped.length > 0 && <Table title="Skipped" head={["Key", "Reason"]} rows={fixture.skipped.map((s) => [s.key, s.reason])} />}
+            {detach.cleared.length > 0 && <Table title="Selections cleared" head={["Selection", "Client", "Stored under"]} rows={detach.cleared.map((m) => [m.id, m.clientNames || "—", m.namespace])} />}
+            {detach.pagesUpdated.length > 0 && <Table title="Published pages reverted to their frozen block" head={["Slug", "Live"]} rows={detach.pagesUpdated.map((p) => [p.slug, p.live ? "yes" : "unpublished"])} />}
+            {detach.skipped.length > 0 && <Table title="Skipped" head={["Key", "Reason"]} rows={detach.skipped.map((s) => [s.key, s.reason])} />}
           </>
         )}
       </section>

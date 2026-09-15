@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { canViewAll, createSelection, listSelections } from "@/server/pages.mjs";
+import { canViewAll, createSelection, listSelections, scopingEnabled } from "@/server/pages.mjs";
 import { seedDemoSelection } from "@/server/demo/harrington";
 import { requireConsultantSession, selectionAccess } from "@/server/auth";
 import { listConsultants, readConsultantRecord } from "@/server/consultants.mjs";
@@ -42,6 +42,8 @@ export async function GET(request: NextRequest) {
       items,
       scope,
       canViewAll: canViewAll(session.identity),
+      /** false while CONSULTANT_SCOPING is off: every row is everyone's */
+      scoping: scopingEnabled(),
       /** The session consultant's record id — rows with this consultantId are "mine" */
       me: session.consultant.id,
       consultants,

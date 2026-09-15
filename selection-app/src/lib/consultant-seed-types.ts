@@ -26,6 +26,16 @@ export interface FixtureResult {
   pagesUpdated: Array<{ slug: string; live: boolean }>;
 }
 
+/** What one run of the "clear consultant assignments" action did (POST /api/admin/detach-consultants). */
+export interface DetachResult {
+  ranAt: string;
+  selectionsFound: number;
+  cleared: Array<{ id: string; clientNames: string; namespace: string }>;
+  untouched: Array<{ id: string; clientNames: string }>;
+  skipped: Array<{ key: string; reason: string }>;
+  pagesUpdated: Array<{ slug: string; live: boolean }>;
+}
+
 /** What one run of the seed import did. Returned by the API and rendered on the import page. */
 export interface ConsultantImportResult {
   ranAt: string;

@@ -28,6 +28,8 @@ export default function Dashboard() {
   const [items, setItems] = useState<SelectionMeta[] | null>(null);
   const [scope, setScope] = useState<Scope>("mine");
   const [canViewAll, setCanViewAll] = useState(false);
+  /** CONSULTANT_SCOPING on the server; while off there is no "mine" and the toggle is hidden */
+  const [scoping, setScoping] = useState(true);
   const [me, setMe] = useState<string>("");
   /** Consultant records behind the rows' owners, keyed by owner id. */
   const [consultants, setConsultants] = useState<Record<string, DashboardConsultant>>({});
@@ -70,6 +72,7 @@ export default function Dashboard() {
       if (!res.ok) throw new Error(body?.error ?? "The selection list is unavailable.");
       setItems(body.items ?? []);
       setCanViewAll(Boolean(body.canViewAll));
+      setScoping(body.scoping !== false);
       setMe(body.me ?? "");
       setConsultants(body.consultants ?? {});
       setMyConsultant(body.myConsultant ?? null);
@@ -291,7 +294,7 @@ export default function Dashboard() {
               <option value="2">{TIER_LABEL[2]}</option>
               <option value="3">{TIER_LABEL[3]}</option>
             </select>
-            {canViewAll && (
+            {canViewAll && scoping && (
               <label className={styles.toggle}>
                 <input
                   type="checkbox"
@@ -323,7 +326,7 @@ export default function Dashboard() {
                 <tbody>
                   {visible.map((m) => {
                     // Rows in "mine" are by definition mine; under "all", only rows whose consultant is the session's can be opened.
-                    const mine = scope === "mine" || (!!me && m.consultantId === me);
+                    const mine = !scoping || scope === "mine" || (!!me && m.consultantId === me);
                     const isBusy = busy === m.id;
                     const open = versionsFor === m.id;
                     return (
