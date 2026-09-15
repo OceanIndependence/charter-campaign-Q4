@@ -102,6 +102,8 @@ export function demoTier2Draft(): Omit<Tier2Draft, "id" | "owner" | "createdAt" 
         "You chartered in the third week of July, consistently the most requested week of the Mediterranean season. Owners are confirming 2027 calendars now, and the strongest yachts typically commit their July weeks before Christmas.",
     },
     footerDisclaimer: TIER2_DEFAULT_DISCLAIMER,
+    theme: "dark",
+    sections: { costs: true, compare: true },
     destinations: [
       destination(AMALFI, {
         eyebrow: "RETURN, BUT DEEPER",

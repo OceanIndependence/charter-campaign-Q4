@@ -147,6 +147,22 @@ published under that slug (`DEMO_PAGES=false` disables it). The first dashboard 
 demo mode seeds the same Harrington draft into the signed-in consultant's selections so
 the Tier 2 form can be reviewed with content in it.
 
+## Page sections
+
+The form's PAGE SECTIONS card (04, after the shortlist) mirrors the Tier 3 card without
+the itinerary, which is to get a card of its own: a DARK / LIGHT theme toggle, "Costs
+involved" and "Compare feature". They are stored on the draft as `theme` and
+`sections.{costs, compare}` and frozen into the page config by `tier2DraftToConfig`.
+A new selection starts with both sections on and the dark theme, and a draft saved
+before the card existed is read the same way on load. A page published before the
+card existed has no `sections` block and renders exactly as published: neither section.
+
+On the client page the light theme swaps the header logo and the page ground and
+otherwise rides the shared `[data-theme="light"]` tokens; the compare toggle sits over
+each rail card's image and feeds the Tier 3 `CompareBar` and `CompareOverlay` (the VAT
+row hides itself because Tier 2 carries no VAT percentage); `CostsSection` renders
+beneath the season note, before the consultant block.
+
 ## Redacted sample of one Tier 2 page config
 
 From `GET /api/atlas/demo`; two of three destinations, two of six yachts and 37 other pins
@@ -213,6 +229,8 @@ rate plus APA, both computed by `mapDraftYacht`.
     { "id": "mediterranean/cyprus", "name": "Cyprus", "lat": 35.0275, "lon": 33.2162 },
     "… 37 more"
   ],
+  "sections": { "costs": true, "compare": true },
+  "theme": "dark",
   "consultant": {
     "name": "Lucy",
     "title": "Charter Consultant, Ocean Independence",

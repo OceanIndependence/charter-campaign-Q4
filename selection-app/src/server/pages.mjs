@@ -323,6 +323,8 @@ function emptyTier2Draft(identity, consultant) {
     footerDisclaimer: TIER2_DISCLAIMER,
     destinations: [emptyDestination(), emptyDestination(), emptyDestination()],
     yachts: [],
+    theme: "dark",
+    sections: { costs: true, compare: true },
   };
 }
 

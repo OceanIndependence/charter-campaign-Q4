@@ -196,6 +196,12 @@ export interface AtlasPagePin {
   lon: number;
 }
 
+/** The optional sections of a Tier 2 page: the Tier 3 set without the itinerary. */
+export interface AtlasPageSections {
+  costs: boolean;
+  compare: boolean;
+}
+
 export interface AtlasPageConfig {
   tier: 2;
   slug: string;
@@ -207,6 +213,13 @@ export interface AtlasPageConfig {
   destinations: AtlasPageDestination[];
   yachts: AtlasPageYacht[];
   otherPins: AtlasPagePin[];
+  /**
+   * Absent on pages published before the Tier 2 form had a Page Sections
+   * card: those pages carry neither section, exactly as they were published.
+   */
+  sections?: AtlasPageSections;
+  /** Colour theme; absent means dark */
+  theme?: PageTheme;
   /** Null when the consultant is inactive: no contact block, no signatures, no "ask" button */
   consultant: Consultant | null;
   /** The public Tier 1 page */

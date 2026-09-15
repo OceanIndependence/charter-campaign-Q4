@@ -17,6 +17,7 @@ import type {
 } from "@/lib/portal-types";
 import {
   TIER2_DEFAULT_DISCLAIMER,
+  TIER2_DEFAULT_SECTIONS,
   TIER2_MAX_YACHTS,
   emptyTier2Destination,
   emptyTier2Yacht,
@@ -181,6 +182,10 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
         next.introNote ??= "";
         next.seasonNote ??= null;
         next.footerDisclaimer ??= TIER2_DEFAULT_DISCLAIMER;
+        // Drafts saved before the Page Sections card existed: read as a new
+        // draft would be, so the form and the page agree on what is on.
+        next.theme = next.theme === "light" ? "light" : "dark";
+        next.sections = { ...TIER2_DEFAULT_SECTIONS, ...(next.sections ?? {}) };
         const slots = (next.destinations ?? []).slice(0, 3);
         while (slots.length < 3) slots.push(emptyTier2Destination());
         next.destinations = slots as Tier2Draft["destinations"];
@@ -1236,9 +1241,62 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
           </button>
         </section>
 
-        {/* 04 — SEASON NOTE */}
+        {/* 04 — PAGE SECTIONS: the Tier 3 set without the itinerary, which is to get a card of its own */}
         <section className={styles.card}>
-          <div className={styles.sectionHead}>04 — SEASON NOTE</div>
+          <div className={styles.sectionHead}>04 — PAGE SECTIONS</div>
+          <div className={styles.checkGrid}>
+            <div className={styles.checkChild} style={{ paddingLeft: 0, marginLeft: 0 }}>
+              <span className={styles.fieldLabel}>
+                THEME <span className={styles.fieldLabelHint}>— the client page&rsquo;s colour scheme</span>
+              </span>
+              <div className={styles.segmented} role="radiogroup" aria-label="Client page theme">
+                {(["dark", "light"] as const).map((t) => {
+                  const on = (draft.theme ?? "dark") === t;
+                  return (
+                    <button
+                      key={t}
+                      type="button"
+                      role="radio"
+                      aria-checked={on}
+                      className={`${styles.segment} ${on ? styles.segmentOn : ""}`}
+                      onClick={() => update((d) => ({ ...d, theme: t }))}
+                    >
+                      {t.toUpperCase()}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <label className={styles.checkRow}>
+              <input
+                type="checkbox"
+                className={styles.checkbox}
+                checked={draft.sections?.costs ?? TIER2_DEFAULT_SECTIONS.costs}
+                onChange={(e) =>
+                  update((d) => ({ ...d, sections: { ...TIER2_DEFAULT_SECTIONS, ...d.sections, costs: e.target.checked } }))
+                }
+              />
+              <span className={styles.checkLabel}>
+                Costs involved (charter fee, APA, VAT, delivery, gratuity)
+              </span>
+            </label>
+            <label className={styles.checkRow}>
+              <input
+                type="checkbox"
+                className={styles.checkbox}
+                checked={draft.sections?.compare ?? TIER2_DEFAULT_SECTIONS.compare}
+                onChange={(e) =>
+                  update((d) => ({ ...d, sections: { ...TIER2_DEFAULT_SECTIONS, ...d.sections, compare: e.target.checked } }))
+                }
+              />
+              <span className={styles.checkLabel}>Compare feature (side-by-side specifications)</span>
+            </label>
+          </div>
+        </section>
+
+        {/* 05 — SEASON NOTE */}
+        <section className={styles.card}>
+          <div className={styles.sectionHead}>05 — SEASON NOTE</div>
           <p className={styles.sectionNote}>Shown beneath the shortlist, before your details — a short word on timing for the client’s season.</p>
           <div className={styles.grid}>
             <label className={`${styles.checkRow} ${styles.fieldFull}`}>
@@ -1279,12 +1337,12 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
           </div>
         </section>
 
-        {/* 05 — YOUR DETAILS: read-only, from the consultant record */}
-        <ConsultantDetailsCard sectionHead="05 — YOUR DETAILS" consultant={selectionConsultant} />
+        {/* 06 — YOUR DETAILS: read-only, from the consultant record */}
+        <ConsultantDetailsCard sectionHead="06 — YOUR DETAILS" consultant={selectionConsultant} />
 
-        {/* 06 — FOOTER */}
+        {/* 07 — FOOTER */}
         <section className={styles.card}>
-          <div className={styles.sectionHead}>06 — FOOTER</div>
+          <div className={styles.sectionHead}>07 — FOOTER</div>
           <div className={styles.grid}>
             <label className={`${styles.field} ${styles.fieldFull}`}>
               <span className={styles.fieldLabel}>

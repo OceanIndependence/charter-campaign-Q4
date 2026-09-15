@@ -8,7 +8,9 @@ import AtlasGlobe, { type GlobeHandle } from "@/components/atlas/AtlasGlobe";
 import SpecPanel from "@/components/SpecPanel";
 import ConsultantBlock from "@/components/ConsultantBlock";
 import EnlargeableImage from "@/components/EnlargeableImage";
-import { SmallChevronIcon } from "@/components/icons";
+import { CompareBar, CompareOverlay } from "@/components/Compare";
+import { CostsSection } from "@/components/CollapsibleSections";
+import { CompareToggleIcon, SmallChevronIcon } from "@/components/icons";
 import styles from "./Personalised.module.css";
 
 /** Camera at rest: the Mediterranean, as in the design reference. */
@@ -30,6 +32,11 @@ function yachtMeta(y: AtlasPageYacht): string {
 
 export default function PersonalisedAtlasPage({ config }: { config: AtlasPageConfig }) {
   const { destinations, yachts, consultant } = config;
+  const theme = config.theme === "light" ? "light" : "dark";
+  // Pages published before the form had a Page Sections card carry no block
+  // and render exactly as they were published: neither section.
+  const compareEnabled = config.sections?.compare === true;
+  const costsEnabled = config.sections?.costs === true;
   // "" when the consultant is inactive: no signatures, no "ask" button, no block.
   const consultantFirst = consultant ? firstName(consultant.name) || consultant.name : "";
   const chosenIds = useMemo(() => destinations.map((d) => d.id), [destinations]);
@@ -46,12 +53,33 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
   const panelRef = useRef<HTMLDivElement>(null);
   const fadeTimer = useRef<number | undefined>(undefined);
 
+  // The page root carries the theme for its own tokens; the document root
+  // carries it too so html/body background and scrollbars follow.
   useEffect(() => {
-    document.documentElement.dataset.theme = "dark";
+    document.documentElement.dataset.theme = theme;
     return () => {
       delete document.documentElement.dataset.theme;
     };
+  }, [theme]);
+
+  /* ------------------------------------------------------------- compare */
+
+  /** Yacht ids ticked for comparison, in the order they were ticked (up to three). */
+  const [compare, setCompare] = useState<string[]>([]);
+  const [compareOpen, setCompareOpen] = useState(false);
+
+  const toggleCompare = useCallback((id: string) => {
+    setCompare((cmp) => {
+      if (cmp.includes(id)) return cmp.filter((x) => x !== id);
+      if (cmp.length >= 3) return cmp;
+      return [...cmp, id];
+    });
   }, []);
+
+  const compareYachts = useMemo(
+    () => compare.map((id) => yachts.find((y) => y.id === id)).filter((y): y is AtlasPageYacht => Boolean(y)),
+    [compare, yachts]
+  );
 
   /* --------------------------------------------------------------- globe */
 
@@ -244,10 +272,10 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
   const askHref = consultant?.email ? `mailto:${consultant.email}?subject=${encodeURIComponent("Summer 2027 options")}` : null;
 
   return (
-    <div className={styles.page} data-theme="dark">
+    <div className={styles.page} data-theme={theme}>
       <header className={styles.header}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/assets/logo-white.png" alt="Ocean Independence" className={styles.logo} />
+        <img src={theme === "light" ? "/assets/logo-black.png" : "/assets/logo-white.png"} alt="Ocean Independence" className={styles.logo} />
         <span className={styles.headerLabel}>PERSONALISED FOR YOU</span>
       </header>
 
@@ -381,38 +409,57 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
           {yachts.map((y, i) => {
             const rate = fmtCardRate(y);
             const dim = Boolean(selectedDest) && !y.destinationIds.includes(selectedDest!.id);
+            const ticked = compare.includes(y.id);
             return (
-              <button
-                type="button"
-                key={y.id}
-                className={`${styles.card} ${dim ? styles.cardDim : ""}`}
-                onClick={() => openDrawer(i)}
-                aria-label={`${y.name} — open details`}
-              >
-                <div className={styles.cardMedia}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  {y.leadImageUrl && <img src={y.imageThumbs?.lead ?? y.leadImageUrl} alt={`${y.name} — exterior profile`} loading="lazy" />}
-                </div>
-                <div className={styles.cardBody}>
-                  <div className={styles.cardName}>{y.name}</div>
-                  <div className={styles.cardMeta}>{yachtMeta(y)}</div>
-                  {rate && <div className={styles.cardRate}>{rate}</div>}
-                  <div className={styles.chips}>
-                    {y.destinationIds.map((id) => {
-                      const d = byId.get(id);
-                      return d ? (
-                        <span key={id} className={`${styles.chip} ${selectedId === id ? styles.chipActive : ""}`}>
-                          {d.name.toUpperCase()}
-                        </span>
-                      ) : null;
-                    })}
+              <div key={y.id} className={styles.cardWrap}>
+                {compareEnabled && (
+                  <button
+                    type="button"
+                    className={`${styles.cmpBtn} ${ticked ? styles.cmpBtnOn : ""}`}
+                    title={ticked ? "Remove from comparison" : "Add to comparison"}
+                    aria-label={`${ticked ? "Remove" : "Add"} ${y.name} ${ticked ? "from" : "to"} comparison`}
+                    aria-pressed={ticked}
+                    onClick={() => toggleCompare(y.id)}
+                  >
+                    <CompareToggleIcon selected={ticked} />
+                  </button>
+                )}
+                <button
+                  type="button"
+                  className={`${styles.card} ${dim ? styles.cardDim : ""}`}
+                  onClick={() => openDrawer(i)}
+                  aria-label={`${y.name} — open details`}
+                >
+                  <div className={styles.cardMedia}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    {y.leadImageUrl && <img src={y.imageThumbs?.lead ?? y.leadImageUrl} alt={`${y.name} — exterior profile`} loading="lazy" />}
                   </div>
-                </div>
-              </button>
+                  <div className={styles.cardBody}>
+                    <div className={styles.cardName}>{y.name}</div>
+                    <div className={styles.cardMeta}>{yachtMeta(y)}</div>
+                    {rate && <div className={styles.cardRate}>{rate}</div>}
+                    <div className={styles.chips}>
+                      {y.destinationIds.map((id) => {
+                        const d = byId.get(id);
+                        return d ? (
+                          <span key={id} className={`${styles.chip} ${selectedId === id ? styles.chipActive : ""}`}>
+                            {d.name.toUpperCase()}
+                          </span>
+                        ) : null;
+                      })}
+                    </div>
+                  </div>
+                </button>
+              </div>
             );
           })}
         </div>
       </section>
+
+      {compareEnabled && !compareOpen && compareYachts.length > 0 && (
+        <CompareBar yachts={compareYachts} onOpen={() => compareYachts.length >= 2 && setCompareOpen(true)} onClear={() => setCompare([])} />
+      )}
+      {compareEnabled && compareOpen && <CompareOverlay yachts={compareYachts} onClose={() => setCompareOpen(false)} />}
 
       {config.seasonNote && (
         <section className={styles.seasonNote} data-screen-label="Season note">
@@ -422,6 +469,8 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
           </div>
         </section>
       )}
+
+      {costsEnabled && <CostsSection />}
 
       {consultant && <ConsultantBlock consultant={consultant} atlasUrl={config.atlasUrl} />}
 
