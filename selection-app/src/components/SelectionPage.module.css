@@ -9,6 +9,19 @@
   padding: 18px 0 56px;
 }
 
+/* The foot is a dark theme scope on both themes (see SelectionPage.tsx).
+   Setting its base colour makes inherited text re-resolve against its own
+   tokens rather than carry the light page's computed ink. */
+.foot {
+  color: var(--fg);
+}
+
+/* Light theme: the foot also has to paint the dark ground, since the page
+   behind it is light. */
+[data-theme="light"] .foot {
+  background: var(--page-base);
+}
+
 .disclaimer {
   border-top: 1px solid var(--hairline);
   padding: 22px clamp(24px, 6vw, 72px);
