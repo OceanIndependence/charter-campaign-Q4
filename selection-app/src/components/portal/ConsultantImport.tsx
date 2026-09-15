@@ -74,7 +74,7 @@ export default function ConsultantImport() {
     try {
       const res = await fetch("/api/admin/import-consultants");
       if (res.status === 401) {
-        window.location.href = "/portal/login";
+        window.location.href = "/portal/sign-in";
         return;
       }
       const body = await res.json().catch(() => null);
