@@ -36,6 +36,26 @@ export interface DetachResult {
   pagesUpdated: Array<{ slug: string; live: boolean }>;
 }
 
+/** What one run of the one-off single-selection assignment did (POST /api/admin/assign-selection). */
+export interface AssignSelectionResult {
+  ranAt: string;
+  selection: {
+    id: string;
+    clientNames: string;
+    /** The namespace it was stored under before this run */
+    from: string;
+    /** The consultant id it is stored under now */
+    to: string;
+    /** True when this run moved it out of another namespace */
+    moved: boolean;
+    alreadyAssigned: boolean;
+    publishedSlug: string | null;
+  };
+  consultant: { id: string; displayName: string; email: string; phone: string; status: "active" | "inactive"; photoStatus: "ok" | "missing" };
+  consultantCreated: boolean;
+  pageUpdated: { slug: string; live: boolean } | null;
+}
+
 /** What one run of the seed import did. Returned by the API and rendered on the import page. */
 export interface ConsultantImportResult {
   ranAt: string;

@@ -1,12 +1,21 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import type { ConsultantImportResult, DetachResult } from "@/lib/consultant-seed-types";
+import type { AssignSelectionResult, ConsultantImportResult, DetachResult } from "@/lib/consultant-seed-types";
 import type { ImportStatus } from "@/app/api/admin/import-consultants/route";
 import { ADMIN_CONSULTANTS_PATH } from "@/lib/consultant-types";
 import styles from "./PortalForm.module.css";
 
 const ENV_LABEL: Record<string, string> = { production: "Production", preview: "Preview", development: "Development" };
+
+/**
+ * What the one-off assignment below would do, for the copy only — the
+ * action itself takes no input and reads these from ASSIGN_SELECTION_ID and
+ * ASSIGN_EMAIL in src/server/consultant-fixture.mjs, which is the source of
+ * truth for both.
+ */
+const ASSIGN_SELECTION_ID = "ae64b2e2-e716-4a4b-997a-897bf53b1530";
+const ASSIGN_EMAIL = "hanneke@ocyachts.com";
 
 /**
  * The import page body: where the writes go, what a press would do, the
@@ -23,6 +32,26 @@ export default function ConsultantImport() {
   const [detachRunning, setDetachRunning] = useState(false);
   const [detach, setDetach] = useState<DetachResult | null>(null);
   const [detachError, setDetachError] = useState<string | null>(null);
+  const [assignRunning, setAssignRunning] = useState(false);
+  const [assign, setAssign] = useState<AssignSelectionResult | null>(null);
+  const [assignError, setAssignError] = useState<string | null>(null);
+
+  const runAssign = async () => {
+    if (assignRunning) return;
+    setAssignRunning(true);
+    setAssignError(null);
+    setAssign(null);
+    try {
+      const res = await fetch("/api/admin/assign-selection", { method: "POST" });
+      const body = await res.json().catch(() => null);
+      if (!res.ok) throw new Error(body?.error ?? "The assignment did not run.");
+      setAssign(body.result as AssignSelectionResult);
+    } catch (err) {
+      setAssignError(err instanceof Error ? err.message : "The assignment did not run.");
+    } finally {
+      setAssignRunning(false);
+    }
+  };
 
   const runDetach = async () => {
     if (detachRunning) return;
@@ -195,6 +224,43 @@ export default function ConsultantImport() {
             {detach.cleared.length > 0 && <Table title="Selections cleared" head={["Selection", "Client", "Stored under"]} rows={detach.cleared.map((m) => [m.id, m.clientNames || "—", m.namespace])} />}
             {detach.pagesUpdated.length > 0 && <Table title="Published pages reverted to their frozen block" head={["Slug", "Live"]} rows={detach.pagesUpdated.map((p) => [p.slug, p.live ? "yes" : "unpublished"])} />}
             {detach.skipped.length > 0 && <Table title="Skipped" head={["Key", "Reason"]} rows={detach.skipped.map((s) => [s.key, s.reason])} />}
+          </>
+        )}
+      </section>
+
+      <section className={styles.card}>
+        <div className={styles.sectionHeadRow}>
+          <div className={styles.sectionHead}>04 — ASSIGN ONE SELECTION</div>
+          <button type="button" className={styles.publishBtn} onClick={runAssign} disabled={assignRunning || !status}>
+            {assignRunning ? "ASSIGNING…" : assign ? "RUN AGAIN" : "ASSIGN THE SELECTION"}
+          </button>
+        </div>
+        <p className={styles.sectionNote}>
+          One-off, by request: gives selection <code>{ASSIGN_SELECTION_ID}</code> to <code>{ASSIGN_EMAIL}</code>. The draft moves into that
+          consultant&rsquo;s dashboard and, if the selection is published, the live page shows their contact block from the next render. Both the
+          selection and the consultant are fixed in the code, so this button assigns nothing else; every other selection keeps the consultant
+          chosen when it was created. Safe to press again — a second press finds it already assigned and writes nothing.
+        </p>
+        {assignError && <p className={styles.dashError}>{assignError}</p>}
+        {assign && (
+          <>
+            <div className={styles.grid} style={{ marginTop: 8 }}>
+              <Value label="OUTCOME" value={assign.selection.alreadyAssigned ? "Already assigned" : assign.selection.moved ? "Moved" : "Assigned"} />
+              <Value label="CLIENT" value={assign.selection.clientNames || "—"} />
+              <Value label="CONSULTANT" value={`${assign.consultant.displayName} <${assign.consultant.email}>`} />
+              <Value label="RECORD CREATED" value={assign.consultantCreated ? "yes — from the seed row" : "no — already existed"} />
+              <Value label="STORED UNDER" value={assign.selection.to} hint={`was ${assign.selection.from}`} />
+              <Value
+                label="PHONE"
+                value={assign.consultant.phone || "Not set — publishing is blocked until it is"}
+                warn={!assign.consultant.phone}
+              />
+              <Value label="STATUS" value={assign.consultant.status} warn={assign.consultant.status !== "active"} hint="an inactive consultant means no contact block at all" />
+              <Value
+                label="PUBLISHED PAGE"
+                value={assign.pageUpdated ? `${assign.pageUpdated.slug} — ${assign.pageUpdated.live ? "live" : "unpublished"}` : assign.selection.publishedSlug ?? "Not published"}
+              />
+            </div>
           </>
         )}
       </section>

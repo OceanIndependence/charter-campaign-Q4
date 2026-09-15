@@ -127,7 +127,8 @@ filled in (off by default, like scoping, until real sign-in). Everything
 else on the record belongs to the admin screen.
 
 A selection belongs to one consultant record, chosen from a picker when it
-is created and never reassigned. Selections are stored under that record
+is created and never reassigned (bar the one-off admin action below).
+Selections are stored under that record
 (`portal/selections/<consultantId>/…`), so a consultant's dashboard and every
 selection route CAN be scoped structurally — behind the `CONSULTANT_SCOPING`
 flag, which is OFF by default until Microsoft sign-in lands. While off, every
@@ -141,7 +142,15 @@ page carries no contact block at all. Publishing is blocked while the
 selection's consultant has no phone number. The import page also carries a
 one-off CLEAR CONSULTANT FROM ALL SELECTIONS action, which removes the
 consultant from every existing selection and its published page (undoing an
-earlier fixture attachment); the attach action remains as code only. See `docs/consultant-profiles-report.md` and
+earlier fixture attachment); the attach action remains as code only. Beside it,
+ASSIGN THE SELECTION is a second one-off, added for a single request: it gives
+one named selection to one named consultant, moving the draft into that
+consultant's dashboard and stamping the published record so the live page shows
+their block. Both the selection id and the email are constants
+(`ASSIGN_SELECTION_ID` and `ASSIGN_EMAIL` in
+`src/server/consultant-fixture.mjs`); the route takes no body, so it is a named
+exception rather than a reassignment feature, and it is safe to press again.
+Delete these one-offs once they are spent. See `docs/consultant-profiles-report.md` and
 `docs/consultant-pages-phase3-report.md`.
 
 Microsoft sign-in (`PORTAL_AUTH_PROVIDER=microsoft`, with
