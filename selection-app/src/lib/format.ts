@@ -33,11 +33,12 @@ export function fmtCardRate(yacht: Yacht): string | undefined {
 /**
  * Ring/rail-card total: "TOTAL EUR 389,650", the sum of the rate line above
  * it — charter fee, APA, VAT and any delivery fee — as frozen at publish.
- * "FROM" when the rate the total is built on is a from-rate.
+ * Like the rate line, it is the figure itself: no "from", whatever the season
+ * rate behind it. The spec panel carries the "from" wording.
  */
 export function fmtCardTotal(yacht: Yacht): string | undefined {
   if (yacht.totalAmount == null) return undefined;
-  return `TOTAL ${yacht.weeklyRateIsFrom ? "FROM " : ""}${fmtMoney(yacht.currency, yacht.totalAmount)}`;
+  return `TOTAL ${fmtMoney(yacht.currency, yacht.totalAmount)}`;
 }
 
 /** "47.00 metres" for the spec panel */
