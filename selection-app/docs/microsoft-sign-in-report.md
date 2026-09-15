@@ -11,7 +11,8 @@ on Node's `crypto` and `fetch`, no auth library:
 
 - `GET /api/auth/microsoft` sets a ten-minute flow cookie (state, nonce,
   PKCE verifier, return path, HMAC-signed) and redirects to Microsoft. The
-  redirect URI is `https://<the host the browser used>/api/auth/microsoft/callback`.
+  redirect URI is always the one registered origin (see **One origin**
+  below), never the host the browser happened to use.
 - `GET /api/auth/microsoft/callback` checks the state against the flow
   cookie, exchanges the code with the client secret and the PKCE verifier,
   and validates the ID token: RS256 signature against the tenant's
@@ -25,6 +26,19 @@ on Node's `crypto` and `fetch`, no auth library:
   cookie is simply "not signed in".
 - Sign-out (`DELETE /api/auth/identity`) clears the cookie. It does not end
   the Microsoft session in the browser, so signing in again is one click.
+
+**One origin.** Entra matches redirect URIs exactly and accepts no
+wildcards, while Vercel gives every deployment its own host
+(`charter-campaign-q4-<hash>-<team>.vercel.app`). Signing in from one of
+those sent Entra an unregistered URI and failed with AADSTS50011. The flow
+is now pinned to a single origin, resolved in `src/server/auth/origin.ts`:
+`PORTAL_PUBLIC_ORIGIN` if set, else Vercel's own `VERCEL_PROJECT_PRODUCTION_URL`
+(the production domain, the same value on every deployment), else the
+request's origin for local development. A browser that starts the flow on
+any other host is redirected to that origin first, before the flow cookie
+is set, so both legs agree on the redirect URI and share the cookie. Only
+`https://charter-campaign-q4.vercel.app/api/auth/microsoft/callback` has to
+be registered.
 
 **Who may sign in.** Only people with a consultant record. After the token
 is validated the callback looks the person up by object ID, then by sign-in
@@ -109,7 +123,9 @@ PORTAL_SESSION_SECRET=<long random string, 32+ characters>
 PORTAL_AUTH_PROVIDER=microsoft
 ```
 
-Set both for the environment you are switching, redeploy. With
+`PORTAL_PUBLIC_ORIGIN` is optional and only needed for a custom domain;
+without it the Vercel production domain is used. Set the two above for
+Production, redeploy. With
 `microsoft` selected and any variable missing the portal is locked, not
 open. `PORTAL_ACCESS_KEY` and the `PORTAL_SOLO_*` variables can stay or go;
 they are ignored under Microsoft.
@@ -122,9 +138,14 @@ they are ignored under Microsoft.
    Microsoft signs you in as) while still on the solo provider, or you will
    be locked out with everyone else. The same applies to anyone else who
    needs access but is not a consultant.
-2. **Redirect URI per host.** Only hosts registered on the app can sign in.
-   `https://charter-campaign-q4.vercel.app/api/auth/microsoft/callback` is
-   confirmed; a custom domain or a preview host needs its own entry first.
+2. **Redirect URI.** One entry covers every deployment now that the flow is
+   pinned to one origin:
+   `https://charter-campaign-q4.vercel.app/api/auth/microsoft/callback`,
+   already registered. Opening the portal on a deployment-specific URL
+   sends you to that host to sign in, which is intended. A custom domain
+   later needs its own entry plus `PORTAL_PUBLIC_ORIGIN` set to it.
+   Microsoft sign-in is Production only by your decision, so no preview
+   host needs registering.
 3. **Existing test selections.** They have no consultant, so under scoping
    only you see them. You said that is fine. If a consultant later needs
    one, the clean route is to duplicate it from your admin view (the copy

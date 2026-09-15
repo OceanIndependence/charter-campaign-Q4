@@ -9,7 +9,7 @@ import {
 } from "@/server/auth/microsoft";
 import { authProvider } from "@/server/auth";
 import { findConsultantByEmail, findConsultantByObjectId } from "@/server/consultants.mjs";
-import { requestOrigin } from "@/server/auth/origin";
+import { signInOrigin } from "@/server/auth/origin";
 
 export const runtime = "nodejs";
 
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
 
   let completed;
   try {
-    completed = await completeSignIn(config, requestOrigin(request), request.nextUrl.searchParams, request.cookies.get(MICROSOFT_FLOW_COOKIE)?.value);
+    completed = await completeSignIn(config, signInOrigin(request), request.nextUrl.searchParams, request.cookies.get(MICROSOFT_FLOW_COOKIE)?.value);
   } catch (err) {
     console.warn(`[auth/microsoft] sign-in failed: ${String((err as Error)?.message ?? err)}`);
     signIn.searchParams.set("error", "failed");
