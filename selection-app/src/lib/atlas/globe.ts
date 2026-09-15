@@ -21,17 +21,13 @@ import { geoEquirectangular, geoGraticule10, geoPath } from "d3-geo";
 import { merge } from "topojson-client";
 import type { Topology, GeometryCollection, Polygon, MultiPolygon } from "topojson-specification";
 import type { MultiPolygon as GeoMultiPolygon } from "geojson";
-import { DARK_PALETTE, type GlobePalette } from "./palette";
-
-export type { GlobePalette, PinInk } from "./palette";
-export { DARK_PALETTE, LIGHT_PALETTE } from "./palette";
 
 export interface GlobePin {
   id: string;
   name: string;
   lat: number;
   lon: number;
-  /** Mint pin with a full label; otherwise a quiet grey dot. */
+  /** Emphasised pin with a full label; otherwise a quiet dot. */
   featured: boolean;
   /**
    * Labelled at rest. Other resting pins show as dots until the globe is
@@ -63,8 +59,6 @@ export interface GlobeConfig {
   onDeselect?: () => void;
   /** Initial view (lat, lon, zoom). Defaults to the Mediterranean. */
   home?: { lat: number; lon: number; zoom: number };
-  /** Colour scheme; defaults to the dark Atlas globe. */
-  palette?: GlobePalette;
 }
 
 interface PinState extends GlobePin {
@@ -88,6 +82,53 @@ type CountriesTopology = Topology<{ countries: GeometryCollection }>;
 
 const d2r = Math.PI / 180;
 const FONT = '"Gotham","Helvetica Neue",Arial,sans-serif';
+const MINT = "#A7E6D7";
+
+/** Colours for one class of pin: label ink, dot fill, stem line and dot glow. */
+interface PinInk {
+  label: string;
+  dot: string;
+  stem: string;
+  /** box-shadow on the dot (blurs start at the edge of its transparent hit-area border) */
+  glow: string;
+  /**
+   * 1px ring drawn tight against the dot's edge so the mint dot reads on the
+   * light sea. Drawn as an outline pulled inside the hit-area border, since a
+   * box-shadow spread would sit 8px out from the dot.
+   */
+  ring: string;
+}
+
+/**
+ * The globe's colours: light sea, darker muted land. Mint is not legible on
+ * the light sea, so labels and stems use the design system's ink (#1D1D1D)
+ * and graphite (#555759); dots stay mint with a 1px dark ring. Used for the
+ * base texture, the zoom patch texture, the atmosphere halo and the pin DOM.
+ */
+const PALETTE = {
+  ocean: "#BCE0E4",
+  land: "#8FA6A4",
+  coast: "rgba(255,255,255,0.5)",
+  graticule: "rgba(29,29,29,0.08)",
+  /** Radial halo behind the sphere: inner stop, 55% stop, outer stop */
+  halo: ["rgba(167,230,215,0.3)", "rgba(167,230,215,0.06)", "rgba(167,230,215,0)"],
+  /** Shadow under the label text (sub-pin labels never carry one) */
+  labelShadow: "0 1px 6px rgba(255,255,255,0.7)",
+  pin: {
+    selected: { label: "#1D1D1D", dot: MINT, stem: "rgba(29,29,29,0.8)", glow: "0 0 10px rgba(167,230,215,1)", ring: "rgba(29,29,29,0.55)" },
+    /** Featured (shortlist) destinations at rest */
+    emphasised: {
+      label: "rgba(29,29,29,0.95)",
+      dot: "rgba(167,230,215,0.95)",
+      stem: "rgba(29,29,29,0.55)",
+      glow: "0 0 6px rgba(167,230,215,0.7)",
+      ring: "rgba(29,29,29,0.45)",
+    },
+    /** Places within a selected country */
+    sub: { label: "rgba(29,29,29,0.75)", dot: "rgba(167,230,215,0.85)", stem: "rgba(29,29,29,0.4)", glow: "0 0 4px rgba(167,230,215,0.6)", ring: "rgba(29,29,29,0.4)" },
+    other: { label: "rgba(85,87,89,0.85)", dot: "rgba(167,230,215,0.7)", stem: "rgba(85,87,89,0.4)", glow: "0 0 4px rgba(167,230,215,0.5)", ring: "rgba(29,29,29,0.35)" },
+  } satisfies Record<string, PinInk>,
+};
 /** Transparent border around each dot that widens its hit area */
 const DOT_HIT_PAD = 8;
 const ZOOM_MIN = 0.7;
@@ -101,7 +142,6 @@ export class AtlasGlobe {
   private glWrap: HTMLDivElement;
   private pinLayer: HTMLDivElement;
   private cfg: GlobeConfig;
-  private palette: GlobePalette;
   private home: { lat: number; lon: number; zoom: number };
 
   private yaw: number;
@@ -145,7 +185,6 @@ export class AtlasGlobe {
   constructor(host: HTMLElement, cfg: GlobeConfig = {}) {
     this.host = host;
     this.cfg = cfg;
-    this.palette = cfg.palette ?? DARK_PALETTE;
     this.home = cfg.home ?? { lat: 38, lon: 12, zoom: 1 };
     this.yaw = -Math.PI / 2 - this.home.lon * d2r;
     this.pitch = this.home.lat * d2r;
@@ -233,7 +272,7 @@ export class AtlasGlobe {
     this.yawG = new THREE.Group();
     this.pitchG.add(this.yawG);
     this.scene.add(this.pitchG);
-    this.sphereMat = new THREE.MeshPhongMaterial({ shininess: 18, specular: new THREE.Color(0x2a4a44), color: new THREE.Color(this.palette.ocean) });
+    this.sphereMat = new THREE.MeshPhongMaterial({ shininess: 18, specular: new THREE.Color(0x2a4a44), color: new THREE.Color(PALETTE.ocean) });
     this.yawG.add(new THREE.Mesh(new THREE.SphereGeometry(1, 96, 96), this.sphereMat));
 
     // Mint atmosphere halo — a sprite behind the globe.
@@ -241,9 +280,9 @@ export class AtlasGlobe {
     haloCv.width = haloCv.height = 256;
     const hctx = haloCv.getContext("2d")!;
     const hg = hctx.createRadialGradient(128, 128, 86, 128, 128, 128);
-    hg.addColorStop(0, this.palette.halo[0]);
-    hg.addColorStop(0.55, this.palette.halo[1]);
-    hg.addColorStop(1, this.palette.halo[2]);
+    hg.addColorStop(0, PALETTE.halo[0]);
+    hg.addColorStop(0.55, PALETTE.halo[1]);
+    hg.addColorStop(1, PALETTE.halo[2]);
     hctx.fillStyle = hg;
     hctx.fillRect(0, 0, 256, 256);
     const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(haloCv), transparent: true, depthWrite: false }));
@@ -283,16 +322,16 @@ export class AtlasGlobe {
     if (this.opts.graticule) {
       ctx.beginPath();
       path(geoGraticule10());
-      ctx.strokeStyle = this.palette.graticule;
+      ctx.strokeStyle = PALETTE.graticule;
       ctx.lineWidth = lineWidth;
       ctx.stroke();
     }
     if (this.landMerged) {
       ctx.beginPath();
       path(this.landMerged);
-      ctx.fillStyle = this.palette.land;
+      ctx.fillStyle = PALETTE.land;
       ctx.fill();
-      ctx.strokeStyle = this.palette.coast;
+      ctx.strokeStyle = PALETTE.coast;
       ctx.lineWidth = 1.1 * lineWidth;
       ctx.stroke();
     }
@@ -307,7 +346,7 @@ export class AtlasGlobe {
     cv.width = w;
     cv.height = h;
     const ctx = cv.getContext("2d")!;
-    ctx.fillStyle = this.palette.ocean;
+    ctx.fillStyle = PALETTE.ocean;
     ctx.fillRect(0, 0, w, h);
     // topojson merge() takes the geometry array, not the collection.
     this.landMerged = merge(this.topo, this.topo.objects.countries.geometries as Array<Polygon | MultiPolygon>);
@@ -317,7 +356,7 @@ export class AtlasGlobe {
     this.paintLand(ctx, proj, k);
     // The canvas is left in three's default (linear) colour space on purpose:
     // the renderer's sRGB output then lifts the mid-tones, which is what
-    // gives the prototype globe its shaded, lit look against the black page.
+    // gives the globe its shaded, lit look.
     const tex = new THREE.CanvasTexture(cv);
     tex.anisotropy = this.renderer.capabilities.getMaxAnisotropy();
     this.sphereMat.map?.dispose();
@@ -364,7 +403,7 @@ export class AtlasGlobe {
     cv.width = texW;
     cv.height = texH;
     const ctx = cv.getContext("2d")!;
-    ctx.fillStyle = this.palette.ocean;
+    ctx.fillStyle = PALETTE.ocean;
     ctx.fillRect(0, 0, texW, texH);
     const scale = texW / ((lonE - lonW) * d2r);
     const proj = geoEquirectangular()
@@ -570,7 +609,7 @@ export class AtlasGlobe {
     const { label, stem, dot } = p._parts;
     const sel = this.selected === p.id;
     const tier = this.pinTier(p);
-    const pal = this.palette.pin;
+    const pal = PALETTE.pin;
     // Label and stem follow the pin's class; a sub-pin that is not featured
     // keeps the quiet sub-pin type but the plain "other" dot.
     const cls = sel ? pal.selected : p.sub ? pal.sub : p.featured ? pal.emphasised : pal.other;
@@ -586,7 +625,7 @@ export class AtlasGlobe {
       fontWeight: tier.weight,
       color: ink,
       whiteSpace: "nowrap",
-      textShadow: p.sub ? "none" : this.palette.labelShadow,
+      textShadow: p.sub ? "none" : PALETTE.labelShadow,
     });
     Object.assign(stem.style, {
       background: cls.stem,
@@ -604,8 +643,8 @@ export class AtlasGlobe {
       backgroundColor: dotInk,
       boxShadow: glow,
       // The ring is pulled inside the hit-area border so it hugs the dot.
-      outline: dotCls.ring ? `1px solid ${dotCls.ring}` : "none",
-      outlineOffset: dotCls.ring ? `-${DOT_HIT_PAD}px` : "0",
+      outline: `1px solid ${dotCls.ring}`,
+      outlineOffset: `-${DOT_HIT_PAD}px`,
     });
     this.applyPlacement(p, p._place ?? "up", true);
   }

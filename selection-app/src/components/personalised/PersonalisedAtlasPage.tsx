@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { AtlasPageConfig, AtlasPageDestination, AtlasPageYacht } from "@/lib/types";
 import type { GlobePin } from "@/lib/atlas/globe";
-import { LIGHT_PALETTE } from "@/lib/atlas/palette";
 import { countWord, fmtCardRate, fmtLengthShort } from "@/lib/format";
 import AtlasGlobe, { type GlobeHandle } from "@/components/atlas/AtlasGlobe";
 import SpecPanel from "@/components/SpecPanel";
@@ -288,7 +287,6 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
             pins={pins}
             options={globeOptions}
             home={HOME}
-            palette={LIGHT_PALETTE}
             onPinSelect={onPinSelect}
             onDeselect={closePanel}
             onReady={onGlobeReady}

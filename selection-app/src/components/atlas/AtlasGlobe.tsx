@@ -21,8 +21,6 @@ interface Props {
   options?: Partial<GlobeOptions>;
   /** Resting view (lat, lon, zoom); the engine defaults to the Mediterranean at zoom 1 */
   home?: GlobeConfig["home"];
-  /** Colour scheme for texture, halo and pins; the engine defaults to the dark Atlas palette */
-  palette?: GlobeConfig["palette"];
   className?: string;
 }
 
@@ -31,13 +29,12 @@ interface Props {
  * on the client after mount, so the page shell and panel arrive first.
  * Calls made before the engine is ready are remembered and replayed.
  */
-const AtlasGlobe = forwardRef<GlobeHandle, Props>(function AtlasGlobe({ pins, onPinSelect, onDeselect, onReady, options, home, palette, className }, ref) {
+const AtlasGlobe = forwardRef<GlobeHandle, Props>(function AtlasGlobe({ pins, onPinSelect, onDeselect, onReady, options, home, className }, ref) {
   const hostRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<Engine | null>(null);
   const pinsRef = useRef(pins);
   const optionsRef = useRef(options);
   const homeRef = useRef(home);
-  const paletteRef = useRef(palette);
   const callbacks = useRef({ onPinSelect, onDeselect, onReady });
   const pending = useRef<{ subPins: GlobePin[]; focus: string[] | null; selected: string | null; fly: [number, number, number, number] | null }>({
     subPins: [],
@@ -61,7 +58,6 @@ const AtlasGlobe = forwardRef<GlobeHandle, Props>(function AtlasGlobe({ pins, on
         onPinSelect: (id) => callbacks.current.onPinSelect(id),
         onDeselect: () => callbacks.current.onDeselect(),
         ...(homeRef.current ? { home: homeRef.current } : {}),
-        ...(paletteRef.current ? { palette: paletteRef.current } : {}),
       });
       engine.setPins(pinsRef.current);
       // Idle drift stays on, as in the design reference; pass options.drift
