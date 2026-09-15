@@ -30,7 +30,8 @@ function yachtMeta(y: AtlasPageYacht): string {
 
 export default function PersonalisedAtlasPage({ config }: { config: AtlasPageConfig }) {
   const { destinations, yachts, consultant } = config;
-  const consultantFirst = firstName(consultant.name) || consultant.name;
+  // "" when the consultant is inactive: no signatures, no "ask" button, no block.
+  const consultantFirst = consultant ? firstName(consultant.name) || consultant.name : "";
   const chosenIds = useMemo(() => destinations.map((d) => d.id), [destinations]);
   const byId = useMemo(() => new Map(destinations.map((d) => [d.id, d])), [destinations]);
   const otherById = useMemo(() => new Map(config.otherPins.map((p) => [p.id, p])), [config.otherPins]);
@@ -240,7 +241,7 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
   const destCount = destinations.length;
   const railEyebrow = `${countWord(yachts.length)} ${yachts.length === 1 ? "YACHT" : "YACHTS"} ACROSS ${countWord(destCount)} ${destCount === 1 ? "DESTINATION" : "DESTINATIONS"}`;
   const introEyebrow = `PREPARED FOR ${config.clientNames.toUpperCase()} · SUMMER 2027`;
-  const askHref = `mailto:${consultant.email}?subject=${encodeURIComponent("Summer 2027 options")}`;
+  const askHref = consultant?.email ? `mailto:${consultant.email}?subject=${encodeURIComponent("Summer 2027 options")}` : null;
 
   return (
     <div className={styles.page} data-theme="dark">
@@ -255,7 +256,8 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
         <h1 className={styles.h1}>{config.clientGreeting}</h1>
         {config.introNote && (
           <p className={styles.introNote}>
-            {config.introNote} — {consultantFirst}
+            {config.introNote}
+            {consultantFirst && ` — ${consultantFirst}`}
           </p>
         )}
       </section>
@@ -325,17 +327,19 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
                 <div className={styles.eyebrow}>BEYOND THE SHORTLIST</div>
                 <h3 className={styles.panelHeading}>{selectedOther.name.toUpperCase()}</h3>
                 <p className={styles.otherBody}>
-                  Not part of this shortlist, but if {selectedOther.name} appeals, {consultantFirst} can build it into your 2027 with the same
-                  care.
+                  Not part of this shortlist, but if {selectedOther.name} appeals, {consultantFirst || "Ocean Independence"} can build it into your
+                  2027 with the same care.
                 </p>
                 <a className={styles.textLink} href={`${config.atlasUrl}?destination=${encodeURIComponent(selectedOther.id)}`} target="_blank" rel="noopener">
                   EXPLORE THIS DESTINATION →
                 </a>
-                <div className={styles.panelFoot}>
-                  <a className={styles.btnOutline} href={askHref}>
-                    ASK {consultantFirst.toUpperCase()} ABOUT IT
-                  </a>
-                </div>
+                {askHref && consultantFirst && (
+                  <div className={styles.panelFoot}>
+                    <a className={styles.btnOutline} href={askHref}>
+                      ASK {consultantFirst.toUpperCase()} ABOUT IT
+                    </a>
+                  </div>
+                )}
               </div>
             )}
           </aside>
@@ -419,7 +423,7 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
         </section>
       )}
 
-      <ConsultantBlock consultant={consultant} atlasUrl={config.atlasUrl} />
+      {consultant && <ConsultantBlock consultant={consultant} atlasUrl={config.atlasUrl} />}
 
       <div className={styles.disclaimer}>{config.footerDisclaimer}</div>
 
@@ -442,7 +446,7 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
               fading={fading}
               onPrev={() => stepDrawer(-1)}
               onNext={() => stepDrawer(1)}
-              signedBy={consultantFirst}
+              signedBy={consultantFirst || undefined}
               vatText={drawerYacht.vatText}
             />
           </div>
@@ -460,7 +464,7 @@ function DestinationPanel({ dest, consultant, onSeeYachts }: { dest: AtlasPageDe
       {dest.eyebrow.value && <div className={styles.eyebrow}>{dest.eyebrow.value.toUpperCase()}</div>}
       <h3 className={styles.panelHeading}>{dest.name.toUpperCase()}</h3>
       {dest.deckLine.value && <div className={styles.deck}>{dest.deckLine.value}</div>}
-      {dest.description.source === "consultant" && (
+      {dest.description.source === "consultant" && consultant && (
         <div className={`${styles.attribution} ${styles.attributionMint}`}>CURATED FOR YOU BY {consultant.toUpperCase()}</div>
       )}
       {dest.description.value && <p className={styles.description}>{dest.description.value}</p>}
@@ -469,7 +473,8 @@ function DestinationPanel({ dest, consultant, onSeeYachts }: { dest: AtlasPageDe
       </button>
       {dest.consultantNote?.value && (
         <p className={styles.note}>
-          {dest.consultantNote.value} — {consultant}
+          {dest.consultantNote.value}
+          {consultant && ` — ${consultant}`}
         </p>
       )}
       <div className={styles.images}>

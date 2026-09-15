@@ -8,8 +8,9 @@ export default function Cover({ config }: { config: PageConfig }) {
   const { clientNames, season, region, headline, subHeadline, welcome, consultant } = config;
   const headerLabel = [season, region].filter(Boolean).map((s) => s.toUpperCase()).join(" · ");
   const whenWhere = [season, region].filter(Boolean).join(", ");
+  // No consultant (inactive record): the page names nobody.
   const defaultSubline =
-    `Prepared for ${clientNames} by ${consultant.name}` + (whenWhere ? ` — ${whenWhere}` : "");
+    `Prepared for ${clientNames}` + (consultant?.name ? ` by ${consultant.name}` : "") + (whenWhere ? ` — ${whenWhere}` : "");
   const subline = welcome && welcome.trim() ? welcome.trim() : defaultSubline;
   const eyebrow = subHeadline && subHeadline.trim() ? subHeadline.trim() : DEFAULT_EYEBROW;
   return (

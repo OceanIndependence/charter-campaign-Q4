@@ -97,8 +97,20 @@ export interface SelectionBase {
   tier?: Tier;
   /** Consultant identity that owns this draft (stamped server-side) */
   owner?: PageOwner;
+  /**
+   * The consultant RECORD (consultants/<id>.json) the selection belongs to:
+   * chosen once at creation, never reassigned, the storage namespace, and
+   * resolved live on every client render. Optional in the type only for
+   * drafts written before records existed.
+   */
+  consultantId?: string;
   updatedAt: string;
   clientNames: string;
+  /**
+   * The contact block as last snapshotted from the consultant record. Kept
+   * on the draft for the form's read-only "YOUR DETAILS" card and as the
+   * holding-page fallback; the live record wins on every client render.
+   */
   consultant: {
     name: string;
     title: string;
@@ -287,7 +299,10 @@ export type SelectionStatus = "draft" | "published" | "unpublished";
 export interface SelectionMeta {
   id: string;
   tier: Tier;
+  /** The identity that created the selection (audit only) */
   owner: PageOwner;
+  /** The consultant record the selection belongs to; null only on rows written before records existed */
+  consultantId: string | null;
   clientNames: string;
   /** Tier 3: page headline; Tier 2: the client greeting */
   headline: string;

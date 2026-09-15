@@ -1839,3 +1839,112 @@
 .staleNote {
   color: #8a5a2b;
 }
+
+/* ------------------------------------------------------------- profile */
+
+.headerLink {
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  font-weight: 500;
+  color: #555759;
+  text-decoration: none;
+}
+.headerLink:hover {
+  color: #1d1d1d;
+}
+
+.avatarImg {
+  object-fit: cover;
+  display: block;
+}
+
+.profileRow {
+  display: flex;
+  gap: 36px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.profilePhoto,
+.profilePhotoEmpty {
+  width: 128px;
+  height: 128px;
+  flex: 0 0 128px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Neutral placeholder: no upload control, since the consultant cannot fix it here. */
+.profilePhotoEmpty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ececea;
+  color: #555759;
+  font-size: 28px;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+}
+
+.profileFields {
+  flex: 1 1 280px;
+  display: grid;
+  gap: 22px;
+}
+
+/* A read-only detail: text, not a disabled input, so it never reads as editable. */
+.readValue {
+  font-size: 14px;
+  font-weight: 300;
+  color: #1d1d1d;
+  line-height: 1.5;
+  min-height: 1.5em;
+}
+
+.readValueEmpty {
+  color: #8a8a88;
+  font-style: italic;
+}
+
+.savedNote {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: #2f6b4f;
+}
+
+.gateNote {
+  margin: 0 0 22px;
+  padding: 14px 18px;
+  border: 1px solid #d9c3ad;
+  background: #fbf6f0;
+  font-size: 12px;
+  line-height: 1.7;
+  color: #8a5a2b;
+}
+
+/* Dashboard flag for a record created at sign-in rather than seeded. */
+.ssoTag {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 8.5px;
+  letter-spacing: 0.2em;
+  font-weight: 500;
+  color: #8a5a2b;
+  border: 1px solid #d9c3ad;
+  border-radius: 999px;
+  padding: 2px 8px 2px calc(8px + 0.2em);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.dashNote {
+  margin: 18px 0 0;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  line-height: 1.7;
+  color: #8a5a2b;
+}
+.dashNote a {
+  color: inherit;
+  text-decoration: underline;
+}

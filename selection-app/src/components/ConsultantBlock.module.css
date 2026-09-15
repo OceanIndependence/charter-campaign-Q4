@@ -54,6 +54,10 @@
   gap: 12px;
 }
 
+.row a {
+  color: inherit;
+}
+
 .email {
   text-decoration: none;
   border-bottom: 1px solid var(--fg-3);
@@ -88,11 +92,33 @@
   color: var(--fg-45);
   text-decoration: none;
 }
+/* Hover in the full foreground on both themes: mint is decoration, never text. */
 .exploreLink:hover {
-  color: var(--mint);
+  color: var(--fg);
 }
 
-/* Light theme: hover in ink rather than mint. */
-[data-theme="light"] .exploreLink:hover {
-  color: var(--fg);
+/* Narrow viewports: the photo wraps above the text, so centre both and let
+   long names and titles break instead of forcing a wide column. */
+@media (max-width: 480px) {
+  .section {
+    padding: 56px 24px 64px;
+  }
+  .inner {
+    gap: 24px;
+  }
+  .details {
+    min-width: 0;
+    width: 100%;
+    text-align: center;
+  }
+  .name,
+  .title {
+    overflow-wrap: anywhere;
+  }
+  .row {
+    justify-content: center;
+  }
+  .email {
+    overflow-wrap: anywhere;
+  }
 }

@@ -8,7 +8,10 @@
     "start": "next start",
     "yachts:fetch": "node scripts/fetch-yachtfolio.mjs",
     "import:destinations": "node scripts/import-destinations.mjs",
-    "sirv:backfill": "node scripts/backfill-sirv.mjs"
+    "sirv:backfill": "node scripts/backfill-sirv.mjs",
+    "consultants:import": "node scripts/import-consultants.mjs",
+    "prebuild": "node scripts/build-consultants-seed.mjs",
+    "consultants:seed:build": "node scripts/build-consultants-seed.mjs"
   },
   "dependencies": {
     "@vercel/blob": "^2.8.0",

@@ -82,10 +82,20 @@ export function fmtDateLong(iso: string | null | undefined): string {
  * phone number becomes https://wa.me/<digits> (the wa.me pattern shared by
  * every client page).
  */
+/**
+ * wa.me link for a stored WhatsApp number: every space, plus sign and piece
+ * of punctuation stripped, an international "00" prefix dropped, and a
+ * bracketed trunk zero — "+44 (0)7000 …" — removed rather than kept as a
+ * digit, since wa.me expects the number exactly as dialled from abroad.
+ * A full URL is passed through.
+ */
 export function whatsappHref(value: string | undefined): string {
   const v = (value ?? "").trim();
   if (!v) return "";
   if (/^https?:\/\//i.test(v)) return v;
-  const digits = v.replace(/[^\d]/g, "").replace(/^00/, "");
+  const digits = v
+    .replace(/\(\s*0\s*\)/g, "")
+    .replace(/[^\d]/g, "")
+    .replace(/^00/, "");
   return digits ? `https://wa.me/${digits}` : "";
 }

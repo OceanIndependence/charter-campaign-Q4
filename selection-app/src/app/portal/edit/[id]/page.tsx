@@ -4,8 +4,9 @@ import PortalForm from "@/components/portal/PortalForm";
 import Tier2Form from "@/components/portal/Tier2Form";
 import PortalHeader from "@/components/portal/PortalHeader";
 import styles from "@/components/portal/PortalForm.module.css";
-import { authProviderInfo, getPortalPageState } from "@/server/auth";
+import { authProviderInfo, getPortalPageState, selectionAccess } from "@/server/auth";
 import { getSelection, tierOf } from "@/server/pages.mjs";
+import { ADMIN_CONSULTANTS_PATH, PROFILE_PATH, consultantNeedsPhone, profileGateEnabled } from "@/lib/consultant-types";
 
 export const dynamic = "force-dynamic";
 
@@ -23,19 +24,23 @@ export default async function EditPage({ params }: { params: Promise<{ id: strin
   const state = await getPortalPageState();
   if ("redirect" in state) redirect(state.redirect === "login" ? "/portal/login" : "/portal/sign-in");
   const { id } = await params;
-  const { identity } = state;
+  const { identity, consultant, isAdmin } = state;
+  if (profileGateEnabled() && consultantNeedsPhone(consultant)) redirect(PROFILE_PATH);
   const showSignOut = !authProviderInfo().singleConsultant;
   let tier: 2 | 3 = 3;
   try {
-    tier = tierOf(await getSelection(identity, id));
+    tier = tierOf(await getSelection(selectionAccess(state), id));
   } catch {
     // Unknown or someone else's selection: the form reports it on load.
   }
   return (
     <div className={styles.page}>
       <PortalHeader
-        consultant={identity.name.toUpperCase()}
-        initial={(identity.name || identity.email || "?").slice(0, 1).toUpperCase()}
+        consultant={(consultant.displayName || identity.name).toUpperCase()}
+        initial={(consultant.displayName || identity.name || identity.email || "?").slice(0, 1).toUpperCase()}
+        photoUrl={consultant.photoStatus === "ok" ? consultant.photoUrl : undefined}
+        profileHref={PROFILE_PATH}
+        adminHref={isAdmin ? ADMIN_CONSULTANTS_PATH : undefined}
         showSignOut={showSignOut}
         backHref="/portal"
       />

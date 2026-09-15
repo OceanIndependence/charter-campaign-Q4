@@ -24,7 +24,8 @@ import { tier2DraftToConfig } from "@/lib/atlas-map";
 import { atlasCopyFor, atlasResolutionFor, getAtlasIndex, imageCandidates } from "@/server/atlas/content";
 import { demoDetail, demoImages, isDemoFleet } from "./fleet.mjs";
 import { createSelection, listSelections, saveSelection } from "../pages.mjs";
-import type { ConsultantIdentity } from "../auth/types";
+import type { SelectionAccess } from "../auth";
+import type { ConsultantRecord } from "@/lib/consultant-types";
 
 export const DEMO_TIER2_SLUG = "harrington-summer-2027";
 
@@ -175,22 +176,24 @@ export function demoPagesEnabled(): boolean {
  * draft so the Tier 2 form opens with content. Returns the seeded draft or
  * null when nothing was done.
  */
-export async function seedDemoSelection(identity: ConsultantIdentity): Promise<AnySelection | null> {
+export async function seedDemoSelection(access: SelectionAccess, consultant: ConsultantRecord): Promise<AnySelection | null> {
   if (!isDemoFleet() || !demoPagesEnabled()) return null;
-  const existing = (await listSelections(identity)) as Array<{ id: string }>;
+  const existing = (await listSelections(access)) as Array<{ id: string }>;
   if (existing.length) return null;
-  const created = (await createSelection(identity, { tier: 2 })) as Tier2Draft;
+  // Demo fixture only: the session consultant stands in for the picker.
+  const created = (await createSelection(access, { tier: 2, consultant })) as Tier2Draft;
   const seeded = {
     ...demoTier2Draft(),
     id: created.id,
     owner: created.owner,
+    consultantId: created.consultantId,
     createdAt: created.createdAt,
     updatedAt: created.updatedAt,
     consultant: {
       ...demoTier2Draft().consultant,
-      name: identity.name || "Lucy",
-      email: identity.email || "lucy@oceanindependence.com",
+      name: consultant.displayName || access.identity.name || "Lucy",
+      email: consultant.email || access.identity.email || "lucy@oceanindependence.com",
     },
   };
-  return (await saveSelection(identity, created.id, seeded)) as AnySelection;
+  return (await saveSelection(access, created.id, seeded)) as AnySelection;
 }

@@ -91,6 +91,61 @@ See `selection-app/docs/tier2-build-report.md` for the modules reused, the globe
 adaptations, the destination ids and a sample page config.
 
 
+## Consultant profiles (`selection-app/`)
+
+Consultants are records at `consultants/<id>.json` in the private DATA store
+(same pattern as the per-yacht records), with a summary index at
+`consultants/index.json` for look-ups by email or Entra object ID. The
+initial set comes from `data/consultants-seed.csv`, the editable source in
+the repo. A build step (`prebuild`, also `npm run consultants:seed:build`)
+compiles it into the committed module `src/data/consultants-seed.ts`, so the
+deployed app never reads the CSV from disk. Edit the CSV, regenerate, commit
+both.
+
+The import runs inside the deployed app: `/portal/admin/import-consultants`
+has one button, guarded server-side by `PORTAL_ACCESS_KEY` (closed when the
+key is unset; to move behind `PORTAL_ADMIN_EMAILS` once Microsoft sign-in
+lands). It writes to the same Blob store the app already uses and shows how
+many records were created, how many rows were skipped, and which photos did
+not resolve. It skips any email that already has a record, never updates or
+deletes, and is safe to press again. `npm run consultants:import` is a local
+test harness that calls the same function.
+
+On each portal request the signed-in identity is resolved to its record in
+`src/server/consultant-session.ts`: matched on Entra object ID, then on
+email (which claims an unclaimed record), else created with `source: "sso"`
+from the token claims. Claims never overwrite a stored value. Consultants
+edit only their phone and WhatsApp numbers, at `/portal/profile`; with
+`CONSULTANT_SCOPING=on` the dashboard redirects there until a phone number is
+filled in (off by default, like scoping, until real sign-in). Everything
+else on the record belongs to the admin screen.
+
+A selection belongs to one consultant record, chosen from a picker when it
+is created and never reassigned. Selections are stored under that record
+(`portal/selections/<consultantId>/…`), so a consultant's dashboard and every
+selection route CAN be scoped structurally — behind the `CONSULTANT_SCOPING`
+flag, which is OFF by default until Microsoft sign-in lands. While off, every
+signed-in user sees every selection, no route checks ownership, selections
+are found by id through `portal/selection-locations.json`, and a selection
+with no consultant publishes with the block frozen in its draft. Set
+`CONSULTANT_SCOPING=on` to enable scoping. Client pages resolve the consultant
+live: every render of `/selection/<slug>` or `/atlas/<slug>` reads the
+current record (`src/server/consultant-render.ts`). An inactive consultant's
+page carries no contact block at all. Publishing is blocked while the
+selection's consultant has no phone number. The import page also carries a
+one-off CLEAR CONSULTANT FROM ALL SELECTIONS action, which removes the
+consultant from every existing selection and its published page (undoing an
+earlier fixture attachment); the attach action remains as code only. See `docs/consultant-profiles-report.md` and
+`docs/consultant-pages-phase3-report.md`.
+
+Admin: `PORTAL_ADMIN_EMAILS` (comma-separated, compared lowercase against
+the signed-in email, in `src/server/auth/index.ts` only) opens
+`/portal/admin/consultants` and the `/api/admin/consultants` routes, guarded
+server-side. Admins edit display name, job title, email, photo URL (HEAD
+re-checked on change) and status, add a consultant ahead of their first
+sign-in, and release a record for re-claiming; never phone or WhatsApp,
+never deletion. Every change stamps `updatedAt` and `updatedBy`.
+
 ## Storage and imagery (`selection-app/`)
 
 The portal keeps two stores, deliberately separate:

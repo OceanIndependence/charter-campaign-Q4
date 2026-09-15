@@ -13,7 +13,11 @@
  * returns it: there is nothing to pick or sign into.
  *
  * Env overrides (all optional; defaults below):
- *   PORTAL_SOLO_ID, PORTAL_SOLO_NAME, PORTAL_SOLO_EMAIL
+ *   PORTAL_SOLO_ID, PORTAL_SOLO_NAME, PORTAL_SOLO_EMAIL, PORTAL_SOLO_JOB_TITLE
+ *
+ * The consultant record is matched on PORTAL_SOLO_EMAIL (see
+ * consultant-session.ts); leave it set to a seeded address to exercise the
+ * claim-by-email path on a preview. An empty email never matches a record.
  */
 
 import type { AuthProvider, ConsultantIdentity } from "./types";
@@ -27,6 +31,7 @@ function soloIdentity(): ConsultantIdentity {
     id: process.env.PORTAL_SOLO_ID || DEFAULT_ID,
     name: process.env.PORTAL_SOLO_NAME || DEFAULT_NAME,
     email: process.env.PORTAL_SOLO_EMAIL || DEFAULT_EMAIL,
+    jobTitle: process.env.PORTAL_SOLO_JOB_TITLE || "",
   };
 }
 

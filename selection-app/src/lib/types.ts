@@ -142,7 +142,8 @@ export interface PageConfig {
   /** Up to 10 shortlisted yachts */
   yachts: Yacht[];
   sections: PageSections;
-  consultant: Consultant;
+  /** Null when the consultant is inactive: the page carries no contact block at all */
+  consultant: Consultant | null;
   /** "Explore all destinations" link target (Tier 1 atlas) */
   atlasUrl?: string;
   /** Colour theme; absent means dark */
@@ -206,7 +207,8 @@ export interface AtlasPageConfig {
   destinations: AtlasPageDestination[];
   yachts: AtlasPageYacht[];
   otherPins: AtlasPagePin[];
-  consultant: Consultant;
+  /** Null when the consultant is inactive: no contact block, no signatures, no "ask" button */
+  consultant: Consultant | null;
   /** The public Tier 1 page */
   atlasUrl: string;
   /** Diagnostic: which destinations resolved from the live website vs the snapshot */

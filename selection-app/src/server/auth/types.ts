@@ -18,6 +18,12 @@ export interface ConsultantIdentity {
   email: string;
   /** Display name. Cosmetic. */
   name: string;
+  /**
+   * Job title claim, when the provider has one (Microsoft: Graph /me
+   * jobTitle or an optional claim). Used only to CREATE a consultant record
+   * for someone not in the seed list; never overwrites an existing value.
+   */
+  jobTitle?: string;
 }
 
 /**

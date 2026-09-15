@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import type { SelectionMeta, SelectionStatus, Tier, VersionInfo } from "@/lib/portal-types";
 import { TIER_LABEL, clientPagePath, selectionTitle } from "@/lib/portal-types";
 import { fmtDateShort } from "@/lib/format";
+import { PROFILE_PATH } from "@/lib/consultant-types";
+import type { DashboardConsultant } from "@/app/api/selections/route";
 import ConfirmDialog from "./ConfirmDialog";
 import styles from "./PortalForm.module.css";
 
@@ -26,7 +28,12 @@ export default function Dashboard() {
   const [items, setItems] = useState<SelectionMeta[] | null>(null);
   const [scope, setScope] = useState<Scope>("mine");
   const [canViewAll, setCanViewAll] = useState(false);
+  /** CONSULTANT_SCOPING on the server; while off there is no "mine" and the toggle is hidden */
+  const [scoping, setScoping] = useState(true);
   const [me, setMe] = useState<string>("");
+  /** Consultant records behind the rows' owners, keyed by owner id. */
+  const [consultants, setConsultants] = useState<Record<string, DashboardConsultant>>({});
+  const [myConsultant, setMyConsultant] = useState<DashboardConsultant | null>(null);
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<StatusFilter>("all");
   const [tier, setTier] = useState<TierFilter>("all");
@@ -65,7 +72,10 @@ export default function Dashboard() {
       if (!res.ok) throw new Error(body?.error ?? "The selection list is unavailable.");
       setItems(body.items ?? []);
       setCanViewAll(Boolean(body.canViewAll));
+      setScoping(body.scoping !== false);
       setMe(body.me ?? "");
+      setConsultants(body.consultants ?? {});
+      setMyConsultant(body.myConsultant ?? null);
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "The selection list is unavailable.");
@@ -111,16 +121,16 @@ export default function Dashboard() {
     [load, scope]
   );
 
-  /** Create a selection of the chosen tier, or duplicate one (which keeps its tier). */
+  /** Create a selection of the chosen tier for the chosen consultant, or duplicate one (which keeps its tier and consultant). */
   const createNew = useCallback(
-    (opts: { tier?: Tier; duplicateOf?: string } = {}) =>
+    (opts: { tier?: Tier; consultantId?: string; duplicateOf?: string } = {}) =>
       act(
         opts.duplicateOf ?? "new",
         () =>
           fetch("/api/selections", {
             method: "POST",
             headers: { "content-type": "application/json" },
-            body: JSON.stringify(opts.duplicateOf ? { duplicateOf: opts.duplicateOf } : { tier: opts.tier ?? 3 }),
+            body: JSON.stringify(opts.duplicateOf ? { duplicateOf: opts.duplicateOf } : { tier: opts.tier ?? 3, consultantId: opts.consultantId }),
           }),
         (body) => {
           if (typeof body.id === "string") router.push(`/portal/edit/${body.id}`);
@@ -236,8 +246,20 @@ export default function Dashboard() {
 
       {error && <p className={styles.dashError}>{error}</p>}
 
+      {myConsultant?.source === "sso" && (
+        <p className={styles.dashNote}>
+          Your profile was created from your sign-in rather than the seed list, so your job title and photo may be incomplete.{" "}
+          <a href={PROFILE_PATH}>Check your profile</a> and contact marketing if anything needs correcting.
+        </p>
+      )}
+
       {(choosing || nothingYet) && (
-        <TierChooser busy={busy === "new"} onPick={(t) => createNew({ tier: t })} onCancel={nothingYet ? undefined : () => setChoosing(false)} />
+        <TierChooser
+          busy={busy === "new"}
+          defaultConsultantId={myConsultant?.id ?? null}
+          onPick={(t, consultantId) => createNew({ tier: t, consultantId })}
+          onCancel={nothingYet ? undefined : () => setChoosing(false)}
+        />
       )}
 
       {nothingYet ? null : (
@@ -272,7 +294,7 @@ export default function Dashboard() {
               <option value="2">{TIER_LABEL[2]}</option>
               <option value="3">{TIER_LABEL[3]}</option>
             </select>
-            {canViewAll && (
+            {canViewAll && scoping && (
               <label className={styles.toggle}>
                 <input
                   type="checkbox"
@@ -303,7 +325,8 @@ export default function Dashboard() {
                 </thead>
                 <tbody>
                   {visible.map((m) => {
-                    const mine = !me || m.owner?.id === me;
+                    // Rows in "mine" are by definition mine; under "all", only rows whose consultant is the session's can be opened.
+                    const mine = !scoping || scope === "mine" || (!!me && m.consultantId === me);
                     const isBusy = busy === m.id;
                     const open = versionsFor === m.id;
                     return (
@@ -312,6 +335,7 @@ export default function Dashboard() {
                         m={m}
                         mine={mine}
                         showOwner={scope === "all"}
+                        ownerConsultant={m.owner?.id ? consultants[m.owner.id] ?? null : null}
                         isBusy={isBusy}
                         copied={copied === m.id}
                         menuOpen={menuFor === m.id}
@@ -368,21 +392,100 @@ const TIER_CARDS: Array<{ tier: Tier; title: string; body: string; cta: string }
   },
 ];
 
-function TierChooser({ busy, onPick, onCancel }: { busy: boolean; onPick: (tier: Tier) => void; onCancel?: () => void }) {
+interface PickerConsultant {
+  id: string;
+  displayName: string;
+  jobTitle: string;
+}
+
+/**
+ * The creation form: which consultant the selection belongs to (fixed for
+ * its whole life, never shown again on the edit form) and which format.
+ *
+ * TODO(auth): once real sign-in lands, pre-select the signed-in consultant
+ * here. The picker stays, because a consultant may create a selection on a
+ * colleague's behalf. Today, under the solo provider, the default is the
+ * session record only when it is an active consultant in the list.
+ */
+function TierChooser({
+  busy,
+  defaultConsultantId,
+  onPick,
+  onCancel,
+}: {
+  busy: boolean;
+  defaultConsultantId: string | null;
+  onPick: (tier: Tier, consultantId: string) => void;
+  onCancel?: () => void;
+}) {
+  const [consultants, setConsultants] = useState<PickerConsultant[] | null>(null);
+  const [consultantId, setConsultantId] = useState<string>("");
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch("/api/consultants");
+        const body = await res.json().catch(() => null);
+        if (!res.ok) throw new Error(body?.error ?? "The consultant list is unavailable.");
+        const list = (body.consultants ?? []) as PickerConsultant[];
+        setConsultants(list);
+        if (defaultConsultantId && list.some((c) => c.id === defaultConsultantId)) setConsultantId(defaultConsultantId);
+      } catch (err) {
+        setLoadError(err instanceof Error ? err.message : "The consultant list is unavailable.");
+        setConsultants([]);
+      }
+    })();
+  }, [defaultConsultantId]);
+
+  const chosen = consultants?.find((c) => c.id === consultantId) ?? null;
+
   return (
     <section className={`${styles.card} ${styles.cardFirst} ${styles.chooser}`}>
       <div className={styles.sectionHeadRow}>
-        <div className={styles.sectionHead}>NEW SELECTION — CHOOSE A FORMAT</div>
+        <div className={styles.sectionHead}>NEW SELECTION</div>
         {onCancel && (
           <button type="button" className={styles.actionBtn} onClick={onCancel}>
             CANCEL
           </button>
         )}
       </div>
-      <p className={styles.sectionNote}>This decides what the client page is and cannot be changed once the selection exists.</p>
+      <p className={styles.sectionNote}>
+        Who this selection belongs to, and what the client page is. Neither can be changed once the selection exists: the consultant&rsquo;s
+        details are shown live on the client page for its whole life.
+      </p>
+      <div className={styles.grid} style={{ marginBottom: 28 }}>
+        <label className={`${styles.field} ${styles.fieldFull}`}>
+          <span className={styles.fieldLabel}>CONSULTANT</span>
+          <select
+            className={styles.select}
+            value={consultantId}
+            onChange={(e) => setConsultantId(e.target.value)}
+            disabled={consultants === null || busy}
+            aria-label="Consultant this selection belongs to"
+          >
+            <option value="">{consultants === null ? "Loading consultants…" : "Choose a consultant"}</option>
+            {(consultants ?? []).map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.displayName}
+                {c.jobTitle ? ` — ${c.jobTitle}` : ""}
+              </option>
+            ))}
+          </select>
+          {loadError && <span className={styles.fetchWarning}>{loadError}</span>}
+        </label>
+      </div>
+      <div className={styles.sectionHead}>CHOOSE A FORMAT</div>
       <div className={styles.tierGrid}>
         {TIER_CARDS.map((c) => (
-          <button type="button" key={c.tier} className={styles.tierCard} onClick={() => onPick(c.tier)} disabled={busy}>
+          <button
+            type="button"
+            key={c.tier}
+            className={styles.tierCard}
+            onClick={() => chosen && onPick(c.tier, chosen.id)}
+            disabled={busy || !chosen}
+            title={chosen ? undefined : "Choose a consultant first"}
+          >
             <span className={styles.tierTitle}>{c.title}</span>
             <span className={styles.tierBody}>{c.body}</span>
             <span className={styles.tierCta}>{busy ? "CREATING…" : c.cta}</span>
@@ -399,6 +502,8 @@ interface RowProps {
   m: SelectionMeta;
   mine: boolean;
   showOwner: boolean;
+  /** The consultant record behind the row's owner, when one has claimed that identity */
+  ownerConsultant: DashboardConsultant | null;
   isBusy: boolean;
   copied: boolean;
   menuOpen: boolean;
@@ -433,10 +538,12 @@ function RowGroup(p: RowProps) {
   const subline = [
     TIER_LABEL[tier],
     `${m.yachtCount} ${m.yachtCount === 1 ? "yacht" : "yachts"}`,
-    p.showOwner ? m.owner?.name || m.owner?.email || null : null,
+    p.showOwner ? p.ownerConsultant?.displayName || m.owner?.name || m.owner?.email || null : null,
   ]
     .filter(Boolean)
     .join(" · ");
+  // A record created at sign-in rather than seeded: visible to whoever views all consultants.
+  const unseeded = p.showOwner && p.ownerConsultant?.source === "sso";
   const menuItem = (label: string, onClick: () => void, danger = false) => (
     <button
       type="button"
@@ -455,7 +562,14 @@ function RowGroup(p: RowProps) {
       <tr className={`${styles.row} ${p.isBusy ? styles.rowBusy : ""}`} data-id={m.id}>
         <td className={styles.tdWrap}>
           <span className={styles.rowClient}>{m.clientNames.trim() || title}</span>
-          <span className={styles.rowSub}>{subline}</span>
+          <span className={styles.rowSub}>
+            {subline}
+            {unseeded && (
+              <span className={styles.ssoTag} title="This consultant's record was created from their sign-in, not the seed list">
+                CREATED AT SIGN-IN
+              </span>
+            )}
+          </span>
         </td>
         <td>
           <span className={`${styles.status} ${styles[`status_${m.status}`]}`}>{STATUS_LABEL[m.status]}</span>

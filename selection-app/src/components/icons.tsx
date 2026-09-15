@@ -80,12 +80,17 @@ export function SpeakerIcon({ on }: { on: boolean }) {
   );
 }
 
+/**
+ * Contact-row icons take the current text colour: --fg-7 on the dark
+ * theme, ink on light, so they clear 3:1 on both. Mint stayed below 3:1 on
+ * the light theme and is decoration only.
+ */
 export function PhoneIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
       <path
         d="M3 1.5H5L6 4.5L4.5 5.5C5.2 7 7 8.8 8.5 9.5L9.5 8L12.5 9V11C12.5 11.8 11.8 12.5 11 12.5C5.8 12.2 1.8 8.2 1.5 3C1.5 2.2 2.2 1.5 3 1.5Z"
-        stroke={MINT_70}
+        stroke="currentColor"
         strokeWidth="1"
         strokeLinejoin="round"
       />
@@ -96,8 +101,8 @@ export function PhoneIcon() {
 export function MailIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-      <rect x="1.5" y="3" width="11" height="8" stroke={MINT_70} strokeWidth="1" />
-      <path d="M1.5 3.5L7 8L12.5 3.5" stroke={MINT_70} strokeWidth="1" />
+      <rect x="1.5" y="3" width="11" height="8" stroke="currentColor" strokeWidth="1" />
+      <path d="M1.5 3.5L7 8L12.5 3.5" stroke="currentColor" strokeWidth="1" />
     </svg>
   );
 }

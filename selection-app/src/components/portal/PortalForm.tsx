@@ -16,6 +16,7 @@ import { MAX_ITINERARY_LINKS } from "@/lib/types";
 import FleetSelect from "./FleetSelect";
 import ImagePicker from "./ImagePicker";
 import ConfirmDialog from "./ConfirmDialog";
+import ConsultantDetailsCard, { type SelectionConsultant } from "./ConsultantDetailsCard";
 import { DragGhost, DragHandle, useYachtReorder } from "./useYachtReorder";
 import { POLL_TIMEOUT_NOTE, fetchDetail, fmtUpdated, pollImages, progressLabel, readImages, refreshYacht as refreshYachtApi, staleNote, startPrepare } from "./fleetApi";
 import styles from "./PortalForm.module.css";
@@ -119,9 +120,13 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
   /** Monotonic pick counter per entry so a stale response never applies. */
   const fetchSeq = useRef<Map<string, number>>(new Map());
   const [saveState, setSaveState] = useState<SaveState>("idle");
+  /** The consultant record this selection belongs to, as the API resolved it on load. */
+  const [selectionConsultant, setSelectionConsultant] = useState<SelectionConsultant | null | undefined>(undefined);
   const [published, setPublished] = useState<{ slug: string; url: string } | null>(null);
   const [publishFlash, setPublishFlash] = useState(false);
   const [publishing, setPublishing] = useState(false);
+  /** Why the last publish was refused, with an optional link (e.g. to the profile). */
+  const [publishError, setPublishError] = useState<{ message: string; href: string | null } | null>(null);
   /** Full-size image shown in the lightbox popup, or null when closed. */
   const [lightbox, setLightbox] = useState<{ url: string; label: string } | null>(null);
 
@@ -148,6 +153,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
           return;
         }
         const next: PortalDraft = body?.draft ?? null;
+        setSelectionConsultant((body?.consultant as SelectionConsultant | null | undefined) ?? null);
         if (!next) return;
         next.subHeadline ??= "";
         next.welcome ??= "";
@@ -657,6 +663,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
     const d = draftRef.current;
     if (!d || publishing) return;
     setPublishing(true);
+    setPublishError(null);
     try {
       const saved = await flushSave();
       if (!saved) throw new Error("save failed");
@@ -666,7 +673,14 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
         body: JSON.stringify({}),
       });
       const body = await res.json().catch(() => null);
-      if (!res.ok) throw new Error(body?.error ?? "publish failed");
+      if (!res.ok) {
+        // A refusal naming the consultant (no phone number) carries a link to fix it.
+        if (res.status === 422 && body?.error) {
+          setPublishError({ message: body.error, href: typeof body.profileUrl === "string" ? body.profileUrl : null });
+          return;
+        }
+        throw new Error(body?.error ?? "publish failed");
+      }
       setPublished({ slug: body.slug, url: body.url });
       update((prev) => ({ ...prev, publishedSlug: body.slug }));
       setPublishFlash(true);
@@ -1353,42 +1367,29 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
           </div>
         </section>
 
-        {/* 04 — YOUR DETAILS */}
-        <section className={styles.card}>
-          <div className={styles.sectionHead}>04 — YOUR DETAILS</div>
-          <div className={styles.grid}>
-            {(
-              [
-                ["NAME", "name", "Example – Lucy", "text"],
-                ["TITLE", "title", "Example – Charter Consultant", "text"],
-                ["PHONE", "phone", "Example – +41 44 000 00 00", "tel"],
-                ["EMAIL", "email", "Example – eleanor@ocyachts.com", "email"],
-                ["WHATSAPP NUMBER", "whatsapp", "Example – 41440000000", "tel"],
-                ["PHOTO URL", "photoUrl", "Example – https://…", "url"],
-              ] as const
-            ).map(([label, key, placeholder, type]) => (
-              <label key={key} className={styles.field}>
-                <span className={styles.fieldLabel}>{label}</span>
-                <input
-                  type={type}
-                  className={styles.input}
-                  placeholder={placeholder}
-                  value={draft.consultant[key]}
-                  onChange={(e) =>
-                    update((d) => ({ ...d, consultant: { ...d.consultant, [key]: e.target.value } }))
-                  }
-                />
-              </label>
-            ))}
-          </div>
-        </section>
+        {/* 04 — YOUR DETAILS: read-only, from the consultant record */}
+        <ConsultantDetailsCard sectionHead="04 — YOUR DETAILS" consultant={selectionConsultant} />
       </main>
 
       {/* Publish bar */}
       <div className={styles.publishBar}>
         <span className={styles.statusLine}>
-          {statusLine}
-          {published && (
+          {publishError ? (
+            <>
+              {publishError.message}
+              {publishError.href && (
+                <>
+                  {" "}
+                  <a className={styles.statusLink} href={publishError.href}>
+                    Open your profile →
+                  </a>
+                </>
+              )}
+            </>
+          ) : (
+            statusLine
+          )}
+          {published && !publishError && (
             <>
               {" "}
               <a
