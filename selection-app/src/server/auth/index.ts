@@ -4,6 +4,9 @@
  *
  * Portal access is two independent layers, both required:
  *   1. Staging gate  — the shared PORTAL_ACCESS_KEY cookie (portal-auth.ts).
+ *                      Applies to the stub and solo providers only: with
+ *                      Microsoft sign-in the tenant is the gate and the key
+ *                      is not asked for (stagingGateApplies()).
  *   2. Identity      — a ConsultantIdentity from the active provider, which
  *                      is what ownership is recorded and checked against.
  * Once both pass, the identity is resolved to its consultant RECORD
@@ -101,9 +104,21 @@ export function authProviderInfo() {
     provider: p.name,
     isStub: p.isStub,
     singleConsultant: p.name === "solo",
+    microsoft: p.name === "microsoft",
     locked: Boolean(p.lockedReason),
     lockedReason: p.lockedReason,
+    stagingGate: stagingGateApplies(),
   };
+}
+
+/** The PORTAL_ACCESS_KEY gate stands in front of every provider except Microsoft, where the tenant is the gate. */
+export function stagingGateApplies(): boolean {
+  return authProvider().name !== "microsoft";
+}
+
+/** Whether a signed-in identity with no consultant record may have one created from its claims (never under Microsoft). */
+function createRecordsOnSignIn(): boolean {
+  return authProvider().name !== "microsoft";
 }
 
 export function selectableIdentities(): ConsultantIdentity[] {
@@ -158,10 +173,12 @@ export type PortalSession =
 export interface SelectionAccess {
   consultantId: string;
   identity: ConsultantIdentity;
+  /** PORTAL_ADMIN_EMAILS: sees, opens and edits every consultant's selections */
+  isAdmin: boolean;
 }
 
 export function selectionAccess(session: { identity: ConsultantIdentity; consultant: ConsultantRecord }): SelectionAccess {
-  return { consultantId: session.consultant.id, identity: session.identity };
+  return { consultantId: session.consultant.id, identity: session.identity, isAdmin: isAdmin(session.identity) };
 }
 
 export type ConsultantSession =
@@ -173,7 +190,7 @@ export type ConsultantSession =
  * Returns the identity on success, or a JSON error response.
  */
 export function requirePortalSession(request: NextRequest): PortalSession {
-  if (!isPortalAuthed(request)) {
+  if (stagingGateApplies() && !isPortalAuthed(request)) {
     return { ok: false, response: NextResponse.json({ error: "Staging access required." }, { status: 401 }) };
   }
   const identity = getIdentityFromRequest(request);
@@ -191,7 +208,7 @@ export function requirePortalSession(request: NextRequest): PortalSession {
 export async function requireConsultantSession(request: NextRequest): Promise<ConsultantSession> {
   const session = requirePortalSession(request);
   if (!session.ok) return session;
-  const consultant = await resolveConsultant(session.identity);
+  const consultant = await resolveConsultant(session.identity, { createIfMissing: createRecordsOnSignIn() });
   return { ok: true, identity: session.identity, consultant, isAdmin: isAdmin(session.identity) };
 }
 
@@ -216,9 +233,9 @@ export async function requireAdminSession(request: NextRequest): Promise<Consult
 export async function getPortalPageState(): Promise<
   { redirect: "login" | "signin" } | { identity: ConsultantIdentity; consultant: ConsultantRecord; isAdmin: boolean }
 > {
-  if (!(await isPortalAuthedServer())) return { redirect: "login" };
+  if (stagingGateApplies() && !(await isPortalAuthedServer())) return { redirect: "login" };
   const identity = await getIdentityServer();
   if (!identity) return { redirect: "signin" };
-  const consultant = await resolveConsultant(identity);
+  const consultant = await resolveConsultant(identity, { createIfMissing: createRecordsOnSignIn() });
   return { identity, consultant, isAdmin: isAdmin(identity) };
 }

@@ -1,0 +1,92 @@
+/* The shared Ocean Independence sign-in screen: white page, centred column,
+   wordmark, tool name, one outlined button, one line of small print. */
+
+.page {
+  min-height: 100svh;
+  background: #ffffff;
+  color: #1d1d1d;
+  display: grid;
+  place-items: center;
+  padding: 48px 24px;
+  font-family: "Gotham", "Helvetica Neue", Arial, sans-serif;
+}
+
+.card {
+  width: min(560px, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.logo {
+  width: 320px;
+  max-width: 78%;
+  height: auto;
+  display: block;
+}
+
+.tool {
+  margin-top: 34px;
+  font-size: 12px;
+  letter-spacing: 0.36em;
+  font-weight: 500;
+  color: #8a8a88;
+}
+
+.button {
+  margin-top: 84px;
+  width: 100%;
+  min-height: 66px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  border: 1.5px solid #1d1d1d;
+  background: #ffffff;
+  color: #1d1d1d;
+  font-size: 13px;
+  letter-spacing: 0.24em;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 200ms ease, color 200ms ease;
+}
+.button:hover {
+  background: #1d1d1d;
+  color: #ffffff;
+}
+.buttonDisabled,
+.buttonDisabled:hover {
+  border-color: #c9c9c7;
+  color: #8a8a88;
+  background: #ffffff;
+  cursor: not-allowed;
+}
+
+.mark {
+  flex: 0 0 auto;
+}
+
+.error {
+  margin: 28px 0 0;
+  max-width: 460px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #8a5a2b;
+}
+
+.note {
+  margin: 112px 0 0;
+  font-size: 14px;
+  line-height: 1.85;
+  color: #8a8a88;
+}
+
+@media (max-width: 480px) {
+  .button {
+    margin-top: 56px;
+  }
+  .note {
+    margin-top: 64px;
+  }
+}

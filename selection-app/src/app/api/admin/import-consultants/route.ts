@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { expectedCookieValue, isPortalAuthed } from "@/server/portal-auth";
+import { requireAdminSession } from "@/server/auth";
 import { importConsultantSeed } from "@/server/consultant-import.mjs";
 import { listConsultants } from "@/server/consultants.mjs";
 import { storageMode } from "@/server/storage.mjs";
@@ -13,24 +13,13 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 
 /**
- * Guard: PORTAL_ACCESS_KEY only, server-side, exactly as the other
- * protected routes check it — with one deliberate difference. Those routes
- * treat an UNSET key as "gate disabled, let everyone through", which for a
- * route that writes records would leave the import open to any visitor. So
- * this one fails closed: no key configured, no import.
- *
- * TODO(auth): once Microsoft sign-in lands, replace this with
- * requireAdminSession() (PORTAL_ADMIN_EMAILS) like the other
- * /api/admin/consultants routes, and move the page behind isAdmin.
+ * Guard: PORTAL_ADMIN_EMAILS, server-side (requireAdminSession) — the same
+ * check as the consultant admin screen. With Microsoft sign-in the tenant
+ * is the front door, so the earlier PORTAL_ACCESS_KEY guard is gone.
  */
-function requireAccessKey(request: NextRequest): NextResponse | null {
-  if (!expectedCookieValue()) {
-    return NextResponse.json({ error: "PORTAL_ACCESS_KEY is not set in this environment, so the import is closed. Set it and sign in at /portal/login first." }, { status: 403 });
-  }
-  if (!isPortalAuthed(request)) {
-    return NextResponse.json({ error: "Staging access required — sign in at /portal/login." }, { status: 401 });
-  }
-  return null;
+async function requireAccessKey(request: NextRequest): Promise<NextResponse | null> {
+  const session = await requireAdminSession(request);
+  return session.ok ? null : session.response;
 }
 
 /** Store id embedded in a Vercel Blob token (vercel_blob_rw_<storeId>_<secret>); never the secret. */
@@ -54,7 +43,7 @@ export interface ImportStatus {
 
 /** What a press would do, and where the writes would go. */
 export async function GET(request: NextRequest) {
-  const denied = requireAccessKey(request);
+  const denied = await requireAccessKey(request);
   if (denied) return denied;
   try {
     const rows = (await listConsultants()) as ConsultantSummary[];
@@ -76,7 +65,7 @@ export async function GET(request: NextRequest) {
 
 /** Run the seed import against the app's own DATA store. Safe to call repeatedly. */
 export async function POST(request: NextRequest) {
-  const denied = requireAccessKey(request);
+  const denied = await requireAccessKey(request);
   if (denied) return denied;
   if (!rateLimit("import-consultants", clientIp(request), 5, 60_000)) {
     return NextResponse.json({ error: "Too many requests." }, { status: 429 });
