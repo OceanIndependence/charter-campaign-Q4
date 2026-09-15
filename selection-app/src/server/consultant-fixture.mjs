@@ -18,7 +18,7 @@
 import { deleteJson, getJson, listKeys, putJson } from "./storage.mjs";
 import { findConsultantByEmail } from "./consultants.mjs";
 import { importConsultantSeed } from "./consultant-import.mjs";
-import { SELECTIONS_PREFIX, currentKey, metaOf, readIndex, removeIndexEntry, selectionKey, indexKey } from "./pages.mjs";
+import { SELECTIONS_PREFIX, currentKey, locateSelection, metaOf, readIndex, removeIndexEntry, selectionKey, indexKey, store } from "./pages.mjs";
 
 /**
  * Undo of the attachment above, and of any consultantId on any existing
@@ -141,5 +141,98 @@ export async function attachFixtureConsultant(seedRows, { updatedBy }) {
     alreadyAttached,
     skipped,
     pagesUpdated,
+  };
+}
+
+/* ------------------------------------------- one-off: a single selection */
+
+/**
+ * The one-off assignment below, asked for once: this selection,
+ * to this consultant. Both are constants, not inputs: a selection takes its
+ * consultant from the picker at creation and is otherwise never reassigned
+ * (see pages.mjs), so this is a named exception rather than a way to move
+ * any selection to anyone.
+ */
+export const ASSIGN_SELECTION_ID = "ae64b2e2-e716-4a4b-997a-897bf53b1530";
+export const ASSIGN_EMAIL = "hanneke@ocyachts.com";
+
+/**
+ * Move ONE selection into ONE consultant's namespace and stamp its
+ * consultantId, the same three writes the fixture backfill makes for every
+ * selection: the draft under portal/selections/<consultantId>/, its
+ * dashboard index row (the old namespace's row and copy removed), and, when
+ * the selection is published, the consultantId on its published record so
+ * the live page renders that consultant's block.
+ *
+ * The consultant's record is created from their seed row if the store has
+ * none, exactly as the import page would. Idempotent: a second run finds
+ * everything in place and writes nothing. No list() unless the locations
+ * file does not know the selection.
+ *
+ * @param {ReadonlyArray<{ line: number, name: string, jobTitle: string, phone: string, email: string, whatsapp: string, photoUrl: string }>} seedRows
+ * @param {{ updatedBy: string, selectionId?: string, email?: string }} opts
+ */
+export async function assignSelectionToConsultant(seedRows, { updatedBy, selectionId = ASSIGN_SELECTION_ID, email = ASSIGN_EMAIL }) {
+  const wanted = String(email).toLowerCase();
+
+  // 1. The consultant record, created from the seed row if there is none.
+  let consultant = await findConsultantByEmail(wanted);
+  let consultantCreated = false;
+  if (!consultant) {
+    const row = seedRows.find((r) => String(r.email).toLowerCase() === wanted);
+    if (!row) throw new Error(`There is no consultant record for ${wanted} and no seed row to create one from.`);
+    const imported = await importConsultantSeed([row], { updatedBy });
+    consultant = await findConsultantByEmail(wanted);
+    if (!consultant) throw new Error(`No consultant record for ${wanted} after import.`);
+    consultantCreated = imported.created.length === 1;
+  }
+
+  // 2. The selection, wherever it currently lives.
+  const namespace = await locateSelection(selectionId);
+  if (!namespace) throw new Error(`No selection ${selectionId} in this store.`);
+  const draft = await getJson(selectionKey(namespace, selectionId));
+  if (!draft?.id) throw new Error(`The document at ${selectionKey(namespace, selectionId)} is not a selection.`);
+
+  const alreadyAssigned = namespace === consultant.id && draft.consultantId === consultant.id;
+  if (!alreadyAssigned) {
+    // Writes the draft, its index row and its location under the consultant.
+    await store({ ...draft, consultantId: consultant.id }, consultant.id);
+    if (namespace !== consultant.id) {
+      await deleteJson(selectionKey(namespace, selectionId));
+      await removeIndexEntry(namespace, selectionId);
+    }
+  }
+
+  // 3. The published record, so the live page renders the new consultant.
+  let pageUpdated = null;
+  if (draft.publishedSlug) {
+    const current = await getJson(currentKey(draft.publishedSlug));
+    if (current && current.draftId === draft.id && current.consultantId !== consultant.id) {
+      await putJson(currentKey(draft.publishedSlug), { ...current, consultantId: consultant.id });
+      pageUpdated = { slug: draft.publishedSlug, live: !current.unpublished };
+    }
+  }
+
+  return {
+    ranAt: new Date().toISOString(),
+    selection: {
+      id: draft.id,
+      clientNames: draft.clientNames ?? "",
+      from: namespace,
+      to: consultant.id,
+      moved: !alreadyAssigned && namespace !== consultant.id,
+      alreadyAssigned,
+      publishedSlug: draft.publishedSlug ?? null,
+    },
+    consultant: {
+      id: consultant.id,
+      displayName: consultant.displayName,
+      email: consultant.email,
+      phone: consultant.phone,
+      status: consultant.status,
+      photoStatus: consultant.photoStatus,
+    },
+    consultantCreated,
+    pageUpdated,
   };
 }
