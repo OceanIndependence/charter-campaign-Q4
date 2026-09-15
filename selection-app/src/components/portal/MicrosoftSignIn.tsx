@@ -19,9 +19,10 @@ function messageFor(error: string | null, detail: string | null, lockedReason: s
 }
 
 /**
- * The Microsoft sign-in screen, matching the other Ocean Independence tools:
- * wordmark, tool name, one button, one line on who may enter. Server
- * component — the button is a plain link into the OAuth flow.
+ * The Microsoft sign-in screen. Deliberately identical to the QR business
+ * card tool's login page: wordmark, tool name, one outlined button, one line
+ * on who may enter. Server component — the button is a plain link into the
+ * OAuth flow.
  */
 export default function MicrosoftSignIn({ error, detail, next, lockedReason }: { error: string | null; detail: string | null; next: string | null; lockedReason: string | null }) {
   const message = messageFor(error, detail, lockedReason);
@@ -30,24 +31,26 @@ export default function MicrosoftSignIn({ error, detail, next, lockedReason }: {
     <main className={styles.page}>
       <div className={styles.card}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/assets/logo-black.png" alt="Ocean Independence" className={styles.logo} />
-        <div className={styles.tool}>RETAIL CHARTER CAMPAIGN Q4</div>
+        <img src="/assets/logo-signin.png" alt="Ocean Independence" className={styles.logo} />
+        <div className={styles.tool}>Retail Charter Campaign Q4</div>
         {lockedReason ? (
           <span className={`${styles.button} ${styles.buttonDisabled}`} aria-disabled="true">
             <MicrosoftMark />
-            CONTINUE WITH MICROSOFT
+            Continue with Microsoft
           </span>
         ) : (
           <a href={href} className={styles.button}>
             <MicrosoftMark />
-            CONTINUE WITH MICROSOFT
+            Continue with Microsoft
           </a>
         )}
-        {message && (
-          <p className={styles.error} role="alert">
-            {message}
-          </p>
-        )}
+        <div className={styles.status}>
+          {message && (
+            <p className={styles.error} role="alert">
+              {message}
+            </p>
+          )}
+        </div>
         <p className={styles.note}>
           Access is limited to Ocean Independence consultants.
           <br />
@@ -60,11 +63,11 @@ export default function MicrosoftSignIn({ error, detail, next, lockedReason }: {
 
 function MicrosoftMark() {
   return (
-    <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" className={styles.mark}>
-      <rect x="0" y="0" width="8.5" height="8.5" fill="#F25022" />
-      <rect x="9.5" y="0" width="8.5" height="8.5" fill="#7FBA00" />
-      <rect x="0" y="9.5" width="8.5" height="8.5" fill="#00A4EF" />
-      <rect x="9.5" y="9.5" width="8.5" height="8.5" fill="#FFB900" />
+    <svg width="15" height="15" viewBox="0 0 21 21" aria-hidden="true" className={styles.mark}>
+      <rect x="0" y="0" width="10" height="10" fill="#F25022" />
+      <rect x="11" y="0" width="10" height="10" fill="#7FBA00" />
+      <rect x="0" y="11" width="10" height="10" fill="#00A4EF" />
+      <rect x="11" y="11" width="10" height="10" fill="#FFB900" />
     </svg>
   );
 }
