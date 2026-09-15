@@ -130,6 +130,31 @@ Production, redeploy. With
 open. `PORTAL_ACCESS_KEY` and the `PORTAL_SOLO_*` variables can stay or go;
 they are ignored under Microsoft.
 
+## Preview: always signed in as Eleanor
+
+Microsoft sign-in is Production only. Preview keeps the single-consultant
+provider, which admits every visitor as one fixed real person. On the
+Preview environment set:
+
+```
+PORTAL_AUTH_PROVIDER=solo
+PORTAL_SOLO_EMAIL=eleanor@ocyachts.com
+PORTAL_SOLO_JOB_TITLE=Charter Consultant
+```
+
+The name already defaults to Eleanor Bartoli Turner; the address is what
+matters, because the record is matched on it. Leaving `PORTAL_SOLO_EMAIL`
+unset is what produced the earlier stray profile with no phone number: an
+empty address matches nothing, so a fresh blank record is minted instead of
+her real one. Leave `PORTAL_ACCESS_KEY` unset on Preview to skip the key
+prompt, and `CONSULTANT_SCOPING` unset so she still sees every selection
+(set it to `on` to preview the scoped dashboard).
+
+Verified locally against the seeded directory: `/portal` opens straight to
+the dashboard with no sign-in screen and no key, `/portal/sign-in`
+redirects to it, and the identity resolves to her imported record,
+`eleanor@ocyachts.com`, active, with her phone number.
+
 ## Outstanding questions and issues
 
 1. **Your own record.** Sign-in is refused without a consultant record,
