@@ -15,6 +15,15 @@
   padding: 0 40px;
   min-height: 72px;
   border-bottom: 1px solid var(--hairline);
+  /* Re-resolve inherited text against this element's (dark) tokens. */
+  color: var(--fg);
+}
+
+/* Light theme: the header keeps the dark ground. Its tokens are already dark
+   (data-theme="dark" on the element); the background still has to be painted
+   because the page behind it is light. */
+[data-theme="light"] .header {
+  background: var(--page-base);
 }
 
 .logo {
