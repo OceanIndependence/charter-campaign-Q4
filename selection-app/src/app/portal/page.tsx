@@ -4,7 +4,7 @@ import Dashboard from "@/components/portal/Dashboard";
 import PortalHeader from "@/components/portal/PortalHeader";
 import styles from "@/components/portal/PortalForm.module.css";
 import { authProviderInfo, getPortalPageState } from "@/server/auth";
-import { ADMIN_CONSULTANTS_PATH, PROFILE_PATH, consultantNeedsPhone } from "@/lib/consultant-types";
+import { ADMIN_CONSULTANTS_PATH, PROFILE_PATH, consultantNeedsPhone, profileGateEnabled } from "@/lib/consultant-types";
 
 export const dynamic = "force-dynamic";
 
@@ -19,8 +19,9 @@ export default async function PortalPage() {
   if ("redirect" in state) redirect(state.redirect === "login" ? "/portal/login" : "/portal/sign-in");
   const { identity, consultant, isAdmin } = state;
   // A client page carries the consultant's phone number: until it is filled
-  // in, the profile is the only place to go.
-  if (consultantNeedsPhone(consultant)) redirect(PROFILE_PATH);
+  // in, the profile is the only place to go — once real sign-in makes the
+  // session consultant a real person (CONSULTANT_SCOPING on).
+  if (profileGateEnabled() && consultantNeedsPhone(consultant)) redirect(PROFILE_PATH);
   const showSignOut = !authProviderInfo().singleConsultant;
   return (
     <div className={styles.page}>

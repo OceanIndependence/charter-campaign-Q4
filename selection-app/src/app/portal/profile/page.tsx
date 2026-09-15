@@ -4,7 +4,7 @@ import PortalHeader from "@/components/portal/PortalHeader";
 import ProfileForm from "@/components/portal/ProfileForm";
 import styles from "@/components/portal/PortalForm.module.css";
 import { authProviderInfo, getPortalPageState } from "@/server/auth";
-import { ADMIN_CONSULTANTS_PATH, PROFILE_PATH, consultantNeedsPhone } from "@/lib/consultant-types";
+import { ADMIN_CONSULTANTS_PATH, PROFILE_PATH, consultantNeedsPhone, profileGateEnabled } from "@/lib/consultant-types";
 
 export const dynamic = "force-dynamic";
 
@@ -23,7 +23,7 @@ export default async function ProfilePage() {
   const state = await getPortalPageState();
   if ("redirect" in state) redirect(state.redirect === "login" ? "/portal/login" : "/portal/sign-in");
   const { identity, consultant, isAdmin } = state;
-  const gated = consultantNeedsPhone(consultant);
+  const gated = profileGateEnabled() && consultantNeedsPhone(consultant);
   const showSignOut = !authProviderInfo().singleConsultant;
   return (
     <div className={styles.page}>

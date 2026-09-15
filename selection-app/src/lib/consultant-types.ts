@@ -38,9 +38,19 @@ export const PROFILE_PATH = "/portal/profile";
 /** The consultant admin screen (PORTAL_ADMIN_EMAILS only). */
 export const ADMIN_CONSULTANTS_PATH = "/portal/admin/consultants";
 
-/** True while an active consultant has no phone number: the dashboard redirects to the profile until it is filled. */
+/** True while an active consultant has no phone number. */
 export function consultantNeedsPhone(c: Pick<ConsultantRecord, "status" | "phone"> | null | undefined): boolean {
   return Boolean(c) && c!.status === "active" && !String(c!.phone ?? "").trim();
+}
+
+/**
+ * Whether the portal redirects a consultant with no phone number to their
+ * profile. Tied to CONSULTANT_SCOPING: until real sign-in lands, the session
+ * consultant is a stand-in record and the gate would fire on every visit, so
+ * it is off while scoping is off. Server-only (reads the environment).
+ */
+export function profileGateEnabled(): boolean {
+  return /^(on|true|1|yes)$/i.test(String(process.env.CONSULTANT_SCOPING ?? "").trim());
 }
 
 /** Wording shown wherever a read-only detail may be wrong. */

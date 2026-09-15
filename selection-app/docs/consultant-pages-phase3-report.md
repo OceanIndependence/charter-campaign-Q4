@@ -166,6 +166,11 @@ filter:
   does not know costs one scan of `portal/selections/` and is then
   recorded. Saves go back to the namespace the selection was read from, so
   nothing moves.
+- The profile gate (redirect to `/portal/profile` while the session
+  consultant has no phone) is behind the same flag, since under the solo
+  provider the session record is a stand-in with no phone and the redirect
+  fired on every visit. Publishing a selection whose consultant has no phone
+  is still refused.
 - The scoping code is intact and verified with the flag on: the dashboard
   returns only the session consultant's rows, and another consultant's
   selection is a 404 on every route.

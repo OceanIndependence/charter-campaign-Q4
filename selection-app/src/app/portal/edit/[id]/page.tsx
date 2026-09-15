@@ -6,7 +6,7 @@ import PortalHeader from "@/components/portal/PortalHeader";
 import styles from "@/components/portal/PortalForm.module.css";
 import { authProviderInfo, getPortalPageState, selectionAccess } from "@/server/auth";
 import { getSelection, tierOf } from "@/server/pages.mjs";
-import { ADMIN_CONSULTANTS_PATH, PROFILE_PATH, consultantNeedsPhone } from "@/lib/consultant-types";
+import { ADMIN_CONSULTANTS_PATH, PROFILE_PATH, consultantNeedsPhone, profileGateEnabled } from "@/lib/consultant-types";
 
 export const dynamic = "force-dynamic";
 
@@ -25,7 +25,7 @@ export default async function EditPage({ params }: { params: Promise<{ id: strin
   if ("redirect" in state) redirect(state.redirect === "login" ? "/portal/login" : "/portal/sign-in");
   const { id } = await params;
   const { identity, consultant, isAdmin } = state;
-  if (consultantNeedsPhone(consultant)) redirect(PROFILE_PATH);
+  if (profileGateEnabled() && consultantNeedsPhone(consultant)) redirect(PROFILE_PATH);
   const showSignOut = !authProviderInfo().singleConsultant;
   let tier: 2 | 3 = 3;
   try {

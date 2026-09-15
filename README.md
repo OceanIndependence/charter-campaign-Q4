@@ -115,8 +115,9 @@ On each portal request the signed-in identity is resolved to its record in
 `src/server/consultant-session.ts`: matched on Entra object ID, then on
 email (which claims an unclaimed record), else created with `source: "sso"`
 from the token claims. Claims never overwrite a stored value. Consultants
-edit only their phone and WhatsApp numbers, at `/portal/profile`; the
-dashboard redirects there until a phone number is filled in. Everything
+edit only their phone and WhatsApp numbers, at `/portal/profile`; with
+`CONSULTANT_SCOPING=on` the dashboard redirects there until a phone number is
+filled in (off by default, like scoping, until real sign-in). Everything
 else on the record belongs to the admin screen.
 
 A selection belongs to one consultant record, chosen from a picker when it
