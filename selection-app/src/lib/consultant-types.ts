@@ -50,7 +50,10 @@ export function consultantNeedsPhone(c: Pick<ConsultantRecord, "status" | "phone
  * it is off while scoping is off. Server-only (reads the environment).
  */
 export function profileGateEnabled(): boolean {
-  return /^(on|true|1|yes)$/i.test(String(process.env.CONSULTANT_SCOPING ?? "").trim());
+  const raw = String(process.env.CONSULTANT_SCOPING ?? "").trim();
+  if (/^(on|true|1|yes)$/i.test(raw)) return true;
+  if (/^(off|false|0|no)$/i.test(raw)) return false;
+  return String(process.env.PORTAL_AUTH_PROVIDER ?? "").trim().toLowerCase() === "microsoft";
 }
 
 /** Wording shown wherever a read-only detail may be wrong. */
