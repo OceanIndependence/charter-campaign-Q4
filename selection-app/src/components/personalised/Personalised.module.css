@@ -567,6 +567,17 @@
   color: var(--fg);
 }
 
+/* The rate line's sum — charter fee, APA, VAT and any delivery fee — so the
+   shortlist compares like for like without opening a yacht. It reads as a
+   quiet second line under the rate, on the meta type. */
+.cardTotal {
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  font-weight: 500;
+  color: var(--fg-45);
+  margin-top: 6px;
+}
+
 .chips {
   display: flex;
   flex-wrap: wrap;

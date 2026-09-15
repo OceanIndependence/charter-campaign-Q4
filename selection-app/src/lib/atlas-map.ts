@@ -9,7 +9,7 @@
 
 import type { AtlasBlock, AtlasPageConfig, AtlasPageDestination, AtlasPageYacht } from "./types";
 import type { ContentBlock, Tier2Draft, Tier2DraftYacht } from "./portal-types";
-import { TIER2_DEFAULT_DISCLAIMER, TIER2_DEFAULT_SECTIONS, TIER2_DEFAULT_VAT_TEXT, TIER2_MAX_YACHTS, TIER2_MIN_YACHTS } from "./portal-types";
+import { TIER2_DEFAULT_DISCLAIMER, TIER2_DEFAULT_SECTIONS, TIER2_DEFAULT_VAT_TEXT, TIER2_MAX_YACHTS, TIER2_MIN_YACHTS, tier2VatPctFromText } from "./portal-types";
 import { CAMPAIGN_ATLAS_URL, mapDraftYacht, mapItineraryLinks } from "./portal-map";
 import { slugify } from "@/server/yachtfolio/normalise.mjs";
 
@@ -34,16 +34,20 @@ export function chosenDestinationIds(draft: Tier2Draft): string[] {
 }
 
 export function mapTier2Yacht(y: Tier2DraftYacht, validDestinationIds: Set<string>): AtlasPageYacht | null {
-  // Tier 2 has no VAT percentage: the drawer shows vatText and the total is
-  // rate plus APA. Clear any stray percentage before the shared mapping runs;
-  // the Yachtfolio key features carry through as the drawer highlights.
-  const base = mapDraftYacht({ ...y, vatPct: "", notes: y.consultantNote });
+  // VAT is a percentage on both tiers: the shared mapping turns it into an
+  // amount and folds it into the total, so the rail card, the drawer and the
+  // comparison grid read as they do on Tier 3. A yacht whose VAT was typed as
+  // free text before the field was a percentage is read as one here; only a
+  // yacht with no percentage at all falls back to the vatText line. The
+  // Yachtfolio key features carry through as the drawer highlights.
+  const vatPct = str(y.vatPct) ?? tier2VatPctFromText(y.vatText);
+  const base = mapDraftYacht({ ...y, vatPct, notes: y.consultantNote });
   if (!base) return null;
   return {
     ...base,
     destinationIds: (y.destinationIds ?? []).filter((id) => validDestinationIds.has(id)),
     consultantNote: str(y.consultantNote),
-    vatText: str(y.vatText) ?? TIER2_DEFAULT_VAT_TEXT,
+    vatText: (tier2VatPctFromText(y.vatText) ? undefined : str(y.vatText)) ?? TIER2_DEFAULT_VAT_TEXT,
   };
 }
 

@@ -19,10 +19,12 @@ import type {
 import {
   TIER2_DEFAULT_DISCLAIMER,
   TIER2_DEFAULT_SECTIONS,
+  TIER2_DEFAULT_VAT_TEXT,
   TIER2_MAX_YACHTS,
   emptyItineraryLink,
   emptyTier2Destination,
   emptyTier2Yacht,
+  tier2VatPctFromText,
 } from "@/lib/portal-types";
 import { suggestTier2Slug, tier2PublishProblems, tier2Warnings } from "@/lib/atlas-map";
 import { slugify } from "@/server/yachtfolio/normalise.mjs";
@@ -200,13 +202,20 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
         const slots = (next.destinations ?? []).slice(0, 3);
         while (slots.length < 3) slots.push(emptyTier2Destination());
         next.destinations = slots as Tier2Draft["destinations"];
-        next.yachts = (next.yachts ?? []).map((y) => ({
-          ...emptyTier2Yacht(y.uid || crypto.randomUUID()),
-          ...y,
-          uid: y.uid || crypto.randomUUID(),
-          gallery: y.gallery ?? [],
-          destinationIds: y.destinationIds ?? [],
-        }));
+        next.yachts = (next.yachts ?? []).map((y) => {
+          // VAT was a free-text line before it was a percentage: a draft that
+          // holds a number ("22", "22%") opens with it in the VAT % field, so
+          // the page shows the amount rather than the typed line.
+          const typedPct = (y.vatPct ?? "").trim() ? "" : tier2VatPctFromText(y.vatText);
+          return {
+            ...emptyTier2Yacht(y.uid || crypto.randomUUID()),
+            ...y,
+            uid: y.uid || crypto.randomUUID(),
+            gallery: y.gallery ?? [],
+            destinationIds: y.destinationIds ?? [],
+            ...(typedPct ? { vatPct: typedPct, vatText: TIER2_DEFAULT_VAT_TEXT } : {}),
+          };
+        });
         if (next.slug) slugTouched.current = true;
         setDraft(next);
         if (next.publishedSlug) setPublished({ slug: next.publishedSlug, url: `/atlas/${next.publishedSlug}` });
@@ -1065,9 +1074,11 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
               const removedRecord = y.yfId != null && removedIds.has(y.yfId);
               const rate = num(y.weeklyRate);
               const apa = num(y.apaPct);
+              const vat = num(y.vatPct);
               const delivery = num(y.deliveryFee ?? "");
               const apaAmount = rate != null && apa != null ? Math.round((rate * apa) / 100) : undefined;
-              const total = rate != null ? rate + (apaAmount ?? 0) + (delivery ?? 0) : undefined;
+              const vatAmount = rate != null && vat != null ? Math.round((rate * vat) / 100) : undefined;
+              const total = rate != null ? rate + (apaAmount ?? 0) + (vatAmount ?? 0) + (delivery ?? 0) : undefined;
               const noDest = y.name.trim() && !y.destinationIds.some((id) => chosen.some((d) => d.destinationId === id));
               return (
                 <div
@@ -1215,9 +1226,10 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                       </label>
                       <label className={styles.field}>
                         <span className={styles.fieldLabel}>
-                          VAT <span className={styles.checkTag}>check</span>
+                          VAT % <span className={styles.checkTag}>check</span>
+                          <span className={styles.fieldLabelHint}> — blank reads “{TIER2_DEFAULT_VAT_TEXT}” on the page</span>
                         </span>
-                        <input type="text" className={styles.input} placeholder="Example – Varies by location" value={y.vatText} onChange={(e) => setYacht(y.uid, { vatText: e.target.value })} />
+                        <input type="number" className={styles.input} placeholder="Example – 22" value={y.vatPct} onChange={(e) => setYacht(y.uid, { vatPct: e.target.value })} />
                       </label>
                       <label className={styles.field}>
                         <span className={styles.fieldLabel}>
@@ -1239,7 +1251,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                               APA {fmtMoneyForm(y.currency, apaAmount)} ({apa}%)
                             </span>
                           )}
-                          <span>VAT {y.vatText || "Varies by location"}</span>
+                          <span>VAT {vatAmount != null ? `${fmtMoneyForm(y.currency, vatAmount)} (${vat}%)` : y.vatText || TIER2_DEFAULT_VAT_TEXT}</span>
                           {delivery != null && <span>DELIVERY FEE {fmtMoneyForm(y.currency, delivery)}</span>}
                           {total != null && <span className={styles.priceTotal}>TOTAL {fmtMoneyForm(y.currency, total)}</span>}
                         </div>
