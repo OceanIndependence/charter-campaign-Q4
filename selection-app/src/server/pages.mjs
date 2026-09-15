@@ -486,14 +486,13 @@ export async function createSelection(access, { duplicateOf, tier, consultant } 
 /**
  * Save a selection. Owner, consultant, creation date and publish state are
  * always taken from the stored record, so nothing in the request body can
- * forge or reassign them — a body carrying a different consultantId is
- * rejected outright rather than silently ignored.
+ * forge or reassign them. A body carrying a different consultantId is not
+ * an error: the stored value simply wins, so a form that loaded the draft
+ * before an admin action changed it (the fixture clear, say) keeps saving
+ * the consultant's other edits instead of failing every autosave.
  */
 export async function saveSelection(access, id, incoming) {
   const { ns, draft: existing } = await load(access, id);
-  if (incoming?.consultantId != null && incoming.consultantId !== existing.consultantId) {
-    throw fail("FORBIDDEN", "A selection cannot be moved to another consultant.");
-  }
   const stored = {
     ...incoming,
     id: existing.id,

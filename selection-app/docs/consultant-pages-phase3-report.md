@@ -16,8 +16,9 @@ it on a preview.
 - The edit form never shows the picker. Its YOUR DETAILS card is read-only
   and fed from the selection's consultant, returned alongside the draft by
   `GET /api/selections/:id`.
-- Server-side, a save body carrying a different `consultantId` is refused
-  with 403 ("A selection cannot be moved to another consultant"); creation
+- Server-side, `consultantId` is server-owned: whatever a save body carries,
+  the stored value wins, so a change can never be applied (and a form that
+  loaded the draft before an admin action changed it keeps saving). Creation
   without a consultant, or with an inactive one, is refused with 400. There
   is no reassignment path for anyone, admins included.
 - Storage is now namespaced by consultant: `portal/selections/<consultantId>/<id>.json`
