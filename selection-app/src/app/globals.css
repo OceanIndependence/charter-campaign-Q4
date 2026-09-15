@@ -108,6 +108,14 @@
   --hairline: rgba(29, 29, 29, 0.08);
   --hairline-strong: rgba(29, 29, 29, 0.12);
 
+  /* Grounds. These four were declared only on :root, so anything reading
+     them (the Tier 2 destination panel and yacht drawer, the brochure
+     button's hover) stayed dark on a light page. --ink is the inverse of
+     --fg: text drawn on a --fg ground. */
+  --ink: #ffffff;
+  --ink-lift: #ffffff;
+  --atlas-ink: #fafaf8;
+  --panel: #ffffff;
   --page-base: #fafaf8;
   --page-bg: #fafaf8;
   --surface: #ffffff;
