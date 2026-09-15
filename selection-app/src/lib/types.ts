@@ -196,9 +196,12 @@ export interface AtlasPagePin {
   lon: number;
 }
 
-/** The optional sections of a Tier 2 page: the Tier 3 set without the itinerary. */
+/** The optional sections of a Tier 2 page: the same set as a Tier 3 page. */
 export interface AtlasPageSections {
   costs: boolean;
+  itinerary: boolean;
+  /** Up to MAX_ITINERARY_LINKS itinerary buttons, in the consultant's order */
+  itineraryLinks?: ItineraryLink[];
   compare: boolean;
 }
 

@@ -84,11 +84,12 @@ with the Tier 3 Yachtfolio, image, publishing and auth modules; nothing is dupli
   (live from the website where it answers, else the checked-in snapshot); each block
   records whether it is Atlas text or the consultant's edit, and the page labels it.
 - Published pages freeze destination content, pins and yacht data at publish time.
-- The form's PAGE SECTIONS card is the Tier 3 one without the itinerary: a dark or
-  light theme, the collapsible "Costs involved" explainer and the compare feature
-  (a toggle on each rail card, up to three yachts side by side). Both sections are
-  on for a new selection; pages published before the card existed carry neither.
-  The itinerary is to get a card of its own.
+- The form's PAGE SECTIONS card is the Tier 3 one: a dark or light theme, the
+  collapsible "Costs involved" explainer, a suggested itinerary with up to three
+  links (each with its own button text) and the compare feature (a toggle on each
+  rail card, up to three yachts side by side). Every section is on for a new
+  selection; pages published before the card existed carry none. On the light
+  theme the header and the foot stay dark, as on the Yacht Selection page.
 - Without `YACHTFOLIO_PASSKEY` the fleet is served from a six-yacht demo set, and
   `/atlas/harrington-summer-2027` renders the demo page (`DEMO_PAGES=false` disables it).
 

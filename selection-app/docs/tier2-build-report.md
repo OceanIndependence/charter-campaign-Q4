@@ -149,19 +149,23 @@ the Tier 2 form can be reviewed with content in it.
 
 ## Page sections
 
-The form's PAGE SECTIONS card (04, after the shortlist) mirrors the Tier 3 card without
-the itinerary, which is to get a card of its own: a DARK / LIGHT theme toggle, "Costs
-involved" and "Compare feature". They are stored on the draft as `theme` and
-`sections.{costs, compare}` and frozen into the page config by `tier2DraftToConfig`.
-A new selection starts with both sections on and the dark theme, and a draft saved
-before the card existed is read the same way on load. A page published before the
-card existed has no `sections` block and renders exactly as published: neither section.
+The form's PAGE SECTIONS card (04, after the shortlist) is the Tier 3 card: a DARK /
+LIGHT theme toggle, "Costs involved", "Suggested itinerary" with up to three itinerary
+links (each with its own button text; blank text reads "View your suggested itinerary";
+links with no address are left off) and "Compare feature". They are stored on the draft
+as `theme` and `sections.{costs, itinerary, itineraryLinks, compare}` and frozen into
+the page config by `tier2DraftToConfig`, the itinerary buttons through the same
+`mapItineraryLinks` as Tier 3. A new selection starts with every section on and the
+dark theme, and a draft saved before the card existed is read the same way on load. A
+page published before the card existed has no `sections` block and renders exactly as
+published: no optional section.
 
-On the client page the light theme swaps the header logo and the page ground and
-otherwise rides the shared `[data-theme="light"]` tokens; the compare toggle sits over
-each rail card's image and feeds the Tier 3 `CompareBar` and `CompareOverlay` (the VAT
-row hides itself because Tier 2 carries no VAT percentage); `CostsSection` renders
-beneath the season note, before the consultant block.
+On the client page the light theme rides the shared `[data-theme="light"]` tokens for
+the page ground, while the header and the foot (consultant block and disclaimer) stay
+on the dark ground on both themes, as on the Yacht Selection page; the compare toggle
+sits over each rail card's image and feeds the Tier 3 `CompareBar` and `CompareOverlay`
+(the VAT row hides itself because Tier 2 carries no VAT percentage); `CostsSection` and
+`ItinerarySection` render beneath the season note, before the consultant block.
 
 ## Redacted sample of one Tier 2 page config
 
@@ -229,7 +233,7 @@ rate plus APA, both computed by `mapDraftYacht`.
     { "id": "mediterranean/cyprus", "name": "Cyprus", "lat": 35.0275, "lon": 33.2162 },
     "… 37 more"
   ],
-  "sections": { "costs": true, "compare": true },
+  "sections": { "costs": true, "itinerary": true, "itineraryLinks": [{ "label": "Naples to Sicily", "url": "https://…" }], "compare": true },
   "theme": "dark",
   "consultant": {
     "name": "Lucy",

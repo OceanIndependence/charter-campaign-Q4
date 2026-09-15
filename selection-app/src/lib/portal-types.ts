@@ -241,18 +241,22 @@ export const TIER2_MIN_YACHTS = 2;
 export const TIER2_MAX_YACHTS = 10;
 
 /**
- * The optional page sections of a Personalised Atlas — the Tier 3 set minus
- * the itinerary, which is to get a section of its own on the Tier 2 form.
+ * The optional page sections of a Personalised Atlas — the same set as the
+ * Tier 3 Yacht Selection, edited on the same PAGE SECTIONS card.
  */
 export interface Tier2Sections {
   /** The collapsible "Costs involved" explainer beneath the shortlist */
   costs: boolean;
+  /** The collapsible "Your itinerary" section with its buttons */
+  itinerary: boolean;
+  /** Up to MAX_ITINERARY_LINKS itinerary buttons, in the consultant's order */
+  itineraryLinks: DraftItineraryLink[];
   /** Side-by-side specifications, picked from the yacht rail */
   compare: boolean;
 }
 
 /** What a new Personalised Atlas starts with, and what an older draft is read as. */
-export const TIER2_DEFAULT_SECTIONS: Tier2Sections = { costs: true, compare: true };
+export const TIER2_DEFAULT_SECTIONS: Tier2Sections = { costs: true, itinerary: true, itineraryLinks: [], compare: true };
 
 /** Tier 2 — Personalised Atlas. */
 export interface Tier2Draft extends SelectionBase {

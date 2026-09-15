@@ -103,7 +103,7 @@ export function demoTier2Draft(): Omit<Tier2Draft, "id" | "owner" | "createdAt" 
     },
     footerDisclaimer: TIER2_DEFAULT_DISCLAIMER,
     theme: "dark",
-    sections: { costs: true, compare: true },
+    sections: { costs: true, itinerary: true, itineraryLinks: [], compare: true },
     destinations: [
       destination(AMALFI, {
         eyebrow: "RETURN, BUT DEEPER",

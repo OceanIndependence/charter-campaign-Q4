@@ -324,7 +324,7 @@ function emptyTier2Draft(identity, consultant) {
     destinations: [emptyDestination(), emptyDestination(), emptyDestination()],
     yachts: [],
     theme: "dark",
-    sections: { costs: true, compare: true },
+    sections: { costs: true, itinerary: true, itineraryLinks: [], compare: true },
   };
 }
 

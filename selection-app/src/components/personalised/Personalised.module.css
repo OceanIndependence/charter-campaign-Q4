@@ -29,6 +29,14 @@
   border-bottom: 1px solid var(--hairline-strong);
   position: relative;
   z-index: 5;
+  /* A dark theme scope on both themes: re-resolve inherited text against
+     this element's own tokens rather than the page's computed ink. */
+  color: var(--fg);
+}
+
+/* Light theme: the header keeps the dark ground; the page behind it is light. */
+[data-theme="light"] .header {
+  background: var(--page-base);
 }
 
 .logo {
@@ -666,6 +674,16 @@
 }
 
 /* ------------------------------------------------------------ disclaimer */
+
+/* The foot (consultant block and disclaimer) is a dark theme scope on both
+   themes; see PersonalisedAtlasPage.tsx. */
+.foot {
+  color: var(--fg);
+}
+
+[data-theme="light"] .foot {
+  background: var(--page-base);
+}
 
 .disclaimer {
   border-top: 1px solid var(--hairline);

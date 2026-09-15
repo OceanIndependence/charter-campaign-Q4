@@ -9,7 +9,7 @@ import SpecPanel from "@/components/SpecPanel";
 import ConsultantBlock from "@/components/ConsultantBlock";
 import EnlargeableImage from "@/components/EnlargeableImage";
 import { CompareBar, CompareOverlay } from "@/components/Compare";
-import { CostsSection } from "@/components/CollapsibleSections";
+import { CostsSection, ItinerarySection } from "@/components/CollapsibleSections";
 import { CompareToggleIcon, SmallChevronIcon } from "@/components/icons";
 import styles from "./Personalised.module.css";
 
@@ -37,6 +37,7 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
   // and render exactly as they were published: neither section.
   const compareEnabled = config.sections?.compare === true;
   const costsEnabled = config.sections?.costs === true;
+  const itineraryEnabled = config.sections?.itinerary === true;
   // "" when the consultant is inactive: no signatures, no "ask" button, no block.
   const consultantFirst = consultant ? firstName(consultant.name) || consultant.name : "";
   const chosenIds = useMemo(() => destinations.map((d) => d.id), [destinations]);
@@ -273,9 +274,10 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
 
   return (
     <div className={styles.page} data-theme={theme}>
-      <header className={styles.header}>
+      {/* The header stays dark on both themes, as on the Yacht Selection page. */}
+      <header className={styles.header} data-theme="dark">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={theme === "light" ? "/assets/logo-black.png" : "/assets/logo-white.png"} alt="Ocean Independence" className={styles.logo} />
+        <img src="/assets/logo-white.png" alt="Ocean Independence" className={styles.logo} />
         <span className={styles.headerLabel}>PERSONALISED FOR YOU</span>
       </header>
 
@@ -471,10 +473,15 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
       )}
 
       {costsEnabled && <CostsSection />}
+      {itineraryEnabled && <ItinerarySection itineraryLinks={config.sections?.itineraryLinks} />}
 
-      {consultant && <ConsultantBlock consultant={consultant} atlasUrl={config.atlasUrl} />}
+      {/* The foot stays dark on both themes: consultant block and disclaimer
+          share one dark surface, as on the Yacht Selection page. */}
+      <div className={styles.foot} data-theme="dark">
+        {consultant && <ConsultantBlock consultant={consultant} atlasUrl={config.atlasUrl} />}
 
-      <div className={styles.disclaimer}>{config.footerDisclaimer}</div>
+        <div className={styles.disclaimer}>{config.footerDisclaimer}</div>
+      </div>
 
       {drawerYacht && (
         <div className={styles.drawerScrim} onClick={closeDrawer} role="presentation">
