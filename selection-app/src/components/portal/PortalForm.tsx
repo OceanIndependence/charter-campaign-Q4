@@ -16,7 +16,7 @@ import { MAX_ITINERARY_LINKS } from "@/lib/types";
 import FleetSelect from "./FleetSelect";
 import ImagePicker from "./ImagePicker";
 import ConfirmDialog from "./ConfirmDialog";
-import ConsultantDetailsCard from "./ConsultantDetailsCard";
+import ConsultantDetailsCard, { type SelectionConsultant } from "./ConsultantDetailsCard";
 import { DragGhost, DragHandle, useYachtReorder } from "./useYachtReorder";
 import { POLL_TIMEOUT_NOTE, fetchDetail, fmtUpdated, pollImages, progressLabel, readImages, refreshYacht as refreshYachtApi, staleNote, startPrepare } from "./fleetApi";
 import styles from "./PortalForm.module.css";
@@ -120,6 +120,8 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
   /** Monotonic pick counter per entry so a stale response never applies. */
   const fetchSeq = useRef<Map<string, number>>(new Map());
   const [saveState, setSaveState] = useState<SaveState>("idle");
+  /** The consultant record this selection belongs to, as the API resolved it on load. */
+  const [selectionConsultant, setSelectionConsultant] = useState<SelectionConsultant | null | undefined>(undefined);
   const [published, setPublished] = useState<{ slug: string; url: string } | null>(null);
   const [publishFlash, setPublishFlash] = useState(false);
   const [publishing, setPublishing] = useState(false);
@@ -151,6 +153,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
           return;
         }
         const next: PortalDraft = body?.draft ?? null;
+        setSelectionConsultant((body?.consultant as SelectionConsultant | null | undefined) ?? null);
         if (!next) return;
         next.subHeadline ??= "";
         next.welcome ??= "";
@@ -1365,7 +1368,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
         </section>
 
         {/* 04 — YOUR DETAILS: read-only, from the consultant record */}
-        <ConsultantDetailsCard sectionHead="04 — YOUR DETAILS" />
+        <ConsultantDetailsCard sectionHead="04 — YOUR DETAILS" consultant={selectionConsultant} />
       </main>
 
       {/* Publish bar */}

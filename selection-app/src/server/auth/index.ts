@@ -150,6 +150,20 @@ export type PortalSession =
   | { ok: true; identity: ConsultantIdentity }
   | { ok: false; response: NextResponse };
 
+/**
+ * What pages.mjs needs to scope every selection operation: the session
+ * consultant's record id (the storage namespace) and the identity (audit,
+ * manager check). Built here so no route assembles it by hand.
+ */
+export interface SelectionAccess {
+  consultantId: string;
+  identity: ConsultantIdentity;
+}
+
+export function selectionAccess(session: { identity: ConsultantIdentity; consultant: ConsultantRecord }): SelectionAccess {
+  return { consultantId: session.consultant.id, identity: session.identity };
+}
+
 export type ConsultantSession =
   | { ok: true; identity: ConsultantIdentity; consultant: ConsultantRecord; isAdmin: boolean }
   | { ok: false; response: NextResponse };

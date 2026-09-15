@@ -98,10 +98,10 @@ export interface SelectionBase {
   /** Consultant identity that owns this draft (stamped server-side) */
   owner?: PageOwner;
   /**
-   * The consultant RECORD (consultants/<id>.json) whose details the client
-   * page shows, stamped server-side at creation and resolved live at render.
-   * Absent on selections created before consultant records existed: their
-   * pages keep the block frozen at publish.
+   * The consultant RECORD (consultants/<id>.json) the selection belongs to:
+   * chosen once at creation, never reassigned, the storage namespace, and
+   * resolved live on every client render. Optional in the type only for
+   * drafts written before records existed.
    */
   consultantId?: string;
   updatedAt: string;
@@ -299,7 +299,10 @@ export type SelectionStatus = "draft" | "published" | "unpublished";
 export interface SelectionMeta {
   id: string;
   tier: Tier;
+  /** The identity that created the selection (audit only) */
   owner: PageOwner;
+  /** The consultant record the selection belongs to; null only on rows written before records existed */
+  consultantId: string | null;
   clientNames: string;
   /** Tier 3: page headline; Tier 2: the client greeting */
   headline: string;

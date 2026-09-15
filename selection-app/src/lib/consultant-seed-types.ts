@@ -14,6 +14,18 @@ export interface ConsultantSeedRow {
   photoUrl: string;
 }
 
+/** What one run of the test-fixture backfill did (POST /api/admin/attach-fixture). */
+export interface FixtureResult {
+  ranAt: string;
+  fixture: { id: string; displayName: string; email: string; photoStatus: "ok" | "missing"; status: "active" | "inactive" };
+  fixtureCreated: boolean;
+  selectionsFound: number;
+  moved: Array<{ id: string; from: string; clientNames: string; file: string }>;
+  alreadyAttached: Array<{ id: string; clientNames: string }>;
+  skipped: Array<{ key: string; reason: string }>;
+  pagesUpdated: Array<{ slug: string; live: boolean }>;
+}
+
 /** What one run of the seed import did. Returned by the API and rendered on the import page. */
 export interface ConsultantImportResult {
   ranAt: string;

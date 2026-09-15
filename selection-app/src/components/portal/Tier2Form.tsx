@@ -26,7 +26,7 @@ import { slugify } from "@/server/yachtfolio/normalise.mjs";
 import FleetSelect from "./FleetSelect";
 import ImagePicker from "./ImagePicker";
 import ConfirmDialog from "./ConfirmDialog";
-import ConsultantDetailsCard from "./ConsultantDetailsCard";
+import ConsultantDetailsCard, { type SelectionConsultant } from "./ConsultantDetailsCard";
 import { DragGhost, DragHandle, useYachtReorder } from "./useYachtReorder";
 import { POLL_TIMEOUT_NOTE, fetchDetail, fmtUpdated, pollImages, progressLabel, readImages, refreshYacht as refreshYachtApi, staleNote, startPrepare } from "./fleetApi";
 import styles from "./PortalForm.module.css";
@@ -145,6 +145,8 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
   const [publishFlash, setPublishFlash] = useState(false);
   const [publishing, setPublishing] = useState(false);
   const [publishError, setPublishError] = useState<string | null>(null);
+  /** The consultant record this selection belongs to, as the API resolved it on load. */
+  const [selectionConsultant, setSelectionConsultant] = useState<SelectionConsultant | null | undefined>(undefined);
   /** Link offered with a publish refusal, e.g. the profile page when a phone number is missing. */
   const [publishErrorHref, setPublishErrorHref] = useState<string | null>(null);
   const [lightbox, setLightbox] = useState<{ url: string; label: string } | null>(null);
@@ -172,6 +174,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
           return;
         }
         const next: Tier2Draft = body?.draft;
+        setSelectionConsultant((body?.consultant as SelectionConsultant | null | undefined) ?? null);
         if (!next) return;
         next.slug ??= "";
         next.clientGreeting ??= "";
@@ -1277,7 +1280,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
         </section>
 
         {/* 05 — YOUR DETAILS: read-only, from the consultant record */}
-        <ConsultantDetailsCard sectionHead="05 — YOUR DETAILS" />
+        <ConsultantDetailsCard sectionHead="05 — YOUR DETAILS" consultant={selectionConsultant} />
 
         {/* 06 — FOOTER */}
         <section className={styles.card}>

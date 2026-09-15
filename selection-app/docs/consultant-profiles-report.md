@@ -7,9 +7,11 @@ admin screen and the admin-created record.
 
 ## How the block is resolved
 
-- A selection carries the consultant's record id (`consultantId`), stamped
-  server-side when it is created and copied onto the published record at
-  `portal/pages/<slug>/current.json`. Nothing in the request body can set it.
+- A selection carries the consultant's record id (`consultantId`), chosen
+  from the picker on the creation form, fixed for the selection's whole life,
+  and copied onto the published record at `portal/pages/<slug>/current.json`.
+  A save body cannot change it. See `docs/consultant-pages-phase3-report.md`
+  for the picker, the consultant-scoped storage and the test fixture.
 - Every render of a client page reads the record behind that id
   (`src/server/consultant-render.ts`) and builds the block from the record as
   it stands now. This is deliberately different from the specifications,

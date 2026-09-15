@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import type { ConsultantImportResult } from "@/lib/consultant-seed-types";
+import type { ConsultantImportResult, FixtureResult } from "@/lib/consultant-seed-types";
 import type { ImportStatus } from "@/app/api/admin/import-consultants/route";
 import { ADMIN_CONSULTANTS_PATH } from "@/lib/consultant-types";
 import styles from "./PortalForm.module.css";
@@ -20,6 +20,27 @@ export default function ConsultantImport() {
   const [running, setRunning] = useState(false);
   const [result, setResult] = useState<ConsultantImportResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [fixtureRunning, setFixtureRunning] = useState(false);
+  const [fixture, setFixture] = useState<FixtureResult | null>(null);
+  const [fixtureError, setFixtureError] = useState<string | null>(null);
+
+  const runFixture = async () => {
+    if (fixtureRunning) return;
+    setFixtureRunning(true);
+    setFixtureError(null);
+    setFixture(null);
+    try {
+      const res = await fetch("/api/admin/attach-fixture", { method: "POST" });
+      const body = await res.json().catch(() => null);
+      if (!res.ok) throw new Error(body?.error ?? "The backfill did not run.");
+      setFixture(body.result as FixtureResult);
+      await loadStatus();
+    } catch (err) {
+      setFixtureError(err instanceof Error ? err.message : "The backfill did not run.");
+    } finally {
+      setFixtureRunning(false);
+    }
+  };
 
   const loadStatus = useCallback(async () => {
     try {
@@ -147,6 +168,40 @@ export default function ConsultantImport() {
                 Every photo URL answered with an image.
               </p>
             )}
+          </>
+        )}
+      </section>
+
+      <section className={styles.card}>
+        <div className={styles.sectionHeadRow}>
+          <div className={styles.sectionHead}>03 — ATTACH THE TEST FIXTURE</div>
+          <button type="button" className={styles.publishBtn} onClick={runFixture} disabled={fixtureRunning || !status}>
+            {fixtureRunning ? "ATTACHING…" : fixture ? "RUN AGAIN" : "ATTACH ALL SELECTIONS TO ELEANOR"}
+          </button>
+        </div>
+        <p className={styles.sectionNote}>
+          One-off backfill for the test selections already in the store. Creates the Eleanor Bartoli Turner record from her seed row if it does
+          not exist, then moves every selection into her namespace and stamps her on its published page. Selections created from now on take
+          their consultant from the picker; this is a fixture, not a default. Safe to press again: nothing already attached is touched.
+        </p>
+        {fixtureError && <p className={styles.dashError}>{fixtureError}</p>}
+        {fixture && (
+          <>
+            <div className={styles.grid} style={{ marginTop: 8 }}>
+              <Value label="FIXTURE RECORD" value={`${fixture.fixture.displayName} · ${fixture.fixture.status}`} hint={fixture.fixtureCreated ? "created this run" : "already existed"} />
+              <Value label="FIXTURE PHOTO" value={fixture.fixture.photoStatus} warn={fixture.fixture.photoStatus !== "ok"} />
+              <Value label="SELECTIONS FOUND" value={String(fixture.selectionsFound)} />
+              <Value label="ATTACHED THIS RUN" value={String(fixture.moved.length)} />
+              <Value label="ALREADY ATTACHED" value={String(fixture.alreadyAttached.length)} />
+              <Value label="PUBLISHED PAGES UPDATED" value={String(fixture.pagesUpdated.length)} />
+            </div>
+            {fixture.moved.length > 0 && (
+              <Table title="Selections attached" head={["Selection", "Client", "Moved from"]} rows={fixture.moved.map((m) => [m.id, m.clientNames || "—", m.from])} />
+            )}
+            {fixture.pagesUpdated.length > 0 && (
+              <Table title="Published pages now rendering the fixture" head={["Slug", "Live"]} rows={fixture.pagesUpdated.map((p) => [p.slug, p.live ? "yes" : "unpublished"])} />
+            )}
+            {fixture.skipped.length > 0 && <Table title="Skipped" head={["Key", "Reason"]} rows={fixture.skipped.map((s) => [s.key, s.reason])} />}
           </>
         )}
       </section>

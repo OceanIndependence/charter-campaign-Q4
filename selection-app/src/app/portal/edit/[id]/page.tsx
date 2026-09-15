@@ -4,7 +4,7 @@ import PortalForm from "@/components/portal/PortalForm";
 import Tier2Form from "@/components/portal/Tier2Form";
 import PortalHeader from "@/components/portal/PortalHeader";
 import styles from "@/components/portal/PortalForm.module.css";
-import { authProviderInfo, getPortalPageState } from "@/server/auth";
+import { authProviderInfo, getPortalPageState, selectionAccess } from "@/server/auth";
 import { getSelection, tierOf } from "@/server/pages.mjs";
 import { ADMIN_CONSULTANTS_PATH, PROFILE_PATH, consultantNeedsPhone } from "@/lib/consultant-types";
 
@@ -29,7 +29,7 @@ export default async function EditPage({ params }: { params: Promise<{ id: strin
   const showSignOut = !authProviderInfo().singleConsultant;
   let tier: 2 | 3 = 3;
   try {
-    tier = tierOf(await getSelection(identity, id));
+    tier = tierOf(await getSelection(selectionAccess(state), id));
   } catch {
     // Unknown or someone else's selection: the form reports it on load.
   }

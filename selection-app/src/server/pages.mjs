@@ -2,26 +2,34 @@
  * Selections (drafts), the per-consultant dashboard index, and versioned
  * publishing — SERVER-ONLY.
  *
- * Selections: portal/selections/<ownerId>/<id>.json   full editable draft
- * Index:      portal/index/<ownerId>.json              { items: { id: meta } }
+ * Selections: portal/selections/<consultantId>/<id>.json   full editable draft
+ * Index:      portal/index/<consultantId>.json              { items: { id: meta } }
  *             one small document per consultant carrying exactly what the
  *             dashboard table needs, rewritten on every save/publish/
  *             unpublish/delete — the list never parses full page configs.
  * Published:  portal/pages/<slug>/current.json         { slug, version, owner,
- *             draftId, publishedAt, unpublished?, config }
+ *             consultantId, draftId, publishedAt, unpublished?, config }
  *             portal/pages/<slug>/versions/<n>.json     immutable history;
  *             unpublish flags current.json offline, rollback appends a new
  *             version copied from an old one, so history is never rewritten.
  *
- * `owner` is stamped server-side from the session, never from the request
- * body; every key is owner-namespaced so isolation is structural. The layout
- * is the same whether owner.id comes from the dev stub or from Microsoft.
- * `consultantId` — the consultant RECORD whose details the client page shows
- * — is stamped the same way at creation and copied onto the published
- * record; client pages resolve it live at render (consultant-render.ts).
+ * A selection BELONGS to a consultant record (consultants/<id>.json) for its
+ * whole life. `consultantId` is chosen once, at creation — from the picker
+ * today, pre-filled from the signed-in consultant once real sign-in lands —
+ * and is never taken from a save body, so it cannot be reassigned by anyone.
+ * Every key is namespaced by that consultantId, so isolation is structural:
+ * a consultant's dashboard reads only their own index, and a shared URL to
+ * someone else's selection is a NOT_FOUND, not a permission check that could
+ * be forgotten. Every entry point takes an `access` object built by
+ * selectionAccess() in the auth module: { consultantId, identity }.
  *
- * The earlier single working draft (portal/drafts/<ownerId>/working.json) is
- * imported as a selection on the consultant's first dashboard load.
+ * `owner` is the signed-in identity that created the record, stamped
+ * server-side for audit only. Client pages resolve consultantId live at
+ * render (consultant-render.ts): specs freeze at publish, the consultant
+ * does not.
+ *
+ * The earlier single working draft (portal/drafts/<identityId>/working.json)
+ * is imported as a selection on the consultant's first dashboard load.
  *
  * Every save, publish, unpublish, rollback and delete also updates the
  * in-use index (in-use.mjs) so the nightly refresh knows which yachts are
@@ -37,15 +45,16 @@ import { randomUUID } from "node:crypto";
 import { deleteJson, getJson, hashJson, listKeys, noteStorageError, putJson } from "./storage.mjs";
 import { removeSelection as removeFromInUse, setSelectionYachts, yachtIdsOf } from "./in-use.mjs";
 
-const OWNER_RE = /^[A-Za-z0-9._@:-]{1,128}$/;
+const NAMESPACE_RE = /^[A-Za-z0-9._@:-]{1,128}$/;
 const SLUG_RE = /^[a-z0-9-]{1,120}$/;
 const ID_RE = /^[A-Za-z0-9-]{8,64}$/;
 
-const selectionKey = (ownerId, id) => `portal/selections/${ownerId}/${id}.json`;
-const indexKey = (ownerId) => `portal/index/${ownerId}.json`;
+export const SELECTIONS_PREFIX = "portal/selections/";
+export const selectionKey = (consultantId, id) => `${SELECTIONS_PREFIX}${consultantId}/${id}.json`;
+export const indexKey = (consultantId) => `portal/index/${consultantId}.json`;
 const INDEX_PREFIX = "portal/index/";
-const legacyWorkingKey = (ownerId) => `portal/drafts/${ownerId}/working.json`;
-const currentKey = (slug) => `portal/pages/${slug}/current.json`;
+const legacyWorkingKey = (identityId) => `portal/drafts/${identityId}/working.json`;
+export const currentKey = (slug) => `portal/pages/${slug}/current.json`;
 const versionKey = (slug, n) => `portal/pages/${slug}/versions/${n}.json`;
 
 const fail = (code, message) => Object.assign(new Error(message), { code });
@@ -64,9 +73,10 @@ export function isValidSlug(slug) {
   return SLUG_RE.test(String(slug ?? ""));
 }
 
-function requireOwnerId(identity) {
-  const id = identity?.id;
-  if (!id || !OWNER_RE.test(id)) throw fail("FORBIDDEN", "Invalid consultant identity.");
+/** The consultant namespace every key hangs off. */
+function requireConsultantId(access) {
+  const id = access?.consultantId;
+  if (!id || !NAMESPACE_RE.test(id)) throw fail("FORBIDDEN", "No consultant record for this session.");
   return id;
 }
 
@@ -76,7 +86,7 @@ function requireId(id) {
 }
 
 function ownerOf(identity) {
-  return { id: identity.id, email: identity.email ?? "", name: identity.name ?? "" };
+  return { id: identity?.id ?? "", email: identity?.email ?? "", name: identity?.name ?? "" };
 }
 
 /**
@@ -84,6 +94,7 @@ function ownerOf(identity) {
  * comma-separated list of consultant ids or emails; when it is unset (the
  * staging default) everyone may. With Microsoft sign-in the natural
  * replacement is a group claim on the token, checked in the same place.
+ * Viewing all rows never opens them: getSelection() is namespace-bound.
  */
 export function canViewAll(identity) {
   const raw = process.env.PORTAL_MANAGERS;
@@ -101,13 +112,14 @@ function namedYachtCount(draft) {
 }
 
 /** The dashboard row for a draft — derived, never edited by hand. */
-function metaOf(draft) {
+export function metaOf(draft) {
   const p = draft.published;
   const tier = tierOf(draft);
   return {
     id: draft.id,
     tier,
     owner: draft.owner,
+    consultantId: draft.consultantId ?? null,
     clientNames: draft.clientNames ?? "",
     headline: (tier === 2 ? draft.clientGreeting : draft.headline) ?? "",
     slug: draft.publishedSlug ?? null,
@@ -121,13 +133,13 @@ function metaOf(draft) {
   };
 }
 
-async function readIndex(ownerId) {
-  const idx = await getJson(indexKey(ownerId));
+export async function readIndex(consultantId) {
+  const idx = await getJson(indexKey(consultantId));
   return idx && typeof idx === "object" && idx.items ? idx : { updatedAt: null, items: {} };
 }
 
-async function writeIndexEntry(ownerId, meta) {
-  const idx = await readIndex(ownerId);
+async function writeIndexEntry(consultantId, meta) {
+  const idx = await readIndex(consultantId);
   // Autosave fires on every pause in typing; the row's metadata rarely
   // changes with it. Skip the index write when the row is unchanged, since
   // every write is a billed Blob operation.
@@ -136,21 +148,22 @@ async function writeIndexEntry(ownerId, meta) {
   if (idx.items[meta.id] && hashJson(next) === hashJson(prev)) return;
   idx.items[meta.id] = meta;
   idx.updatedAt = new Date().toISOString();
-  await putJson(indexKey(ownerId), idx);
+  await putJson(indexKey(consultantId), idx);
 }
 
-async function removeIndexEntry(ownerId, id) {
-  const idx = await readIndex(ownerId);
+export async function removeIndexEntry(consultantId, id) {
+  const idx = await readIndex(consultantId);
   if (!(id in idx.items)) return;
   delete idx.items[id];
   idx.updatedAt = new Date().toISOString();
-  await putJson(indexKey(ownerId), idx);
+  await putJson(indexKey(consultantId), idx);
 }
 
-/** Persist a draft and its index row together, then the in-use index. */
-async function store(ownerId, draft) {
-  await putJson(selectionKey(ownerId, draft.id), draft);
-  await writeIndexEntry(ownerId, metaOf(draft));
+/** Persist a draft under its consultant and its index row together, then the in-use index. */
+export async function store(draft) {
+  const consultantId = requireConsultantId({ consultantId: draft.consultantId });
+  await putJson(selectionKey(consultantId, draft.id), draft);
+  await writeIndexEntry(consultantId, metaOf(draft));
   await syncInUse(draft);
   return draft;
 }
@@ -193,17 +206,40 @@ function emptyDestination() {
 
 const TIER2_DISCLAIMER = "These vessels are offered subject to change, price change, and owners’ final approval.";
 
-/** A new Personalised Atlas: three empty destination slots, no yachts yet. */
-function emptyTier2Draft(identity, consultantId) {
+/**
+ * The legacy per-selection contact block. Kept on the draft as the
+ * holding-page fallback; the client page always renders the consultant
+ * record live, so this is filled from the record at creation.
+ */
+function consultantBlockFrom(consultant) {
+  return {
+    name: consultant?.displayName ?? "",
+    title: consultant?.jobTitle ?? "",
+    phone: consultant?.phone ?? "",
+    email: consultant?.email ?? "",
+    whatsapp: consultant?.whatsapp ?? "",
+    photoUrl: consultant?.photoStatus === "ok" ? consultant.photoUrl ?? "" : "",
+  };
+}
+
+function baseDraft(identity, consultant) {
   const now = new Date().toISOString();
   return {
     id: randomUUID(),
-    tier: 2,
     owner: ownerOf(identity),
-    ...(consultantId ? { consultantId } : {}),
+    consultantId: consultant.id,
     createdAt: now,
     updatedAt: now,
     clientNames: "",
+    consultant: consultantBlockFrom(consultant),
+  };
+}
+
+/** A new Personalised Atlas: three empty destination slots, no yachts yet. */
+function emptyTier2Draft(identity, consultant) {
+  return {
+    ...baseDraft(identity, consultant),
+    tier: 2,
     slug: "",
     clientGreeting: "",
     introNote: "",
@@ -211,31 +247,13 @@ function emptyTier2Draft(identity, consultantId) {
     footerDisclaimer: TIER2_DISCLAIMER,
     destinations: [emptyDestination(), emptyDestination(), emptyDestination()],
     yachts: [],
-    consultant: consultantOf(identity),
   };
 }
 
-function consultantOf(identity) {
+function emptyDraft(identity, consultant) {
   return {
-    name: identity.name ?? "",
-    title: "Charter Consultant, Ocean Independence",
-    phone: "",
-    email: identity.email ?? "",
-    whatsapp: "",
-    photoUrl: "",
-  };
-}
-
-function emptyDraft(identity, consultantId) {
-  const now = new Date().toISOString();
-  return {
-    id: randomUUID(),
+    ...baseDraft(identity, consultant),
     tier: 3,
-    owner: ownerOf(identity),
-    ...(consultantId ? { consultantId } : {}),
-    createdAt: now,
-    updatedAt: now,
-    clientNames: "",
     season: "",
     region: "",
     headline: "",
@@ -244,17 +262,18 @@ function emptyDraft(identity, consultantId) {
     theme: "dark",
     yachts: [],
     sections: { costs: true, itinerary: true, itineraryLinks: [], compare: true },
-    consultant: consultantOf(identity),
   };
 }
 
 /**
- * Import the pre-dashboard single working draft as a selection, once. An
- * empty legacy draft is simply discarded.
+ * Import the pre-dashboard single working draft as a selection, once, under
+ * the session consultant. An empty legacy draft is simply discarded.
  */
-async function migrateLegacyDraft(identity) {
-  const ownerId = requireOwnerId(identity);
-  const legacy = await getJson(legacyWorkingKey(ownerId));
+async function migrateLegacyDraft(access) {
+  const consultantId = requireConsultantId(access);
+  const identityId = access.identity?.id;
+  if (!identityId || !NAMESPACE_RE.test(identityId)) return;
+  const legacy = await getJson(legacyWorkingKey(identityId));
   if (!legacy) return;
   const hasContent =
     (legacy.clientNames ?? "").trim() ||
@@ -263,7 +282,7 @@ async function migrateLegacyDraft(identity) {
     legacy.publishedSlug;
   if (hasContent) {
     const id = ID_RE.test(String(legacy.id ?? "")) ? legacy.id : randomUUID();
-    if (!(await getJson(selectionKey(ownerId, id)))) {
+    if (!(await getJson(selectionKey(consultantId, id)))) {
       const now = new Date().toISOString();
       let published;
       if (legacy.publishedSlug && isValidSlug(legacy.publishedSlug)) {
@@ -277,64 +296,70 @@ async function migrateLegacyDraft(identity) {
           };
         }
       }
-      await store(ownerId, {
+      await store({
         ...legacy,
         id,
-        owner: ownerOf(identity),
+        owner: ownerOf(access.identity),
+        consultantId,
         createdAt: legacy.updatedAt ?? now,
         updatedAt: legacy.updatedAt ?? now,
         ...(published ? { published } : {}),
       });
     }
   }
-  await deleteJson(legacyWorkingKey(ownerId));
+  await deleteJson(legacyWorkingKey(identityId));
 }
 
 /** Dashboard rows, newest edited first. scope "all" needs canViewAll. */
-export async function listSelections(identity, { scope = "mine" } = {}) {
-  const ownerId = requireOwnerId(identity);
-  await migrateLegacyDraft(identity);
+export async function listSelections(access, { scope = "mine" } = {}) {
+  const consultantId = requireConsultantId(access);
+  await migrateLegacyDraft(access);
   let items;
   if (scope === "all") {
-    if (!canViewAll(identity)) throw fail("FORBIDDEN", "You may only view your own selections.");
+    if (!canViewAll(access.identity)) throw fail("FORBIDDEN", "You may only view your own selections.");
     const keys = await listKeys(INDEX_PREFIX);
     const indexes = await Promise.all(keys.map((k) => getJson(k)));
     items = indexes.flatMap((idx) => Object.values(idx?.items ?? {}));
   } else {
-    items = Object.values((await readIndex(ownerId)).items);
+    items = Object.values((await readIndex(consultantId)).items);
   }
   return items.sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)));
 }
 
-/** The consultant's own selection, or a NOT_FOUND error. */
-export async function getSelection(identity, id) {
-  const ownerId = requireOwnerId(identity);
-  const draft = await getJson(selectionKey(ownerId, requireId(id)));
+/**
+ * One of the session consultant's own selections, or NOT_FOUND. The key is
+ * namespaced by consultantId, so another consultant's id (from a shared
+ * URL) simply does not exist here — view, edit, publish and every other
+ * route go through this.
+ */
+export async function getSelection(access, id) {
+  const consultantId = requireConsultantId(access);
+  const draft = await getJson(selectionKey(consultantId, requireId(id)));
   if (!draft) throw fail("NOT_FOUND", "This selection does not exist or is not yours.");
   return draft;
 }
 
 /**
- * Create an empty selection, or duplicate one of the consultant's own as a
- * fresh draft for a new client: the yachts (and their images, rates and
+ * Create an empty selection for `consultant` (an active consultant record,
+ * validated by the route), or duplicate one of the session consultant's own
+ * as a fresh draft for a new client: the yachts (and their images, rates and
  * highlights) carry across; the client name, welcome greeting, per-yacht
- * notes to the client and any publish state are cleared. `consultantId` is
- * the session consultant's record id, attached at creation (a duplicate is
- * attached to whoever duplicates it).
+ * notes to the client and any publish state are cleared. A duplicate stays
+ * with the consultant who owns the source.
  */
-export async function createSelection(identity, { duplicateOf, tier, consultantId } = {}) {
-  const ownerId = requireOwnerId(identity);
-  let draft = Number(tier) === 2 ? emptyTier2Draft(identity, consultantId) : emptyDraft(identity, consultantId);
+export async function createSelection(access, { duplicateOf, tier, consultant } = {}) {
+  let draft;
   if (duplicateOf) {
-    const src = await getSelection(identity, duplicateOf);
+    const src = await getSelection(access, duplicateOf);
+    const owningConsultant = consultant?.id === src.consultantId ? consultant : { id: src.consultantId };
     // A duplicate keeps its source's tier — the tier is fixed once created.
-    const base = tierOf(src) === 2 ? emptyTier2Draft(identity, consultantId) : emptyDraft(identity, consultantId);
+    const base = tierOf(src) === 2 ? emptyTier2Draft(access.identity, owningConsultant) : emptyDraft(access.identity, owningConsultant);
     draft = {
       ...src,
       id: base.id,
       tier: tierOf(src),
-      owner: ownerOf(identity),
-      ...(consultantId ? { consultantId } : {}),
+      owner: ownerOf(access.identity),
+      consultantId: src.consultantId,
       createdAt: base.createdAt,
       updatedAt: base.updatedAt,
       clientNames: "",
@@ -352,45 +377,49 @@ export async function createSelection(identity, { duplicateOf, tier, consultantI
     };
     delete draft.publishedSlug;
     delete draft.published;
+  } else {
+    if (!consultant?.id) throw fail("INVALID", "Choose the consultant this selection belongs to.");
+    draft = Number(tier) === 2 ? emptyTier2Draft(access.identity, consultant) : emptyDraft(access.identity, consultant);
   }
-  return store(ownerId, draft);
+  return store(draft);
 }
 
 /**
- * Save a selection. Owner, creation date, consultant id and publish state
- * are always taken from the stored record, so nothing in the request body
- * can forge them. A selection created before consultant records existed
- * takes the session consultant's id on its next save.
+ * Save a selection. Owner, consultant, creation date and publish state are
+ * always taken from the stored record, so nothing in the request body can
+ * forge or reassign them — a body carrying a different consultantId is
+ * rejected outright rather than silently ignored.
  */
-export async function saveSelection(identity, id, incoming, { consultantId } = {}) {
-  const ownerId = requireOwnerId(identity);
-  const existing = await getSelection(identity, id);
+export async function saveSelection(access, id, incoming) {
+  const existing = await getSelection(access, id);
+  if (incoming?.consultantId != null && incoming.consultantId !== existing.consultantId) {
+    throw fail("FORBIDDEN", "A selection cannot be moved to another consultant.");
+  }
   const stored = {
     ...incoming,
     id: existing.id,
     tier: tierOf(existing),
-    owner: ownerOf(identity),
-    consultantId: existing.consultantId ?? consultantId,
+    owner: existing.owner ?? ownerOf(access.identity),
+    consultantId: existing.consultantId,
     createdAt: existing.createdAt,
     publishedSlug: existing.publishedSlug,
     published: existing.published,
     updatedAt: new Date().toISOString(),
   };
-  if (!stored.consultantId) delete stored.consultantId;
   if (!stored.publishedSlug) delete stored.publishedSlug;
   if (!stored.published) delete stored.published;
-  return store(ownerId, stored);
+  return store(stored);
 }
 
 /** Delete a never-published draft. Published selections are unpublished instead. */
-export async function deleteSelection(identity, id) {
-  const ownerId = requireOwnerId(identity);
-  const existing = await getSelection(identity, id);
+export async function deleteSelection(access, id) {
+  const consultantId = requireConsultantId(access);
+  const existing = await getSelection(access, id);
   if (existing.published) {
     throw fail("CONFLICT", "Published selections are unpublished, never deleted, so the version history survives.");
   }
-  await deleteJson(selectionKey(ownerId, existing.id));
-  await removeIndexEntry(ownerId, existing.id);
+  await deleteJson(selectionKey(consultantId, existing.id));
+  await removeIndexEntry(consultantId, existing.id);
   try {
     await removeFromInUse(existing.id);
   } catch (err) {
@@ -406,10 +435,16 @@ export async function getPublishedPage(slug) {
   return record && !record.unpublished ? record : null;
 }
 
-async function ownedCurrent(identity, slug) {
+/** The consultant a published record belongs to: consultantId, else (pre-records pages) the owner identity. */
+function belongsTo(current, access) {
+  if (current?.consultantId) return current.consultantId === access.consultantId;
+  return !current?.owner?.id || current.owner.id === access.identity?.id;
+}
+
+async function ownedCurrent(access, slug) {
   const current = await getJson(currentKey(slug));
-  if (current && current.owner?.id && current.owner.id !== identity.id) {
-    throw fail("FORBIDDEN", "This client page is owned by another consultant.");
+  if (current && !belongsTo(current, access)) {
+    throw fail("FORBIDDEN", "This client page belongs to another consultant.");
   }
   return current;
 }
@@ -425,68 +460,62 @@ function publishStateOf(record) {
 
 /**
  * Publish a selection as a versioned client page. Reuses its slug on
- * republish; otherwise claims slugBase, suffixing -2, -3… past any slug owned
- * by someone else.
+ * republish; otherwise claims slugBase, suffixing -2, -3… past any slug that
+ * belongs to someone else.
  */
-export async function publishSelection({ identity, id, slugBase, buildConfig, consultantId }) {
-  const ownerId = requireOwnerId(identity);
-  const draft = await getSelection(identity, id);
-  // A selection created before consultant records existed is attached to
-  // the publishing consultant's record from this publish onwards.
-  if (!draft.consultantId && consultantId) draft.consultantId = consultantId;
+export async function publishSelection({ access, id, slugBase, buildConfig }) {
+  const draft = await getSelection(access, id);
 
   let slug = draft.publishedSlug && isValidSlug(draft.publishedSlug) ? draft.publishedSlug : null;
   if (slug) {
-    await ownedCurrent(identity, slug);
+    await ownedCurrent(access, slug);
   } else {
     if (!isValidSlug(slugBase)) throw fail("INVALID", "Cannot derive a client page address.");
     slug = slugBase;
     for (let i = 2; i <= 50; i++) {
       const existing = await getJson(currentKey(slug));
-      if (!existing || existing.owner?.id === identity.id) break;
+      if (!existing || belongsTo(existing, access)) break;
       slug = `${slugBase}-${i}`;
     }
   }
 
-  const current = await ownedCurrent(identity, slug);
+  const current = await ownedCurrent(access, slug);
   const record = {
     slug,
     version: (current?.version ?? 0) + 1,
-    owner: ownerOf(identity),
+    owner: ownerOf(access.identity),
+    // Resolved live on every render of the client page.
+    consultantId: draft.consultantId,
     draftId: draft.id,
-    // Resolved live on every render of the client page; absent on pages
-    // whose selection predates consultant records (they keep config.consultant).
-    ...(draft.consultantId ? { consultantId: draft.consultantId } : {}),
     publishedAt: new Date().toISOString(),
     config: buildConfig(slug),
   };
   await putJson(versionKey(slug, record.version), record);
   await putJson(currentKey(slug), record);
 
-  await store(ownerId, { ...draft, publishedSlug: slug, published: publishStateOf(record) });
+  await store({ ...draft, publishedSlug: slug, published: publishStateOf(record) });
   return { slug, version: record.version };
 }
 
 /** Take the client page offline; the record and every version are kept. */
-export async function unpublishSelection(identity, id) {
-  const ownerId = requireOwnerId(identity);
-  const draft = await getSelection(identity, id);
+export async function unpublishSelection(access, id) {
+  const draft = await getSelection(access, id);
   if (!draft.publishedSlug) throw fail("CONFLICT", "This selection has not been published.");
-  const current = await ownedCurrent(identity, draft.publishedSlug);
+  const current = await ownedCurrent(access, draft.publishedSlug);
   if (!current) throw fail("NOT_FOUND", "The published page no longer exists.");
   if (!current.unpublished) {
     const record = { ...current, unpublished: true, unpublishedAt: new Date().toISOString() };
     await putJson(currentKey(draft.publishedSlug), record);
-    await store(ownerId, { ...draft, published: publishStateOf(record) });
+    await store({ ...draft, published: publishStateOf(record) });
   }
   return { slug: draft.publishedSlug };
 }
 
 /** Version history of a published selection, newest first. */
-export async function listVersions(identity, id) {
-  const draft = await getSelection(identity, id);
+export async function listVersions(access, id) {
+  const draft = await getSelection(access, id);
   if (!draft.publishedSlug) return [];
-  const current = await ownedCurrent(identity, draft.publishedSlug);
+  const current = await ownedCurrent(access, draft.publishedSlug);
   if (!current) return [];
   const versions = [];
   for (let n = current.version; n >= 1; n--) {
@@ -510,12 +539,11 @@ export async function listVersions(identity, id) {
  * new version (history is never rewritten) and puts the page back online.
  * The editable draft is left untouched.
  */
-export async function rollbackSelection(identity, id, toVersion) {
-  const ownerId = requireOwnerId(identity);
-  const draft = await getSelection(identity, id);
+export async function rollbackSelection(access, id, toVersion) {
+  const draft = await getSelection(access, id);
   if (!draft.publishedSlug) throw fail("CONFLICT", "This selection has not been published.");
   const slug = draft.publishedSlug;
-  const current = await ownedCurrent(identity, slug);
+  const current = await ownedCurrent(access, slug);
   if (!current) throw fail("NOT_FOUND", "The published page no longer exists.");
   const n = Number(toVersion);
   if (!Number.isInteger(n) || n < 1 || n > current.version) throw fail("INVALID", "No such version.");
@@ -525,9 +553,9 @@ export async function rollbackSelection(identity, id, toVersion) {
   const record = {
     ...target,
     version: current.version + 1,
-    owner: ownerOf(identity),
+    owner: ownerOf(access.identity),
+    consultantId: draft.consultantId,
     draftId: draft.id,
-    ...(draft.consultantId ? { consultantId: draft.consultantId } : {}),
     publishedAt: new Date().toISOString(),
     rolledBackFrom: n,
     unpublished: false,
@@ -535,6 +563,6 @@ export async function rollbackSelection(identity, id, toVersion) {
   };
   await putJson(versionKey(slug, record.version), record);
   await putJson(currentKey(slug), record);
-  await store(ownerId, { ...draft, published: publishStateOf(record) });
+  await store({ ...draft, published: publishStateOf(record) });
   return { slug, version: record.version, rolledBackFrom: n };
 }

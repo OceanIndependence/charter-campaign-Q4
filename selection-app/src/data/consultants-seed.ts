@@ -2,7 +2,7 @@
  * GENERATED FILE — do not edit. Source: data/consultants-seed.csv.
  * Regenerate with `npm run consultants:seed:build` (also runs on `prebuild`).
  *
- * 20 row(s). Emails are already lowercase. `line` is the CSV line,
+ * 21 row(s). Emails are already lowercase. `line` is the CSV line,
  * for the import report.
  */
 
@@ -29,4 +29,5 @@ export const CONSULTANT_SEED_ROWS: readonly ConsultantSeedRow[] = [
   {"line":19,"name":"Saul Varndell-Baxter","jobTitle":"Senior Charter Consultant","phone":"+44 7384 816507","email":"saul@ocyachts.com","whatsapp":"+44 7384 816507","photoUrl":"https://cdn.oceanindependence.com/Team%20Images/saul-varndell-baxter.jpg"},
   {"line":20,"name":"Suzanne McGhee","jobTitle":"Charter Consultant","phone":"+33 678 137 529","email":"suzanne@ocyachts.com","whatsapp":"+33 678 137 529","photoUrl":"https://cdn.oceanindependence.com/Team%20Images/suzanne-mcghee.jpg"},
   {"line":21,"name":"Tanja Schmid","jobTitle":"Charter Consultant","phone":"+1 416-305-1785","email":"tanja@ocyachts.com","whatsapp":"+1 416-305-1785","photoUrl":"https://cdn.oceanindependence.com/Team%20Images/tanja-schmid.jpg"},
+  {"line":22,"name":"Eleanor Bartoli Turner","jobTitle":"Charter Consultant","phone":"+44 7000 000000","email":"eleanor@ocyachts.com","whatsapp":"+44 7000 000000","photoUrl":"https://cdn.oceanindependence.com/Team%20Images/eleanor-bartoli-turner.jpg"},
 ];

@@ -20,7 +20,10 @@ export default function ConsultantBlock({
       <div className={styles.inner}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         {consultant.photoUrl ? (
-          <img src={consultant.photoUrl} alt={consultant.name} className={styles.photo} />
+          // Decorative: the name is the text beside it, and an empty alt means a
+          // photo that fails to load leaves nothing behind rather than clipped
+          // alt text inside the circle.
+          <img src={consultant.photoUrl} alt="" className={styles.photo} />
         ) : null}
         <div className={styles.details}>
           <div className={styles.name}>{consultant.name.toUpperCase()}</div>

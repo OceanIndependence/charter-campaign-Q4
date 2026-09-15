@@ -119,11 +119,17 @@ edit only their phone and WhatsApp numbers, at `/portal/profile`; the
 dashboard redirects there until a phone number is filled in. Everything
 else on the record belongs to the admin screen.
 
-Client pages resolve the consultant live: a selection carries the record id
-from creation, and every render of `/selection/<slug>` or `/atlas/<slug>`
-reads the current record (`src/server/consultant-render.ts`). An inactive
-consultant's page carries no contact block at all. Publishing is blocked while the assigned
-consultant has no phone number. See `docs/consultant-profiles-report.md`.
+A selection belongs to one consultant record, chosen from a picker when it
+is created and never reassigned. Selections are stored under that record
+(`portal/selections/<consultantId>/…`), so a consultant's dashboard and every
+selection route are scoped structurally. Client pages resolve the consultant
+live: every render of `/selection/<slug>` or `/atlas/<slug>` reads the
+current record (`src/server/consultant-render.ts`). An inactive consultant's
+page carries no contact block at all. Publishing is blocked while the
+selection's consultant has no phone number. The pre-existing test selections
+are attached to the Eleanor Bartoli Turner fixture by a button on the import
+page. See `docs/consultant-profiles-report.md` and
+`docs/consultant-pages-phase3-report.md`.
 
 Admin: `PORTAL_ADMIN_EMAILS` (comma-separated, compared lowercase against
 the signed-in email, in `src/server/auth/index.ts` only) opens
