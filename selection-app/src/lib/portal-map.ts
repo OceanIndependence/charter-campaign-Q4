@@ -131,11 +131,14 @@ export function freezeImagesAtPublish<T extends { yachts: Yacht[] }>(config: T):
 
 /**
  * The itinerary buttons to freeze into the published page: blank rows
- * dropped, text and URLs trimmed, capped at MAX_ITINERARY_LINKS. A draft
- * saved before several itineraries were possible carries one itineraryUrl
- * instead, which becomes the single link.
+ * dropped, text and URLs trimmed, capped at MAX_ITINERARY_LINKS. A Tier 3
+ * draft saved before several itineraries were possible carries one
+ * itineraryUrl instead, which becomes the single link. Shared by both tiers.
  */
-function mapItineraryLinks(sections: PortalDraft["sections"]): ItineraryLink[] | undefined {
+export function mapItineraryLinks(sections: {
+  itineraryLinks?: Array<{ label?: string; url?: string }>;
+  itineraryUrl?: string;
+}): ItineraryLink[] | undefined {
   const rows: Array<{ label?: string; url?: string }> = sections.itineraryLinks?.length
     ? sections.itineraryLinks
     : [{ url: sections.itineraryUrl }];

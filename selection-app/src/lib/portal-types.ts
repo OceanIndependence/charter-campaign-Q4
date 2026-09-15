@@ -240,6 +240,24 @@ export const TIER2_DEFAULT_APA = "35";
 export const TIER2_MIN_YACHTS = 2;
 export const TIER2_MAX_YACHTS = 10;
 
+/**
+ * The optional page sections of a Personalised Atlas — the same set as the
+ * Tier 3 Yacht Selection, edited on the same PAGE SECTIONS card.
+ */
+export interface Tier2Sections {
+  /** The collapsible "Costs involved" explainer beneath the shortlist */
+  costs: boolean;
+  /** The collapsible "Your itinerary" section with its buttons */
+  itinerary: boolean;
+  /** Up to MAX_ITINERARY_LINKS itinerary buttons, in the consultant's order */
+  itineraryLinks: DraftItineraryLink[];
+  /** Side-by-side specifications, picked from the yacht rail */
+  compare: boolean;
+}
+
+/** What a new Personalised Atlas starts with, and what an older draft is read as. */
+export const TIER2_DEFAULT_SECTIONS: Tier2Sections = { costs: true, itinerary: true, itineraryLinks: [], compare: true };
+
 /** Tier 2 — Personalised Atlas. */
 export interface Tier2Draft extends SelectionBase {
   tier: 2;
@@ -254,6 +272,10 @@ export interface Tier2Draft extends SelectionBase {
   /** Always three slots */
   destinations: [Tier2DestinationDraft, Tier2DestinationDraft, Tier2DestinationDraft];
   yachts: Tier2DraftYacht[];
+  /** Client page theme; absent means dark */
+  theme?: "dark" | "light";
+  /** Drafts saved before the form had a Page Sections card carry no block; the form fills in the defaults on load. */
+  sections?: Tier2Sections;
 }
 
 export type AnySelection = PortalDraft | Tier2Draft;

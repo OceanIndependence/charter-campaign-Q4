@@ -9,8 +9,8 @@
 
 import type { AtlasBlock, AtlasPageConfig, AtlasPageDestination, AtlasPageYacht } from "./types";
 import type { ContentBlock, Tier2Draft, Tier2DraftYacht } from "./portal-types";
-import { TIER2_DEFAULT_DISCLAIMER, TIER2_DEFAULT_VAT_TEXT, TIER2_MAX_YACHTS, TIER2_MIN_YACHTS } from "./portal-types";
-import { CAMPAIGN_ATLAS_URL, mapDraftYacht } from "./portal-map";
+import { TIER2_DEFAULT_DISCLAIMER, TIER2_DEFAULT_SECTIONS, TIER2_DEFAULT_VAT_TEXT, TIER2_MAX_YACHTS, TIER2_MIN_YACHTS } from "./portal-types";
+import { CAMPAIGN_ATLAS_URL, mapDraftYacht, mapItineraryLinks } from "./portal-map";
 import { slugify } from "@/server/yachtfolio/normalise.mjs";
 
 /** What the mapping needs from the Atlas for the chosen destinations. */
@@ -85,6 +85,17 @@ export function tier2DraftToConfig(draft: Tier2Draft, slug: string, atlas: Atlas
     destinations,
     yachts,
     otherPins: atlas.otherPins,
+    // A draft saved before the Page Sections card existed is read as a new
+    // one would be: every section on, dark theme (what the form shows on load).
+    // Itinerary buttons go through the Tier 3 mapping: blank rows dropped,
+    // capped at MAX_ITINERARY_LINKS.
+    sections: {
+      costs: draft.sections?.costs ?? TIER2_DEFAULT_SECTIONS.costs,
+      itinerary: draft.sections?.itinerary ?? TIER2_DEFAULT_SECTIONS.itinerary,
+      itineraryLinks: mapItineraryLinks({ itineraryLinks: draft.sections?.itineraryLinks }),
+      compare: draft.sections?.compare ?? TIER2_DEFAULT_SECTIONS.compare,
+    },
+    theme: draft.theme === "light" ? "light" : "dark",
     consultant: {
       name: str(draft.consultant.name) ?? "",
       title: str(draft.consultant.title) ?? "",

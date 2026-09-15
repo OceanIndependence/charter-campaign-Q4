@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type {
   AtlasDestinationContent,
+  DraftItineraryLink,
   AtlasDestinationOption,
   ContentBlock,
   FleetCache,
@@ -17,7 +18,9 @@ import type {
 } from "@/lib/portal-types";
 import {
   TIER2_DEFAULT_DISCLAIMER,
+  TIER2_DEFAULT_SECTIONS,
   TIER2_MAX_YACHTS,
+  emptyItineraryLink,
   emptyTier2Destination,
   emptyTier2Yacht,
 } from "@/lib/portal-types";
@@ -29,6 +32,7 @@ import ConfirmDialog from "./ConfirmDialog";
 import ConsultantDetailsCard, { type SelectionConsultant } from "./ConsultantDetailsCard";
 import { DragGhost, DragHandle, useYachtReorder } from "./useYachtReorder";
 import { POLL_TIMEOUT_NOTE, fetchDetail, fmtUpdated, pollImages, progressLabel, readImages, refreshYacht as refreshYachtApi, staleNote, startPrepare } from "./fleetApi";
+import { MAX_ITINERARY_LINKS } from "@/lib/types";
 import styles from "./PortalForm.module.css";
 
 const AUTOSAVE_MS = 2500;
@@ -181,6 +185,18 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
         next.introNote ??= "";
         next.seasonNote ??= null;
         next.footerDisclaimer ??= TIER2_DEFAULT_DISCLAIMER;
+        // Drafts saved before the Page Sections card existed: read as a new
+        // draft would be, so the form and the page agree on what is on.
+        next.theme = next.theme === "light" ? "light" : "dark";
+        next.sections = { ...TIER2_DEFAULT_SECTIONS, ...(next.sections ?? {}) };
+        // Itinerary rows are keyed by a stable uid; a draft saved before the
+        // form had them (or with none) shows one empty row, as on Tier 3.
+        next.sections.itineraryLinks = (next.sections.itineraryLinks ?? [])
+          .slice(0, MAX_ITINERARY_LINKS)
+          .map((l) => ({ ...l, uid: l.uid || crypto.randomUUID() }));
+        if (next.sections.itineraryLinks.length === 0) {
+          next.sections.itineraryLinks = [emptyItineraryLink(crypto.randomUUID())];
+        }
         const slots = (next.destinations ?? []).slice(0, 3);
         while (slots.length < 3) slots.push(emptyTier2Destination());
         next.destinations = slots as Tier2Draft["destinations"];
@@ -580,6 +596,42 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
 
   /** The yacht awaiting removal confirmation, if any. */
   const [pendingRemove, setPendingRemove] = useState<{ uid: string; label: string } | null>(null);
+
+  /* ------------------------------------------------- itinerary links (as on Tier 3) */
+
+  const setLinks = useCallback(
+    (mutate: (links: DraftItineraryLink[]) => DraftItineraryLink[]) => {
+      update((d) => ({
+        ...d,
+        sections: {
+          ...TIER2_DEFAULT_SECTIONS,
+          ...d.sections,
+          itineraryLinks: mutate(d.sections?.itineraryLinks ?? []),
+        },
+      }));
+    },
+    [update]
+  );
+
+  const addItineraryLink = useCallback(() => {
+    setLinks((links) =>
+      links.length >= MAX_ITINERARY_LINKS ? links : [...links, emptyItineraryLink(crypto.randomUUID())]
+    );
+  }, [setLinks]);
+
+  const editItineraryLink = useCallback(
+    (uid: string, patch: Partial<Omit<DraftItineraryLink, "uid">>) => {
+      setLinks((links) => links.map((l) => (l.uid === uid ? { ...l, ...patch } : l)));
+    },
+    [setLinks]
+  );
+
+  const removeItineraryLink = useCallback(
+    (uid: string) => {
+      setLinks((links) => links.filter((l) => l.uid !== uid));
+    },
+    [setLinks]
+  );
 
   /** Ask first, in the portal's own dialog rather than the browser's. */
   const removeYacht = useCallback((uid: string, name: string) => {
@@ -1236,9 +1288,118 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
           </button>
         </section>
 
-        {/* 04 — SEASON NOTE */}
+        {/* 04 — PAGE SECTIONS: the same set as the Tier 3 card */}
         <section className={styles.card}>
-          <div className={styles.sectionHead}>04 — SEASON NOTE</div>
+          <div className={styles.sectionHead}>04 — PAGE SECTIONS</div>
+          <div className={styles.checkGrid}>
+            <div className={styles.checkChild} style={{ paddingLeft: 0, marginLeft: 0 }}>
+              <span className={styles.fieldLabel}>
+                THEME <span className={styles.fieldLabelHint}>— the client page&rsquo;s colour scheme</span>
+              </span>
+              <div className={styles.segmented} role="radiogroup" aria-label="Client page theme">
+                {(["dark", "light"] as const).map((t) => {
+                  const on = (draft.theme ?? "dark") === t;
+                  return (
+                    <button
+                      key={t}
+                      type="button"
+                      role="radio"
+                      aria-checked={on}
+                      className={`${styles.segment} ${on ? styles.segmentOn : ""}`}
+                      onClick={() => update((d) => ({ ...d, theme: t }))}
+                    >
+                      {t.toUpperCase()}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <label className={styles.checkRow}>
+              <input
+                type="checkbox"
+                className={styles.checkbox}
+                checked={draft.sections?.costs ?? TIER2_DEFAULT_SECTIONS.costs}
+                onChange={(e) =>
+                  update((d) => ({ ...d, sections: { ...TIER2_DEFAULT_SECTIONS, ...d.sections, costs: e.target.checked } }))
+                }
+              />
+              <span className={styles.checkLabel}>
+                Costs involved (charter fee, APA, VAT, delivery, gratuity)
+              </span>
+            </label>
+            <label className={styles.checkRow}>
+              <input
+                type="checkbox"
+                className={styles.checkbox}
+                checked={draft.sections?.itinerary ?? TIER2_DEFAULT_SECTIONS.itinerary}
+                onChange={(e) =>
+                  update((d) => ({ ...d, sections: { ...TIER2_DEFAULT_SECTIONS, ...d.sections, itinerary: e.target.checked } }))
+                }
+              />
+              <span className={styles.checkLabel}>Suggested itinerary</span>
+            </label>
+            <div className={styles.checkChild}>
+              <span className={styles.fieldLabel}>
+                ITINERARY LINKS{" "}
+                <span className={styles.fieldLabelHint}>
+                  &mdash; up to {MAX_ITINERARY_LINKS}, each with its own button text
+                </span>
+              </span>
+              {(draft.sections?.itineraryLinks ?? []).map((link, i) => (
+                <div key={link.uid} className={styles.linkRow}>
+                  <input
+                    type="text"
+                    className={styles.input}
+                    aria-label={`Itinerary ${i + 1} button text`}
+                    placeholder="Example – Naples to Sicily"
+                    value={link.label}
+                    onChange={(e) => editItineraryLink(link.uid, { label: e.target.value })}
+                  />
+                  <input
+                    type="url"
+                    className={styles.input}
+                    aria-label={`Itinerary ${i + 1} link`}
+                    placeholder="Example – https://… (the client itinerary page)"
+                    value={link.url}
+                    onChange={(e) => editItineraryLink(link.uid, { url: e.target.value })}
+                  />
+                  <button
+                    type="button"
+                    className={styles.removeBtn}
+                    title="Remove this itinerary link"
+                    onClick={() => removeItineraryLink(link.uid)}
+                  >
+                    REMOVE
+                  </button>
+                </div>
+              ))}
+              <span className={styles.linkHint}>
+                Blank button text reads &ldquo;View your suggested itinerary&rdquo; on the client
+                page. Links with no address are left off.
+              </span>
+              {(draft.sections?.itineraryLinks ?? []).length < MAX_ITINERARY_LINKS && (
+                <button type="button" className={styles.addLinkBtn} onClick={addItineraryLink}>
+                  + ADD AN ITINERARY LINK
+                </button>
+              )}
+            </div>
+            <label className={styles.checkRow}>
+              <input
+                type="checkbox"
+                className={styles.checkbox}
+                checked={draft.sections?.compare ?? TIER2_DEFAULT_SECTIONS.compare}
+                onChange={(e) =>
+                  update((d) => ({ ...d, sections: { ...TIER2_DEFAULT_SECTIONS, ...d.sections, compare: e.target.checked } }))
+                }
+              />
+              <span className={styles.checkLabel}>Compare feature (side-by-side specifications)</span>
+            </label>
+          </div>
+        </section>
+
+        {/* 05 — SEASON NOTE */}
+        <section className={styles.card}>
+          <div className={styles.sectionHead}>05 — SEASON NOTE</div>
           <p className={styles.sectionNote}>Shown beneath the shortlist, before your details — a short word on timing for the client’s season.</p>
           <div className={styles.grid}>
             <label className={`${styles.checkRow} ${styles.fieldFull}`}>
@@ -1279,12 +1440,12 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
           </div>
         </section>
 
-        {/* 05 — YOUR DETAILS: read-only, from the consultant record */}
-        <ConsultantDetailsCard sectionHead="05 — YOUR DETAILS" consultant={selectionConsultant} />
+        {/* 06 — YOUR DETAILS: read-only, from the consultant record */}
+        <ConsultantDetailsCard sectionHead="06 — YOUR DETAILS" consultant={selectionConsultant} />
 
-        {/* 06 — FOOTER */}
+        {/* 07 — FOOTER */}
         <section className={styles.card}>
-          <div className={styles.sectionHead}>06 — FOOTER</div>
+          <div className={styles.sectionHead}>07 — FOOTER</div>
           <div className={styles.grid}>
             <label className={`${styles.field} ${styles.fieldFull}`}>
               <span className={styles.fieldLabel}>
