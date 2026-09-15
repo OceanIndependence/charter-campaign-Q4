@@ -144,6 +144,17 @@ consultant from every existing selection and its published page (undoing an
 earlier fixture attachment); the attach action remains as code only. See `docs/consultant-profiles-report.md` and
 `docs/consultant-pages-phase3-report.md`.
 
+Microsoft sign-in (`PORTAL_AUTH_PROVIDER=microsoft`, with
+`AZURE_AD_TENANT_ID`, `AZURE_AD_CLIENT_ID`, `AZURE_AD_CLIENT_SECRET` and
+`PORTAL_SESSION_SECRET`): OpenID Connect with PKCE in
+`src/server/auth/microsoft.ts`, routes `/api/auth/microsoft` and
+`/api/auth/microsoft/callback` (register
+`https://<host>/api/auth/microsoft/callback` on the app for every host).
+Only people with a consultant record may sign in; the record is matched on
+object ID, then email. Under Microsoft the access key is not asked for, and
+consultant scoping and the profile gate default to on. See
+`selection-app/docs/microsoft-sign-in-report.md`.
+
 Admin: `PORTAL_ADMIN_EMAILS` (comma-separated, compared lowercase against
 the signed-in email, in `src/server/auth/index.ts` only) opens
 `/portal/admin/consultants` and the `/api/admin/consultants` routes, guarded

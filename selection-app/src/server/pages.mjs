@@ -71,9 +71,16 @@ export const LOCATIONS_KEY = "portal/selection-locations.json";
 
 const fail = (code, message) => Object.assign(new Error(message), { code });
 
-/** CONSULTANT_SCOPING=on|true|1|yes enables consultant scoping. Anything else, or unset, is off. */
+/**
+ * CONSULTANT_SCOPING=on|true|1|yes enables consultant scoping, off|false|0|no
+ * disables it. Unset: on under Microsoft sign-in (PORTAL_AUTH_PROVIDER=
+ * microsoft, where every visitor is a real person), off otherwise.
+ */
 export function scopingEnabled() {
-  return /^(on|true|1|yes)$/i.test(String(process.env.CONSULTANT_SCOPING ?? "").trim());
+  const raw = String(process.env.CONSULTANT_SCOPING ?? "").trim();
+  if (/^(on|true|1|yes)$/i.test(raw)) return true;
+  if (/^(off|false|0|no)$/i.test(raw)) return false;
+  return String(process.env.PORTAL_AUTH_PROVIDER ?? "").trim().toLowerCase() === "microsoft";
 }
 
 /** 2 for a Personalised Atlas, 3 for a Yacht Selection (and for anything saved before tiers). */
@@ -145,7 +152,8 @@ export async function locateSelection(id) {
  * wherever it lives when scoping is off.
  */
 async function namespaceFor(access, id) {
-  if (scopingEnabled()) return requireConsultantId(access);
+  // Admins (PORTAL_ADMIN_EMAILS) reach any selection wherever it lives.
+  if (scopingEnabled() && !access?.isAdmin) return requireConsultantId(access);
   const ns = await locateSelection(id);
   if (!ns) throw fail("NOT_FOUND", "This selection does not exist.");
   return ns;
@@ -404,7 +412,7 @@ export async function listSelections(access, { scope = "mine" } = {}) {
   const consultantId = requireConsultantId(access);
   await migrateLegacyDraft(access);
   let items;
-  if (!scopingEnabled()) {
+  if (!scopingEnabled() || access.isAdmin) {
     items = await allRows();
   } else if (scope === "all") {
     if (!canViewAll(access.identity)) throw fail("FORBIDDEN", "You may only view your own selections.");
@@ -486,14 +494,13 @@ export async function createSelection(access, { duplicateOf, tier, consultant } 
 /**
  * Save a selection. Owner, consultant, creation date and publish state are
  * always taken from the stored record, so nothing in the request body can
- * forge or reassign them — a body carrying a different consultantId is
- * rejected outright rather than silently ignored.
+ * forge or reassign them. A body carrying a different consultantId is not
+ * an error: the stored value simply wins, so a form that loaded the draft
+ * before an admin action changed it (the fixture clear, say) keeps saving
+ * the consultant's other edits instead of failing every autosave.
  */
 export async function saveSelection(access, id, incoming) {
   const { ns, draft: existing } = await load(access, id);
-  if (incoming?.consultantId != null && incoming.consultantId !== existing.consultantId) {
-    throw fail("FORBIDDEN", "A selection cannot be moved to another consultant.");
-  }
   const stored = {
     ...incoming,
     id: existing.id,
@@ -540,7 +547,7 @@ export async function getPublishedPage(slug) {
  * (pre-records pages) the owner identity. Always true while scoping is off.
  */
 function belongsTo(current, access) {
-  if (!scopingEnabled()) return true;
+  if (!scopingEnabled() || access?.isAdmin) return true;
   if (current?.consultantId) return current.consultantId === access.consultantId;
   return !current?.owner?.id || current.owner.id === access.identity?.id;
 }

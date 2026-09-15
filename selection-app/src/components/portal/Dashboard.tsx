@@ -30,6 +30,11 @@ export default function Dashboard() {
   const [canViewAll, setCanViewAll] = useState(false);
   /** CONSULTANT_SCOPING on the server; while off there is no "mine" and the toggle is hidden */
   const [scoping, setScoping] = useState(true);
+  /** Admin (PORTAL_ADMIN_EMAILS): sees everyone's rows with a CONSULTANT column */
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [consultantNames, setConsultantNames] = useState<Record<string, string>>({});
+  /** Admin filter: a consultant record id, "unassigned", or "" for everyone */
+  const [consultantFilter, setConsultantFilter] = useState("");
   const [me, setMe] = useState<string>("");
   /** Consultant records behind the rows' owners, keyed by owner id. */
   const [consultants, setConsultants] = useState<Record<string, DashboardConsultant>>({});
@@ -73,6 +78,8 @@ export default function Dashboard() {
       setItems(body.items ?? []);
       setCanViewAll(Boolean(body.canViewAll));
       setScoping(body.scoping !== false);
+      setIsAdmin(Boolean(body.isAdmin));
+      setConsultantNames(body.consultantNames ?? {});
       setMe(body.me ?? "");
       setConsultants(body.consultants ?? {});
       setMyConsultant(body.myConsultant ?? null);
@@ -92,6 +99,8 @@ export default function Dashboard() {
     return (items ?? []).filter((m) => {
       if (status !== "all" && m.status !== status) return false;
       if (tier !== "all" && String(tierOf(m)) !== tier) return false;
+      if (consultantFilter === "unassigned" && m.consultantId) return false;
+      if (consultantFilter && consultantFilter !== "unassigned" && m.consultantId !== consultantFilter) return false;
       if (!needle) return true;
       return (
         m.clientNames.toLowerCase().includes(needle) ||
@@ -99,7 +108,14 @@ export default function Dashboard() {
         (m.slug ?? "").toLowerCase().includes(needle)
       );
     });
-  }, [items, q, status, tier]);
+  }, [items, q, status, tier, consultantFilter]);
+
+  /** Consultants appearing in the rows, for the admin filter. */
+  const rowConsultants = useMemo(() => {
+    const ids = new Set((items ?? []).map((m) => m.consultantId).filter((id): id is string => Boolean(id)));
+    return [...ids].map((id) => ({ id, name: consultantNames[id] ?? "Unknown consultant" })).sort((a, b) => a.name.localeCompare(b.name, "en-GB"));
+  }, [items, consultantNames]);
+  const hasUnassigned = useMemo(() => (items ?? []).some((m) => !m.consultantId), [items]);
 
   /* --------------------------------------------------------- actions */
 
@@ -294,7 +310,18 @@ export default function Dashboard() {
               <option value="2">{TIER_LABEL[2]}</option>
               <option value="3">{TIER_LABEL[3]}</option>
             </select>
-            {canViewAll && scoping && (
+            {isAdmin && (
+              <select className={styles.select} value={consultantFilter} onChange={(e) => setConsultantFilter(e.target.value)} aria-label="Filter by consultant">
+                <option value="">All consultants</option>
+                {rowConsultants.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+                {hasUnassigned && <option value="unassigned">Unassigned</option>}
+              </select>
+            )}
+            {canViewAll && scoping && !isAdmin && (
               <label className={styles.toggle}>
                 <input
                   type="checkbox"
@@ -317,6 +344,7 @@ export default function Dashboard() {
                 <thead>
                   <tr>
                     <th>CLIENT</th>
+                    {isAdmin && <th>CONSULTANT</th>}
                     <th>STATUS</th>
                     <th>EDITED</th>
                     <th>PUBLISHED</th>
@@ -326,7 +354,7 @@ export default function Dashboard() {
                 <tbody>
                   {visible.map((m) => {
                     // Rows in "mine" are by definition mine; under "all", only rows whose consultant is the session's can be opened.
-                    const mine = !scoping || scope === "mine" || (!!me && m.consultantId === me);
+                    const mine = !scoping || isAdmin || scope === "mine" || (!!me && m.consultantId === me);
                     const isBusy = busy === m.id;
                     const open = versionsFor === m.id;
                     return (
@@ -335,6 +363,7 @@ export default function Dashboard() {
                         m={m}
                         mine={mine}
                         showOwner={scope === "all"}
+                        consultantColumn={isAdmin ? (m.consultantId ? consultantNames[m.consultantId] ?? "Unknown consultant" : "Unassigned") : null}
                         ownerConsultant={m.owner?.id ? consultants[m.owner.id] ?? null : null}
                         isBusy={isBusy}
                         copied={copied === m.id}
@@ -502,6 +531,8 @@ interface RowProps {
   m: SelectionMeta;
   mine: boolean;
   showOwner: boolean;
+  /** Admin view: the owning consultant's name, or "Unassigned"; null hides the column */
+  consultantColumn: string | null;
   /** The consultant record behind the row's owner, when one has claimed that identity */
   ownerConsultant: DashboardConsultant | null;
   isBusy: boolean;
@@ -571,6 +602,7 @@ function RowGroup(p: RowProps) {
             )}
           </span>
         </td>
+        {p.consultantColumn !== null && <td className={styles.tdWrap}>{p.consultantColumn}</td>}
         <td>
           <span className={`${styles.status} ${styles[`status_${m.status}`]}`}>{STATUS_LABEL[m.status]}</span>
           {m.version > 1 && (
@@ -621,7 +653,7 @@ function RowGroup(p: RowProps) {
       </tr>
       {p.versionsOpen && (
         <tr className={styles.versionsRow}>
-          <td colSpan={COLS}>
+          <td colSpan={COLS + (p.consultantColumn !== null ? 1 : 0)}>
             {p.versions === null ? (
               <span className={styles.dashEmptyFilter}>Loading versions…</span>
             ) : p.versions.length === 0 ? (

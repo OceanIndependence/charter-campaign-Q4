@@ -45,7 +45,7 @@ import {
 const signInStamp = (identity: ConsultantIdentity) => `sign-in:${normaliseEmail(identity.email) || identity.id}`;
 
 /** The consultant record for this identity, claimed or created as needed. Storage errors propagate. */
-export async function resolveConsultant(identity: ConsultantIdentity): Promise<ConsultantRecord> {
+export async function resolveConsultant(identity: ConsultantIdentity, { createIfMissing = true }: { createIfMissing?: boolean } = {}): Promise<ConsultantRecord> {
   const objectId = String(identity.id ?? "").trim();
   if (!objectId) throw Object.assign(new Error("Signed-in identity has no object ID."), { code: "FORBIDDEN" });
 
@@ -78,7 +78,12 @@ export async function resolveConsultant(identity: ConsultantIdentity): Promise<C
   // 3. Retired: the consultant keeps resolving to their inactive record.
   if (inactiveByOid) return inactiveByOid;
 
-  // 4. Unseeded: create from the claims.
+  // 4. Unseeded. Under Microsoft sign-in the callback has already refused
+  //    anyone without a record, so reaching here means the record vanished
+  //    between the two requests: fail closed rather than mint a stray.
+  if (!createIfMissing) {
+    throw Object.assign(new Error("No consultant record for this account. Contact marketing."), { code: "FORBIDDEN" });
+  }
   const displayName = String(identity.name ?? "").trim();
   const photoUrl = derivedPhotoUrl(displayName);
   const record: ConsultantRecord = {

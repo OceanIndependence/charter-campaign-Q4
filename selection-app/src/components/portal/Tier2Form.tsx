@@ -251,12 +251,26 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
 
   /* ---------------------------------------------------------- autosave */
 
+  /** Why the last save failed, from the server where it said; null while saves succeed. */
+  const [saveError, setSaveError] = useState<string | null>(null);
+
   const putDraft = useCallback(
     async (d: Tier2Draft): Promise<boolean> => {
       try {
         const res = await fetch(api, { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify(d) });
-        return res.ok;
+        if (res.status === 401) {
+          window.location.href = "/portal/sign-in";
+          return false;
+        }
+        if (!res.ok) {
+          const body = await res.json().catch(() => null);
+          setSaveError(body?.error ?? `The server refused the save (HTTP ${res.status}).`);
+          return false;
+        }
+        setSaveError(null);
+        return true;
       } catch {
+        setSaveError("The portal could not be reached — check the connection.");
         return false;
       }
     },
@@ -753,10 +767,10 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
 
   const statusLine = useMemo(() => {
     if (publishFlash) return "Client page updated — the link is ready to send.";
-    if (saveState === "error") return "Draft could not be saved — check the connection.";
+    if (saveState === "error") return `Draft could not be saved${saveError ? ` — ${saveError}` : " — check the connection."}`;
     if (saveState === "saving") return "Draft — saving…";
     return "Draft — changes are saved as you type.";
-  }, [publishFlash, saveState]);
+  }, [publishFlash, saveState, saveError]);
 
   const grouped = useMemo(() => {
     const groups: Array<{ region: string; options: AtlasDestinationOption[] }> = [];

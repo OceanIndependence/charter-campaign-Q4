@@ -35,8 +35,11 @@ export async function GET(request: NextRequest) {
       items = await listSelections(access, { scope });
     }
     const consultants: Record<string, DashboardConsultant> = {};
+    /** Display names by consultant record id — the CONSULTANT column for admins */
+    const consultantNames: Record<string, string> = {};
     for (const row of (await listConsultants()) as ConsultantSummary[]) {
       if (row.objectId) consultants[row.objectId] = { id: row.id, displayName: row.displayName, source: row.source, status: row.status };
+      consultantNames[row.id] = row.displayName;
     }
     return NextResponse.json({
       items,
@@ -44,6 +47,9 @@ export async function GET(request: NextRequest) {
       canViewAll: canViewAll(session.identity),
       /** false while CONSULTANT_SCOPING is off: every row is everyone's */
       scoping: scopingEnabled(),
+      /** PORTAL_ADMIN_EMAILS: every row, every owner named, every row openable */
+      isAdmin: session.isAdmin,
+      consultantNames,
       /** The session consultant's record id — rows with this consultantId are "mine" */
       me: session.consultant.id,
       consultants,
