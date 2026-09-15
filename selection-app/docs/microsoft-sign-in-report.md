@@ -80,7 +80,7 @@ now behind the same admin check.
 | Dashboard | Everyone saw everything (flag off) | Own selections only; admins see all with a CONSULTANT column |
 | Ownership checks | None | Structural: another consultant's selection is a 404 |
 | Profile gate | Off | On: no phone number, redirected to the profile until entered |
-| Admin pages guard | `PORTAL_ACCESS_KEY` | `PORTAL_ADMIN_EMAILS` |
+| Admin pages guard | `PORTAL_ACCESS_KEY` | `PORTAL_ADMIN_EMAILS`, the import page included |
 | Existing selections (no consultant) | Visible to all | Visible to admins only |
 
 The stub (development) and solo providers are unchanged and still behind
@@ -129,6 +129,22 @@ Production, redeploy. With
 `microsoft` selected and any variable missing the portal is locked, not
 open. `PORTAL_ACCESS_KEY` and the `PORTAL_SOLO_*` variables can stay or go;
 they are ignored under Microsoft.
+
+## PORTAL_ACCESS_KEY
+
+Under Microsoft the key is ignored: the tenant is the front door and
+`/portal/login` redirects to the Microsoft screen. It is still the gate for
+the stub and solo providers, so it is what closes a Preview deployment to
+anyone holding the URL.
+
+The consultant import page was the last thing still reading it, and under
+Microsoft that left it unreachable for the very admin its own API already
+admitted: with the key unset the page declared itself closed, and with the
+key set it redirected to a login that Microsoft redirects away from. It now
+guards on `PORTAL_ADMIN_EMAILS`, like the consultant admin screen and both
+admin APIs. On Preview, where everyone is Eleanor, add her address to
+`PORTAL_ADMIN_EMAILS` for that environment if you want the import button
+there.
 
 ## Preview: always signed in as Eleanor
 
