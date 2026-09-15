@@ -27,11 +27,11 @@ exactly" at the end).
 | Yachtfolio client, normaliser | `src/server/yachtfolio/client.mjs`, `normalise.mjs` | Unchanged; Tier 2 yachts are picked through the same `GET /api/fleet`, `GET /api/fleet/:yfId`, `GET /api/fleet/:yfId/images`. |
 | Fleet cache | `src/server/fleet.mjs` | Unchanged flow; gains a demo fallback when `YACHTFOLIO_PASSKEY` is absent (`src/server/demo/fleet.mjs`). |
 | sharp image pipeline | `src/server/yachtfolio/images.mjs` (`cropToSizes`) | Yacht imagery as before; destination imagery from the website is cropped to 2000 × 1250 and 1000 × 625 and stored under `atlas/images/<sha1 of source URL>` in the public IMAGES store. |
-| Yacht detail component | `src/components/SpecPanel.tsx` | The drawer. Two optional props added (`signedBy`, `vatText`); the highlights are the Yachtfolio key features, as on Tier 3, and Tier 3 rendering is unchanged. |
+| Yacht detail component | `src/components/SpecPanel.tsx` | The drawer. Two optional props added (`signedBy`, `vatText` — the VAT row of a yacht with no VAT percentage); the highlights are the Yachtfolio key features, as on Tier 3, and Tier 3 rendering is unchanged. |
 | Consultant footer | `src/components/ConsultantBlock.tsx` | Reused as-is; the WhatsApp link now goes through `whatsappHref()` so a typed number becomes `https://wa.me/<digits>` on both tiers. |
 | Draft / publish / versions | `src/server/pages.mjs` | Same store, index, slug claiming, versions, rollback and unpublish. Adds `tier` (fixed at creation), an empty Tier 2 draft, tier-aware duplicate and dashboard metadata. Both tiers share one slug namespace; each route 404s the other tier's slug. |
 | Auth | `src/server/auth/*` | Unchanged. Owner is stamped from the session identity (Microsoft object id once the provider is switched). |
-| Yacht mapping and price maths | `src/lib/portal-map.ts` (`mapDraftYacht`) | Tier 2 yachts go through the same mapping, so APA amount and total are computed from the weekly rate at preview and publish, never typed. |
+| Yacht mapping and price maths | `src/lib/portal-map.ts` (`mapDraftYacht`) | Tier 2 yachts go through the same mapping, so the APA and VAT amounts and the total (with any delivery fee) are computed from the weekly rate at preview and publish, never typed. |
 
 New modules: `src/lib/atlas-map.ts` (Tier 2 draft → frozen page config, slug and
 validation), `src/server/atlas/content.ts` (Atlas defaults, live refresh with cache
@@ -127,8 +127,11 @@ live run.
   picker can tell two yachts of the same name apart.
 - **E-brochure link.** Not in the API payloads the normaliser knows; pasted by the
   consultant as on Tier 3. The demo yachts have none, so their drawers hide VIEW BROCHURE.
-- **VAT.** Tier 2 shows free text ("Varies by location") and excludes VAT from the total;
-  Tier 3's percentage is not used.
+- **VAT.** A percentage, as on Tier 3: the amount is computed from the weekly rate,
+  frozen at publish and added to the total. Left blank it reads "Varies by location"
+  (the `vatText` line, still carried for yachts whose VAT is not yet known) and drops
+  out of the total. A draft written when the field was free text opens with a typed
+  number ("22", "22 %") already in the VAT % field, in the form and at publish.
 - **One-line note.** A consultant field; nothing in Yachtfolio corresponds. The drawer
   highlights are Yachtfolio's key features (editable in the form), as on Tier 3.
 - **Builder** is missing for some yachts (recorded in `missing`); the rail meta line
@@ -164,14 +167,16 @@ On the client page the light theme rides the shared `[data-theme="light"]` token
 the page ground, while the header and the foot (consultant block and disclaimer) stay
 on the dark ground on both themes, as on the Yacht Selection page; the compare toggle
 sits over each rail card's image and feeds the Tier 3 `CompareBar` and `CompareOverlay`
-(the VAT row hides itself because Tier 2 carries no VAT percentage); `CostsSection` and
-`ItinerarySection` render beneath the season note, before the consultant block.
+(its VAT row carries the percentage, as on Tier 3, and hides itself for a yacht with
+none); `CostsSection` and `ItinerarySection` render beneath the season note, before the
+consultant block.
 
 ## Redacted sample of one Tier 2 page config
 
 From `GET /api/atlas/demo`; two of three destinations, two of six yachts and 37 other pins
-elided. Demo figures throughout; APA is 35 per cent of the weekly rate and the total is
-rate plus APA, both computed by `mapDraftYacht`.
+elided. Demo figures throughout; APA is 35 per cent of the weekly rate, the demo yachts
+carry no VAT percentage and no delivery fee, and the total is rate plus APA — every
+figure computed by `mapDraftYacht`.
 
 ```json
 {
@@ -262,8 +267,9 @@ rate plus APA, both computed by `mapDraftYacht`.
   through sharp; PREVIEW renders the Tier 2 page; PUBLISH writes version 1 and the
   dashboard shows PUBLISHED with LIVE PAGE / COPY LINK pointing at `/atlas/…`;
   `/selection/harrington-summer-2027` is a 404.
-- The drawer for ETERNAL SPARK shows WEEKLY RATE EUR 334,800, VAT "Varies by location",
-  APA (35%) EUR 117,180, TOTAL EUR 451,980.
+- The drawer for ETERNAL SPARK shows WEEKLY RATE EUR 334,800, VAT "Varies by location"
+  (no percentage on the demo yachts), APA (35%) EUR 117,180, TOTAL EUR 451,980; the rail
+  card repeats that total under its rate line.
 
 ## Not matched exactly, and why
 

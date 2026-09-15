@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { AtlasPageConfig, AtlasPageDestination, AtlasPageYacht } from "@/lib/types";
 import type { GlobePin } from "@/lib/atlas/globe";
-import { countWord, fmtCardRate, fmtLengthShort } from "@/lib/format";
+import { countWord, fmtCardRate, fmtCardTotal, fmtLengthShort } from "@/lib/format";
 import AtlasGlobe, { type GlobeHandle } from "@/components/atlas/AtlasGlobe";
 import SpecPanel from "@/components/SpecPanel";
 import ConsultantBlock from "@/components/ConsultantBlock";
@@ -410,6 +410,7 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
         <div className={styles.rail} id="pa-rail-track" ref={railRef}>
           {yachts.map((y, i) => {
             const rate = fmtCardRate(y);
+            const total = fmtCardTotal(y);
             const dim = Boolean(selectedDest) && !y.destinationIds.includes(selectedDest!.id);
             const ticked = compare.includes(y.id);
             return (
@@ -440,6 +441,7 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
                     <div className={styles.cardName}>{y.name}</div>
                     <div className={styles.cardMeta}>{yachtMeta(y)}</div>
                     {rate && <div className={styles.cardRate}>{rate}</div>}
+                    {total && <div className={styles.cardTotal}>{total}</div>}
                     <div className={styles.chips}>
                       {y.destinationIds.map((id) => {
                         const d = byId.get(id);

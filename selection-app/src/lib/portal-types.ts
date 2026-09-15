@@ -225,7 +225,11 @@ export interface Tier2DraftYacht extends DraftYacht {
   destinationIds: string[];
   /** One line, signed with the consultant's first name on the page */
   consultantNote: string;
-  /** Drawer VAT row text (there is no VAT percentage on Tier 2) */
+  /**
+   * The VAT line as free text, from before the field was a percentage. It is
+   * the drawer's VAT row only when the yacht carries no VAT percentage — the
+   * default "Varies by location" of a yacht whose VAT is not yet known.
+   */
   vatText: string;
 }
 
@@ -239,6 +243,17 @@ export const TIER2_DEFAULT_VAT_TEXT = "Varies by location";
 export const TIER2_DEFAULT_APA = "35";
 export const TIER2_MIN_YACHTS = 2;
 export const TIER2_MAX_YACHTS = 10;
+
+/**
+ * A VAT percentage read out of the old free-text field: "22", "22%" and
+ * "22 %" are the percentage, anything else (the default "Varies by location")
+ * is not and stays as the fallback line. Drafts saved before VAT was a
+ * percentage come through here, in the form on load and at publish.
+ */
+export function tier2VatPctFromText(vatText: string | undefined): string {
+  const m = (vatText ?? "").trim().match(/^(\d+(?:\.\d+)?)\s*%?$/);
+  return m ? m[1] : "";
+}
 
 /**
  * The optional page sections of a Personalised Atlas — the same set as the
