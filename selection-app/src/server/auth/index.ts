@@ -144,6 +144,17 @@ export function isAdmin(identity: ConsultantIdentity | null | undefined): boolea
     .includes(email);
 }
 
+/**
+ * Whether PORTAL_ADMIN_EMAILS names anyone at all. For telling an admin
+ * page's "you cannot open this" message apart from "no admin is configured
+ * in this environment"; the guard itself is isAdmin() and this changes
+ * nothing about it. Keeps the env var read inside this module.
+ */
+export function adminListConfigured(): boolean {
+  const raw = process.env.PORTAL_ADMIN_EMAILS;
+  return Boolean(raw && raw.trim());
+}
+
 export function identityCookieName(): string {
   return authProvider().cookieName;
 }

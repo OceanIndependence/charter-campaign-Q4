@@ -109,13 +109,18 @@ deployed app never reads the CSV from disk. Edit the CSV, regenerate, commit
 both.
 
 The import runs inside the deployed app: `/portal/admin/import-consultants`
-has one button, guarded server-side by `PORTAL_ACCESS_KEY` (closed when the
-key is unset; to move behind `PORTAL_ADMIN_EMAILS` once Microsoft sign-in
-lands). It writes to the same Blob store the app already uses and shows how
-many records were created, how many rows were skipped, and which photos did
-not resolve. It skips any email that already has a record, never updates or
-deletes, and is safe to press again. `npm run consultants:import` is a local
-test harness that calls the same function.
+has one button, guarded server-side by `PORTAL_ADMIN_EMAILS` — the same
+guard as the consultant admin screen, on the page and on every
+`/api/admin` route it calls. `PORTAL_ACCESS_KEY` does not gate it: where
+that key is set the staging gate still stands in front of every portal
+page, and where it is unset the page opens for an admin as before. A
+signed-in visitor who is not on the admin list is told which variable to
+change rather than redirected. It writes to the same Blob store the app
+already uses and shows how many records were created, how many rows were
+skipped, and which photos did not resolve. It skips any email that already
+has a record, never updates or deletes, and is safe to press again.
+`npm run consultants:import` is a local test harness that calls the same
+function.
 
 On each portal request the signed-in identity is resolved to its record in
 `src/server/consultant-session.ts`: matched on Entra object ID, then on
