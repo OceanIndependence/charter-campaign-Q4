@@ -5,6 +5,7 @@ import type { AtlasPageConfig, AtlasPageDestination, AtlasPageYacht } from "@/li
 import type { GlobePin } from "@/lib/atlas/globe";
 import { countWord, fmtCardRate, fmtCardTotal, fmtLengthShort } from "@/lib/format";
 import AtlasGlobe, { type GlobeHandle } from "@/components/atlas/AtlasGlobe";
+import { SHOW_OTHER_PINS } from "@/lib/atlas/tier2-other-pins";
 import SpecPanel from "@/components/SpecPanel";
 import ConsultantBlock from "@/components/ConsultantBlock";
 import EnlargeableImage from "@/components/EnlargeableImage";
@@ -74,7 +75,12 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
   const consultantFirst = consultant ? firstName(consultant.name) || consultant.name : "";
   const chosenIds = useMemo(() => destinations.map((d) => d.id), [destinations]);
   const byId = useMemo(() => new Map(destinations.map((d) => [d.id, d])), [destinations]);
-  const otherById = useMemo(() => new Map(config.otherPins.map((p) => [p.id, p])), [config.otherPins]);
+  // With SHOW_OTHER_PINS off there is no "beyond the shortlist" pin to open,
+  // so the map stays empty and that branch of the panel never renders.
+  const otherById = useMemo(
+    () => new Map(SHOW_OTHER_PINS ? config.otherPins.map((p) => [p.id, p] as const) : []),
+    [config.otherPins]
+  );
 
   /** Selected destination id (chosen or other Atlas pin), or null for the three-pin view. */
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -118,9 +124,13 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
 
   const pins = useMemo<GlobePin[]>(() => {
     const chosen: GlobePin[] = destinations.map((d) => ({ id: d.id, name: d.name, lat: d.lat, lon: d.lon, featured: true, priority: true }));
-    const others: GlobePin[] = config.otherPins
-      .filter((p) => !byId.has(p.id))
-      .map((p) => ({ id: p.id, name: p.name, lat: p.lat, lon: p.lon, featured: false, priority: false }));
+    // The dimmed Atlas pins around the shortlist are off for now: the globe
+    // shows the consultant's chosen destinations only. See tier2-other-pins.ts.
+    const others: GlobePin[] = SHOW_OTHER_PINS
+      ? config.otherPins
+          .filter((p) => !byId.has(p.id))
+          .map((p) => ({ id: p.id, name: p.name, lat: p.lat, lon: p.lon, featured: false, priority: false }))
+      : [];
     return [...chosen, ...others];
   }, [destinations, config.otherPins, byId]);
 
