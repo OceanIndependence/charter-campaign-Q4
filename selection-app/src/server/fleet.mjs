@@ -607,6 +607,9 @@ export async function getYachtDetail(yfId, { forceRefresh = false, debug = false
       _debug: {
         ...shape,
         yachtfolioLinks: shape.yachtfolioLinks.map((s) => redact(s, passkey)),
+        lengthFields: Object.fromEntries(
+          Object.entries(shape.lengthFields).map(([k, v]) => [k, typeof v === "string" ? redact(v, passkey) : v])
+        ),
         shapeNotes: checkBrochureShape(brochure),
       },
     };

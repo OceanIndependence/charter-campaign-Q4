@@ -150,10 +150,16 @@ export function fmtYachtRate(y: AtlasYacht): string | undefined {
   return `${y.weeklyRateIsFrom ? "From " : ""}${y.currency} ${y.weeklyRate.toLocaleString("en-GB")} per week`;
 }
 
-/** "50M · BILGIN YACHTS · 2021 · 12 GUESTS" */
+/** "50M / 164' · BILGIN YACHTS · 2021 · 12 GUESTS" */
 export function fmtYachtMeta(y: AtlasYacht): string {
   const parts: string[] = [];
-  if (y.lengthM != null) parts.push(`${Math.round(y.lengthM)}M`);
+  // The website publishes both figures and rounds the metres itself, so its
+  // own feet are the true length ("65m (215')" is 65.53 m). Convert only when
+  // the card carried no feet.
+  if (y.lengthM != null) {
+    const feet = y.lengthFt?.trim() || String(Math.round(y.lengthM / 0.3048));
+    parts.push(`${Math.round(y.lengthM)}M / ${feet}'`);
+  }
   if (y.builder) parts.push(y.builder);
   if (y.year) parts.push(String(y.year));
   if (y.guests) parts.push(`${y.guests} guests`);

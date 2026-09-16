@@ -41,16 +41,29 @@ export function fmtCardTotal(yacht: Yacht): string | undefined {
   return `TOTAL ${fmtMoney(yacht.currency, yacht.totalAmount)}`;
 }
 
-/** "47.00 metres" for the spec panel */
-export function fmtLength(yacht: Yacht): string | undefined {
-  if (yacht.lengthM == null) return undefined;
-  return yacht.lengthM.toFixed(2) + " metres";
+/**
+ * Metres to feet on the international foot (1 ft = 0.3048 m exactly).
+ *
+ * Feet are derived from the metre figure shown beside them rather than
+ * carried as their own field, so the two always reconcile — a consultant who
+ * edits LENGTH (M) in the form cannot leave a stale feet value behind it.
+ * Whatever length fields Yachtfolio carries are reported by `lengthFields` on
+ * GET /api/fleet/:yfId?debug=1.
+ */
+export function metresToFeet(metres: number): number {
+  return metres / 0.3048;
 }
 
-/** "47M" for the ring-card stat */
+/** "47.00m / 154.20'" for the spec panel and the Compare overlay */
+export function fmtLength(yacht: Yacht): string | undefined {
+  if (yacht.lengthM == null) return undefined;
+  return `${yacht.lengthM.toFixed(2)}m / ${metresToFeet(yacht.lengthM).toFixed(2)}'`;
+}
+
+/** "47M / 154'" for the ring-card stat and the Tier 2 rail card — both rounded */
 export function fmtLengthShort(yacht: Yacht): string | undefined {
   if (yacht.lengthM == null) return undefined;
-  return Math.round(yacht.lengthM) + "M";
+  return `${Math.round(yacht.lengthM)}M / ${Math.round(metresToFeet(yacht.lengthM))}'`;
 }
 
 /** "6 (5 double, 1 twin)", or just "6" when no breakdown is known */

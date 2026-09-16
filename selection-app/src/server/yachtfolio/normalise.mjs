@@ -323,11 +323,43 @@ function forEachString(value, fn, seen = new Set()) {
 }
 
 /**
+ * Every key path whose name matches `pattern`, with its raw value — for
+ * locating fields the documentation does not describe. Galleries are skipped
+ * (hundreds of image rows) and the result is capped.
+ */
+export function keyPathsMatching(value, pattern, { prefix = "", out = [], seen = new Set(), limit = 40 } = {}) {
+  if (value == null || typeof value !== "object" || seen.has(value) || out.length >= limit) return out;
+  seen.add(value);
+  for (const [k, v] of Object.entries(value)) {
+    if (k === "galleries" || out.length >= limit) continue;
+    const path = prefix ? `${prefix}.${k}` : k;
+    if (pattern.test(k) && (v == null || typeof v !== "object")) out.push([path, v]);
+    if (v && typeof v === "object") keyPathsMatching(v, pattern, { prefix: path, out, seen, limit });
+  }
+  return out;
+}
+
+/**
+ * Length fields as Yachtfolio reports them, across the specifications block,
+ * the data_source block and the basic record: every key naming a length, an
+ * LOA or an imperial measure, with its raw value. The client pages show
+ * metres and feet side by side; feet are converted from the metre figure
+ * unless this shows Yachtfolio carrying one of its own.
+ */
+export function describeLengthFields(brochure, basic) {
+  const pattern = /length|loa|feet|foot|imperial|metric|metre|meter/i;
+  return Object.fromEntries(
+    keyPathsMatching({ brochure, basic }, pattern).map(([path, value]) => [path, value])
+  );
+}
+
+/**
  * Raw-shape diagnostics: the top-level keys of the brochure and basic
- * responses (plus the brochure's general/broker sub-keys) and every string
- * value pointing at yachtfolio.com. Used to locate fields the documentation
- * does not describe. Links are returned unredacted — the caller must redact
- * the passkey before anything leaves the server.
+ * responses (plus the brochure's general/broker/specifications sub-keys),
+ * the length fields, and every string value pointing at yachtfolio.com. Used
+ * to locate fields the documentation does not describe. Links are returned
+ * unredacted — the caller must redact the passkey before anything leaves the
+ * server.
  */
 export function describeRawShape(brochure, basic) {
   const yachtfolioLinks = [];
@@ -338,7 +370,9 @@ export function describeRawShape(brochure, basic) {
     brochureKeys: Object.keys(brochure ?? {}),
     generalKeys: Object.keys(brochure?.general ?? {}),
     brokerKeys: Object.keys(brochure?.broker ?? {}),
+    specificationKeys: Object.keys(brochure?.specifications ?? {}),
     basicKeys: Object.keys(basic ?? {}),
+    lengthFields: describeLengthFields(brochure, basic),
     yachtfolioLinks: [...new Set(yachtfolioLinks)].slice(0, 20),
   };
 }
