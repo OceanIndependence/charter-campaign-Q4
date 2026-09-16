@@ -51,12 +51,35 @@
  * tierOf(). Published pages of both tiers share one slug namespace.
  */
 
-import { randomUUID } from "node:crypto";
+import { randomInt, randomUUID } from "node:crypto";
 import { deleteJson, getJson, hashJson, listKeys, noteStorageError, putJson } from "./storage.mjs";
 import { removeSelection as removeFromInUse, setSelectionYachts, yachtIdsOf } from "./in-use.mjs";
 
 const NAMESPACE_RE = /^[A-Za-z0-9._@:-]{1,128}$/;
 const SLUG_RE = /^[a-z0-9-]{1,120}$/;
+
+/**
+ * Unguessable tail for a new client page address.
+ *
+ * A published page is a private link with no sign-in: anyone holding the URL
+ * sees the client's name, their itinerary and their rates. A slug derived
+ * from the client's name alone ("harrington-summer-2027") can be guessed
+ * from a surname and the season, so every new address carries this random
+ * tail. 28^8 is about 3.8e11 — a crawler or a script cannot walk it.
+ *
+ * The alphabet drops vowels and the characters that misread when a slug is
+ * dictated over the telephone (0/o, 1/l/i), so a tail cannot spell a word.
+ * Drawn with crypto.randomInt, which is unbiased and unpredictable;
+ * Math.random would be neither.
+ */
+const SLUG_TOKEN_ALPHABET = "23456789bcdfghjkmnpqrstvwxyz";
+const SLUG_TOKEN_LENGTH = 8;
+
+export function slugToken() {
+  let out = "";
+  for (let i = 0; i < SLUG_TOKEN_LENGTH; i++) out += SLUG_TOKEN_ALPHABET[randomInt(SLUG_TOKEN_ALPHABET.length)];
+  return out;
+}
 const ID_RE = /^[A-Za-z0-9-]{8,64}$/;
 
 export const SELECTIONS_PREFIX = "portal/selections/";
@@ -570,9 +593,12 @@ function publishStateOf(record) {
 }
 
 /**
- * Publish a selection as a versioned client page. Reuses its slug on
- * republish; otherwise claims slugBase, suffixing -2, -3… past any slug that
- * belongs to someone else.
+ * Publish a selection as a versioned client page.
+ *
+ * A page already published keeps its address, whatever it is, so links
+ * already with a client never break. A new address is slugBase plus a random
+ * tail (slugToken), which is what makes it unguessable; the -2, -3… loop
+ * stays as a collision backstop, though a clash is now vanishingly unlikely.
  */
 export async function publishSelection({ access, id, slugBase, buildConfig }) {
   const { ns, draft } = await load(access, id);
@@ -582,11 +608,12 @@ export async function publishSelection({ access, id, slugBase, buildConfig }) {
     await ownedCurrent(access, slug);
   } else {
     if (!isValidSlug(slugBase)) throw fail("INVALID", "Cannot derive a client page address.");
-    slug = slugBase;
+    const base = `${slugBase}-${slugToken()}`;
+    slug = base;
     for (let i = 2; i <= 50; i++) {
       const existing = await getJson(currentKey(slug));
       if (!existing || belongsTo(existing, access)) break;
-      slug = `${slugBase}-${i}`;
+      slug = `${base}-${i}`;
     }
   }
 
