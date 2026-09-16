@@ -1,8 +1,8 @@
 # Builder field report (Phase 0)
 
 Written 16 September 2026 on branch `claude/gallant-cray-bmjpyd`. Nothing has
-been built: this report and the read-only diagnostic script it describes are
-the only changes.
+been built: this report and the temporary read-only diagnostic route it
+describes are the only changes.
 
 ## Summary
 
@@ -17,12 +17,18 @@ the only changes.
   in-use index, and every route on the deployed app answers 401 without a
   portal session. Yachtfolio itself is reachable from here; it answered
   "Parameter passkey has not been provided or has incorrect format".
-- A one-command diagnostic, `selection-app/scripts/builder-field-report.mjs`,
-  answers all of them and prints Markdown for section 8 below. It is tested
-  against a mock brochure server covering auto, manual and text.
-- One defect found in the existing read path: a blank `specifications.builder`
-  masks the detail block's value, because the fallback uses `??`. Whether it
-  bites depends on live data; the diagnostic counts it.
+- A temporary portal-authed route, `GET /api/admin/builder-field-report`,
+  answers all of them on Vercel, where both variables exist, and returns
+  Markdown as text/plain for section 8 below. It is tested against a mock
+  brochure server covering auto, manual and text, and typechecks.
+- The nightly cache does not store raw Yachtfolio responses, only normalised
+  output, so the route has to make live calls: one brochure call per in-use
+  yacht, sequential, 400 ms apart, 32 calls in all.
+- One observation about the existing read path, reported rather than fixed:
+  a blank `specifications.builder` masks the detail block's value, because
+  the fallback uses `??`. Per your decision the data_source rule stays as it
+  is; the route counts how often that happens and whether the blocks ever
+  disagree, so the question can go to Yachtfolio if it is a data issue.
 
 ## 1. Exact paths where builder appears
 
@@ -75,21 +81,32 @@ What can be said from the code and documentation:
   specifications block only, the detail block only, both, and how many
   disagree.
 
-Defect in the current fallback. `spec.builder ?? detail.builder` treats an
-empty string as a value, so a yacht whose `specifications.builder` is `""`
-while `manual.builder` is `"Benetti"` returns nothing today. The mock run
-reproduces it (data_source manual: current rule 0 of 1, first-non-empty rule
-1 of 1). Phase 1 should take the first non-empty block instead, in the shared
-module, on the same path. I will do that unless you say otherwise.
+Observation on the current fallback, for the record. `spec.builder ??
+detail.builder` treats an empty string as a value, so a yacht whose
+`specifications.builder` is `""` while `manual.builder` is `"Benetti"`
+returns nothing today. The mock run reproduces it (data_source manual:
+current rule 0 of 1). The rule is not being changed: it governs staterooms
+and engines as well, and the live "Masked" and "Disagree" columns in
+section 8 will show whether this is a real case and whether it is a
+Yachtfolio data quality point rather than something for the code to work
+around.
 
 ## 3. How many of the 32 in-use yachts return a non-empty builder
 
 Not available from this session. The in-use set lives in the private data
 store as `selections/in-use.json`; the environment has neither the store
-token nor the passkey. The diagnostic reads the index when the token is
-present, or takes ids on the command line, fetches each brochure once (one
-call per yacht, 400 ms apart, 32 calls in all) and prints the count with the
-current rule and with the first-non-empty rule.
+token nor the passkey. The route reads the index on Vercel, fetches each
+brochure once (one call per yacht, sequential, 400 ms apart, 32 calls in
+all) and prints the count with the current rule, plus how many yachts have a
+value in some block at all.
+
+Cache check. Neither `yachtfolio/fleet.json` nor the per-yacht records
+(`yachts/<id>.json`) hold a raw brochure: the fleet file carries list rows
+and the three picker facts, the records carry the normalised detail
+document. The only raw copy is a five-minute in-memory memo per serverless
+instance (`brochureFor()` in `gallery.mjs`), which the route reuses, so a
+refresh within five minutes on the same instance costs no calls. There is no
+way to derive the report without live calls.
 
 For reference only, the six demo yachts served without a passkey carry
 `""`, `"Amer"`, `"Bilgin Yachts"`, `"Ferretti"`, `"Riva"` and `""`. These are
@@ -97,10 +114,10 @@ hand-written demo values, not Yachtfolio output.
 
 ## 4. Raw values for five real yachts
 
-Not available from this session. The diagnostic prints every yacht read, not
+Not available from this session. The route prints every yacht read, not
 five, with the value of all three blocks quoted as JSON strings so trailing
 whitespace, all-caps source data, "Shipyard" suffixes and HTML are visible.
-The passkey is redacted from every line before it is printed.
+The passkey is redacted from the whole response before it is sent.
 
 What the code does to the value today: `String(v).trim()` on the server, no
 case change, no HTML stripping. So whatever casing Yachtfolio uses reaches
@@ -110,9 +127,9 @@ the form's picker as is.
 
 Nothing in the code, the documentation notes or the docs folder reads or
 mentions a build country, hull material, flag or designer field from
-Yachtfolio. The diagnostic lists every brochure key whose name contains
-country, hull, material, flag, naval, designer or architect, with a sample
-value, so the answer will be in section 8.
+Yachtfolio. The route lists every brochure key whose name contains country,
+hull, material, flag, naval, designer or architect, with a sample value, so
+the answer will be in section 8.
 
 ## 6. What already exists downstream (relevant to Phases 1 to 4)
 
@@ -169,36 +186,44 @@ Two options:
    as broken on a page whose typography is otherwise exact, and the ellipsis
    appears at 390 px for most two-word builders.
 
-I will build option 1 unless you choose option 2.
+Decision: option 1, the controlled two-line wrap. Confirmed 16 September
+2026.
 
 ## 8. Live results
 
-Run the diagnostic where the passkey is available (a local checkout with
-`.env.local`, or a machine with the Vercel environment pulled). With the
-data store token it reads the in-use index itself; without it, pass the ids.
+Open the route on the preview for this branch, or on production once the
+branch is merged, while signed in to the portal:
 
 ```
-cd selection-app
-npm install
-YACHTFOLIO_PASSKEY=… PORTAL_DATA_READ_WRITE_TOKEN=… node scripts/builder-field-report.mjs
-# or
-YACHTFOLIO_PASSKEY=… node scripts/builder-field-report.mjs 12683 12901 …
+/api/admin/builder-field-report
+/api/admin/builder-field-report?ids=12683,12901
 ```
 
-It prints a Markdown fragment with four tables (paths seen, per-data_source
-counts, raw values for every yacht, adjacent fields) that can be appended
-here. It makes no writes to Blob and no image calls.
+The first form reads `selections/in-use.json` on the deployment and inspects
+every yacht in it; the second inspects only the ids given (a preview whose
+data store differs from production may hold a different in-use set, so the
+production URL is the one that answers the 32-yacht question). The
+response is text/plain Markdown with four tables: paths seen,
+per-data_source counts, raw values for every yacht, adjacent fields. Paste
+it below.
 
-_Results pending: the section is filled in once the command has been run
-with the passkey._
+Safety: portal session required; one run per minute per address; at most 60
+ids per run; one brochure call per yacht, sequential, 400 ms apart; a spent
+rate-limit back-off ends the run and marks the rest "not attempted"; no
+writes to Blob, no image calls, only a count in the logs; the passkey is
+read from the environment and redacted from the response.
 
-## 9. Verification blockers to note before Phase 1
+Temporary files, to delete once the output is pasted here:
 
-- No Vercel token in this session, so I cannot create a preview deployment
-  directly. If the Vercel project is connected to the GitHub repository,
-  pushing the branch produces the preview automatically; otherwise the
-  deploy will need to be triggered on your side.
-- The preview will run without a passkey unless the environment variables are
-  set on preview deployments, in which case the demo fleet renders. That is
-  enough for the Harrington page and for the blanked-builder check, since two
-  demo yachts (SERENITY, AURELIA) already carry an empty builder.
+- `selection-app/src/app/api/admin/builder-field-report/route.ts` (delete the folder)
+- `selection-app/src/server/yachtfolio/builder-field-report.mjs`
+
+_Results pending: paste the route's output here._
+
+## 9. Verification notes for Phase 1 onwards
+
+- The Vercel project builds branches from GitHub, so pushing this branch
+  produces the preview. If the preview lacks the passkey the route answers
+  503 with a plain message and makes no calls; run it on production instead.
+- The blanked-builder check will use the demo yachts SERENITY and AURELIA,
+  which already carry an empty builder. Confirmed 16 September 2026.
