@@ -8,10 +8,15 @@ export function fmtMoney(currency: string | undefined, amount: number): string {
   return `${(currency || "EUR").toUpperCase()} ${Math.round(amount).toLocaleString("en-GB")}`;
 }
 
-/** Weekly rate, "From EUR 250,000" when the season rate is a range. */
+/**
+ * Weekly rate, "EUR 250,000". The figure is the one the consultant chose and
+ * is frozen at publish, so it is never qualified with "from", even where the
+ * Yachtfolio season rate behind it is a range (`weeklyRateIsFrom`, still
+ * carried on the yacht and still set by the forms, is not rendered).
+ */
 export function fmtWeeklyRate(yacht: Yacht): string | undefined {
   if (yacht.weeklyRate == null) return undefined;
-  return (yacht.weeklyRateIsFrom ? "From " : "") + fmtMoney(yacht.currency, yacht.weeklyRate);
+  return fmtMoney(yacht.currency, yacht.weeklyRate);
 }
 
 /** Ring-card price, upper-case "FROM EUR 250,000". */

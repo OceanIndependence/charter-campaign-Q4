@@ -46,14 +46,14 @@ export function CompareOverlay({ yachts, onClose }: { yachts: Yacht[]; onClose: 
         "VAT",
         (y) =>
           y.vatAmount != null && y.vatPct != null
-            ? `${y.weeklyRateIsFrom ? "from " : ""}${fmtMoney(y.currency, y.vatAmount)} (${y.vatPct}%)`
+            ? `${fmtMoney(y.currency, y.vatAmount)} (${y.vatPct}%)`
             : undefined,
       ],
       [
         "APA",
         (y) =>
           y.apaAmount != null && y.apaPct != null
-            ? `${y.weeklyRateIsFrom ? "from " : ""}${fmtMoney(y.currency, y.apaAmount)} (${y.apaPct}%)`
+            ? `${fmtMoney(y.currency, y.apaAmount)} (${y.apaPct}%)`
             : undefined,
       ],
       ["DELIVERY FEE", (y) => (y.deliveryFee != null ? fmtMoney(y.currency, y.deliveryFee) : undefined)],
@@ -61,7 +61,7 @@ export function CompareOverlay({ yachts, onClose }: { yachts: Yacht[]; onClose: 
         "TOTAL",
         (y) =>
           y.totalAmount != null
-            ? `${y.weeklyRateIsFrom ? "from " : ""}${fmtMoney(y.currency, y.totalAmount)}`
+            ? fmtMoney(y.currency, y.totalAmount)
             : undefined,
       ],
     ] as Array<[string, (y: Yacht) => string | undefined]>
