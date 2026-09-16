@@ -8,13 +8,7 @@ import styles from "./ConsultantBlock.module.css";
  * present: a blank photo lets the text stand alone (no placeholder on a
  * client page), a blank phone or WhatsApp hides that row.
  */
-export default function ConsultantBlock({
-  consultant,
-  atlasUrl,
-}: {
-  consultant: Consultant;
-  atlasUrl?: string;
-}) {
+export default function ConsultantBlock({ consultant }: { consultant: Consultant }) {
   return (
     <section className={styles.section}>
       <div className={styles.inner}>
@@ -50,13 +44,6 @@ export default function ConsultantBlock({
             <a href={whatsappHref(consultant.whatsapp)} className={styles.whatsapp} target="_blank" rel="noopener">
               WHATSAPP ME
             </a>
-          )}
-          {atlasUrl && (
-            <div className={styles.explore}>
-              <a href={atlasUrl} className={styles.exploreLink}>
-                EXPLORE ALL 2027 DESTINATIONS →
-              </a>
-            </div>
           )}
         </div>
       </div>

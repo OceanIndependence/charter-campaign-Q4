@@ -75,26 +75,15 @@
   text-decoration: none;
   transition: all 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
-.whatsapp:hover {
+/* The class is doubled to outrank the global `[data-theme="light"] a:hover`
+   rule (an attribute plus a pseudo-class beats a single class). On a light
+   page that rule was repainting the label in var(--fg) — and because the foot
+   is its own dark scope, that resolved to white on the white hover fill, so
+   the button read as an empty rectangle. */
+.whatsapp.whatsapp:hover {
   background: var(--btn-hover-bg);
   color: var(--btn-hover-fg);
   border-color: var(--btn-hover-bg);
-}
-
-.explore {
-  margin-top: 24px;
-}
-
-.exploreLink {
-  font-size: 10px;
-  letter-spacing: 0.3em;
-  font-weight: 500;
-  color: var(--fg-45);
-  text-decoration: none;
-}
-/* Hover in the full foreground on both themes: mint is decoration, never text. */
-.exploreLink:hover {
-  color: var(--fg);
 }
 
 /* Narrow viewports: the photo wraps above the text, so centre both and let

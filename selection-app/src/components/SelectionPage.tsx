@@ -161,7 +161,7 @@ export default function SelectionPage({ config }: { config: PageConfig }) {
           the disclaimer and the footer share one dark surface. */}
       <div className={styles.foot} data-theme="dark">
         {/* No block at all when the consultant is inactive. */}
-        {config.consultant && <ConsultantBlock consultant={config.consultant} atlasUrl={config.atlasUrl} />}
+        {config.consultant && <ConsultantBlock consultant={config.consultant} />}
 
         <div className={styles.disclaimer}>
           These vessels are offered subject to change, price change, and owners&rsquo; final approval.
