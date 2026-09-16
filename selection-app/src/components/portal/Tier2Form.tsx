@@ -1182,7 +1182,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                               </>
                             )}
                           </span>
-                          <input type="text" className={styles.input} placeholder={key === "builder" ? undefined : "Auto-filled on selection"} value={y[key] ?? ""} onChange={(e) => editAutoField(y.uid, key, e.target.value)} />
+                          <input type="text" className={styles.input} placeholder="Auto-filled on selection" value={y[key] ?? ""} onChange={(e) => editAutoField(y.uid, key, e.target.value)} />
                         </label>
                       ))}
 

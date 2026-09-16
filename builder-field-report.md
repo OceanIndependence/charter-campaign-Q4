@@ -375,10 +375,13 @@ Current = what normalise.mjs returns today (`specifications.builder`, else the d
   `DraftYacht`; `mapDraftYacht()` maps it. Pages published earlier have no
   field and every reader treats it as optional.
 - **Forms.** BUILDER after YEAR / REFIT on both yacht cards, on the existing
-  auto-fill list and dirty tracking, no placeholder.
+  auto-fill list and dirty tracking, with the same "Auto-filled on selection"
+  placeholder as the neighbouring fields.
 - **Spec panel.** BUILDER row between YEAR / REFIT and GUESTS, hidden when
   absent, on the existing `.specLabel` token. The Tier 2 drawer is the same
-  component and shows the row.
+  component and shows the row. The Compare overlay, used at both tiers, has
+  the same row in the same position; as with its other rows, a yacht without
+  a value gets an empty cell and the row is hidden when no yacht can fill it.
 - **Tier 2 cards.** Builder in capitals after the length. Each segment,
   with its trailing middot, is a nowrap span; the line wraps only between
   segments and is clamped to two lines. Verified locally at 1280, 390 and

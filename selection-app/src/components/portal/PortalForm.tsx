@@ -1008,6 +1008,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
                         <input
                           type="text"
                           className={styles.input}
+                          placeholder="Auto-filled on selection"
                           value={y.builder ?? ""}
                           onChange={(e) => editAutoField(y.uid, "builder", e.target.value)}
                         />
