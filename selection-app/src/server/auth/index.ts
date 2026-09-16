@@ -266,14 +266,18 @@ export async function requireAdminSession(request: NextRequest): Promise<AdminSe
 
 /**
  * Guard for the few things only the owner may do — granting and revoking
- * admin. An admin passes requireAdminSession but is refused here: admins
- * see who is an admin and cannot change it.
+ * admin, and removing a record. An admin passes requireAdminSession but is
+ * refused here: admins see who is an admin and cannot change it.
+ *
+ * `action` completes "Only the portal owner may …" so the refusal names
+ * what was actually refused rather than whichever owner-only route was
+ * written first.
  */
-export async function requireOwnerSession(request: NextRequest): Promise<AdminSession> {
+export async function requireOwnerSession(request: NextRequest, action = "do this"): Promise<AdminSession> {
   const session = await requireAdminSession(request);
   if (!session.ok) return session;
   if (session.role !== "owner") {
-    return { ok: false, response: NextResponse.json({ error: "Only the portal owner may change admin access." }, { status: 403 }) };
+    return { ok: false, response: NextResponse.json({ error: `Only the portal owner may ${action}.` }, { status: 403 }) };
   }
   return session;
 }

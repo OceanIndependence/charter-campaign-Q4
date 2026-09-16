@@ -34,7 +34,7 @@ export async function PUT(request: NextRequest, { params }: Params) {
     return NextResponse.json({ error: "Too many requests." }, { status: 429 });
   }
   try {
-    const session = await requireOwnerSession(request);
+    const session = await requireOwnerSession(request, "change admin access");
     if (!session.ok) return session.response;
     const { id } = await params;
     const existing = (await readConsultantRecord(id)) as ConsultantRecord | null;

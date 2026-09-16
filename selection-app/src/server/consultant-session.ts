@@ -22,6 +22,9 @@
  *   4. No match anywhere: create a record with source "sso", taking
  *      displayName and jobTitle from the claims, the email from the token,
  *      and a photo URL derived from the display name and HEAD-checked.
+ *      An identity with NO email is refused instead of created: email is
+ *      what step 2 matches on, so such a record could never be claimed or
+ *      found again, and only litters the list under a duplicate name.
  *
  * Claims are used to create, never to update: a seeded displayName,
  * jobTitle or email is never touched by what the token says.
@@ -83,6 +86,22 @@ export async function resolveConsultant(identity: ConsultantIdentity, { createIf
   //    between the two requests: fail closed rather than mint a stray.
   if (!createIfMissing) {
     throw Object.assign(new Error("No consultant record for this account. Contact marketing."), { code: "FORBIDDEN" });
+  }
+  // A session with no email address cannot produce a usable record: email
+  // is what step 2 matches on, so the record could never be claimed, never
+  // be found again, and never be reconciled — it is litter that shows up
+  // in the admin list and in the consultant picker under a duplicate name.
+  // It happens whenever the provider yields no address (most easily
+  // PORTAL_AUTH_PROVIDER=solo with PORTAL_SOLO_EMAIL unset), and a new one
+  // is minted for every distinct object ID. Fail closed and name the cause.
+  if (!email) {
+    throw Object.assign(
+      new Error(
+        "This sign-in carries no email address, so no consultant record can be created for it. " +
+          "Set the address for this environment (PORTAL_SOLO_EMAIL under the solo provider) and sign in again."
+      ),
+      { code: "FORBIDDEN" }
+    );
   }
   const displayName = String(identity.name ?? "").trim();
   const photoUrl = derivedPhotoUrl(displayName);

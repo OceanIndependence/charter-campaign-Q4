@@ -57,6 +57,7 @@ calls `resolvePortalRole()`. Hiding navigation is not relied on anywhere.
 | `GET`/`POST /api/admin/consultants` | `requireAdminSession` |
 | `PUT /api/admin/consultants/[id]` | `requireAdminSession` |
 | **`PUT /api/admin/consultants/[id]/admin`** (new) | **`requireOwnerSession`** |
+| **`DELETE /api/admin/consultants/[id]`** (new) | **`requireOwnerSession`** |
 | `POST /api/admin/import-consultants` | `requireAdminSession` |
 | `POST /api/admin/attach-fixture` | `requireAdminSession` |
 | `POST /api/admin/assign-selection` | `requireAdminSession` |
@@ -139,6 +140,27 @@ ACTIVE. The summary counts line above the table now reads
 Records written before this change have none of the three fields;
 `normaliseRecord()` reads them back as `isAdmin: false`, so no migration
 pass over stored records is needed.
+
+## Removing a stray record
+
+Setting a record inactive is still how a real consultant is retired, and
+deletion is still not part of the ordinary vocabulary: selections live
+under `portal/selections/<consultantId>/`, so removing a record that owns
+any would orphan them with no way back.
+
+`DELETE /api/admin/consultants/[id]` exists for records that were never
+usable — the email-less strays a misconfigured sign-in used to mint. It is
+owner-only and refuses three cases: the owner's own record (400), a record
+owning one or more selections (409, naming the count), and any caller who
+is not the owner (403). The owner reaches it from REMOVE RECORD in the
+edit drawer, which asks twice.
+
+Those strays came from `resolveConsultant()` step 4 creating a record for
+an identity carrying no email — one per distinct object ID. Since email is
+what step 2 matches on, such a record can never be claimed or found again,
+and it appears in the admin list AND the creation picker as a duplicate of
+a real person. That path now refuses instead, naming the variable to set,
+so the only strays left are the ones already in a store.
 
 ## If a role looks wrong in a deployment
 

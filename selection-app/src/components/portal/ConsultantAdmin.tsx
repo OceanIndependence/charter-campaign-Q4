@@ -156,6 +156,10 @@ export default function ConsultantAdmin() {
                     onSaved={(next) => {
                       setRows((all) => (all ?? []).map((x) => (x.id === next.id ? next : x)));
                     }}
+                    onRemoved={(id) => {
+                      setRows((all) => (all ?? []).filter((x) => x.id !== id));
+                      setEditing(null);
+                    }}
                   />
                 ))}
               </tbody>
@@ -176,6 +180,7 @@ function Row({
   editing,
   onToggle,
   onSaved,
+  onRemoved,
 }: {
   r: ConsultantSummary;
   role: PortalRole;
@@ -183,6 +188,7 @@ function Row({
   editing: boolean;
   onToggle: () => void;
   onSaved: (next: ConsultantSummary) => void;
+  onRemoved: (id: string) => void;
 }) {
   return (
     <>
@@ -222,7 +228,13 @@ function Row({
       {editing && (
         <tr>
           <td colSpan={8} style={{ padding: "0 0 28px", whiteSpace: "normal" }}>
-            <EditForm r={r} onSaved={onSaved} onClose={onToggle} />
+            <EditForm
+              r={r}
+              onSaved={onSaved}
+              onClose={onToggle}
+              onRemoved={onRemoved}
+              canRemove={role === "owner" && !(Boolean(ownerEmail) && r.email.trim().toLowerCase() === ownerEmail)}
+            />
           </td>
         </tr>
       )}
@@ -322,7 +334,20 @@ function AdminCell({
 
 /* ------------------------------------------------------------ edit form */
 
-function EditForm({ r, onSaved, onClose }: { r: ConsultantSummary; onSaved: (next: ConsultantSummary) => void; onClose: () => void }) {
+function EditForm({
+  r,
+  onSaved,
+  onClose,
+  onRemoved,
+  canRemove,
+}: {
+  r: ConsultantSummary;
+  onSaved: (next: ConsultantSummary) => void;
+  onClose: () => void;
+  onRemoved: (id: string) => void;
+  /** Owner only, and never the owner's own row. The server refuses regardless. */
+  canRemove: boolean;
+}) {
   const [displayName, setDisplayName] = useState(r.displayName);
   const [jobTitle, setJobTitle] = useState(r.jobTitle);
   const [email, setEmail] = useState(r.email);
@@ -333,6 +358,8 @@ function EditForm({ r, onSaved, onClose }: { r: ConsultantSummary; onSaved: (nex
   const [error, setError] = useState<string | null>(null);
   const [photo, setPhoto] = useState<PhotoCheck>(null);
   const [saved, setSaved] = useState(false);
+  /** Removal asks twice: the first press arms it, the second carries it out. */
+  const [confirmRemove, setConfirmRemove] = useState(false);
   /** Whether the browser managed to load the URL as typed — a first, client-side sign before the server HEAD check on save. */
   const [previewFailed, setPreviewFailed] = useState(false);
 
@@ -359,6 +386,27 @@ function EditForm({ r, onSaved, onClose }: { r: ConsultantSummary; onSaved: (nex
       setSaved(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "The record could not be saved.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const remove = async () => {
+    if (busy) return;
+    if (!confirmRemove) {
+      setConfirmRemove(true);
+      return;
+    }
+    setBusy(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/admin/consultants/${encodeURIComponent(r.id)}`, { method: "DELETE" });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(body?.error ?? "The record could not be removed.");
+      onRemoved(r.id);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "The record could not be removed.");
+      setConfirmRemove(false);
     } finally {
       setBusy(false);
     }
@@ -460,6 +508,18 @@ function EditForm({ r, onSaved, onClose }: { r: ConsultantSummary; onSaved: (nex
           {!error && !saved && r.updatedAt && `Last changed ${fmtDateShort(r.updatedAt)} by ${r.updatedBy ?? "—"}`}
         </span>
         <span style={{ display: "flex", gap: 12 }}>
+          {canRemove && (
+            <button
+              type="button"
+              className={styles.previewBtn}
+              style={{ color: "#8a5a2b", borderColor: "#d9c3ad" }}
+              onClick={remove}
+              disabled={busy}
+              title="Only for a record that owns no selections — retire a real consultant by setting them inactive instead"
+            >
+              {confirmRemove ? "CONFIRM REMOVAL" : "REMOVE RECORD"}
+            </button>
+          )}
           <button type="button" className={styles.previewBtn} onClick={onClose}>
             CLOSE
           </button>

@@ -52,7 +52,7 @@
  */
 
 import { randomUUID } from "node:crypto";
-import { getJson, listKeys, putJson } from "./storage.mjs";
+import { deleteJson, getJson, listKeys, putJson } from "./storage.mjs";
 
 export const RECORD_VERSION = 1;
 export const INDEX_KEY = "consultants/index.json";
@@ -230,6 +230,25 @@ export async function findConsultantByEmail(email, opts = {}) {
 export async function findConsultantByObjectId(objectId, opts = {}) {
   const id = await findConsultantIdByObjectId(objectId, opts);
   return id ? readConsultantRecord(id) : null;
+}
+
+/**
+ * Remove a record and its index row. Deletion is NOT part of the ordinary
+ * admin vocabulary — a consultant who should vanish from client pages is
+ * set inactive, because selections are namespaced by consultantId and a
+ * deleted record would orphan them. This exists only to clear records that
+ * were never usable in the first place (see the DELETE route, which
+ * refuses any record that owns a selection). Callers check that first.
+ */
+export async function deleteConsultantRecord(id) {
+  if (!isValidConsultantId(id)) throw fail("INVALID", "Invalid consultant id.");
+  await deleteJson(recordKey(id));
+  const idx = await readConsultantIndex();
+  if (idx.items[id]) {
+    delete idx.items[id];
+    idx.updatedAt = new Date().toISOString();
+    await putJson(INDEX_KEY, idx);
+  }
 }
 
 /**

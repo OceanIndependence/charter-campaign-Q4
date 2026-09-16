@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireAdminSession } from "@/server/auth";
+import { isOwnerEmail, requireAdminSession, requireOwnerSession } from "@/server/auth";
 import { errorResponse } from "@/server/http";
 import { clientIp, rateLimit } from "@/server/rate-limit";
-import { checkPhotoDetail, readConsultantRecord, stampConsultant, writeConsultantRecord } from "@/server/consultants.mjs";
+import { checkPhotoDetail, deleteConsultantRecord, readConsultantRecord, stampConsultant, writeConsultantRecord } from "@/server/consultants.mjs";
+import { readIndex } from "@/server/pages.mjs";
 import type { ConsultantRecord, ConsultantSummary, PhotoStatus } from "@/lib/consultant-types";
 import { adminEmail, adminText } from "@/server/consultant-admin";
 
@@ -69,6 +70,52 @@ export async function PUT(request: NextRequest, { params }: Params) {
     stampConsultant(next, `admin:${session.identity.email || session.identity.id}`);
     const stored = (await writeConsultantRecord(next)) as ConsultantRecord;
     return NextResponse.json({ consultant: summaryOf(stored), photo });
+  } catch (err) {
+    return errorResponse(err);
+  }
+}
+
+/**
+ * Remove a consultant record entirely. Owner-only, and deliberately narrow.
+ *
+ * Setting a record inactive is still the way to retire a real consultant —
+ * selections live under portal/selections/<consultantId>/, so deleting a
+ * record that owns any would orphan them with no way back. This exists for
+ * records that were never usable: the email-less strays a misconfigured
+ * sign-in used to mint (one per object ID), which cannot be claimed, cannot
+ * be matched, and appear in the admin list and the creation picker as
+ * duplicates of a real person.
+ *
+ * Refused for the owner's own record, and for any record that owns even one
+ * selection — that is the guard that keeps the original reasoning intact.
+ */
+export async function DELETE(request: NextRequest, { params }: Params) {
+  if (!rateLimit("admin-consultants", clientIp(request), 60, 60_000)) {
+    return NextResponse.json({ error: "Too many requests." }, { status: 429 });
+  }
+  try {
+    const session = await requireOwnerSession(request, "remove a consultant record");
+    if (!session.ok) return session.response;
+    const { id } = await params;
+    const existing = (await readConsultantRecord(id)) as ConsultantRecord | null;
+    if (!existing) return NextResponse.json({ error: "No such consultant record." }, { status: 404 });
+
+    if (isOwnerEmail(existing.email)) {
+      return NextResponse.json({ error: "This is the portal owner's own record and cannot be removed." }, { status: 400 });
+    }
+    const selections = Object.keys((await readIndex(id)).items ?? {}).length;
+    if (selections > 0) {
+      return NextResponse.json(
+        {
+          error: `${existing.displayName || "This consultant"} owns ${selections} selection${selections === 1 ? "" : "s"}, so the record cannot be removed. Set it inactive instead.`,
+        },
+        { status: 409 }
+      );
+    }
+
+    await deleteConsultantRecord(id);
+    console.info(`[admin] ${session.identity.email} removed consultant record ${id} (${existing.email || "no email"}, ${existing.displayName || "no name"}).`);
+    return NextResponse.json({ removed: id });
   } catch (err) {
     return errorResponse(err);
   }
