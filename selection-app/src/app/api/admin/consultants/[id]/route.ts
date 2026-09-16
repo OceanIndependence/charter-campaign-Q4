@@ -21,7 +21,10 @@ const summaryOf = (r: ConsultantRecord): ConsultantSummary => {
  * accepted here, not even for the admin's own record. Every change stamps
  * updatedAt and updatedBy; there is no audit log beyond this. Deletion is
  * not offered: a record that should disappear from client pages is set
- * inactive.
+ * inactive. isAdmin, adminGrantedBy and adminGrantedAt are never accepted
+ * here either — only the owner changes those, on
+ * PUT /api/admin/consultants/[id]/admin. Each field below is copied across
+ * by name, so nothing in the body can reach the record on its own.
  *
  * Body (all optional): { displayName, jobTitle, email, photoUrl, status,
  * releaseObjectId: true, recheckPhoto: true }. The photo is HEAD-checked

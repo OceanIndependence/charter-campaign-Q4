@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import type { ConsultantSummary, PhotoStatus } from "@/lib/consultant-types";
+import type { ConsultantSummary, PhotoStatus, PortalRole } from "@/lib/consultant-types";
 import { fmtDateShort } from "@/lib/format";
 import styles from "./PortalForm.module.css";
 
@@ -14,14 +14,24 @@ const SOURCE_LABEL: Record<ConsultantSummary["source"], string> = {
 };
 
 /**
- * Every consultant record: display name, job title, email, status, source,
- * photo status and the last change. An admin edits display name, job
- * title, email and photo URL, sets active or inactive, adds a consultant
- * ahead of their first sign-in, and releases a record for re-claiming.
- * Never phone or WhatsApp (those stay with the consultant), never deletion.
+ * Every consultant record: display name, job title, email, status, admin
+ * access, source, photo status and the last change. An admin edits display
+ * name, job title, email and photo URL, sets active or inactive, adds a
+ * consultant ahead of their first sign-in, and releases a record for
+ * re-claiming. Never phone or WhatsApp (those stay with the consultant),
+ * never deletion.
+ *
+ * The ADMIN column is the owner's alone to change, and it is a column
+ * rather than a field in the edit drawer so that every row's access reads
+ * at a glance. `role` and `ownerEmail` come from the server with the list;
+ * the server refuses the write regardless of what this component renders.
  */
 export default function ConsultantAdmin() {
   const [rows, setRows] = useState<ConsultantSummary[] | null>(null);
+  /** The caller's own role, from the server. Only an owner may toggle admin access. */
+  const [role, setRole] = useState<PortalRole>("consultant");
+  /** The owner's address, so their row (if they have one) shows a fixed chip. */
+  const [ownerEmail, setOwnerEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [q, setQ] = useState("");
   const [editing, setEditing] = useState<string | null>(null);
@@ -37,6 +47,8 @@ export default function ConsultantAdmin() {
       const body = await res.json().catch(() => null);
       if (!res.ok) throw new Error(body?.error ?? "The consultant list is unavailable.");
       setRows(body.consultants ?? []);
+      setRole((body.role as PortalRole) ?? "consultant");
+      setOwnerEmail(String(body.ownerEmail ?? "").trim().toLowerCase());
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "The consultant list is unavailable.");
@@ -58,6 +70,7 @@ export default function ConsultantAdmin() {
     return {
       total: all.length,
       inactive: all.filter((r) => r.status === "inactive").length,
+      admins: all.filter((r) => r.isAdmin && r.status === "active").length,
       sso: all.filter((r) => r.source === "sso").length,
       unclaimed: all.filter((r) => !r.objectId).length,
       photosMissing: all.filter((r) => r.photoStatus !== "ok").length,
@@ -109,7 +122,8 @@ export default function ConsultantAdmin() {
         <div className={styles.toolbar}>
           <input type="search" className={`${styles.input} ${styles.search}`} placeholder="Search by name, title or email" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search consultants" />
           <span className={styles.counter}>
-            {visible.length} OF {counts.total} · {counts.inactive} INACTIVE · {counts.sso} CREATED AT SIGN-IN · {counts.unclaimed} NOT YET SIGNED IN · {counts.photosMissing} WITHOUT PHOTO
+            {visible.length} OF {counts.total} · {counts.inactive} INACTIVE · {counts.admins} ADMIN · {counts.sso} CREATED AT SIGN-IN · {counts.unclaimed} NOT YET SIGNED IN ·{" "}
+            {counts.photosMissing} WITHOUT PHOTO
           </span>
         </div>
 
@@ -123,6 +137,7 @@ export default function ConsultantAdmin() {
                   <th>CONSULTANT</th>
                   <th>EMAIL</th>
                   <th>STATUS</th>
+                  <th>ADMIN</th>
                   <th>SOURCE</th>
                   <th>PHOTO</th>
                   <th>UPDATED</th>
@@ -134,6 +149,8 @@ export default function ConsultantAdmin() {
                   <Row
                     key={r.id}
                     r={r}
+                    role={role}
+                    ownerEmail={ownerEmail}
                     editing={editing === r.id}
                     onToggle={() => setEditing((cur) => (cur === r.id ? null : r.id))}
                     onSaved={(next) => {
@@ -152,7 +169,21 @@ export default function ConsultantAdmin() {
 
 /* ---------------------------------------------------------------- row */
 
-function Row({ r, editing, onToggle, onSaved }: { r: ConsultantSummary; editing: boolean; onToggle: () => void; onSaved: (next: ConsultantSummary) => void }) {
+function Row({
+  r,
+  role,
+  ownerEmail,
+  editing,
+  onToggle,
+  onSaved,
+}: {
+  r: ConsultantSummary;
+  role: PortalRole;
+  ownerEmail: string;
+  editing: boolean;
+  onToggle: () => void;
+  onSaved: (next: ConsultantSummary) => void;
+}) {
   return (
     <>
       <tr className={styles.row}>
@@ -168,6 +199,7 @@ function Row({ r, editing, onToggle, onSaved }: { r: ConsultantSummary; editing:
         <td>
           <span className={`${styles.status} ${r.status === "active" ? styles.status_published : styles.status_unpublished}`}>{r.status}</span>
         </td>
+        <AdminCell r={r} role={role} ownerEmail={ownerEmail} onSaved={onSaved} />
         <td>{SOURCE_LABEL[r.source]}</td>
         <td>
           {r.photoStatus === "ok" && r.photoUrl ? (
@@ -189,12 +221,102 @@ function Row({ r, editing, onToggle, onSaved }: { r: ConsultantSummary; editing:
       </tr>
       {editing && (
         <tr>
-          <td colSpan={7} style={{ padding: "0 0 28px", whiteSpace: "normal" }}>
+          <td colSpan={8} style={{ padding: "0 0 28px", whiteSpace: "normal" }}>
             <EditForm r={r} onSaved={onSaved} onClose={onToggle} />
           </td>
         </tr>
       )}
     </>
+  );
+}
+
+/* ----------------------------------------------------------- admin cell */
+
+/**
+ * The ADMIN column for one row. Three renderings, decided by the server's
+ * answer rather than by anything the browser knows:
+ *
+ *   - the owner's own row: a fixed OWNER chip and no control at all, so
+ *     there is never a checkbox on screen that could remove the owner;
+ *   - the owner viewing anyone else: a checkbox that writes immediately;
+ *   - an admin viewing: the ADMIN badge on admin rows, nothing on the rest.
+ *
+ * The toggle is optimistic — the tick moves at once and the row is patched
+ * in the parent's state, then replaced by the stored record when the write
+ * returns. A failure puts the previous row back and shows the server's own
+ * wording under the checkbox, so a refused grant (an inactive record, an
+ * admin who is not the owner) explains itself where it happened.
+ */
+function AdminCell({
+  r,
+  role,
+  ownerEmail,
+  onSaved,
+}: {
+  r: ConsultantSummary;
+  role: PortalRole;
+  ownerEmail: string;
+  onSaved: (next: ConsultantSummary) => void;
+}) {
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const isOwnerRow = Boolean(ownerEmail) && r.email.trim().toLowerCase() === ownerEmail;
+  const grantedTitle = r.isAdmin && r.adminGrantedAt ? `Granted ${fmtDateShort(r.adminGrantedAt)}${r.adminGrantedBy ? ` by ${r.adminGrantedBy}` : ""}` : undefined;
+
+  if (isOwnerRow) {
+    return (
+      <td>
+        <span className={styles.ssoTag} style={{ marginLeft: 0 }} title="Set by PORTAL_OWNER_EMAIL">
+          OWNER
+        </span>
+      </td>
+    );
+  }
+
+  if (role !== "owner") {
+    return <td>{r.isAdmin ? <span className={`${styles.status} ${styles.status_published}`} title={grantedTitle}>admin</span> : null}</td>;
+  }
+
+  const toggle = async (next: boolean) => {
+    const previous = r;
+    setError(null);
+    setBusy(true);
+    onSaved({ ...r, isAdmin: next });
+    try {
+      const res = await fetch(`/api/admin/consultants/${encodeURIComponent(r.id)}/admin`, {
+        method: "PUT",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ isAdmin: next }),
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(body?.error ?? "Admin access could not be changed.");
+      onSaved(body.consultant as ConsultantSummary);
+    } catch (err) {
+      onSaved(previous);
+      setError(err instanceof Error ? err.message : "Admin access could not be changed.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <td>
+      <input
+        type="checkbox"
+        className={styles.checkbox}
+        checked={r.isAdmin}
+        disabled={busy}
+        onChange={(e) => toggle(e.target.checked)}
+        title={grantedTitle}
+        aria-label={`Admin access for ${r.displayName || r.email || "this consultant"}`}
+      />
+      {error && (
+        <span className={styles.dashError} style={{ display: "block", margin: "6px 0 0", maxWidth: 180, whiteSpace: "normal" }}>
+          {error}
+        </span>
+      )}
+    </td>
   );
 }
 

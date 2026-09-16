@@ -11,7 +11,8 @@
  *   - the seed CSV (scripts/import-consultants.mjs), imported once, which
  *     establishes the initial set;
  *   - the admin screen, which owns displayName, jobTitle, email, photoUrl
- *     and status from the moment of import onwards;
+ *     and status from the moment of import onwards, and — for the owner
+ *     alone — isAdmin and its two grant stamps;
  *   - the consultant, who edits phone and whatsapp and nothing else.
  *
  * Microsoft Entra only establishes identity: on sign-in the record is
@@ -29,6 +30,8 @@
  *     photoUrl, photoStatus,          "ok" | "missing" (HEAD-checked)
  *     source,         "csv" (seed import) | "sso" (created at sign-in) | "admin" (added on the admin screen)
  *     status,         "active" | "inactive"
+ *     isAdmin,        owner-controlled; an INACTIVE record is never an admin
+ *     adminGrantedBy, adminGrantedAt  who granted it and when; cleared on revoke
  *     updatedAt, updatedBy
  *   }
  *
@@ -98,6 +101,9 @@ export function emptyConsultantRecord(id) {
     photoStatus: "missing",
     source: "sso",
     status: "active",
+    isAdmin: false,
+    adminGrantedBy: "",
+    adminGrantedAt: null,
     updatedAt: null,
     updatedBy: null,
   };
@@ -117,6 +123,9 @@ function normaliseRecord(id, rec) {
   if (!PHOTO_STATUSES.includes(out.photoStatus)) out.photoStatus = "missing";
   if (!SOURCES.includes(out.source)) out.source = base.source;
   if (!STATUSES.includes(out.status)) out.status = base.status;
+  out.isAdmin = out.isAdmin === true;
+  out.adminGrantedBy = normaliseEmail(out.adminGrantedBy);
+  out.adminGrantedAt = out.adminGrantedAt ? String(out.adminGrantedAt) : null;
   out.updatedAt = out.updatedAt ? String(out.updatedAt) : null;
   out.updatedBy = out.updatedBy ? String(out.updatedBy) : null;
   return out;
