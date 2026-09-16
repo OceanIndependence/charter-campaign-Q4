@@ -54,10 +54,10 @@ export function metresToFeet(metres: number): number {
   return metres / 0.3048;
 }
 
-/** "47.00 metres / 154.20'" for the spec panel and the Compare overlay */
+/** "47.00m / 154.20'" for the spec panel and the Compare overlay */
 export function fmtLength(yacht: Yacht): string | undefined {
   if (yacht.lengthM == null) return undefined;
-  return `${yacht.lengthM.toFixed(2)} metres / ${metresToFeet(yacht.lengthM).toFixed(2)}'`;
+  return `${yacht.lengthM.toFixed(2)}m / ${metresToFeet(yacht.lengthM).toFixed(2)}'`;
 }
 
 /** "47M / 154'" for the ring-card stat and the Tier 2 rail card — both rounded */
