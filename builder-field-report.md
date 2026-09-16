@@ -11,12 +11,13 @@ describes are the only changes.
   detail block is `auto`, `manual` or `manual_text` according to
   `general.data_source`. The shared normaliser already reads both, in that
   order.
-- The live questions (consistency across data_source, the count over the
-  32 in-use yachts, five raw values, adjacent fields) could not be answered
-  from this session: there is no `YACHTFOLIO_PASSKEY`, no Blob token for the
-  in-use index, and every route on the deployed app answers 401 without a
-  portal session. Yachtfolio itself is reachable from here; it answered
-  "Parameter passkey has not been provided or has incorrect format".
+- The live questions were answered by running the diagnostic on Vercel on
+  16 September 2026 (section 8): 45 yachts in use, not 32; all 45 return a
+  non-empty builder; `specifications.builder` and the detail block agree on
+  every yacht; 40 auto and five manual, no text; mixed casing for one yard
+  (GOLDEN YACHTS and Golden Yachts), one trailing space, no HTML; no build
+  country field, but flag, hull configuration, hull construction and naval
+  architect sit alongside.
 - A temporary portal-authed route, `GET /api/admin/builder-field-report`,
   answers all of them on Vercel, where both variables exist, and returns
   Markdown as text/plain for section 8 below. It is tested against a mock
@@ -28,7 +29,7 @@ describes are the only changes.
   a blank `specifications.builder` masks the detail block's value, because
   the fallback uses `??`. Per your decision the data_source rule stays as it
   is; the route counts how often that happens and whether the blocks ever
-  disagree, so the question can go to Yachtfolio if it is a data issue.
+  disagree. Live result: it never happens on any yacht in use.
 
 ## 1. Exact paths where builder appears
 
@@ -218,7 +219,140 @@ Temporary files, to delete once the output is pasted here:
 - `selection-app/src/app/api/admin/builder-field-report/route.ts` (delete the folder)
 - `selection-app/src/server/yachtfolio/builder-field-report.mjs`
 
-_Results pending: paste the route's output here._
+Run on 16 September 2026 at 08:38 UTC against the deployment's in-use index. Output pasted verbatim.
+
+Generated 2026-09-16T08:38:40.134Z — 45 yacht id(s) from selections/in-use.json; 45 brochure(s) read, 0 failed; Yachtfolio calls this request: 45.
+
+#### Where `builder` appears (key paths across every brochure read)
+
+| Path | Present in | Non-empty in |
+|---|---|---|
+| `auto.builder` | 40 | 40 |
+| `manual.builder` | 5 | 5 |
+| `specifications.builder` | 45 | 45 |
+
+#### By `general.data_source`
+
+Current = what normalise.mjs returns today (`specifications.builder`, else the detail block). Masked = `specifications.builder` present but blank while the detail block has a value. Disagree = both non-empty and different.
+
+| data_source | Yachts | Non-empty (current rule) | specifications only | detail block only | Both | Neither | Masked | Disagree |
+|---|---|---|---|---|---|---|---|---|
+| auto | 40 | 40 | 0 | 0 | 40 | 0 | 0 | 0 |
+| manual | 5 | 5 | 0 | 0 | 5 | 0 | 0 | 0 |
+
+#### Non-empty builder: 45 of 45 yacht(s) read with the current rule; 45 of 45 have a value in some block
+
+#### Raw values (every yacht, unmodified — quotes show whitespace)
+
+| YF id | data_source | specifications.builder | detail block builder | general.builder |
+|---|---|---|---|---|
+| 205 | auto | "Lurssen" | "Lurssen" | ∅ (absent) |
+| 1268 | auto | "Feadship" | "Feadship" | ∅ (absent) |
+| 5893 | auto | "Sanlorenzo" | "Sanlorenzo" | ∅ (absent) |
+| 6134 | auto | "Mangusta (Overmarine)" | "Mangusta (Overmarine)" | ∅ (absent) |
+| 7198 | auto | "Heesen" | "Heesen" | ∅ (absent) |
+| 7313 | auto | "Heesen" | "Heesen" | ∅ (absent) |
+| 9155 | auto | "GOLDEN YACHTS" | "GOLDEN YACHTS" | ∅ (absent) |
+| 9235 | auto | "Admiral" | "Admiral" | ∅ (absent) |
+| 9750 | auto | "Maiora" | "Maiora" | ∅ (absent) |
+| 10141 | auto | "Alpha" | "Alpha" | ∅ (absent) |
+| 10578 | manual | "Sunseeker" | "Sunseeker" | ∅ (absent) |
+| 10737 | manual | "Sunreef Yachts" | "Sunreef Yachts" | ∅ (absent) |
+| 10770 | auto | "Urkmezler Yachts" | "Urkmezler Yachts" | ∅ (absent) |
+| 10931 | manual | "Codecasa" | "Codecasa" | ∅ (absent) |
+| 11091 | manual | "Sunseeker" | "Sunseeker" | ∅ (absent) |
+| 11411 | auto | "Tansu" | "Tansu" | ∅ (absent) |
+| 11621 | auto | "Ferretti" | "Ferretti" | ∅ (absent) |
+| 11672 | auto | "Radez d.d." | "Radez d.d." | ∅ (absent) |
+| 11705 | auto | "Golden Yachts" | "Golden Yachts" | ∅ (absent) |
+| 11865 | auto | "Ortona Navi" | "Ortona Navi" | ∅ (absent) |
+| 12041 | auto | "Benetti" | "Benetti" | ∅ (absent) |
+| 12220 | auto | "Golden Yachts" | "Golden Yachts" | ∅ (absent) |
+| 12374 | auto | "Broward Marine" | "Broward Marine" | ∅ (absent) |
+| 12455 | auto | "Rossinavi" | "Rossinavi" | ∅ (absent) |
+| 12683 | auto | "Bilgin Yachts" | "Bilgin Yachts" | ∅ (absent) |
+| 13371 | auto | "Alloy Yachts" | "Alloy Yachts" | ∅ (absent) |
+| 13415 | auto | "Lagoon" | "Lagoon" | ∅ (absent) |
+| 13713 | auto | "GOLDEN YACHTS" | "GOLDEN YACHTS" | ∅ (absent) |
+| 13726 | auto | "Sanlorenzo" | "Sanlorenzo" | ∅ (absent) |
+| 13887 | auto | "Heesen" | "Heesen" | ∅ (absent) |
+| 13910 | auto | "Maiora" | "Maiora" | ∅ (absent) |
+| 14097 | auto | "Heesen" | "Heesen" | ∅ (absent) |
+| 14418 | auto | "Lurssen" | "Lurssen" | ∅ (absent) |
+| 14560 | manual | "Leopard (Arno)" | "Leopard (Arno)" | ∅ (absent) |
+| 14703 | auto | "Mulder" | "Mulder" | ∅ (absent) |
+| 15286 | auto | "Icon" | "Icon" | ∅ (absent) |
+| 15352 | auto | "Sanlorenzo" | "Sanlorenzo" | ∅ (absent) |
+| 15483 | auto | "Sunseeker" | "Sunseeker" | ∅ (absent) |
+| 15489 | auto | "Tréhard Ship Builders " | "Tréhard Ship Builders " | ∅ (absent) |
+| 15856 | auto | "Sanlorenzo" | "Sanlorenzo" | ∅ (absent) |
+| 15880 | auto | "Bodrum Shipyard" | "Bodrum Shipyard" | ∅ (absent) |
+| 16408 | auto | "Sanlorenzo" | "Sanlorenzo" | ∅ (absent) |
+| 16743 | auto | "Benetti" | "Benetti" | ∅ (absent) |
+| 16771 | auto | "Amels" | "Amels" | ∅ (absent) |
+| 16905 | auto | "Sunreef Yachts" | "Sunreef Yachts" | ∅ (absent) |
+
+#### Fields sitting alongside it (country / hull / material / flag / designer keys)
+
+| Path | Present in | Non-empty in | Sample |
+|---|---|---|---|
+| `auto.flag` | 40 | 40 | "Isle of Man" |
+| `auto.hull_configuration` | 40 | 40 | "Displacement" |
+| `auto.hull_construction` | 40 | 40 | "Steel" |
+| `auto.naval_architect` | 40 | 32 | "Espen Oino" |
+| `manual.flag` | 5 | 5 | "French" |
+| `manual.hull_configuration` | 5 | 5 | "Planing hull" |
+| `manual.hull_construction` | 5 | 5 | "GRP" |
+| `manual.naval_architect` | 5 | 4 | "Sunreef Yachts" |
+| `specifications.flag` | 45 | 45 | "Isle of Man" |
+| `specifications.hull_configuration` | 45 | 45 | "Displacement" |
+| `specifications.hull_construction` | 45 | 45 | "Steel" |
+| `specifications.naval_architect` | 45 | 35 | "Espen Oino" |
+
+### Findings from the live results
+
+- **Count.** The in-use index holds 45 yachts, not 32. Every one of the 45
+  returns a non-empty builder. If 32 is the figure you expected, the index
+  has grown since it was last counted, or the 32 refers to a different set
+  (published pages only, say); the rebuild route can be run to check.
+- **Consistency.** `specifications.builder` is present and non-empty on all
+  45, and identical to the detail block's value on all 45: zero masked, zero
+  disagreements. For builder, the data_source rule is immaterial; the
+  specifications block alone would give the same answer on every yacht in
+  use. Nothing to raise with Yachtfolio on consistency.
+- **Variants covered.** 40 auto, five manual, no text. The `manual_text`
+  branch is unexercised by any yacht currently in use, so it stays a code
+  path covered by the shared rule rather than by evidence.
+- **Formatting, from the raw values.**
+  - Casing is mixed within Yachtfolio for the same builder: "GOLDEN YACHTS"
+    on two yachts (9155, 13713) and "Golden Yachts" on two others (11705,
+    12220). Every other value is in ordinary title case as the builder
+    writes it.
+  - One trailing space: "Tréhard Ship Builders " (15489). The trim in Phase 1
+    removes it.
+  - No HTML in any value.
+  - Suffixes and qualifiers appear as the yards style themselves: "Bodrum
+    Shipyard", "Tréhard Ship Builders", "Mangusta (Overmarine)", "Leopard
+    (Arno)", "Radez d.d.", "Sunreef Yachts", "Bilgin Yachts". None of these
+    should be stripped; they are the names.
+  - One diacritic present ("Tréhard") and one missing ("Lurssen" rather than
+    Lürssen, on 205 and 14418). A Yachtfolio data point, not a code one.
+  - Longest values are 21 characters: "Mangusta (Overmarine)" and "Tréhard
+    Ship Builders". With the two-line wrap agreed for the card line that is
+    comfortably handled; the parenthetical segments stay unbroken.
+- **Casing decision, for you.** The Tier 2 card line is rendered in capitals
+  anyway, so GOLDEN YACHTS and Golden Yachts read the same there. The form
+  field and the Tier 3 spec panel show the value as stored, so those two
+  yachts would read differently from the other two. Options: preserve as
+  Yachtfolio returns it (the instruction so far), or have the normaliser
+  title-case only values that arrive entirely in capitals, leaving mixed-case
+  values untouched. I will preserve unless you choose the second.
+- **Adjacent fields.** There is no build country field. Alongside builder in
+  every block sit `flag` (45 of 45, but inconsistently styled: "Isle of Man"
+  against "French"), `hull_configuration` (45 of 45, "Displacement",
+  "Planing hull"), `hull_construction` (45 of 45, "Steel", "GRP") and
+  `naval_architect` (35 of 45). None is in scope for this change; they are
+  noted for later.
 
 ## 9. Verification notes for Phase 1 onwards
 
