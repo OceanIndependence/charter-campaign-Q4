@@ -78,7 +78,7 @@ export function ItinerarySection({
         <div className={styles.itinInner}>
           <p className={styles.itinIntro}>
             {links.length > 1 ? "These itineraries are" : "This itinerary is"} purely a suggestion,
-            and we shall work with the captain of your chosen yacht to curate an itinerary with your
+            and I can work with the Captain of your chosen yacht to curate an itinerary with your
             preferences in mind.
           </p>
           {links.length > 0 && (
