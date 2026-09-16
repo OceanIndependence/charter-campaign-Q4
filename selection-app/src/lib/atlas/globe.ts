@@ -149,6 +149,8 @@ export class AtlasGlobe {
   private zoom = 1;
   private pins: PinState[] = [];
   private subPins: PinState[] = [];
+  /** pins + subPins, kept so the render loop does not concat them every frame */
+  private allPins: PinState[] = [];
   private selected: string | null = null;
   private focus: Set<string> | null = null;
   private opts: GlobeOptions = { drift: true, graticule: true, lockDrag: false, lockZoom: false };
@@ -164,6 +166,9 @@ export class AtlasGlobe {
   private detail: THREE.Mesh<THREE.SphereGeometry, THREE.MeshPhongMaterial> | null = null;
   private detailKey: string | null = null;
   private detailBuiltAt = 0;
+  private detailHoldUntil = 0;
+  /** Reused across detail rebuilds; a fresh one each time is megabytes of garbage. */
+  private detailCv: HTMLCanvasElement | null = null;
   private topo: CountriesTopology | null = null;
   private landMerged: GeoMultiPolygon | null = null;
   private texW = 2048;
@@ -181,6 +186,8 @@ export class AtlasGlobe {
   private downPin: PinState | null = null;
   private dragged = false;
   private unbind: Array<() => void> = [];
+  /** Reused by the render loop for the world position of each pin */
+  private scratch = new THREE.Vector3();
 
   constructor(host: HTMLElement, cfg: GlobeConfig = {}) {
     this.host = host;
@@ -213,7 +220,7 @@ export class AtlasGlobe {
     this.ro?.disconnect();
     for (const off of this.unbind) off();
     this.unbind = [];
-    for (const p of this.pins.concat(this.subPins)) p._anchor?.removeFromParent();
+    for (const p of this.allPins) p._anchor?.removeFromParent();
     if (this.detail) {
       this.detail.geometry.dispose();
       this.detail.material.map?.dispose();
@@ -223,6 +230,7 @@ export class AtlasGlobe {
     this.sphereMat?.dispose();
     this.renderer?.dispose();
     this.renderer = null;
+    this.detailCv = null;
     this.glWrap.remove();
     this.pinLayer.remove();
   }
@@ -291,7 +299,7 @@ export class AtlasGlobe {
     this.scene.add(halo);
 
     // Pins created before the scene existed get their anchors now.
-    for (const p of this.pins.concat(this.subPins)) this.anchorPin(p);
+    for (const p of this.allPins) this.anchorPin(p);
 
     this.resize();
     if (!this.destroyed) this.startLoop();
@@ -317,7 +325,12 @@ export class AtlasGlobe {
 
   /* -------------------------------------------------------------- texture */
 
-  private paintLand(ctx: CanvasRenderingContext2D, projection: ReturnType<typeof geoEquirectangular>, lineWidth: number) {
+  private paintLand(
+    ctx: CanvasRenderingContext2D,
+    projection: ReturnType<typeof geoEquirectangular>,
+    lineWidth: number,
+    land: GeoMultiPolygon | null = this.landMerged
+  ) {
     const path = geoPath(projection, ctx);
     if (this.opts.graticule) {
       ctx.beginPath();
@@ -326,15 +339,48 @@ export class AtlasGlobe {
       ctx.lineWidth = lineWidth;
       ctx.stroke();
     }
-    if (this.landMerged) {
+    if (land) {
       ctx.beginPath();
-      path(this.landMerged);
+      path(land);
       ctx.fillStyle = PALETTE.land;
       ctx.fill();
       ctx.strokeStyle = PALETTE.coast;
       ctx.lineWidth = 1.1 * lineWidth;
       ctx.stroke();
     }
+  }
+
+  /**
+   * The polygons of `landMerged` that can reach a lat/lon window, by the
+   * bounding box of each outer ring. The detail tile shows one region but the
+   * merged 50m land carries the whole world, and streaming all of it through
+   * d3-geo is the bulk of a rebuild; this drops roughly two thirds of it.
+   *
+   * Longitudes are compared after rotating by -lon, so the test is correct
+   * across the antimeridian. A ring that straddles the far side of the globe
+   * reads as spanning every longitude and is kept, which only costs time.
+   */
+  private clipLand(lon: number, latS: number, latN: number, half: number): GeoMultiPolygon | null {
+    if (!this.landMerged) return null;
+    const pad = 2;
+    const dxMax = half + pad;
+    const s = latS - pad;
+    const n = latN + pad;
+    const keep = (ring: number[][]) => {
+      let y0 = Infinity;
+      let y1 = -Infinity;
+      let dx0 = Infinity;
+      let dx1 = -Infinity;
+      for (const [x, y] of ring) {
+        if (y < y0) y0 = y;
+        if (y > y1) y1 = y;
+        const dx = ((((x - lon + 180) % 360) + 360) % 360) - 180;
+        if (dx < dx0) dx0 = dx;
+        if (dx > dx1) dx1 = dx;
+      }
+      return y0 < n && y1 > s && dx0 < dxMax && dx1 > -dxMax;
+    };
+    return { type: "MultiPolygon", coordinates: this.landMerged.coordinates.filter((poly) => keep(poly[0])) };
   }
 
   private buildTexture() {
@@ -377,31 +423,50 @@ export class AtlasGlobe {
       return;
     }
     if (this.detail) this.detail.visible = true;
+    // A fly is pure rotation, which the GPU does for free; rebuilding the tile
+    // eight times on the way costs far more than the sharpness is worth, so
+    // hold the current tile and rebuild once the camera lands. Any drag, wheel
+    // or pinch clears `anim`, so a rebuild resumes the moment the user takes
+    // the globe over.
+    if (this.anim || now < this.detailHoldUntil) return;
     let lon = (-Math.PI / 2 - this.yaw) / d2r;
     lon = ((((lon + 180) % 360) + 360) % 360) - 180;
     const lat = this.pitch / d2r;
     const Rpx = Math.max(40, (Math.min(this.w, this.h) / 2 - 24) * z);
     const half = Math.min(60, Math.max(4, ((Math.max(this.w, this.h) / 2) / Rpx / d2r) * 1.3));
-    const key = `${Math.round(lon * 2)},${Math.round(lat * 2)},${Math.round(half * 4)}`;
+    // The tile is built 1.3x wider than the visible disc, so it only needs
+    // rebuilding once the view has panned a real fraction of that margin.
+    const step = Math.max(0.5, half / 8);
+    const key = `${Math.round(lon / step)},${Math.round(lat / step)},${Math.round(Math.log2(half) * 4)}`;
     if (key === this.detailKey) return;
     if (now - this.detailBuiltAt < 180) return;
     this.detailKey = key;
-    this.detailBuiltAt = now;
-    this.buildDetail(lat, lon, half);
+    this.buildDetail(lat, lon, half, Rpx);
+    // Stamped after the build, not before: a build that overruns the throttle
+    // would otherwise re-trigger on the very next frame, and a camera in
+    // motion would rebuild back to back for as long as it moved.
+    this.detailBuiltAt = performance.now();
   }
 
-  private buildDetail(lat: number, lon: number, half: number) {
+  private buildDetail(lat: number, lon: number, half: number, Rpx: number) {
     if (!this.renderer) return;
     const latN = Math.min(89.9, lat + half);
     const latS = Math.max(-89.9, lat - half);
     const lonW = lon - half;
     const lonE = lon + half;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const texW = Math.min(4096, Math.pow(2, Math.ceil(Math.log2(this.w * dpr * 2))));
+    const dpr = Math.min(window.devicePixelRatio || 1, 2); // the renderer's own cap
+    // One texel per rendered device pixel across the window the tile covers.
+    // Rounding this up to a power of two and then doubling it, as the port
+    // first did, pinned the tile at 4096 x 4096 on any stage wider than about
+    // 900 device px — 17 megapixels to paint, upload and mip for a window that
+    // is drawn at a third of that.
+    const texW = Math.max(512, Math.min(4096, Math.round((lonE - lonW) * d2r * Rpx * dpr)));
     const texH = Math.max(64, Math.round((texW * (latN - latS)) / (lonE - lonW)));
-    const cv = document.createElement("canvas");
-    cv.width = texW;
-    cv.height = texH;
+    const cv = this.detailCv ?? (this.detailCv = document.createElement("canvas"));
+    if (cv.width !== texW || cv.height !== texH) {
+      cv.width = texW;
+      cv.height = texH;
+    }
     const ctx = cv.getContext("2d")!;
     ctx.fillStyle = PALETTE.ocean;
     ctx.fillRect(0, 0, texW, texH);
@@ -410,8 +475,8 @@ export class AtlasGlobe {
       .rotate([-lon, 0])
       .scale(scale)
       .translate([texW / 2, texH / 2 + ((latN + latS) / 2) * d2r * scale]);
-    const lw = Math.max(1.2, (1.2 * texW) / (this.w * 1.3 * (window.devicePixelRatio || 1)));
-    this.paintLand(ctx, proj, lw);
+    // A texel is a device pixel now, so the stroke is simply its own width.
+    this.paintLand(ctx, proj, 1.2, this.clipLand(lon, latS, latN, half));
     const geo = new THREE.SphereGeometry(1.0015, 64, 64, (lonW + 180) * d2r, (lonE - lonW) * d2r, (90 - latN) * d2r, (latN - latS) * d2r);
     const tex = new THREE.CanvasTexture(cv);
     tex.anisotropy = this.renderer.capabilities.getMaxAnisotropy();
@@ -456,6 +521,7 @@ export class AtlasGlobe {
       p._anchor?.removeFromParent();
     }
     this.pins = (pins || []).map((p) => ({ ...p }));
+    this.allPins = this.pins.concat(this.subPins);
     for (const p of this.pins) this.makePin(p);
   }
 
@@ -465,6 +531,7 @@ export class AtlasGlobe {
       p._anchor?.removeFromParent();
     }
     this.subPins = (pins || []).map((p) => ({ ...p, sub: true, _born: performance.now() }));
+    this.allPins = this.pins.concat(this.subPins);
     for (const p of this.subPins) this.makePin(p);
   }
 
@@ -474,13 +541,13 @@ export class AtlasGlobe {
 
   setSelected(id: string | null) {
     this.selected = id;
-    for (const p of this.pins.concat(this.subPins)) if (p._el) this.stylePin(p);
+    for (const p of this.allPins) if (p._el) this.stylePin(p);
   }
 
   setOptions(opts: Partial<GlobeOptions>) {
     Object.assign(this.opts, opts || {});
     if (this.topo && this.opts.graticule !== this.texGrat) this.buildTexture();
-    for (const p of this.pins.concat(this.subPins)) if (p._el) this.stylePin(p);
+    for (const p of this.allPins) if (p._el) this.stylePin(p);
   }
 
   flyTo(lat: number, lon: number, zoom = 1, dur = 1500) {
@@ -513,6 +580,8 @@ export class AtlasGlobe {
     const from = this.zoom;
     const start = performance.now();
     const dur = 320;
+    // As with a fly: one tile at the end, not several on the way.
+    this.detailHoldUntil = start + dur;
     const step = (now: number) => {
       const t = Math.min(1, (now - start) / dur);
       const e = 1 - Math.pow(1 - t, 3);
@@ -734,7 +803,7 @@ export class AtlasGlobe {
     const rect = this.host.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    const all = this.pins.concat(this.subPins).filter((p) => p._pickable && p._xy);
+    const all = this.allPins.filter((p) => p._pickable && p._xy);
     const nearest = (radius: number) => {
       let best: PinState | null = null;
       let bestD = radius;
@@ -774,7 +843,7 @@ export class AtlasGlobe {
     on("pointermove", (e) => {
       if (down || touches.size) return;
       const hp = this.pickPin(e);
-      for (const p of this.pins.concat(this.subPins)) p._hover = p === hp;
+      for (const p of this.allPins) p._hover = p === hp;
       host.style.cursor = hp ? "pointer" : "";
     });
 
@@ -862,9 +931,9 @@ export class AtlasGlobe {
     this.pitchG.updateMatrixWorld(true);
 
     const camD = this.camera.position.z;
-    const V = new THREE.Vector3();
+    const V = this.scratch;
     const visible: PinState[] = [];
-    for (const p of this.pins.concat(this.subPins)) {
+    for (const p of this.allPins) {
       if (!p._el) continue;
       if (!p._anchor) this.anchorPin(p);
       if (!p._anchor) continue;
@@ -880,8 +949,16 @@ export class AtlasGlobe {
       p._dimmed = !!(this.focus && !this.focus.has(p.id));
       if (p._dimmed) fade *= 0.55;
       if (p._born) fade *= Math.min(1, (now - p._born) / 400);
-      const ndc = V.clone().project(this.camera);
-      p._xy = [((ndc.x + 1) / 2) * this.w, ((1 - ndc.y) / 2) * this.h];
+      // V is refilled from the anchor next time round, so project it in place.
+      const ndc = V.project(this.camera);
+      const sx = ((ndc.x + 1) / 2) * this.w;
+      const sy = ((1 - ndc.y) / 2) * this.h;
+      if (p._xy) {
+        p._xy[0] = sx;
+        p._xy[1] = sy;
+      } else {
+        p._xy = [sx, sy];
+      }
       p._fade = fade;
       visible.push(p);
     }
