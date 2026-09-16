@@ -399,7 +399,10 @@
   transition: all 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
-.btnOutline:hover {
+/* Doubled class, as on the consultant block's WhatsApp button: the global
+   `[data-theme="light"] a:hover` rule otherwise wins and paints the label in
+   var(--fg), which on a light page is the same ink as the hover fill. */
+.btnOutline.btnOutline:hover {
   background: var(--btn-hover-bg);
   color: var(--btn-hover-fg);
   border-color: var(--btn-hover-bg);

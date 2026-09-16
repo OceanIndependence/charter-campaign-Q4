@@ -530,7 +530,7 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
       {/* The foot stays dark on both themes: consultant block and disclaimer
           share one dark surface, as on the Yacht Selection page. */}
       <div className={styles.foot} data-theme="dark">
-        {consultant && <ConsultantBlock consultant={consultant} atlasUrl={config.atlasUrl} />}
+        {consultant && <ConsultantBlock consultant={consultant} />}
 
         <div className={styles.disclaimer}>{config.footerDisclaimer}</div>
       </div>

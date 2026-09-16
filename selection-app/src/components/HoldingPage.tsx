@@ -6,7 +6,7 @@ import ConsultantBlock from "./ConsultantBlock";
  * cannot be read: a calm note and the consultant's contact details, never a
  * 500. Server component; the storage failure is logged by the caller.
  */
-export default function HoldingPage({ consultant, atlasUrl }: { consultant?: Consultant | null; atlasUrl?: string }) {
+export default function HoldingPage({ consultant }: { consultant?: Consultant | null }) {
   return (
     <main
       style={{
@@ -28,7 +28,7 @@ export default function HoldingPage({ consultant, atlasUrl }: { consultant?: Con
         </p>
       </section>
       {consultant?.name ? (
-        <ConsultantBlock consultant={consultant} atlasUrl={atlasUrl} />
+        <ConsultantBlock consultant={consultant} />
       ) : (
         <p style={{ textAlign: "center", fontSize: 12, letterSpacing: "0.1em", color: "#9a9a96", padding: "0 24px 64px" }}>
           <a href="https://www.oceanindependence.com/" style={{ color: "#e9e7e2" }}>

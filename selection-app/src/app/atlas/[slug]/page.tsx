@@ -50,7 +50,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     live = { ...((await resolveLiveImages(frozen)) as AtlasPageConfig), consultant };
   } catch (err) {
     noteStorageError(`resolve live images for ${slug}`, err);
-    return <HoldingPage consultant={frozen.consultant} atlasUrl={frozen.atlasUrl} />;
+    return <HoldingPage consultant={frozen.consultant} />;
   }
   return <PersonalisedAtlasPage config={live} />;
 }
