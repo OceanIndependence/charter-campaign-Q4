@@ -145,6 +145,21 @@ export function adminAccessConfigured(): boolean {
   return Boolean(ownerEmail()) || legacyAdminListConfigured();
 }
 
+/**
+ * Which role variables this deployment actually has, for /api/health. No
+ * addresses — only whether each is set — so it says nothing a signed-in
+ * consultant may not know. This is how you tell "I am an admin because the
+ * owner ticked me" from "I am an admin because PORTAL_ADMIN_EMAILS still
+ * names me and no owner is configured here", which otherwise look
+ * identical from the outside.
+ */
+export function roleDiagnostics() {
+  return {
+    ownerConfigured: Boolean(ownerEmail()),
+    legacyAdminEmailsStillSet: legacyAdminListConfigured(),
+  };
+}
+
 export function identityCookieName(): string {
   return authProvider().cookieName;
 }

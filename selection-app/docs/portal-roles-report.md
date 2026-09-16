@@ -140,6 +140,23 @@ Records written before this change have none of the three fields;
 `normaliseRecord()` reads them back as `isAdmin: false`, so no migration
 pass over stored records is needed.
 
+## If a role looks wrong in a deployment
+
+`/api/health` (sign-in gated) reports the CALLER's resolved role and
+whether each role variable is set — never their values:
+
+```json
+"role": "admin",
+"roles": { "ownerConfigured": false, "legacyAdminEmailsStillSet": true }
+```
+
+That example is the common one: the person is an admin only because
+`PORTAL_ADMIN_EMAILS` still names them and no owner is configured in that
+environment, so they see the CONSULTANTS link rather than ADMIN and cannot
+tick anyone. Setting `PORTAL_OWNER_EMAIL` for that environment and
+redeploying is the fix. Vercel scopes environment variables per
+environment, so Production, Preview and Development each need it.
+
 ## Removing PORTAL_ADMIN_EMAILS
 
 While the fallback is in place, an address in `PORTAL_ADMIN_EMAILS`
@@ -180,19 +197,16 @@ Doing step 6 before step 5 is safe but pointless; doing step 5 before step
 
 ## Two things to know
 
-**The owner still gets a consultant row from the ordinary portal pages.**
-The admin screens do not create one — that is what `getAdminPageState()`
-is for, and it is verified: opening `/portal/admin/consultants` as the
-owner leaves the record count untouched. But `/portal`, `/portal/profile`
-and the selection pages still call `getPortalPageState()`, which
-resolves-or-creates a record for any signed-in identity, as it always has.
-So an owner who opens the dashboard is added to the consultants list as an
-`sso` record. That is pre-existing behaviour, deliberately left alone here
-because changing it means deciding what the owner sees on the consultant
-side of the portal at all — the dashboard scopes selections to a
-consultant record, so the owner either needs one or needs to be sent
-straight to the admin screen instead. Worth settling before this is
-relied on.
+**The owner may acquire a consultant row, and that is intended.** The
+admin screens never create one — that is what `getAdminPageState()` is
+for, and it is verified: opening `/portal/admin/consultants` as the owner
+leaves the record count untouched. The ordinary portal pages
+(`/portal`, `/portal/profile`, the selection pages) still call
+`getPortalPageState()`, which resolves-or-creates a record for any
+signed-in identity, so an owner who opens the dashboard gains one. That is
+accepted: the owner is meant to see everything, and the dashboard scopes
+selections to a consultant record. When the row exists it renders with the
+fixed OWNER chip and no control, so it can never be toggled.
 
 **Microsoft sign-in has its own gate.** Under
 `PORTAL_AUTH_PROVIDER=microsoft`, the callback refuses anyone with no

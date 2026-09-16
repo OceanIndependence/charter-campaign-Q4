@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fleetDiagnostics, getFleet } from "@/server/fleet.mjs";
-import { requirePortalSession } from "@/server/auth";
+import { requirePortalSession, resolvePortalRole, roleDiagnostics } from "@/server/auth";
 import { authProviderInfo } from "@/server/auth";
 import { storageMode } from "@/server/storage.mjs";
 import { imageStoreDiagnostics } from "@/server/image-store/index.mjs";
@@ -13,8 +13,11 @@ export const maxDuration = 60;
  * Reports, without exposing any secret: whether the passkey and storage are
  * configured, which storage backend is active, which image store is in use
  * (Blob or Sirv) and whether Sirv is fully configured, whether the portal
- * access gate is on, the last storage error, and whether the fleet cache can
- * be served right now.
+ * access gate is on, the last storage error, whether the fleet cache can
+ * be served right now, and which role the CALLER resolves to in this
+ * environment (with whether the role variables are set, never their
+ * values) — the quickest way to see why an admin screen or header link is
+ * or is not showing for you.
  */
 export async function GET(request: NextRequest) {
   const session = requirePortalSession(request);
@@ -30,6 +33,9 @@ export async function GET(request: NextRequest) {
   const checks: Record<string, unknown> = {
     storage: storageMode(),
     auth: authProviderInfo(),
+    /** The caller's own role here and now, resolved the same way every guard resolves it. */
+    role: await resolvePortalRole(session.identity),
+    roles: roleDiagnostics(),
     imagesStoreConfigured: imagesConfigured,
     dataStoreConfigured: dataConfigured,
     cronSecretConfigured: Boolean(process.env.CRON_SECRET),
