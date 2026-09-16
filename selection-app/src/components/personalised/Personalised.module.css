@@ -475,6 +475,9 @@
   display: flex;
 }
 
+/* The card is a container, not the button: the VIEW BROCHURE link is an
+   anchor and cannot nest inside one. The open-details button holds the image
+   and the body; the brochure row sits beneath it. */
 .card {
   flex: 1 1 auto;
   min-width: 0;
@@ -486,6 +489,16 @@
   transition:
     opacity 480ms cubic-bezier(0.22, 0.61, 0.36, 1),
     border-color 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* Takes the space the brochure row does not, which keeps the row on the
+   bottom edge of every card that carries one. */
+.cardOpen {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
 }
 
 /* The Tier 3 ring-card toggle, on the Tier 3 compare tokens. */
@@ -523,6 +536,7 @@
 }
 
 .cardMedia {
+  flex: 0 0 auto;
   aspect-ratio: 2000 / 1250;
   position: relative;
   background: var(--fg-03);
@@ -538,6 +552,7 @@
 }
 
 .cardBody {
+  flex: 1 1 auto;
   padding: 18px 20px 20px;
 }
 
@@ -610,6 +625,36 @@
 .chipActive {
   color: var(--mint);
   border-color: var(--mint-hairline-strong);
+}
+
+/* VIEW BROCHURE, on the drawer's treatment (SpecPanel .brochureLink): small
+   caps over a mint rule. Pinned to the foot of the card so the links line up
+   across the rail whatever the names and stat lines above them do. */
+.cardBrochure {
+  margin-top: auto;
+  padding: 0 20px 20px;
+}
+
+.cardBrochureLink {
+  display: inline-block;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  font-weight: 500;
+  color: var(--fg-6);
+  text-decoration: none;
+  border-bottom: 2px solid var(--mint);
+  padding-bottom: 7px;
+}
+
+.cardBrochureLink:hover {
+  color: var(--mint);
+}
+
+/* Light theme: the label reads in ink rather than mint, as it does in the
+   drawer; the rule beneath it stays mint. */
+[data-theme="light"] .cardBrochureLink,
+[data-theme="light"] .cardBrochureLink:hover {
+  color: var(--fg);
 }
 
 /* ---------------------------------------------------------------- drawer */
