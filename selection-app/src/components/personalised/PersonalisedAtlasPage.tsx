@@ -20,14 +20,43 @@ const OTHER_ZOOM = 2.2;
 
 const firstName = (name: string) => (name.trim().split(/\s+/)[0] ?? "").trim();
 
-/** "38M · 10 GUESTS · 5 STATEROOMS" */
-function yachtMeta(y: AtlasPageYacht): string {
+/**
+ * "38M · SUNSEEKER · 10 GUESTS · 5 STATEROOMS" as segments. A missing value
+ * drops its segment, so the separators never double or trail. The builder is
+ * capitalised here to match the rest of the line; the drawer shows it as
+ * stored.
+ */
+function yachtMetaSegments(y: AtlasPageYacht): string[] {
   const parts: string[] = [];
   const len = fmtLengthShort(y);
   if (len) parts.push(len);
+  if (y.builder) parts.push(y.builder.toUpperCase());
   if (y.guests != null) parts.push(`${y.guests} GUESTS`);
   if (y.staterooms) parts.push(`${y.staterooms.count} ${y.staterooms.count === 1 ? "STATEROOM" : "STATEROOMS"}`);
-  return parts.join(" · ");
+  return parts;
+}
+
+/**
+ * The stat line: each segment (with its trailing middot) is unbreakable, the
+ * line wraps only between segments and is clamped to two lines, so a long
+ * builder never splits mid-name and never pushes the card to a third line.
+ */
+function YachtMeta({ yacht }: { yacht: AtlasPageYacht }) {
+  const segments = yachtMetaSegments(yacht);
+  if (!segments.length) return null;
+  return (
+    <div className={styles.cardMeta}>
+      {segments.map((segment, i) => (
+        <span key={segment}>
+          {i > 0 ? " " : null}
+          <span className={styles.cardMetaSeg}>
+            {segment}
+            {i < segments.length - 1 ? " ·" : ""}
+          </span>
+        </span>
+      ))}
+    </div>
+  );
 }
 
 export default function PersonalisedAtlasPage({ config }: { config: AtlasPageConfig }) {
@@ -439,7 +468,7 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
                   </div>
                   <div className={styles.cardBody}>
                     <div className={styles.cardName}>{y.name}</div>
-                    <div className={styles.cardMeta}>{yachtMeta(y)}</div>
+                    <YachtMeta yacht={y} />
                     {rate && <div className={styles.cardRate}>{rate}</div>}
                     {total && <div className={styles.cardTotal}>{total}</div>}
                     <div className={styles.chips}>

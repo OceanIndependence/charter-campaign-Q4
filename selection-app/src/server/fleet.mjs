@@ -28,6 +28,7 @@ import {
   describeRawShape,
   extractRateOptions,
   extractYachtFacts,
+  normaliseBuilder,
   parseMetres,
   pickSeason,
 } from "./yachtfolio/normalise.mjs";
@@ -234,7 +235,7 @@ async function writeIfChanged(key, value, recordedHash, record) {
 /** Picker facts from a basic record (or a fleet-list row that carries them). */
 export function factsFromBasic(row, fetchedAt = new Date().toISOString()) {
   return {
-    builder: String(row?.builder ?? "").trim(),
+    builder: normaliseBuilder(row?.builder) ?? "",
     lengthM: parseMetres(row?.length_metric ?? row?.length_metres ?? row?.length) ?? null,
     basePort: basePort(row?.summer_base_port) ?? "",
     // When the record was read — a yacht Yachtfolio has no facts for is

@@ -26,6 +26,8 @@ export interface DraftYacht {
   name: string;
   lengthM: string;
   yearRefit: string;
+  /** Auto-filled from Yachtfolio, editable; drafts saved before the field existed have none */
+  builder?: string;
   guests: string;
   crew: string;
   /** e.g. "6 (5 double, 1 twin)" */
@@ -495,6 +497,7 @@ export function emptyDraftYacht(uid: string): DraftYacht {
     name: "",
     lengthM: "",
     yearRefit: "",
+    builder: "",
     guests: "",
     crew: "",
     staterooms: "",

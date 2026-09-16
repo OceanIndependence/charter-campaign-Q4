@@ -45,6 +45,7 @@ const AUTO_FIELDS = [
   "name",
   "lengthM",
   "yearRefit",
+  "builder",
   "guests",
   "crew",
   "staterooms",
@@ -533,6 +534,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
     name: detail.name || entryName.toUpperCase(),
     lengthM: detail.lengthM != null ? String(detail.lengthM) : "",
     yearRefit: detail.yearRefit,
+    builder: detail.builder ?? "",
     guests: detail.guests != null ? String(detail.guests) : "",
     crew: detail.crew != null ? String(detail.crew) : "",
     staterooms: detail.staterooms,
@@ -1162,6 +1164,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                         [
                           ["LENGTH (M)", "lengthM"],
                           ["YEAR / REFIT", "yearRefit"],
+                          ["BUILDER", "builder"],
                           ["GUESTS", "guests"],
                           ["CREW", "crew"],
                           ["STATEROOMS", "staterooms"],
@@ -1179,7 +1182,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                               </>
                             )}
                           </span>
-                          <input type="text" className={styles.input} placeholder="Auto-filled on selection" value={y[key]} onChange={(e) => editAutoField(y.uid, key, e.target.value)} />
+                          <input type="text" className={styles.input} placeholder="Auto-filled on selection" value={y[key] ?? ""} onChange={(e) => editAutoField(y.uid, key, e.target.value)} />
                         </label>
                       ))}
 

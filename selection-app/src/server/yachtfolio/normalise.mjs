@@ -83,6 +83,22 @@ export function breakdownFromCounts(rec) {
   return parts.length ? parts.join(", ") : undefined;
 }
 
+/**
+ * The builder as Yachtfolio returns it, given the same treatment as the
+ * other text fields: HTML stripped, whitespace trimmed and collapsed, blank
+ * → undefined. Casing is preserved, except that a value arriving entirely
+ * in capitals ("GOLDEN YACHTS", seen live beside "Golden Yachts" for the
+ * same yard) is title-cased word by word; words of three letters or fewer
+ * stay in capitals so yard acronyms (CRN, ISA, AB) survive. Mixed-case
+ * values are never touched. The Tier 2 card line capitalises at render.
+ */
+export function normaliseBuilder(value) {
+  const text = stripHtml(value);
+  if (!text) return undefined;
+  if (/\p{Ll}/u.test(text) || !/\p{Lu}/u.test(text)) return text;
+  return text.replace(/[\p{L}\p{N}'’]+/gu, (word) => (word.length <= 3 ? word : capitaliseWord(word)));
+}
+
 /** The spec block carrying cabin_config/bed_config/toys/engines moves with data_source. */
 export function specBlocks(brochure) {
   const ds = brochure?.general?.data_source;
@@ -164,7 +180,7 @@ export function buildReference({ seasons, operating_areas }) {
 export function factsFromBrochure(brochure) {
   const { detail, spec } = specBlocks(brochure);
   return {
-    builder: String(spec.builder ?? detail.builder ?? "").trim(),
+    builder: normaliseBuilder(spec.builder ?? detail.builder) ?? "",
     lengthM: parseMetres(spec.length_metres) ?? parseMetres(detail.length) ?? null,
     basePort: basePort(spec.summer_base_port ?? detail.summer_base_port) ?? "",
   };
@@ -200,7 +216,7 @@ export function extractYachtFacts({ brochure, basic, reference, targetSeason }) 
   const crew = spec.total_crew ?? detail.total_crew ?? basic?.total_crew ?? undefined;
   if (!crew) missing.push("crew");
 
-  const builder = spec.builder ?? detail.builder ?? basic?.builder ?? undefined;
+  const builder = normaliseBuilder(spec.builder ?? detail.builder ?? basic?.builder);
   if (!builder) missing.push("builder");
 
   const cabins = spec.cabins ?? detail.cabins ?? basic?.cabins;

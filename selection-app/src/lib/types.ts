@@ -33,6 +33,8 @@ export interface Yacht {
   lengthM?: number;
   /** e.g. "2019 / 2024" or "2023" */
   yearRefit?: string;
+  /** Yachtfolio builder as normalised ("Sanlorenzo"); absent on pages published before the field existed */
+  builder?: string;
   guests?: number;
   crew?: number;
   staterooms?: Staterooms;
