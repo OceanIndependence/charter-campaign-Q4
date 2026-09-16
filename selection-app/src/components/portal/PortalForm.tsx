@@ -1157,25 +1157,20 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
                         const p = computePrice(y);
                         if (p.rate == null) return null;
                         const cur = y.currency || "EUR";
-                        const pre = y.weeklyRateIsFrom ? "from " : "";
                         return (
                           <div className={`${styles.priceReadout} ${styles.fieldFull}`}>
                             <span>
                               VAT{" "}
-                              {p.vatAmount != null ? `${pre}${fmtMoneyForm(cur, p.vatAmount)} (${p.vatPct}%)` : "TBC"}
+                              {p.vatAmount != null ? `${fmtMoneyForm(cur, p.vatAmount)} (${p.vatPct}%)` : "TBC"}
                             </span>
                             {p.apaAmount != null && (
                               <span>
-                                APA {pre}
-                                {fmtMoneyForm(cur, p.apaAmount)} ({p.apaPct}%)
+                                APA {fmtMoneyForm(cur, p.apaAmount)} ({p.apaPct}%)
                               </span>
                             )}
                             {p.delivery != null && <span>DELIVERY FEE {fmtMoneyForm(cur, p.delivery)}</span>}
                             {p.total != null && (
-                              <span className={styles.priceTotal}>
-                                TOTAL {pre}
-                                {fmtMoneyForm(cur, p.total)}
-                              </span>
+                              <span className={styles.priceTotal}>TOTAL {fmtMoneyForm(cur, p.total)}</span>
                             )}
                           </div>
                         );

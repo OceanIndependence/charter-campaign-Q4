@@ -1,5 +1,5 @@
 import type { Yacht } from "@/lib/types";
-import { fmtLength, fmtMoney, fmtStaterooms, fmtWeeklyRate } from "@/lib/format";
+import { fmtLength, fmtMoney, fmtStaterooms } from "@/lib/format";
 import { SmallChevronIcon } from "./icons";
 import EnlargeableImage from "./EnlargeableImage";
 import styles from "./SpecPanel.module.css";
@@ -41,9 +41,10 @@ export default function SpecPanel({
   ).filter((row): row is [string, string] => Boolean(row[1]));
 
   // Price components are precomputed and frozen at publish; render as stored.
+  // Every figure here is the one the consultant chose, so none of them is
+  // qualified with "from" — the rail and ring cards read the same way.
   const cur = yacht.currency;
   const hasVat = yacht.vatAmount != null && yacht.vatPct != null;
-  const fromPrefix = yacht.weeklyRateIsFrom ? "from " : "";
 
   return (
     <div id="ys-specs" className={styles.panel} style={{ opacity: fading ? 0 : 1 }}>
@@ -95,21 +96,18 @@ export default function SpecPanel({
         <div className={styles.priceBlock}>
           <div className={styles.priceRow}>
             <span className={styles.specLabel}>WEEKLY RATE</span>
-            <span className={styles.rateValue}>{fmtWeeklyRate(yacht)}</span>
+            <span className={styles.rateValue}>{fmtMoney(cur, yacht.weeklyRate)}</span>
           </div>
           <div className={styles.priceRow}>
             <span className={styles.specLabel}>VAT{hasVat ? ` (${yacht.vatPct}%)` : ""}</span>
             <span className={styles.dimValue}>
-              {hasVat ? `${fromPrefix}${fmtMoney(cur, yacht.vatAmount as number)}` : vatText ?? "TBC"}
+              {hasVat ? fmtMoney(cur, yacht.vatAmount as number) : vatText ?? "TBC"}
             </span>
           </div>
           {yacht.apaAmount != null && yacht.apaPct != null && (
             <div className={styles.priceRow}>
               <span className={styles.specLabel}>APA ({yacht.apaPct}%)</span>
-              <span className={styles.dimValue}>
-                {fromPrefix}
-                {fmtMoney(cur, yacht.apaAmount)}
-              </span>
+              <span className={styles.dimValue}>{fmtMoney(cur, yacht.apaAmount)}</span>
             </div>
           )}
           {yacht.deliveryFee != null && (
@@ -121,10 +119,7 @@ export default function SpecPanel({
           {yacht.totalAmount != null && (
             <div className={styles.totalRow}>
               <span className={styles.totalLabel}>TOTAL</span>
-              <span className={styles.totalValue}>
-                {fromPrefix}
-                {fmtMoney(cur, yacht.totalAmount)}
-              </span>
+              <span className={styles.totalValue}>{fmtMoney(cur, yacht.totalAmount)}</span>
             </div>
           )}
         </div>

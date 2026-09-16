@@ -20,6 +20,9 @@ const OTHER_ZOOM = 2.2;
 
 const firstName = (name: string) => (name.trim().split(/\s+/)[0] ?? "").trim();
 
+/** A brochure link the consultant actually filled in ("#" is the blank the mapping writes). */
+const hasBrochure = (y: AtlasPageYacht) => Boolean(y.brochureUrl && y.brochureUrl !== "#");
+
 /**
  * "38M · SUNSEEKER · 10 GUESTS · 5 STATEROOMS" as segments. A missing value
  * drops its segment, so the separators never double or trail. The builder is
@@ -456,33 +459,51 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
                     <CompareToggleIcon selected={ticked} />
                   </button>
                 )}
-                <button
-                  type="button"
-                  className={`${styles.card} ${dim ? styles.cardDim : ""}`}
-                  onClick={() => openDrawer(i)}
-                  aria-label={`${y.name} — open details`}
-                >
-                  <div className={styles.cardMedia}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    {y.leadImageUrl && <img src={y.imageThumbs?.lead ?? y.leadImageUrl} alt={`${y.name} — exterior profile`} loading="lazy" />}
-                  </div>
-                  <div className={styles.cardBody}>
-                    <div className={styles.cardName}>{y.name}</div>
-                    <YachtMeta yacht={y} />
-                    {rate && <div className={styles.cardRate}>{rate}</div>}
-                    {total && <div className={styles.cardTotal}>{total}</div>}
-                    <div className={styles.chips}>
-                      {y.destinationIds.map((id) => {
-                        const d = byId.get(id);
-                        return d ? (
-                          <span key={id} className={`${styles.chip} ${selectedId === id ? styles.chipActive : ""}`}>
-                            {d.name.toUpperCase()}
-                          </span>
-                        ) : null;
-                      })}
+                <div className={`${styles.card} ${dim ? styles.cardDim : ""}`}>
+                  <button
+                    type="button"
+                    className={styles.cardOpen}
+                    onClick={() => openDrawer(i)}
+                    aria-label={`${y.name} — open details`}
+                  >
+                    <div className={styles.cardMedia}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      {y.leadImageUrl && <img src={y.imageThumbs?.lead ?? y.leadImageUrl} alt={`${y.name} — exterior profile`} loading="lazy" />}
                     </div>
-                  </div>
-                </button>
+                    <div className={styles.cardBody}>
+                      <div className={styles.cardName}>{y.name}</div>
+                      <YachtMeta yacht={y} />
+                      {rate && <div className={styles.cardRate}>{rate}</div>}
+                      {total && <div className={styles.cardTotal}>{total}</div>}
+                      <div className={styles.chips}>
+                        {y.destinationIds.map((id) => {
+                          const d = byId.get(id);
+                          return d ? (
+                            <span key={id} className={`${styles.chip} ${selectedId === id ? styles.chipActive : ""}`}>
+                              {d.name.toUpperCase()}
+                            </span>
+                          ) : null;
+                        })}
+                      </div>
+                    </div>
+                  </button>
+                  {/* Only the yachts whose brochure link the consultant filled in
+                      carry the button; the rail stretches every card to the
+                      tallest, so a card without one keeps the same height. */}
+                  {hasBrochure(y) && (
+                    <div className={styles.cardBrochure}>
+                      <a
+                        className={styles.cardBrochureLink}
+                        href={y.brochureUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`View ${y.name}'s brochure`}
+                      >
+                        VIEW BROCHURE
+                      </a>
+                    </div>
+                  )}
+                </div>
               </div>
             );
           })}
