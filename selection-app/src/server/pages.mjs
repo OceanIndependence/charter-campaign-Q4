@@ -23,7 +23,12 @@
  * be forgotten. Every entry point takes an `access` object built by
  * selectionAccess() in the auth module: { consultantId, identity }.
  *
- * CONSULTANT_SCOPING feature flag — OFF by default until real sign-in lands.
+ * CONSULTANT_SCOPING feature flag — ON by default under Microsoft sign-in
+ * (see scopingEnabled), where every visitor is a real person, and off
+ * otherwise. It is what makes the isolation above structural, so turning it
+ * off opens every selection to every signed-in user. An admin
+ * (PORTAL_ADMIN_EMAILS) is the only identity that reaches another
+ * consultant's selection while it is on; there is no manager tier.
  * While off, every signed-in user sees every selection and no route checks
  * ownership: the dashboard lists every index, and a selection is found by
  * id through portal/selection-locations.json ({ id: namespace }), which
@@ -189,22 +194,6 @@ function requireId(id) {
 
 function ownerOf(identity) {
   return { id: identity?.id ?? "", email: identity?.email ?? "", name: identity?.name ?? "" };
-}
-
-/**
- * Who may switch the dashboard to "All consultants". PORTAL_MANAGERS is a
- * comma-separated list of consultant ids or emails; when it is unset (the
- * staging default) everyone may. With Microsoft sign-in the natural
- * replacement is a group claim on the token, checked in the same place.
- * Viewing all rows never opens them: getSelection() is namespace-bound.
- */
-export function canViewAll(identity) {
-  const raw = process.env.PORTAL_MANAGERS;
-  if (!raw || !raw.trim()) return true;
-  const allowed = new Set(raw.split(",").map((s) => s.trim().toLowerCase()).filter(Boolean));
-  const id = String(identity?.id ?? "").toLowerCase();
-  const email = String(identity?.email ?? "").toLowerCase();
-  return allowed.has(id) || (email !== "" && allowed.has(email));
 }
 
 /* ------------------------------------------------------------- metadata */
@@ -428,8 +417,13 @@ async function allRows() {
 
 /**
  * Dashboard rows, newest edited first. Scoping on: the session consultant's
- * own rows, or everyone's for scope "all" with canViewAll. Scoping off:
- * everyone's rows for every signed-in user, whatever the scope asked for.
+ * own rows, and only an admin (PORTAL_ADMIN_EMAILS) sees anyone else's —
+ * there is no manager tier, so scope "all" from a non-admin is refused
+ * rather than quietly narrowed. Scoping off: everyone's rows for every
+ * signed-in user, whatever the scope asked for.
+ *
+ * Listing rows is not opening them either way: namespaceFor() keeps another
+ * consultant's selection unreachable from every read and write path.
  */
 export async function listSelections(access, { scope = "mine" } = {}) {
   const consultantId = requireConsultantId(access);
@@ -438,8 +432,7 @@ export async function listSelections(access, { scope = "mine" } = {}) {
   if (!scopingEnabled() || access.isAdmin) {
     items = await allRows();
   } else if (scope === "all") {
-    if (!canViewAll(access.identity)) throw fail("FORBIDDEN", "You may only view your own selections.");
-    items = await allRows();
+    throw fail("FORBIDDEN", "Only an administrator may list other consultants' selections.");
   } else {
     items = Object.values((await readIndex(consultantId)).items);
   }
@@ -450,7 +443,9 @@ export async function listSelections(access, { scope = "mine" } = {}) {
 async function load(access, id) {
   const ns = await namespaceFor(access, requireId(id));
   const draft = await getJson(selectionKey(ns, id));
-  if (!draft) throw fail("NOT_FOUND", scopingEnabled() ? "This selection does not exist or is not yours." : "This selection does not exist.");
+  // Deliberately the same answer for "someone else's" and "no such id", so a
+  // shared link never confirms that a selection exists.
+  if (!draft) throw fail("NOT_FOUND", scopingEnabled() ? "This selection is not yours: it belongs to another consultant, or it does not exist." : "This selection does not exist.");
   return { ns, draft };
 }
 

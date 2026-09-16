@@ -10,7 +10,6 @@ import type { DashboardConsultant } from "@/app/api/selections/route";
 import ConfirmDialog from "./ConfirmDialog";
 import styles from "./PortalForm.module.css";
 
-type Scope = "mine" | "all";
 type StatusFilter = "all" | SelectionStatus;
 type TierFilter = "all" | "2" | "3";
 
@@ -26,16 +25,11 @@ const STATUS_LABEL: Record<SelectionStatus, string> = {
 export default function Dashboard() {
   const router = useRouter();
   const [items, setItems] = useState<SelectionMeta[] | null>(null);
-  const [scope, setScope] = useState<Scope>("mine");
-  const [canViewAll, setCanViewAll] = useState(false);
-  /** CONSULTANT_SCOPING on the server; while off there is no "mine" and the toggle is hidden */
-  const [scoping, setScoping] = useState(true);
   /** Admin (PORTAL_ADMIN_EMAILS): sees everyone's rows with a CONSULTANT column */
   const [isAdmin, setIsAdmin] = useState(false);
   const [consultantNames, setConsultantNames] = useState<Record<string, string>>({});
   /** Admin filter: a consultant record id, "unassigned", or "" for everyone */
   const [consultantFilter, setConsultantFilter] = useState("");
-  const [me, setMe] = useState<string>("");
   /** Consultant records behind the rows' owners, keyed by owner id. */
   const [consultants, setConsultants] = useState<Record<string, DashboardConsultant>>({});
   const [myConsultant, setMyConsultant] = useState<DashboardConsultant | null>(null);
@@ -66,9 +60,11 @@ export default function Dashboard() {
     return () => document.removeEventListener("mousedown", close);
   }, [menuFor]);
 
-  const load = useCallback(async (s: Scope) => {
+  const load = useCallback(async () => {
     try {
-      const res = await fetch(`/api/selections?scope=${s}`);
+      // No scope parameter: a consultant gets their own rows, an admin gets
+      // everyone's. Asking for anyone else's is refused server-side.
+      const res = await fetch("/api/selections");
       if (res.status === 401) {
         window.location.href = "/portal/sign-in";
         return;
@@ -76,11 +72,8 @@ export default function Dashboard() {
       const body = await res.json().catch(() => null);
       if (!res.ok) throw new Error(body?.error ?? "The selection list is unavailable.");
       setItems(body.items ?? []);
-      setCanViewAll(Boolean(body.canViewAll));
-      setScoping(body.scoping !== false);
       setIsAdmin(Boolean(body.isAdmin));
       setConsultantNames(body.consultantNames ?? {});
-      setMe(body.me ?? "");
       setConsultants(body.consultants ?? {});
       setMyConsultant(body.myConsultant ?? null);
       setError(null);
@@ -91,8 +84,8 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
-    load(scope);
-  }, [load, scope]);
+    load();
+  }, [load]);
 
   const visible = useMemo(() => {
     const needle = q.trim().toLowerCase();
@@ -127,14 +120,14 @@ export default function Dashboard() {
         const body = await res.json().catch(() => ({}));
         if (!res.ok) throw new Error(body?.error ?? "That did not work — please try again.");
         after?.(body);
-        await load(scope);
+        await load();
       } catch (err) {
         setError(err instanceof Error ? err.message : "That did not work — please try again.");
       } finally {
         setBusy(null);
       }
     },
-    [load, scope]
+    [load]
   );
 
   /** Create a selection of the chosen tier for the chosen consultant, or duplicate one (which keeps its tier and consultant). */
@@ -240,7 +233,7 @@ export default function Dashboard() {
     );
   }
 
-  const nothingYet = items.length === 0 && scope === "mine";
+  const nothingYet = items.length === 0;
 
   return (
     <main className={`${styles.main} ${styles.dashMain}`}>
@@ -321,16 +314,6 @@ export default function Dashboard() {
                 {hasUnassigned && <option value="unassigned">Unassigned</option>}
               </select>
             )}
-            {canViewAll && scoping && !isAdmin && (
-              <label className={styles.toggle}>
-                <input
-                  type="checkbox"
-                  checked={scope === "all"}
-                  onChange={(e) => setScope(e.target.checked ? "all" : "mine")}
-                />
-                <span>ALL CONSULTANTS</span>
-              </label>
-            )}
             <span className={styles.counter}>
               {visible.length} OF {items.length}
             </span>
@@ -353,16 +336,13 @@ export default function Dashboard() {
                 </thead>
                 <tbody>
                   {visible.map((m) => {
-                    // Rows in "mine" are by definition mine; under "all", only rows whose consultant is the session's can be opened.
-                    const mine = !scoping || isAdmin || scope === "mine" || (!!me && m.consultantId === me);
                     const isBusy = busy === m.id;
                     const open = versionsFor === m.id;
                     return (
                       <RowGroup
                         key={m.id}
                         m={m}
-                        mine={mine}
-                        showOwner={scope === "all"}
+                        showOwner={isAdmin}
                         consultantColumn={isAdmin ? (m.consultantId ? consultantNames[m.consultantId] ?? "Unknown consultant" : "Unassigned") : null}
                         ownerConsultant={m.owner?.id ? consultants[m.owner.id] ?? null : null}
                         isBusy={isBusy}
@@ -529,7 +509,6 @@ function TierChooser({
 
 interface RowProps {
   m: SelectionMeta;
-  mine: boolean;
   showOwner: boolean;
   /** Admin view: the owning consultant's name, or "Unassigned"; null hides the column */
   consultantColumn: string | null;
@@ -614,41 +593,30 @@ function RowGroup(p: RowProps) {
         <td title={`Created ${fmtDateShort(m.createdAt)}`}>{fmtDateShort(m.updatedAt)}</td>
         <td>{m.publishedAt ? fmtDateShort(m.publishedAt) : "—"}</td>
         <td className={styles.rowActionsCell}>
-          {p.mine ? (
-            <>
-              <button type="button" className={styles.openBtn} onClick={p.onOpen} disabled={p.isBusy}>
-                OPEN
-              </button>
-              <span className={styles.menuWrap} data-row-menu>
-                <button type="button" className={styles.menuBtn} onClick={p.onToggleMenu} aria-expanded={p.menuOpen} aria-haspopup="menu" aria-label="More actions">
-                  MORE {p.menuOpen ? "▴" : "▾"}
-                </button>
-                {p.menuOpen && (
-                  <div className={styles.menu} role="menu">
-                    <a className={styles.menuItem} href={previewHref} target="_blank" rel="noopener noreferrer" onClick={p.onToggleMenu}>
-                      Preview
-                    </a>
-                    {published && m.slug && (
-                      <a className={styles.menuItem} href={liveHref} target="_blank" rel="noopener noreferrer" onClick={p.onToggleMenu}>
-                        Live page
-                      </a>
-                    )}
-                    {published && menuItem(p.copied ? "Copied" : "Copy link", p.onCopy)}
-                    {menuItem("Duplicate", p.onDuplicate)}
-                    {published && menuItem("Unpublish", p.onUnpublish, true)}
-                    {m.status === "draft" && menuItem("Delete draft", p.onDelete, true)}
-                  </div>
+          <button type="button" className={styles.openBtn} onClick={p.onOpen} disabled={p.isBusy}>
+            OPEN
+          </button>
+          <span className={styles.menuWrap} data-row-menu>
+            <button type="button" className={styles.menuBtn} onClick={p.onToggleMenu} aria-expanded={p.menuOpen} aria-haspopup="menu" aria-label="More actions">
+              MORE {p.menuOpen ? "▴" : "▾"}
+            </button>
+            {p.menuOpen && (
+              <div className={styles.menu} role="menu">
+                <a className={styles.menuItem} href={previewHref} target="_blank" rel="noopener noreferrer" onClick={p.onToggleMenu}>
+                  Preview
+                </a>
+                {published && m.slug && (
+                  <a className={styles.menuItem} href={liveHref} target="_blank" rel="noopener noreferrer" onClick={p.onToggleMenu}>
+                    Live page
+                  </a>
                 )}
-              </span>
-            </>
-          ) : (
-            published &&
-            m.slug && (
-              <a className={styles.openBtn} href={liveHref} target="_blank" rel="noopener noreferrer">
-                VIEW PAGE
-              </a>
-            )
-          )}
+                {published && menuItem(p.copied ? "Copied" : "Copy link", p.onCopy)}
+                {menuItem("Duplicate", p.onDuplicate)}
+                {published && menuItem("Unpublish", p.onUnpublish, true)}
+                {m.status === "draft" && menuItem("Delete draft", p.onDelete, true)}
+              </div>
+            )}
+          </span>
         </td>
       </tr>
       {p.versionsOpen && (
@@ -670,7 +638,7 @@ function RowGroup(p: RowProps) {
                     <span className={styles.versionMeta}>
                       {fmtDateShort(v.publishedAt)} · {v.yachtCount} {v.yachtCount === 1 ? "yacht" : "yachts"}
                     </span>
-                    {p.mine && !v.isCurrent && (
+                    {!v.isCurrent && (
                       <button type="button" className={styles.actionBtn} onClick={() => p.onRollback(v)} disabled={p.isBusy}>
                         ROLL BACK TO THIS
                       </button>
