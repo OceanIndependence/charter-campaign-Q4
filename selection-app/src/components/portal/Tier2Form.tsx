@@ -26,8 +26,7 @@ import {
   emptyTier2Yacht,
   tier2VatPctFromText,
 } from "@/lib/portal-types";
-import { suggestTier2Slug, tier2PublishProblems, tier2Warnings } from "@/lib/atlas-map";
-import { slugify } from "@/server/yachtfolio/normalise.mjs";
+import { tier2PublishProblems, tier2Warnings } from "@/lib/atlas-map";
 import FleetSelect from "./FleetSelect";
 import ImagePicker from "./ImagePicker";
 import ConfirmDialog from "./ConfirmDialog";
@@ -158,7 +157,6 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
   const [publishErrorHref, setPublishErrorHref] = useState<string | null>(null);
   const [lightbox, setLightbox] = useState<{ url: string; label: string } | null>(null);
   /** True once the consultant has typed a slug by hand (auto-suggestion stops). */
-  const slugTouched = useRef(false);
 
   const saveTimer = useRef<number | undefined>(undefined);
   const draftRef = useRef<Tier2Draft | null>(null);
@@ -217,7 +215,6 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
             ...(typedPct ? { vatPct: typedPct, vatText: TIER2_DEFAULT_VAT_TEXT } : {}),
           };
         });
-        if (next.slug) slugTouched.current = true;
         setDraft(next);
         if (next.publishedSlug) setPublished({ slug: next.publishedSlug, url: `/atlas/${next.publishedSlug}` });
         setOpenIds(new Set(next.yachts.slice(0, 1).map((y) => y.uid)));
@@ -844,29 +841,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                 className={styles.input}
                 placeholder="Example – Mr and Mrs Harrington"
                 value={draft.clientNames}
-                onChange={(e) => {
-                  const v = e.target.value;
-                  update((d) => ({ ...d, clientNames: v, slug: slugTouched.current ? d.slug : suggestTier2Slug(v) }));
-                }}
-              />
-            </label>
-            <label className={styles.field}>
-              <span className={styles.fieldLabel}>
-                PAGE ADDRESS <span className={styles.fieldLabelHint}>— the client page address</span>
-              </span>
-              <input
-                type="text"
-                className={styles.input}
-                placeholder="Example – harrington-summer-2027"
-                value={draft.slug}
-                disabled={Boolean(draft.publishedSlug)}
-                title={draft.publishedSlug ? "The address is fixed once published." : undefined}
-                onChange={(e) => {
-                  slugTouched.current = true;
-                  const v = e.target.value;
-                  update((d) => ({ ...d, slug: v }));
-                }}
-                onBlur={() => update((d) => ({ ...d, slug: slugify(d.slug) }))}
+                onChange={(e) => update((d) => ({ ...d, clientNames: e.target.value }))}
               />
             </label>
             <label className={`${styles.field} ${styles.fieldFull}`}>

@@ -115,12 +115,17 @@ export function tier2DraftToConfig(draft: Tier2Draft, slug: string, atlas: Atlas
   };
 }
 
-/** Slug the client page is published under: the form's slug, else the client name. */
+/**
+ * The base of the client page address, which publishSelection() completes
+ * with a random tail. The form no longer offers an address field, so this is
+ * the client's surname and the season; a draft saved while the field existed
+ * keeps whatever was typed into it.
+ */
 export function tier2SlugBase(draft: Tier2Draft): string {
-  return slugify(draft.slug || "") || slugify(`${draft.clientNames ?? ""} summer 2027`) || `atlas-${draft.id.slice(0, 8)}`;
+  return slugify(draft.slug || "") || suggestTier2Slug(draft.clientNames ?? "") || `atlas-${draft.id.slice(0, 8)}`;
 }
 
-/** Slug suggested from a client name: "Mr and Mrs Harrington" → "harrington-summer-2027". */
+/** Slug built from a client name: "Mr and Mrs Harrington" → "harrington-summer-2027". */
 export function suggestTier2Slug(clientNames: string): string {
   const words = clientNames
     .replace(/[^\p{L}\p{N}\s-]/gu, " ")

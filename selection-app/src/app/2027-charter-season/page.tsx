@@ -19,7 +19,10 @@ export const metadata: Metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: PATH },
-  robots: { index: true, follow: true },
+  // Inherits the root layout's noindex: the page is shared by link, not
+  // found by search. Open Graph and Twitter below are untouched, so link
+  // previews still unfurl — those crawlers read the cards, not the robots
+  // directives.
   openGraph: {
     type: "website",
     siteName: "Ocean Independence",
