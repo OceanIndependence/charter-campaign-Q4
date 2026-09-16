@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { canViewAll, createSelection, listSelections, scopingEnabled } from "@/server/pages.mjs";
+import { createSelection, listSelections, scopingEnabled } from "@/server/pages.mjs";
 import { seedDemoSelection } from "@/server/demo/harrington";
 import { requireConsultantSession, selectionAccess } from "@/server/auth";
 import { listConsultants, readConsultantRecord } from "@/server/consultants.mjs";
@@ -18,9 +18,12 @@ export interface DashboardConsultant {
 }
 
 /**
- * Dashboard rows for the signed-in consultant (?scope=all for managers),
- * with the consultant record behind each row's owner keyed by owner id, so
- * the dashboard can flag records created at sign-in rather than seeded.
+ * Dashboard rows for the signed-in consultant, with the consultant record
+ * behind each row's owner keyed by owner id, so the dashboard can flag
+ * records created at sign-in rather than seeded.
+ *
+ * ?scope=all is an admin-only view (PORTAL_ADMIN_EMAILS); listSelections()
+ * refuses it for anyone else rather than trusting the query string.
  */
 export async function GET(request: NextRequest) {
   const scope = request.nextUrl.searchParams.get("scope") === "all" ? "all" : "mine";
@@ -44,7 +47,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       items,
       scope,
-      canViewAll: canViewAll(session.identity),
       /** false while CONSULTANT_SCOPING is off: every row is everyone's */
       scoping: scopingEnabled(),
       /** PORTAL_ADMIN_EMAILS: every row, every owner named, every row openable */
