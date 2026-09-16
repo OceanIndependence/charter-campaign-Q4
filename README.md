@@ -76,9 +76,16 @@ only (title, description, Open Graph image, canonical) and no analytics.
 The Personalised Atlas is the 2027 Atlas for one client: the consultant chooses three
 destinations and a shortlist of two to 10 yachts in the Charter Portal (choose
 "Personalised Atlas" when creating a new selection); the client gets the globe with
-those three pinned bright, every other destination dimmed but clickable, a yacht rail
-and a Tier 3-style detail drawer. It composes the Tier 1 globe and content pipeline
-with the Tier 3 Yachtfolio, image, publishing and auth modules; nothing is duplicated.
+those three pinned bright, a yacht rail and a Tier 3-style detail drawer. It composes
+the Tier 1 globe and content pipeline with the Tier 3 Yachtfolio, image, publishing and
+auth modules; nothing is duplicated.
+
+Temporarily, the globe shows the chosen destinations only: the surrounding Atlas pins
+(dimmed but clickable, with a "beyond the shortlist" panel) are switched off at render
+time by `SHOW_OTHER_PINS` in `selection-app/src/lib/atlas/tier2-other-pins.ts`. The pins
+are still resolved and still frozen into every published page, so setting that flag back
+to `true` restores the original globe with no other change and no republishing — see
+`selection-app/docs/tier2-other-pins-hidden.md`.
 
 - Destination copy and imagery arrive from the Atlas when a destination is chosen
   (live from the website where it answers, else the checked-in snapshot); each block
