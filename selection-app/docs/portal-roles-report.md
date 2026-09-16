@@ -118,8 +118,10 @@ the screen is the consultant list and nothing more; the owner sees ADMIN,
 because for them it is also where admin access is granted. Both go to the
 same page. A consultant who is neither sees no link. The chip and badge reuse the existing `ssoTag` and
 `status`/`status_published` styling already used by NOT YET SIGNED IN and
-ACTIVE. The summary counts line above the table now reads
-`22 OF 22 · 1 INACTIVE · 3 ADMIN · … ` in the existing format.
+ACTIVE. The summary counts line that used to sit above the table has been
+removed at the owner's request, for every role — the ADMIN column itself
+shows who is an admin, so the tally was noise. The search box above the
+table is unchanged.
 
 ## Files changed
 
@@ -196,8 +198,8 @@ variable any more. To remove it safely:
 
 1. Set `PORTAL_OWNER_EMAIL` in Vercel to the one owner address and
    redeploy. Confirm you see the checkboxes on `/portal/admin/consultants`.
-2. Tick every person who should keep admin access. The ADMIN count in the
-   summary line is the quick check.
+2. Tick every person who should keep admin access. The ADMIN column shows
+   at a glance who is ticked.
 3. Compare that count against `PORTAL_ADMIN_EMAILS`. Anyone on the variable
    who should not keep access simply stays unticked.
 4. Watch the deployment logs for `[role] … granted admin by

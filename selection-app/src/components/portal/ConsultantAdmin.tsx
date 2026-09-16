@@ -65,18 +65,6 @@ export default function ConsultantAdmin() {
     return (rows ?? []).filter((r) => !needle || r.displayName.toLowerCase().includes(needle) || r.email.toLowerCase().includes(needle) || r.jobTitle.toLowerCase().includes(needle));
   }, [rows, q]);
 
-  const counts = useMemo(() => {
-    const all = rows ?? [];
-    return {
-      total: all.length,
-      inactive: all.filter((r) => r.status === "inactive").length,
-      admins: all.filter((r) => r.isAdmin && r.status === "active").length,
-      sso: all.filter((r) => r.source === "sso").length,
-      unclaimed: all.filter((r) => !r.objectId).length,
-      photosMissing: all.filter((r) => r.photoStatus !== "ok").length,
-    };
-  }, [rows]);
-
   if (rows === null) {
     return (
       <main className={styles.main}>
@@ -121,10 +109,6 @@ export default function ConsultantAdmin() {
       <section className={`${styles.card} ${styles.cardFirst} ${styles.dashCard}`}>
         <div className={styles.toolbar}>
           <input type="search" className={`${styles.input} ${styles.search}`} placeholder="Search by name, title or email" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search consultants" />
-          <span className={styles.counter}>
-            {visible.length} OF {counts.total} · {counts.inactive} INACTIVE · {counts.admins} ADMIN · {counts.sso} CREATED AT SIGN-IN · {counts.unclaimed} NOT YET SIGNED IN ·{" "}
-            {counts.photosMissing} WITHOUT PHOTO
-          </span>
         </div>
 
         {visible.length === 0 ? (
