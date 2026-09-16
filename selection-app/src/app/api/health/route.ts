@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fleetDiagnostics, getFleet } from "@/server/fleet.mjs";
-import { requirePortalSession, resolvePortalRole, roleDiagnostics } from "@/server/auth";
+import { isOwnerEmail, requirePortalSession, resolvePortalRole, roleDiagnostics } from "@/server/auth";
 import { authProviderInfo } from "@/server/auth";
 import { storageMode } from "@/server/storage.mjs";
 import { imageStoreDiagnostics } from "@/server/image-store/index.mjs";
@@ -18,6 +18,13 @@ export const maxDuration = 60;
  * environment (with whether the role variables are set, never their
  * values) — the quickest way to see why an admin screen or header link is
  * or is not showing for you.
+ *
+ * `session` echoes the caller their OWN identity — the address the role is
+ * actually matched on. It is the one thing you cannot otherwise see, and
+ * an empty email here is the usual reason a correctly-set
+ * PORTAL_OWNER_EMAIL still resolves to "consultant": under the solo
+ * provider the address comes from PORTAL_SOLO_EMAIL, which is empty until
+ * it is set. No other identity is ever exposed.
  */
 export async function GET(request: NextRequest) {
   const session = requirePortalSession(request);
@@ -36,6 +43,12 @@ export async function GET(request: NextRequest) {
     /** The caller's own role here and now, resolved the same way every guard resolves it. */
     role: await resolvePortalRole(session.identity),
     roles: roleDiagnostics(),
+    /** The caller's own identity — what the role is matched on. Never anyone else's. */
+    session: {
+      email: session.identity.email ?? "",
+      id: session.identity.id ?? "",
+      emailMatchesOwner: isOwnerEmail(session.identity.email),
+    },
     imagesStoreConfigured: imagesConfigured,
     dataStoreConfigured: dataConfigured,
     cronSecretConfigured: Boolean(process.env.CRON_SECRET),
