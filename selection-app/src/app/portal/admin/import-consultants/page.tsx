@@ -4,7 +4,7 @@ import PortalHeader from "@/components/portal/PortalHeader";
 import ConsultantImport from "@/components/portal/ConsultantImport";
 import styles from "@/components/portal/PortalForm.module.css";
 import { adminAccessConfigured, authProviderInfo, getAdminPageState } from "@/server/auth";
-import { ADMIN_CONSULTANTS_PATH, PROFILE_PATH } from "@/lib/consultant-types";
+import { ADMIN_CONSULTANTS_PATH, adminNavLabel, PROFILE_PATH } from "@/lib/consultant-types";
 
 export const dynamic = "force-dynamic";
 
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 export default async function ImportConsultantsPage() {
   const state = await getAdminPageState();
   if ("redirect" in state) redirect(state.redirect === "login" ? "/portal/login" : "/portal/sign-in");
-  const { identity, consultant, isAdmin } = state;
+  const { identity, consultant, isAdmin, role } = state;
   const showSignOut = !authProviderInfo().singleConsultant;
   return (
     <div className={styles.page}>
@@ -40,6 +40,7 @@ export default async function ImportConsultantsPage() {
         photoUrl={consultant?.photoStatus === "ok" ? consultant.photoUrl : undefined}
         profileHref={PROFILE_PATH}
         adminHref={isAdmin ? ADMIN_CONSULTANTS_PATH : undefined}
+        adminLabel={adminNavLabel(role)}
         showSignOut={showSignOut}
         backHref="/portal"
       />

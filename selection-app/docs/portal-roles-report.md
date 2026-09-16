@@ -109,7 +109,13 @@ column between STATUS and SOURCE:
   nothing on the others.
 
 It is a column, not a field in the edit drawer, so all rows read at a
-glance. The chip and badge reuse the existing `ssoTag` and
+glance.
+
+The header link to this screen is labelled by role (`adminNavLabel()` in
+`src/lib/consultant-types.ts`): an admin sees CONSULTANTS, because for them
+the screen is the consultant list and nothing more; the owner sees ADMIN,
+because for them it is also where admin access is granted. Both go to the
+same page. A consultant who is neither sees no link. The chip and badge reuse the existing `ssoTag` and
 `status`/`status_published` styling already used by NOT YET SIGNED IN and
 ACTIVE. The summary counts line above the table now reads
 `22 OF 22 · 1 INACTIVE · 3 ADMIN · … ` in the existing format.
@@ -172,13 +178,26 @@ variable any more. To remove it safely:
 Doing step 6 before step 5 is safe but pointless; doing step 5 before step
 2 would lock out anyone not yet ticked.
 
-## One thing to know
+## Two things to know
 
-Under `PORTAL_AUTH_PROVIDER=microsoft`, the sign-in callback already
-refuses anyone with no consultant record, before any of this runs. So on a
-Microsoft deployment the owner does need a record in order to sign in at
-all — not because of the role model, which never asks for one, but because
-of that separate sign-in gate. Under `solo` and `stub` the owner needs no
-record anywhere. If the owner should be able to sign in to a Microsoft
-deployment without appearing in the consultants list, that callback gate is
-the thing to change, and it was left alone here deliberately.
+**The owner still gets a consultant row from the ordinary portal pages.**
+The admin screens do not create one — that is what `getAdminPageState()`
+is for, and it is verified: opening `/portal/admin/consultants` as the
+owner leaves the record count untouched. But `/portal`, `/portal/profile`
+and the selection pages still call `getPortalPageState()`, which
+resolves-or-creates a record for any signed-in identity, as it always has.
+So an owner who opens the dashboard is added to the consultants list as an
+`sso` record. That is pre-existing behaviour, deliberately left alone here
+because changing it means deciding what the owner sees on the consultant
+side of the portal at all — the dashboard scopes selections to a
+consultant record, so the owner either needs one or needs to be sent
+straight to the admin screen instead. Worth settling before this is
+relied on.
+
+**Microsoft sign-in has its own gate.** Under
+`PORTAL_AUTH_PROVIDER=microsoft`, the callback refuses anyone with no
+consultant record before any of this runs. So on a Microsoft deployment
+the owner needs a record in order to sign in at all — not because of the
+role model, which never asks for one, but because of that separate gate.
+If the owner should sign in there without appearing in the list, that
+callback is the thing to change, and it was left alone here deliberately.

@@ -8,6 +8,7 @@ export default function PortalHeader({
   photoUrl,
   profileHref,
   adminHref,
+  adminLabel = "CONSULTANTS",
   showSignOut = false,
   backHref,
 }: {
@@ -17,8 +18,10 @@ export default function PortalHeader({
   photoUrl?: string;
   /** When set, a link to the consultant's own profile page */
   profileHref?: string;
-  /** When set (admins only), a link to the consultant admin screen */
+  /** When set (owner and admins only), a link to the consultant admin screen */
   adminHref?: string;
+  /** What that link is called — adminNavLabel(role); ADMIN for the owner, CONSULTANTS for an admin */
+  adminLabel?: string;
   showSignOut?: boolean;
   /** When set, a persistent way back (e.g. to the dashboard) */
   backHref?: string;
@@ -38,7 +41,7 @@ export default function PortalHeader({
       <div className={styles.headerRight}>
         {adminHref && (
           <a href={adminHref} className={styles.headerLink}>
-            CONSULTANTS
+            {adminLabel}
           </a>
         )}
         {profileHref && (

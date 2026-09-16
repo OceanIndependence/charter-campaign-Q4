@@ -55,6 +55,16 @@ export const PROFILE_PATH = "/portal/profile";
 /** The consultant admin screen (owner and admins only). */
 export const ADMIN_CONSULTANTS_PATH = "/portal/admin/consultants";
 
+/**
+ * What the header link to that screen is called. Both roles go to the same
+ * page; the owner sees ADMIN because for them it is the screen where admin
+ * access is granted, and an admin sees CONSULTANTS because for them it is
+ * the consultant list and nothing more.
+ */
+export function adminNavLabel(role: PortalRole): string {
+  return role === "owner" ? "ADMIN" : "CONSULTANTS";
+}
+
 /** True while an active consultant has no phone number. */
 export function consultantNeedsPhone(c: Pick<ConsultantRecord, "status" | "phone"> | null | undefined): boolean {
   return Boolean(c) && c!.status === "active" && !String(c!.phone ?? "").trim();
