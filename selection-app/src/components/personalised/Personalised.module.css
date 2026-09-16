@@ -550,8 +550,19 @@
 .cardMeta {
   font-size: 10.5px;
   letter-spacing: 0.14em;
+  line-height: 1.5;
   color: var(--fg-45);
   margin-top: 8px;
+  /* Wraps only between segments (each is nowrap below) and never beyond two lines. */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.cardMetaSeg {
+  white-space: nowrap;
 }
 
 .cardRate {

@@ -37,6 +37,7 @@ const AUTO_FIELDS = [
   "name",
   "lengthM",
   "yearRefit",
+  "builder",
   "guests",
   "crew",
   "staterooms",
@@ -448,6 +449,7 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
     if (detail.name) apply("name", detail.name);
     apply("lengthM", detail.lengthM != null ? String(detail.lengthM) : "");
     apply("yearRefit", detail.yearRefit);
+    apply("builder", detail.builder ?? "");
     apply("guests", detail.guests != null ? String(detail.guests) : "");
     apply("crew", detail.crew != null ? String(detail.crew) : "");
     apply("staterooms", detail.staterooms);
@@ -999,6 +1001,15 @@ export default function PortalForm({ selectionId }: { selectionId: string }) {
                           placeholder="Auto-filled on selection"
                           value={y.yearRefit}
                           onChange={(e) => editAutoField(y.uid, "yearRefit", e.target.value)}
+                        />
+                      </label>
+                      <label className={styles.field}>
+                        <span className={styles.fieldLabel}>BUILDER</span>
+                        <input
+                          type="text"
+                          className={styles.input}
+                          value={y.builder ?? ""}
+                          onChange={(e) => editAutoField(y.uid, "builder", e.target.value)}
                         />
                       </label>
                       <label className={styles.field}>

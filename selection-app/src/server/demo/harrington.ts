@@ -68,6 +68,7 @@ function yacht(yfId: number, edits: { destinations: string[]; note: string }): T
     name: detail.name,
     lengthM: String(detail.lengthM),
     yearRefit: detail.yearRefit,
+    builder: detail.builder,
     guests: String(detail.guests),
     crew: String(detail.crew),
     staterooms: detail.staterooms,

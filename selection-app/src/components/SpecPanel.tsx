@@ -32,6 +32,7 @@ export default function SpecPanel({
     [
       ["LENGTH", fmtLength(yacht)],
       ["YEAR / REFIT", yacht.yearRefit],
+      ["BUILDER", yacht.builder],
       ["GUESTS", yacht.guests != null ? String(yacht.guests) : undefined],
       ["CREW", yacht.crew != null ? String(yacht.crew) : undefined],
       ["STATEROOMS", fmtStaterooms(yacht)],
