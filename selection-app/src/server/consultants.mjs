@@ -11,7 +11,8 @@
  *   - the seed CSV (scripts/import-consultants.mjs), imported once, which
  *     establishes the initial set;
  *   - the admin screen, which owns displayName, jobTitle, email, photoUrl
- *     and status from the moment of import onwards;
+ *     and status from the moment of import onwards, and — for the owner
+ *     alone — isAdmin and its two grant stamps;
  *   - the consultant, who edits phone and whatsapp and nothing else.
  *
  * Microsoft Entra only establishes identity: on sign-in the record is
@@ -29,6 +30,8 @@
  *     photoUrl, photoStatus,          "ok" | "missing" (HEAD-checked)
  *     source,         "csv" (seed import) | "sso" (created at sign-in) | "admin" (added on the admin screen)
  *     status,         "active" | "inactive"
+ *     isAdmin,        owner-controlled; an INACTIVE record is never an admin
+ *     adminGrantedBy, adminGrantedAt  who granted it and when; cleared on revoke
  *     updatedAt, updatedBy
  *   }
  *
@@ -49,7 +52,7 @@
  */
 
 import { randomUUID } from "node:crypto";
-import { getJson, listKeys, putJson } from "./storage.mjs";
+import { deleteJson, getJson, listKeys, putJson } from "./storage.mjs";
 
 export const RECORD_VERSION = 1;
 export const INDEX_KEY = "consultants/index.json";
@@ -98,6 +101,9 @@ export function emptyConsultantRecord(id) {
     photoStatus: "missing",
     source: "sso",
     status: "active",
+    isAdmin: false,
+    adminGrantedBy: "",
+    adminGrantedAt: null,
     updatedAt: null,
     updatedBy: null,
   };
@@ -117,6 +123,9 @@ function normaliseRecord(id, rec) {
   if (!PHOTO_STATUSES.includes(out.photoStatus)) out.photoStatus = "missing";
   if (!SOURCES.includes(out.source)) out.source = base.source;
   if (!STATUSES.includes(out.status)) out.status = base.status;
+  out.isAdmin = out.isAdmin === true;
+  out.adminGrantedBy = normaliseEmail(out.adminGrantedBy);
+  out.adminGrantedAt = out.adminGrantedAt ? String(out.adminGrantedAt) : null;
   out.updatedAt = out.updatedAt ? String(out.updatedAt) : null;
   out.updatedBy = out.updatedBy ? String(out.updatedBy) : null;
   return out;
@@ -221,6 +230,25 @@ export async function findConsultantByEmail(email, opts = {}) {
 export async function findConsultantByObjectId(objectId, opts = {}) {
   const id = await findConsultantIdByObjectId(objectId, opts);
   return id ? readConsultantRecord(id) : null;
+}
+
+/**
+ * Remove a record and its index row. Deletion is NOT part of the ordinary
+ * admin vocabulary — a consultant who should vanish from client pages is
+ * set inactive, because selections are namespaced by consultantId and a
+ * deleted record would orphan them. This exists only to clear records that
+ * were never usable in the first place (see the DELETE route, which
+ * refuses any record that owns a selection). Callers check that first.
+ */
+export async function deleteConsultantRecord(id) {
+  if (!isValidConsultantId(id)) throw fail("INVALID", "Invalid consultant id.");
+  await deleteJson(recordKey(id));
+  const idx = await readConsultantIndex();
+  if (idx.items[id]) {
+    delete idx.items[id];
+    idx.updatedAt = new Date().toISOString();
+    await putJson(INDEX_KEY, idx);
+  }
 }
 
 /**

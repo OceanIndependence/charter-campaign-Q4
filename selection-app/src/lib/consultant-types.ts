@@ -26,17 +26,44 @@ export interface ConsultantRecord {
   photoStatus: PhotoStatus;
   source: ConsultantSource;
   status: ConsultantStatus;
+  /**
+   * Admin-controlled, never self-editable: only the owner
+   * (PORTAL_OWNER_EMAIL) sets it, from the consultant admin list. An
+   * INACTIVE record never resolves to admin whatever this says.
+   */
+  isAdmin: boolean;
+  /** Address of the owner who last granted admin; "" once revoked. */
+  adminGrantedBy: string;
+  /** ISO timestamp of that grant; null once revoked. */
+  adminGrantedAt: string | null;
   updatedAt: string | null;
   updatedBy: string | null;
 }
+
+/**
+ * What the signed-in identity may do. Resolved per request from the stored
+ * record (src/server/auth/role.ts), never cached in the session, so ticking
+ * someone as admin takes effect at their next request.
+ */
+export type PortalRole = "owner" | "admin" | "consultant";
 
 /** The index row: everything the admin list and sign-in look-ups need, minus the two consultant-owned fields. */
 export type ConsultantSummary = Omit<ConsultantRecord, "phone" | "whatsapp" | "version">;
 
 /** Where a consultant edits their phone and WhatsApp numbers. */
 export const PROFILE_PATH = "/portal/profile";
-/** The consultant admin screen (PORTAL_ADMIN_EMAILS only). */
+/** The consultant admin screen (owner and admins only). */
 export const ADMIN_CONSULTANTS_PATH = "/portal/admin/consultants";
+
+/**
+ * What the header link to that screen is called. Both roles go to the same
+ * page; the owner sees ADMIN because for them it is the screen where admin
+ * access is granted, and an admin sees CONSULTANTS because for them it is
+ * the consultant list and nothing more.
+ */
+export function adminNavLabel(role: PortalRole): string {
+  return role === "owner" ? "ADMIN" : "CONSULTANTS";
+}
 
 /** True while an active consultant has no phone number. */
 export function consultantNeedsPhone(c: Pick<ConsultantRecord, "status" | "phone"> | null | undefined): boolean {

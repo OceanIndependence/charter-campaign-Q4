@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireAdminSession } from "@/server/auth";
+import { ownerEmail, requireAdminSession } from "@/server/auth";
 import { errorResponse } from "@/server/http";
 import { clientIp, rateLimit } from "@/server/rate-limit";
 import { emptyConsultantRecord, listConsultants, newConsultantId, stampConsultant, writeConsultantRecord } from "@/server/consultants.mjs";
@@ -9,19 +9,29 @@ import type { ConsultantRecord, ConsultantSummary } from "@/lib/consultant-types
 export const runtime = "nodejs";
 
 /**
- * Consultant admin — guarded server-side by PORTAL_ADMIN_EMAILS
+ * Consultant admin — guarded server-side by the resolved portal role
  * (requireAdminSession), unlike the operator routes beside it which take
  * the CRON_SECRET bearer. Admins never see or set phone or WhatsApp: the
  * list is the index (which omits them) and the create path leaves them
  * blank for the consultant to fill in on first sign-in.
  */
 
-/** Every record's index row (no phone or WhatsApp), by display name. */
+/**
+ * Every record's index row (no phone or WhatsApp), by display name, plus
+ * what the ADMIN column needs to render: the caller's own role, and the
+ * owner's address so the owner's row (if there is one) can show a fixed
+ * chip instead of a control. Both come from the server — the client never
+ * decides who may toggle, it only draws what it is told.
+ */
 export async function GET(request: NextRequest) {
   try {
     const session = await requireAdminSession(request);
     if (!session.ok) return session.response;
-    return NextResponse.json({ consultants: (await listConsultants()) as ConsultantSummary[] });
+    return NextResponse.json({
+      consultants: (await listConsultants()) as ConsultantSummary[],
+      role: session.role,
+      ownerEmail: ownerEmail(),
+    });
   } catch (err) {
     return errorResponse(err);
   }

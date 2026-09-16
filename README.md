@@ -109,13 +109,13 @@ deployed app never reads the CSV from disk. Edit the CSV, regenerate, commit
 both.
 
 The import runs inside the deployed app: `/portal/admin/import-consultants`
-has one button, guarded server-side by `PORTAL_ADMIN_EMAILS` — the same
+has one button, guarded server-side by the resolved portal role — the same
 guard as the consultant admin screen, on the page and on every
 `/api/admin` route it calls. `PORTAL_ACCESS_KEY` does not gate it: where
 that key is set the staging gate still stands in front of every portal
 page, and where it is unset the page opens for an admin as before. A
-signed-in visitor who is not on the admin list is told which variable to
-change rather than redirected. It writes to the same Blob store the app
+signed-in visitor who is neither owner nor admin is told what to change
+rather than redirected. It writes to the same Blob store the app
 already uses and shows how many records were created, how many rows were
 skipped, and which photos did not resolve. It skips any email that already
 has a record, never updates or deletes, and is safe to press again.
@@ -169,13 +169,26 @@ object ID, then email. Under Microsoft the access key is not asked for, and
 consultant scoping and the profile gate default to on. See
 `selection-app/docs/microsoft-sign-in-report.md`.
 
-Admin: `PORTAL_ADMIN_EMAILS` (comma-separated, compared lowercase against
-the signed-in email, in `src/server/auth/index.ts` only) opens
-`/portal/admin/consultants` and the `/api/admin/consultants` routes, guarded
-server-side. Admins edit display name, job title, email, photo URL (HEAD
-re-checked on change) and status, add a consultant ahead of their first
-sign-in, and release a record for re-claiming; never phone or WhatsApp,
-never deletion. Every change stamps `updatedAt` and `updatedBy`.
+Roles: `PORTAL_OWNER_EMAIL` holds exactly one address — the owner, who need
+not be a consultant and needs no record. Everyone else is an admin only if
+their consultant record has `isAdmin` set AND is active. The role is
+resolved per request in `src/server/auth/role.ts` and nowhere else, so a
+consultant who has never signed in can be ticked now and it takes effect at
+their first sign-in.
+
+Owner and admins both open `/portal/admin/consultants`, the
+`/api/admin/consultants` routes and the import screen, guarded server-side.
+They edit display name, job title, email, photo URL (HEAD re-checked on
+change) and status, add a consultant ahead of their first sign-in, and
+release a record for re-claiming; never phone or WhatsApp, never deletion.
+Only the OWNER grants or revokes admin, from the ADMIN column on that list;
+admins see the column read-only. Every change stamps `updatedAt` and
+`updatedBy`, and a grant also stamps `adminGrantedBy` and `adminGrantedAt`.
+
+`PORTAL_ADMIN_EMAILS` is retired but still honoured as a temporary
+fallback, logged at info level whenever it is what granted access, so
+nobody loses access before the flags are set. See
+`selection-app/docs/portal-roles-report.md` for how to remove it.
 
 ## Storage and imagery (`selection-app/`)
 
