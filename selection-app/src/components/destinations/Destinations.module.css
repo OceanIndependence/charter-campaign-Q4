@@ -400,12 +400,6 @@
   color: var(--mint);
 }
 
-/* Under a day's narrative, which is indented past the day number. */
-.readMoreDay {
-  margin: -8px 0 16px;
-  padding-left: 74px;
-}
-
 /* Light theme: in ink rather than mint on hover, as for .textLink below. */
 [data-theme="light"] .readMore:hover {
   color: var(--fg);
@@ -1088,7 +1082,6 @@
 
 /* The selected day's narrative, whole, beneath its heading. */
 .dayText {
-  --clamp-max: calc(5 * 1.75em + 16px);
   font-size: 12.5px;
   font-weight: 300;
   line-height: 1.75;
@@ -1162,9 +1155,18 @@
   margin-top: 24px;
 }
 
-/* The itinerary section keeps the mint accent on both themes: the eyebrows,
-   the selected day's rule, number, name and thumbnail border are mint on the
-   light panel exactly as they are on the dark one. */
+/* The itinerary section keeps the mint accent on both themes: the selected
+   day's rule, number, name and thumbnail border are mint on the light panel
+   exactly as they are on the dark one.
+
+   The one exception is the day count above each route's name. It is a label
+   rather than a highlight, and mint on white is too faint to read as one, so
+   on the light theme it takes the brand's darker grey — the colour every other
+   secondary label on that panel already uses. */
+[data-theme="light"] .itinCardEyebrow,
+[data-theme="light"] .itEyebrow {
+  color: var(--fg-5);
+}
 
 @media (max-width: 760px) {
   .header {

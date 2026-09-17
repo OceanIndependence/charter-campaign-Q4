@@ -821,16 +821,7 @@ export default function DestinationsPage({ config }: { config: DestinationsPageC
  * while the block is folded: expanded, the element is its own full height and
  * there is nothing left to compare it against.
  */
-function ReadMore({
-  className,
-  linkClassName,
-  children,
-}: {
-  className: string;
-  /** Extra class on the link, where it has to line up with an indented block. */
-  linkClassName?: string;
-  children: React.ReactNode;
-}) {
+function ReadMore({ className, children }: { className: string; children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   const id = useId();
   const [open, setOpen] = useState(false);
@@ -867,7 +858,7 @@ function ReadMore({
       {overflows && (
         <button
           type="button"
-          className={`${styles.readMore} ${linkClassName ?? ""}`}
+          className={styles.readMore}
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-controls={id}
@@ -982,8 +973,8 @@ function ItineraryPanel({
       )}
       <div className={styles.dayHead}>DAY TO DAY · SELECT A STOP</div>
       {/* Each row is a day heading as the website wrote it. Its narrative is
-          a full paragraph, shown whole when the row is selected — never cut
-          to a line. */}
+          a full paragraph, shown whole when the row is selected — never cut to
+          a line and never folded: the row IS the disclosure. */}
       <div className={styles.days} role="list">
         {itinerary.stops.map((s, i) => {
           const on = selectedStop === i;
@@ -1009,11 +1000,7 @@ function ItineraryPanel({
                   {s.image && <img src={s.image} alt="" loading="lazy" decoding="async" />}
                 </span>
               </button>
-              {on && s.text && (
-                <ReadMore className={styles.dayText} linkClassName={styles.readMoreDay}>
-                  {s.text}
-                </ReadMore>
-              )}
+              {on && s.text && <p className={styles.dayText}>{s.text}</p>}
             </div>
           );
         })}
