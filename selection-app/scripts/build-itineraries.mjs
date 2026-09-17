@@ -6,29 +6,32 @@
  *   npm run build:itineraries        (also runs as `prebuild`)
  *
  * Sources:
- *   data/destinations.json           the website itinerary pages, verbatim
- *                                    (`itineraries`, keyed by URL), and which
- *                                    destination pages link to each
- *                                    (`itineraryLinks`) — `npm run import:itineraries`
- *   content/itinerary-stops.json     the located places of each day heading —
- *                                    `npm run geocode:itineraries`, reviewed by hand
+ *   data/destinations.json              the website itinerary pages, verbatim
+ *                                       (`itineraries`, keyed by URL) — `npm run import:itineraries`
+ *   content/itinerary-destinations.json  the hand-authored manifest: which
+ *                                       destinations each itinerary may appear on
+ *   content/itinerary-stops.json        the located places of each day heading —
+ *                                       `npm run geocode:itineraries`, reviewed by hand
  *
  * Output:
  *   data/itineraries.json            destination id → Itinerary[] (src/lib/atlas/itineraries.ts)
  *   docs/itinerary-coverage.md       what each destination draws, every stop and
  *                                    its coordinates, and the gaps
  *
- * A destination draws, in order of preference:
- *   1. the itineraries its own website page links to;
- *   2. for a place (level 4), its cruising ground's (level 3);
- *   3. the itineraries that actually sail there — those with at least two
- *      located stops inside the destination's radius, most stops first.
- * Nothing is inherited downward from a country or a region, whose itineraries
- * cover other coasts; rule 3 is what gives Sardinia the Corsica-and-Sardinia
- * route its own page does not link to.
+ * WHICH ITINERARIES A DESTINATION SHOWS IS THE MANIFEST'S DECISION ALONE. An
+ * itinerary appears on a destination if and only if that destination id is
+ * listed against it in content/itinerary-destinations.json. There is no
+ * ancestor walking, no inheritance to or from children, no radius test and no
+ * fallback for a destination with none: that destination shows no itinerary
+ * panel. The manifest's `_displayOrder` sets the order and
+ * `_maxPerDestination` the number shown. `itineraryLinks` in the snapshot is
+ * still written by the crawl and is deliberately not read here.
  *
- * A day heading whose places could not be located keeps its row and its
- * narrative but draws no pin. Validation problems fail the build.
+ * The coordinates are a separate matter and unchanged: a day heading whose
+ * places could not be located keeps its row and its narrative but draws no
+ * pin, and an itinerary with fewer than two located places cannot be drawn at
+ * all, so the manifest's mappings for it are reported as gaps. Manifest and
+ * validation problems fail the build.
  */
 
 import { mkdir, readFile, writeFile } from "node:fs/promises";
@@ -40,12 +43,7 @@ const SNAPSHOT_PATH = path.join(ROOT, "data", "destinations.json");
 const STOPS_PATH = path.join(ROOT, "content", "itinerary-stops.json");
 const OUT_PATH = path.join(ROOT, "data", "itineraries.json");
 const COVERAGE_PATH = path.join(ROOT, "docs", "itinerary-coverage.md");
-/** The most itineraries one destination lists (the page shows this many at most). */
-const MAX_PER_DESTINATION = 3;
-/** How near a located stop must be to count as sailing at a destination, by level (km). */
-const NEAR_KM = { 1: 0, 2: 260, 3: 150, 4: 60 };
-/** How many of an itinerary's stops must fall inside that radius. */
-const NEAR_MIN_STOPS = 2;
+const MANIFEST_PATH = path.join(ROOT, "content", "itinerary-destinations.json");
 /**
  * A yacht does not sail this far between two places on one route stage, so a
  * point this far from the rest of the route is a wrong geocode, not a leg:
@@ -81,6 +79,7 @@ function fail(problems) {
 async function main() {
   const snapshot = JSON.parse(await readFile(SNAPSHOT_PATH, "utf8"));
   const web = snapshot.itineraries ?? {};
+  const manifest = JSON.parse(await readFile(MANIFEST_PATH, "utf8"));
   let stopsFile = { itineraries: {} };
   try {
     stopsFile = JSON.parse(await readFile(STOPS_PATH, "utf8"));
@@ -159,46 +158,63 @@ async function main() {
     };
   }
 
-  // Own links, else the cruising ground's for a place.
-  const linksFor = (d) => {
-    const own = d.itineraryLinks ?? [];
-    if (own.length) return own;
-    if (d.level >= 4) {
-      let p = byId.get(d.parentId);
-      while (p && p.level >= 3) {
-        if ((p.itineraryLinks ?? []).length) return p.itineraryLinks;
-        p = byId.get(p.parentId);
-      }
-    }
-    return [];
-  };
+  // ---- the manifest ------------------------------------------------------
+  const maxPerDestination = manifest._maxPerDestination;
+  const displayOrder = manifest._displayOrder ?? [];
+  const entries = manifest.itineraries ?? [];
+  const manifestIds = entries.map((e) => e.id);
+  const crawledById = new Map(Object.values(built).filter(Boolean).map((it) => [it.id, it]));
+  // Every crawled itinerary, drawable or not, so an undrawable one is still a
+  // known id rather than a manifest error.
+  const crawledAllIds = new Set(Object.keys(web).map(slugOf));
 
-  /** Itineraries that sail at a destination: at least NEAR_MIN_STOPS located stops inside its radius. */
-  const nearbyFor = (d) => {
-    const radius = NEAR_KM[Math.min(4, d.level)] ?? 0;
-    if (!radius || d.lat == null || d.lon == null) return [];
-    const here = { lat: d.lat, lon: d.lon };
-    return Object.values(built)
-      .filter(Boolean)
-      .map((it) => ({ it, stops: it.stops.filter((s) => s.points.some((p) => km(p, here) <= radius)).length }))
-      .filter((x) => x.stops >= NEAR_MIN_STOPS)
-      .sort((a, b) => b.stops - a.stops || a.it.title.localeCompare(b.it.title))
-      .map((x) => x.it);
-  };
+  for (const e of entries) {
+    if (!crawledAllIds.has(e.id)) problems.push(`manifest: itinerary "${e.id}" has no crawled record in data/destinations.json`);
+    for (const destId of e.destinations ?? []) {
+      if (!byId.has(destId)) problems.push(`manifest: itinerary "${e.id}" lists destination "${destId}", which has no record in data/destinations.json`);
+    }
+  }
+  for (const id of crawledAllIds) {
+    if (!manifestIds.includes(id)) problems.push(`manifest: crawled itinerary "${id}" is absent from the manifest`);
+  }
+  const orderSeen = new Set();
+  for (const id of displayOrder) {
+    if (orderSeen.has(id)) problems.push(`manifest: _displayOrder lists "${id}" more than once`);
+    orderSeen.add(id);
+    if (!manifestIds.includes(id)) problems.push(`manifest: _displayOrder lists "${id}", which is not in the manifest`);
+  }
+  for (const id of manifestIds) {
+    if (!orderSeen.has(id)) problems.push(`manifest: itinerary "${id}" is absent from _displayOrder`);
+  }
+  if (!Number.isInteger(maxPerDestination) || maxPerDestination < 1) problems.push(`manifest: _maxPerDestination must be a positive integer (got ${JSON.stringify(maxPerDestination)})`);
+  if (problems.length) {
+    fail(problems);
+    return;
+  }
+
+  // ---- the mapping: the manifest, and nothing else ------------------------
+  const rank = new Map(displayOrder.map((id, i) => [id, i]));
+  const listed = {};                       // destination id → manifest itinerary ids
+  for (const e of entries) for (const destId of e.destinations ?? []) (listed[destId] ??= []).push(e.id);
 
   const destinations = {};
-  const source = {};
+  const undrawable = {};                   // destination id → ids the manifest lists that cannot be drawn
   for (const d of snapshot.destinations) {
-    const links = linksFor(d);
+    const ids = (listed[d.id] ?? []).slice().sort((a, b) => rank.get(a) - rank.get(b));
     const list = [];
-    const add = (it, how, teaser) => {
-      if (!it || list.some((x) => x.url === it.url) || list.length >= MAX_PER_DESTINATION) return;
-      list.push({ ...it, ...(teaser?.trim() ? { teaser: teaser.trim() } : {}) });
-      (source[d.id] ??= new Set()).add(how);
-    };
-    for (const l of links) add(built[l.url], (d.itineraryLinks ?? []).length ? "own page" : "cruising ground", l.summary);
-    for (const it of nearbyFor(d)) add(it, "sails there");
+    for (const id of ids) {
+      const it = crawledById.get(id);
+      if (!it) {
+        (undrawable[d.id] ??= []).push(id);
+        continue;
+      }
+      if (list.length >= maxPerDestination) continue;
+      list.push(it);
+    }
     destinations[d.id] = list;
+  }
+  for (const [destId, ids] of Object.entries(undrawable)) {
+    gaps.push(`${destId}: the manifest lists ${ids.map((i) => `"${i}"`).join(", ")}, which cannot be drawn (fewer than two located places)`);
   }
 
   if (problems.length) {
@@ -215,7 +231,7 @@ async function main() {
   const lines = [];
   lines.push("# Itinerary coverage");
   lines.push("");
-  lines.push(`Generated by \`npm run build:itineraries\` on ${fmtDate(new Date())} from the website's itinerary pages in \`data/destinations.json\` and the located stops in \`content/itinerary-stops.json\`.`);
+  lines.push(`Generated by \`npm run build:itineraries\` on ${fmtDate(new Date())} from the website's itinerary pages in \`data/destinations.json\` the manifest in \`content/itinerary-destinations.json\` and the located stops in \`content/itinerary-stops.json\`.`);
   lines.push("Edit the sources, not this document; it is rewritten on every build.");
   lines.push("");
   lines.push("| Website itineraries | Drawable | Destinations | With itineraries |");
@@ -230,12 +246,12 @@ async function main() {
   }
   lines.push("## By destination");
   lines.push("");
-  lines.push("| Destination id | Name | Itineraries | Source |");
-  lines.push("|---|---|---|---|");
+  lines.push("| Destination id | Name | Itineraries |");
+  lines.push("|---|---|---|");
   const ordered = [...snapshot.destinations].sort((a, b) => a.id.localeCompare(b.id));
   for (const d of ordered) {
     const list = destinations[d.id] ?? [];
-    lines.push(`| \`${d.id}\` | ${d.name || d.slug} | ${list.length ? list.map((i) => i.title).join(" · ") : "—"} | ${[...(source[d.id] ?? [])].join(", ")} |`);
+    lines.push(`| \`${d.id}\` | ${d.name || d.slug} | ${list.length ? list.map((i) => i.title).join(" · ") : "—"} |`);
   }
   lines.push("");
   lines.push("## Day by day");

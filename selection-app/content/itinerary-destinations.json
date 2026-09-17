@@ -1,0 +1,497 @@
+{
+  "_about": "Explicit itinerary-to-destination mapping for the Personalised Atlas. This file is the single source of truth: an itinerary appears on a destination if and only if that destination id is listed against it here. There is no inheritance, no radius test, no geocoding involvement and no fallback. Destination ids are the snapshot ids in data/destinations.json.",
+  "_maxPerDestination": 3,
+  "_displayOrder": [
+    "cannes-to-monaco",
+    "rome-to-naples",
+    "dubrovnik-to-trogir",
+    "corfu-to-zakynthos",
+    "cyclades-itinerary",
+    "palma-to-cala-morell",
+    "naples-to-sicily",
+    "nassau-to-nassau",
+    "antigua-to-st-lucia",
+    "st-maarten-to-st-maarten",
+    "tortola-to-tortola",
+    "st-thomas-to-st-thomas",
+    "gocek-to-gocek",
+    "rhodes-to-bodrum",
+    "calvi-to-cala-di-volpe",
+    "monaco-to-rome",
+    "croatia-yacht-charter-itinerary-split-to-dubrovnik",
+    "aeolian-islands-catania-to-palermo",
+    "the-florida-keys",
+    "new-england",
+    "sitka-to-juneau-alaska",
+    "california-coast-marina-del-rey-to-marina-del-rey",
+    "san-juan-islands",
+    "male-to-male",
+    "eden-island-to-fregate-island-seychelles",
+    "luxury-7-day-yacht-itinerary-langkawi-to-phuket-exploration-ocean-independence",
+    "the-kimberley",
+    "bay-of-islands",
+    "fiji-itinerary",
+    "la-paz-to-la-paz",
+    "panama-to-costa-rica",
+    "patagonia-itinerary",
+    "stavanger-to-bergen",
+    "east-greenland",
+    "longyearbyen-to-longyearbyen",
+    "dubai-to-abu-dhabi",
+    "antarctica-itinerary",
+    "scenic-eclipse-in-antarctica"
+  ],
+  "itineraries": [
+    {
+      "id": "cannes-to-monaco",
+      "title": "Cannes to Monaco",
+      "url": "/yacht-charter/itineraries/mediterranean/cannes-to-monaco/",
+      "days": 7,
+      "destinations": [
+        "mediterranean",
+        "mediterranean/france",
+        "mediterranean/france/french-riviera",
+        "mediterranean/france/french-riviera/antibes",
+        "mediterranean/france/french-riviera/cannes",
+        "mediterranean/france/french-riviera/cap-ferrat",
+        "mediterranean/france/french-riviera/eze",
+        "mediterranean/france/french-riviera/monaco",
+        "mediterranean/france/french-riviera/porquerolles",
+        "mediterranean/france/french-riviera/st-tropez",
+        "mediterranean/france/french-riviera/villefranche"
+      ]
+    },
+    {
+      "id": "rome-to-naples",
+      "title": "Rome to Naples",
+      "url": "/yacht-charter/itineraries/mediterranean/rome-to-naples/",
+      "days": 7,
+      "destinations": [
+        "mediterranean",
+        "mediterranean/italy",
+        "mediterranean/italy/naples",
+        "mediterranean/italy/naples/pontine-islands",
+        "mediterranean/italy/ischia",
+        "mediterranean/italy/amalfi-coast",
+        "mediterranean/italy/amalfi-coast/amalfi",
+        "mediterranean/italy/amalfi-coast/capri",
+        "mediterranean/italy/amalfi-coast/positano"
+      ]
+    },
+    {
+      "id": "dubrovnik-to-trogir",
+      "title": "Dubrovnik to Trogir",
+      "url": "/yacht-charter/itineraries/mediterranean/dubrovnik-to-trogir/",
+      "days": 7,
+      "destinations": [
+        "mediterranean",
+        "mediterranean/croatia",
+        "mediterranean/croatia/dubrovnik",
+        "mediterranean/croatia/hvar",
+        "mediterranean/montenegro",
+        "mediterranean/montenegro/budva",
+        "mediterranean/montenegro/kotor"
+      ]
+    },
+    {
+      "id": "corfu-to-zakynthos",
+      "title": "Corfu to Zakynthos",
+      "url": "/yacht-charter/itineraries/mediterranean/corfu-to-zakynthos/",
+      "days": 8,
+      "destinations": [
+        "mediterranean",
+        "mediterranean/greece",
+        "mediterranean/greece/the-ionian-islands",
+        "mediterranean/greece/the-ionian-islands/corfu",
+        "mediterranean/greece/the-ionian-islands/zakynthos"
+      ]
+    },
+    {
+      "id": "cyclades-itinerary",
+      "title": "Cyclades Itinerary",
+      "url": "/yacht-charter/itineraries/mediterranean/cyclades-itinerary/",
+      "days": 8,
+      "destinations": [
+        "mediterranean",
+        "mediterranean/greece",
+        "mediterranean/greece/athens",
+        "mediterranean/greece/the-cyclades",
+        "mediterranean/greece/the-cyclades/mykonos",
+        "mediterranean/greece/the-cyclades/santorini"
+      ]
+    },
+    {
+      "id": "palma-to-cala-morell",
+      "title": "Palma to Cala Morell",
+      "url": "/yacht-charter/itineraries/mediterranean/palma-to-cala-morell/",
+      "days": 9,
+      "destinations": [
+        "mediterranean",
+        "mediterranean/spain",
+        "mediterranean/spain/the-balearics",
+        "mediterranean/spain/the-balearics/formentera",
+        "mediterranean/spain/the-balearics/ibiza",
+        "mediterranean/spain/the-balearics/mallorca",
+        "mediterranean/spain/the-balearics/menorca"
+      ]
+    },
+    {
+      "id": "naples-to-sicily",
+      "title": "Naples to Sicily",
+      "url": "/yacht-charter/itineraries/mediterranean/naples-to-sicily/",
+      "days": 8,
+      "destinations": [
+        "mediterranean",
+        "mediterranean/italy",
+        "mediterranean/italy/naples",
+        "mediterranean/italy/ischia",
+        "mediterranean/italy/amalfi-coast",
+        "mediterranean/italy/amalfi-coast/amalfi",
+        "mediterranean/italy/amalfi-coast/capri",
+        "mediterranean/italy/amalfi-coast/positano",
+        "mediterranean/italy/sicily",
+        "mediterranean/italy/sicily/aeolian-islands"
+      ]
+    },
+    {
+      "id": "nassau-to-nassau",
+      "title": "Nassau to Nassau",
+      "url": "/yacht-charter/itineraries/caribbean/nassau-to-nassau/",
+      "days": 7,
+      "destinations": [
+        "caribbean",
+        "caribbean/the-bahamas",
+        "caribbean/the-bahamas/nassau",
+        "caribbean/the-bahamas/the-exumas"
+      ]
+    },
+    {
+      "id": "antigua-to-st-lucia",
+      "title": "Antigua to St Lucia",
+      "url": "/yacht-charter/itineraries/caribbean/antigua-to-st-lucia/",
+      "days": 7,
+      "destinations": [
+        "caribbean",
+        "caribbean/leeward-islands",
+        "caribbean/leeward-islands/antigua",
+        "caribbean/the-windward-islands",
+        "caribbean/the-windward-islands/st-vincent-the-grenadines/dominica",
+        "caribbean/the-windward-islands/st-vincent-the-grenadines/martinique"
+      ]
+    },
+    {
+      "id": "st-maarten-to-st-maarten",
+      "title": "St Maarten to St Maarten",
+      "url": "/yacht-charter/itineraries/caribbean/st-maarten-to-st-maarten/",
+      "days": 8,
+      "destinations": [
+        "caribbean",
+        "caribbean/leeward-islands",
+        "caribbean/leeward-islands/antigua",
+        "caribbean/leeward-islands/st-barts",
+        "caribbean/leeward-islands/st-maarten"
+      ]
+    },
+    {
+      "id": "tortola-to-tortola",
+      "title": "Tortola to Tortola",
+      "url": "/yacht-charter/itineraries/caribbean/tortola-to-tortola/",
+      "days": 10,
+      "destinations": [
+        "caribbean",
+        "caribbean/virgin-islands",
+        "caribbean/virgin-islands/british-virgin-islands"
+      ]
+    },
+    {
+      "id": "st-thomas-to-st-thomas",
+      "title": "St. Thomas to St. Thomas",
+      "url": "/yacht-charter/itineraries/caribbean/st-thomas-to-st-thomas/",
+      "days": 7,
+      "destinations": [
+        "caribbean",
+        "caribbean/virgin-islands",
+        "caribbean/virgin-islands/british-virgin-islands",
+        "caribbean/virgin-islands/us-virgin-islands"
+      ]
+    },
+    {
+      "id": "gocek-to-gocek",
+      "title": "Gocek to Gocek",
+      "url": "/yacht-charter/itineraries/mediterranean/gocek-to-gocek/",
+      "days": 7,
+      "destinations": [
+        "mediterranean",
+        "mediterranean/turkey",
+        "mediterranean/turkey/gocek",
+        "mediterranean/turkey/marmaris"
+      ]
+    },
+    {
+      "id": "rhodes-to-bodrum",
+      "title": "Rhodes to Bodrum",
+      "url": "/yacht-charter/itineraries/mediterranean/rhodes-to-bodrum/",
+      "days": 8,
+      "destinations": [
+        "mediterranean",
+        "mediterranean/greece",
+        "mediterranean/greece/the-dodecanese",
+        "mediterranean/turkey"
+      ]
+    },
+    {
+      "id": "calvi-to-cala-di-volpe",
+      "title": "Calvi to Cala di Volpe",
+      "url": "/yacht-charter/itineraries/mediterranean/calvi-to-cala-di-volpe/",
+      "days": 7,
+      "destinations": [
+        "mediterranean",
+        "mediterranean/france",
+        "mediterranean/france/corsica",
+        "mediterranean/france/corsica/calvi",
+        "mediterranean/italy",
+        "mediterranean/italy/sardinia",
+        "mediterranean/italy/sardinia/olbia"
+      ]
+    },
+    {
+      "id": "monaco-to-rome",
+      "title": "Monaco to Rome",
+      "url": "/yacht-charter/itineraries/mediterranean/monaco-to-rome/",
+      "days": 9,
+      "destinations": [
+        "mediterranean",
+        "mediterranean/france",
+        "mediterranean/france/french-riviera",
+        "mediterranean/france/french-riviera/monaco",
+        "mediterranean/italy",
+        "mediterranean/italy/italian-riviera",
+        "mediterranean/italy/italian-riviera/portofino",
+        "mediterranean/italy/italian-riviera/cinque-terre"
+      ]
+    },
+    {
+      "id": "croatia-yacht-charter-itinerary-split-to-dubrovnik",
+      "title": "Split to Dubrovnik",
+      "url": "/yacht-charter/itineraries/mediterranean/croatia-yacht-charter-itinerary-split-to-dubrovnik/",
+      "days": 7,
+      "destinations": [
+        "mediterranean",
+        "mediterranean/croatia",
+        "mediterranean/croatia/dubrovnik",
+        "mediterranean/croatia/hvar"
+      ]
+    },
+    {
+      "id": "aeolian-islands-catania-to-palermo",
+      "title": "Aeolian Islands: Catania to Palermo",
+      "url": "/yacht-charter/itineraries/mediterranean/aeolian-islands-catania-to-palermo/",
+      "days": 9,
+      "destinations": [
+        "mediterranean",
+        "mediterranean/italy",
+        "mediterranean/italy/sicily",
+        "mediterranean/italy/sicily/aeolian-islands"
+      ]
+    },
+    {
+      "id": "the-florida-keys",
+      "title": "The Florida Keys",
+      "url": "/yacht-charter/itineraries/north-america/the-florida-keys/",
+      "days": 7,
+      "destinations": [
+        "north-america",
+        "north-america/florida"
+      ]
+    },
+    {
+      "id": "new-england",
+      "title": "New England",
+      "url": "/yacht-charter/itineraries/north-america/new-england/",
+      "days": 7,
+      "destinations": [
+        "north-america",
+        "north-america/new-england"
+      ]
+    },
+    {
+      "id": "sitka-to-juneau-alaska",
+      "title": "Sitka to Juneau, Alaska",
+      "url": "/yacht-charter/itineraries/north-america/sitka-to-juneau-alaska/",
+      "days": 8,
+      "destinations": [
+        "north-america",
+        "north-america/alaska"
+      ]
+    },
+    {
+      "id": "california-coast-marina-del-rey-to-marina-del-rey",
+      "title": "Marina del Rey to Marina del Rey",
+      "url": "/yacht-charter/itineraries/north-america/california-coast-marina-del-rey-to-marina-del-rey/",
+      "days": 7,
+      "destinations": [
+        "north-america"
+      ]
+    },
+    {
+      "id": "san-juan-islands",
+      "title": "San Juan Islands",
+      "url": "/yacht-charter/itineraries/north-america/san-juan-islands/",
+      "days": 8,
+      "destinations": [
+        "north-america"
+      ]
+    },
+    {
+      "id": "male-to-male",
+      "title": "Male to Male",
+      "url": "/yacht-charter/itineraries/indian-ocean/male-to-male/",
+      "days": 7,
+      "destinations": [
+        "indian-ocean",
+        "indian-ocean/maldives"
+      ]
+    },
+    {
+      "id": "eden-island-to-fregate-island-seychelles",
+      "title": "Eden Island to Fregate Island, Seychelles",
+      "url": "/yacht-charter/itineraries/indian-ocean/eden-island-to-fregate-island-seychelles/",
+      "days": 9,
+      "destinations": [
+        "indian-ocean",
+        "indian-ocean/seychelles"
+      ]
+    },
+    {
+      "id": "luxury-7-day-yacht-itinerary-langkawi-to-phuket-exploration-ocean-independence",
+      "title": "Langkawi to Phuket",
+      "url": "/yacht-charter/itineraries/indian-ocean/luxury-7-day-yacht-itinerary-langkawi-to-phuket-exploration-ocean-independence/",
+      "days": 7,
+      "destinations": [
+        "south-east-asia",
+        "south-east-asia/malaysia",
+        "south-east-asia/thailand"
+      ]
+    },
+    {
+      "id": "the-kimberley",
+      "title": "The Kimberley",
+      "url": "/yacht-charter/itineraries/australia-and-new-zealand/the-kimberley/",
+      "days": 7,
+      "destinations": [
+        "australia-and-new-zealand",
+        "australia-and-new-zealand/australia",
+        "australia-and-new-zealand/australia/the-kimberley"
+      ]
+    },
+    {
+      "id": "bay-of-islands",
+      "title": "Bay of Islands",
+      "url": "/yacht-charter/itineraries/south-pacific/bay-of-islands/",
+      "days": 8,
+      "destinations": [
+        "australia-and-new-zealand",
+        "australia-and-new-zealand/new-zealand"
+      ]
+    },
+    {
+      "id": "fiji-itinerary",
+      "title": "Fiji Itinerary",
+      "url": "/yacht-charter/itineraries/south-pacific/fiji-itinerary/",
+      "days": 10,
+      "destinations": [
+        "south-pacific",
+        "south-pacific/fiji"
+      ]
+    },
+    {
+      "id": "la-paz-to-la-paz",
+      "title": "La Paz to La Paz",
+      "url": "/yacht-charter/itineraries/central-america/la-paz-to-la-paz/",
+      "days": 8,
+      "destinations": [
+        "central-america",
+        "central-america/mexico"
+      ]
+    },
+    {
+      "id": "panama-to-costa-rica",
+      "title": "Panama to Costa Rica",
+      "url": "/yacht-charter/itineraries/central-america/panama-to-costa-rica/",
+      "days": 8,
+      "destinations": [
+        "central-america",
+        "central-america/costa-rica"
+      ]
+    },
+    {
+      "id": "patagonia-itinerary",
+      "title": "Patagonia Itinerary",
+      "url": "/yacht-charter/itineraries/south-america/patagonia-itinerary/",
+      "days": 7,
+      "destinations": [
+        "south-america",
+        "south-america/patagonia"
+      ]
+    },
+    {
+      "id": "stavanger-to-bergen",
+      "title": "Stavanger to Bergen",
+      "url": "/yacht-charter/itineraries/northern-europe/stavanger-to-bergen/",
+      "days": 7,
+      "destinations": [
+        "northern-europe",
+        "northern-europe/norway"
+      ]
+    },
+    {
+      "id": "east-greenland",
+      "title": "East Greenland",
+      "url": "/yacht-charter/itineraries/arctic/east-greenland/",
+      "days": 9,
+      "destinations": [
+        "arctic",
+        "arctic/east-greenland"
+      ]
+    },
+    {
+      "id": "longyearbyen-to-longyearbyen",
+      "title": "Longyearbyen to Longyearbyen",
+      "url": "/yacht-charter/itineraries/arctic/longyearbyen-to-longyearbyen/",
+      "days": 10,
+      "destinations": [
+        "arctic",
+        "arctic/svalbard"
+      ]
+    },
+    {
+      "id": "dubai-to-abu-dhabi",
+      "title": "Dubai to Abu Dhabi",
+      "url": "/yacht-charter/itineraries/middle-east/dubai-to-abu-dhabi/",
+      "days": 7,
+      "destinations": [
+        "middle-east"
+      ]
+    },
+    {
+      "id": "antarctica-itinerary",
+      "title": "Antarctica Itinerary",
+      "url": "/yacht-charter/itineraries/antarctica/antarctica-itinerary/",
+      "days": 7,
+      "destinations": [
+        "antarctica",
+        "antarctica/antarctica"
+      ]
+    },
+    {
+      "id": "scenic-eclipse-in-antarctica",
+      "title": "Scenic Eclipse in Antarctica",
+      "url": "/yacht-charter/itineraries/antarctica/scenic-eclipse-in-antarctica/",
+      "days": 12,
+      "destinations": [
+        "antarctica",
+        "antarctica/antarctica"
+      ]
+    }
+  ]
+}
