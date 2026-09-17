@@ -142,6 +142,8 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
   const [destOptions, setDestOptions] = useState<AtlasDestinationOption[]>([]);
   const [destState, setDestState] = useState<Record<number, DestFetchState>>({});
   const [openIds, setOpenIds] = useState<Set<string>>(new Set());
+  /* Destination slots fold away like the yacht cards; the first opens on load. */
+  const [openDests, setOpenDests] = useState<Set<number>>(new Set([0]));
   const [cardState, setCardState] = useState<Record<string, CardFetchState>>({});
   const dirtyFields = useRef<Map<string, Set<AutoField>>>(new Map());
   const fetchSeq = useRef<Map<string, number>>(new Map());
@@ -712,6 +714,15 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
     });
   }, []);
 
+  const toggleDestOpen = useCallback((i: number) => {
+    setOpenDests((s) => {
+      const next = new Set(s);
+      if (next.has(i)) next.delete(i);
+      else next.add(i);
+      return next;
+    });
+  }, []);
+
   /* Drag-to-reorder: a ghost follows the pointer and the list reorders live. */
   const yachtUids = useMemo(() => draft?.yachts.map((y) => y.uid) ?? [], [draft]);
   const commitOrder = useCallback(
@@ -890,151 +901,165 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
             {draft.destinations.map((slot, i) => {
               const st = destState[i] ?? { fetching: false, error: null };
               const usedElsewhere = new Set(draft.destinations.filter((_, j) => j !== i).map((d) => d.destinationId));
+              const open = openDests.has(i);
               return (
-                <div key={i} className={styles.destSlot}>
-                  <div className={styles.destSlotHead}>
+                <div key={i} className={styles.yachtEntry}>
+                  <button
+                    type="button"
+                    className={styles.yachtHeader}
+                    onClick={() => toggleDestOpen(i)}
+                    aria-expanded={open}
+                  >
                     <span className={styles.yachtNum}>{String(i + 1).padStart(2, "0")}</span>
-                    <span className={styles.yachtTitle}>{slot.name ? slot.name.toUpperCase() : "CHOOSE A DESTINATION"}</span>
-                    {st.fetching && <span className={styles.headerNote}>Fetching the destination…</span>}
-                    {slot.atlas && !st.fetching && (
-                      <span className={styles.destNote}>
-                        {slot.atlas.contentSource === "live" ? "Copy re-read from the website" : "Copy from the cached snapshot"}
-                      </span>
-                    )}
-                  </div>
-                  <label className={styles.field}>
-                    {/* No label — the slot heading above already names it. */}
-                    <select
-                      className={styles.input}
-                      aria-label={`Destination ${i + 1}`}
-                      value={slot.destinationId ?? ""}
-                      onChange={(e) => pickDestination(i, e.target.value)}
-                    >
-                      <option value="">{destOptions.length ? "Choose…" : "Loading destinations…"}</option>
-                      {grouped.map((g) => (
-                        <optgroup key={g.region} label={g.region}>
-                          {g.options.map((o) => (
-                            <option key={o.id} value={o.id} disabled={usedElsewhere.has(o.id)}>
-                              {`${"  ".repeat(Math.max(0, o.level - 1))}${o.name}${o.pathLabel && o.level > 2 ? ` — ${o.pathLabel}` : ""}`}
-                            </option>
-                          ))}
-                        </optgroup>
-                      ))}
-                    </select>
-                  </label>
-                  {st.error && <p className={styles.fetchWarning}>{st.error}</p>}
-                  {slot.destinationId && (
-                    <>
-                      <div className={styles.grid}>
-                        {COPY_BLOCKS.map((b) => {
-                          const block = slot[b.key];
-                          const edited = block.source === "consultant";
-                          return (
-                            <label key={b.key} className={`${styles.field} ${b.key === "eyebrow" || b.key === "deckLine" ? "" : styles.fieldFull}`}>
-                              <span className={styles.blockHead}>
-                                <span className={styles.fieldLabel}>
-                                  {b.label}
-                                  {b.hint && <span className={styles.fieldLabelHint}> — {b.hint}</span>}
-                                </span>
-                                <span style={{ display: "inline-flex", gap: 10, alignItems: "baseline" }}>
-                                  {edited && slot.atlas && (
-                                    <button type="button" className={styles.restoreLink} onClick={() => restoreBlock(i, b.key)}>
-                                      Restore the original text
-                                    </button>
-                                  )}
-                                  <span className={`${styles.sourceTag} ${edited ? styles.sourceTagEdited : ""}`}>{edited ? "Edited by you" : "From the website"}</span>
-                                </span>
-                              </span>
-                              {b.rows ? (
-                                <textarea rows={b.rows} className={styles.textarea} value={block.value} onChange={(e) => editBlock(i, b.key, e.target.value)} />
-                              ) : (
-                                <input type="text" className={styles.input} value={block.value} onChange={(e) => editBlock(i, b.key, e.target.value)} />
-                              )}
-                            </label>
-                          );
-                        })}
-                        <label className={`${styles.field} ${styles.fieldFull}`}>
-                          <span className={styles.fieldLabel}>
-                            YOUR NOTE ON THIS DESTINATION <span className={styles.fieldLabelHint}>— optional, signed with your first name</span>
-                          </span>
-                          <textarea
-                            rows={2}
-                            className={styles.textarea}
-                            placeholder="Example – You were interested in cruising Sicily last year. I’ve included this as the first option in case these are still your plans for next summer."
-                            value={slot.consultantNote.value}
-                            onChange={(e) => editBlock(i, "consultantNote", e.target.value)}
-                          />
-                        </label>
-                      </div>
-                      <div className={styles.field}>
-                        <span className={styles.fieldLabel}>
-                          THREE IMAGES <span className={styles.fieldLabelHint}>— from the website, replaceable; the client swipes through them</span>
+                    <span className={styles.yachtTitle}>
+                      {slot.name ? slot.name.toUpperCase() : "CHOOSE A DESTINATION"}
+                      {st.fetching && <span className={styles.headerNote}> Fetching the destination…</span>}
+                      {slot.atlas && !st.fetching && (
+                        <span className={styles.destNote}>
+                          {" "}
+                          {slot.atlas.contentSource === "live" ? "Copy re-read from the website" : "Copy from the cached snapshot"}
                         </span>
-                        <div className={styles.imageSlots}>
-                          {([0, 1, 2] as const).map((n) => {
-                            const img = slot.images[n] ?? { value: "", source: "atlas" as const };
-                            const candidates = slot.atlas?.images ?? [];
-                            const fromAtlas = img.source === "atlas";
+                      )}
+                    </span>
+                    <span className={styles.toggleIcon}>{open ? "−" : "+"}</span>
+                  </button>
+                  {open && (
+                    <div className={styles.destBody}>
+                    <label className={styles.field}>
+                      {/* No label — the slot heading above already names it. */}
+                      <select
+                        className={styles.input}
+                        aria-label={`Destination ${i + 1}`}
+                        value={slot.destinationId ?? ""}
+                        onChange={(e) => pickDestination(i, e.target.value)}
+                      >
+                        <option value="">{destOptions.length ? "Choose…" : "Loading destinations…"}</option>
+                        {grouped.map((g) => (
+                          <optgroup key={g.region} label={g.region}>
+                            {g.options.map((o) => (
+                              <option key={o.id} value={o.id} disabled={usedElsewhere.has(o.id)}>
+                                {`${"  ".repeat(Math.max(0, o.level - 1))}${o.name}${o.pathLabel && o.level > 2 ? ` — ${o.pathLabel}` : ""}`}
+                              </option>
+                            ))}
+                          </optgroup>
+                        ))}
+                      </select>
+                    </label>
+                    {st.error && <p className={styles.fetchWarning}>{st.error}</p>}
+                    {slot.destinationId && (
+                      <>
+                        <div className={styles.grid}>
+                          {COPY_BLOCKS.map((b) => {
+                            const block = slot[b.key];
+                            const edited = block.source === "consultant";
                             return (
-                              <div key={n} className={styles.imageSlot}>
+                              <label key={b.key} className={`${styles.field} ${b.key === "eyebrow" || b.key === "deckLine" ? "" : styles.fieldFull}`}>
                                 <span className={styles.blockHead}>
-                                  <span className={styles.fieldLabel}>IMAGE {n + 1}</span>
-                                  <span className={`${styles.sourceTag} ${fromAtlas ? "" : styles.sourceTagEdited}`}>{fromAtlas ? "From the website" : "Edited by you"}</span>
+                                  <span className={styles.fieldLabel}>
+                                    {b.label}
+                                    {b.hint && <span className={styles.fieldLabelHint}> — {b.hint}</span>}
+                                  </span>
+                                  <span style={{ display: "inline-flex", gap: 10, alignItems: "baseline" }}>
+                                    {edited && slot.atlas && (
+                                      <button type="button" className={styles.restoreLink} onClick={() => restoreBlock(i, b.key)}>
+                                        Restore the original text
+                                      </button>
+                                    )}
+                                    <span className={`${styles.sourceTag} ${edited ? styles.sourceTagEdited : ""}`}>{edited ? "Edited by you" : "From the website"}</span>
+                                  </span>
                                 </span>
-                                <button
-                                  type="button"
-                                  className={styles.imagePreview}
-                                  onClick={() => img.value && setLightbox({ url: img.value, label: `${slot.name} image ${n + 1}` })}
-                                  aria-label="View this image larger"
-                                >
-                                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                                  {img.value && <img src={img.value} alt="" loading="lazy" />}
-                                </button>
-                                {candidates.length > 0 && (
-                                  <div className={styles.thumbStrip}>
-                                    {candidates.map((u) => (
-                                      <div key={u} className={`${styles.thumb} ${img.value === u ? styles.thumbSelected : ""}`}>
-                                        <button type="button" className={styles.thumbPick} onClick={() => setImage(i, n, u, "atlas")} aria-label="Use this image" aria-pressed={img.value === u}>
-                                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                                          <img src={u} alt="" loading="lazy" />
-                                          {img.value === u && <span className={styles.thumbCheck} aria-hidden="true">✓</span>}
-                                        </button>
-                                      </div>
-                                    ))}
-                                  </div>
+                                {b.rows ? (
+                                  <textarea rows={b.rows} className={styles.textarea} value={block.value} onChange={(e) => editBlock(i, b.key, e.target.value)} />
+                                ) : (
+                                  <input type="text" className={styles.input} value={block.value} onChange={(e) => editBlock(i, b.key, e.target.value)} />
                                 )}
-                                <details className={styles.slotCustom}>
-                                  <summary>Paste a custom image URL</summary>
-                                  <input
-                                    type="url"
-                                    className={styles.input}
-                                    placeholder="https://…"
-                                    value={fromAtlas ? "" : img.value}
-                                    onChange={(e) => setImage(i, n, e.target.value, "consultant")}
-                                  />
-                                </details>
-                              </div>
+                              </label>
                             );
                           })}
+                          <label className={`${styles.field} ${styles.fieldFull}`}>
+                            <span className={styles.fieldLabel}>
+                              YOUR NOTE ON THIS DESTINATION <span className={styles.fieldLabelHint}>— optional, signed with your first name</span>
+                            </span>
+                            <textarea
+                              rows={2}
+                              className={styles.textarea}
+                              placeholder="Example – You were interested in cruising Sicily last year. I’ve included this as the first option in case these are still your plans for next summer."
+                              value={slot.consultantNote.value}
+                              onChange={(e) => editBlock(i, "consultantNote", e.target.value)}
+                            />
+                          </label>
                         </div>
-                      </div>
-                      <div className={styles.field}>
-                        <span className={styles.fieldLabel}>
-                          SAMPLE ITINERARIES <span className={styles.fieldLabelHint}>— from the website, drawn on the globe when a client opens one</span>
-                        </span>
-                        {slot.websiteItineraries?.length ? (
-                          <ul className={styles.itinSummary}>
-                            {slot.websiteItineraries.map((it) => (
-                              <li key={it.id}>
-                                {it.title} <span className={styles.fieldLabelHint}>— {it.days} days, {it.stops} day headings</span>
-                              </li>
-                            ))}
-                          </ul>
-                        ) : (
-                          <p className={styles.fieldLabelHint}>The website has no sample itinerary for this destination, so the panel shows none.</p>
-                        )}
-                      </div>
-                    </>
+                        <div className={styles.field}>
+                          <span className={styles.fieldLabel}>
+                            THREE IMAGES <span className={styles.fieldLabelHint}>— from the website, replaceable; the client swipes through them</span>
+                          </span>
+                          <div className={styles.imageSlots}>
+                            {([0, 1, 2] as const).map((n) => {
+                              const img = slot.images[n] ?? { value: "", source: "atlas" as const };
+                              const candidates = slot.atlas?.images ?? [];
+                              const fromAtlas = img.source === "atlas";
+                              return (
+                                <div key={n} className={styles.imageSlot}>
+                                  <span className={styles.blockHead}>
+                                    <span className={styles.fieldLabel}>IMAGE {n + 1}</span>
+                                    <span className={`${styles.sourceTag} ${fromAtlas ? "" : styles.sourceTagEdited}`}>{fromAtlas ? "From the website" : "Edited by you"}</span>
+                                  </span>
+                                  <button
+                                    type="button"
+                                    className={styles.imagePreview}
+                                    onClick={() => img.value && setLightbox({ url: img.value, label: `${slot.name} image ${n + 1}` })}
+                                    aria-label="View this image larger"
+                                  >
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    {img.value && <img src={img.value} alt="" loading="lazy" />}
+                                  </button>
+                                  {candidates.length > 0 && (
+                                    <div className={styles.thumbStrip}>
+                                      {candidates.map((u) => (
+                                        <div key={u} className={`${styles.thumb} ${img.value === u ? styles.thumbSelected : ""}`}>
+                                          <button type="button" className={styles.thumbPick} onClick={() => setImage(i, n, u, "atlas")} aria-label="Use this image" aria-pressed={img.value === u}>
+                                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                                            <img src={u} alt="" loading="lazy" />
+                                            {img.value === u && <span className={styles.thumbCheck} aria-hidden="true">✓</span>}
+                                          </button>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                  <details className={styles.slotCustom}>
+                                    <summary>Paste a custom image URL</summary>
+                                    <input
+                                      type="url"
+                                      className={styles.input}
+                                      placeholder="https://…"
+                                      value={fromAtlas ? "" : img.value}
+                                      onChange={(e) => setImage(i, n, e.target.value, "consultant")}
+                                    />
+                                  </details>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                        <div className={styles.field}>
+                          <span className={styles.fieldLabel}>
+                            SAMPLE ITINERARIES <span className={styles.fieldLabelHint}>— from the website, drawn on the globe when a client opens one</span>
+                          </span>
+                          {slot.websiteItineraries?.length ? (
+                            <ul className={styles.itinSummary}>
+                              {slot.websiteItineraries.map((it) => (
+                                <li key={it.id}>
+                                  {it.title} <span className={styles.fieldLabelHint}>— {it.days} days, {it.stops} day headings</span>
+                                </li>
+                              ))}
+                            </ul>
+                          ) : (
+                            <p className={styles.fieldLabelHint}>The website has no sample itinerary for this destination, so the panel shows none.</p>
+                          )}
+                        </div>
+                      </>
+                    )}
+                    </div>
                   )}
                 </div>
               );

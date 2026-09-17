@@ -351,11 +351,58 @@
 }
 
 .description {
+  --clamp-max: calc(5 * 1.8em);
   font-size: 13.5px;
   line-height: 1.8;
   color: var(--fg-72);
   margin: 0 0 24px;
   text-wrap: pretty;
+}
+
+/* Body copy folded to five lines, with "Read more" beneath it. The fold is a
+   max-height, not a line clamp, so the block keeps reporting the full height of
+   its copy and the link appears only when something is genuinely hidden. Each
+   folded block sets its own --clamp-max: five lines of its own type, plus any
+   padding it carries, since box-sizing is border-box. */
+.clamp > :last-child {
+  margin-bottom: 0;
+}
+
+.clampFolded {
+  overflow: hidden;
+  max-height: var(--clamp-max);
+}
+
+/* Pulled up under the block's own 24px bottom margin, so an unfolded block and
+   a folded one sit the same distance from what follows. */
+.readMore {
+  display: inline-block;
+  margin: -14px 0 24px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 9.5px;
+  letter-spacing: 0.28em;
+  font-weight: 500;
+  color: var(--fg-6);
+  cursor: pointer;
+  transition: color 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.readMore:hover {
+  color: var(--mint);
+}
+
+/* Under a day's narrative, which is indented past the day number. */
+.readMoreDay {
+  margin: -8px 0 16px;
+  padding-left: 74px;
+}
+
+/* Light theme: in ink rather than mint on hover, as for .textLink below. */
+[data-theme="light"] .readMore:hover {
+  color: var(--fg);
 }
 
 .textLink {
@@ -994,6 +1041,16 @@
   text-wrap: pretty;
 }
 
+/* The route's own paragraphs as one foldable block: it carries the paragraphs'
+   type so the five-line fold measures in their lines, and their bottom margin
+   so the spacing beneath is unchanged. */
+.itIntro {
+  --clamp-max: calc(5 * 1.8em);
+  font-size: 13px;
+  line-height: 1.8;
+  margin: 0 0 24px;
+}
+
 .dayHead {
   font-size: 10px;
   letter-spacing: 0.32em;
@@ -1025,6 +1082,7 @@
 
 /* The selected day's narrative, whole, beneath its heading. */
 .dayText {
+  --clamp-max: calc(5 * 1.75em + 16px);
   font-size: 12.5px;
   font-weight: 300;
   line-height: 1.75;

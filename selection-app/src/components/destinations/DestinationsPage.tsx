@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import type { DestinationsPageConfig, DestinationsPageDestination, DestinationsPageYacht } from "@/lib/types";
 import type { GlobePin, RoutePoint } from "@/lib/atlas/globe";
 import type { DestinationsPageItinerary, DestinationsPageStop, Consultant } from "@/lib/types";
@@ -809,6 +809,76 @@ export default function DestinationsPage({ config }: { config: DestinationsPageC
   );
 }
 
+/* ----------------------------------------------------------- read more */
+
+/**
+ * Body copy folded to five lines with a "Read more" beneath it.
+ *
+ * The fold is a max-height rather than a line clamp, so the element keeps
+ * reporting the full height of its copy and the link is rendered only when
+ * something is actually hidden — copy that already fits is left exactly as it
+ * was, with no link and no change in spacing. The measurement is taken only
+ * while the block is folded: expanded, the element is its own full height and
+ * there is nothing left to compare it against.
+ */
+function ReadMore({
+  className,
+  linkClassName,
+  children,
+}: {
+  className: string;
+  /** Extra class on the link, where it has to line up with an indented block. */
+  linkClassName?: string;
+  children: React.ReactNode;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const id = useId();
+  const [open, setOpen] = useState(false);
+  const [overflows, setOverflows] = useState(false);
+  const openRef = useRef(open);
+  openRef.current = open;
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let live = true;
+    const measure = () => {
+      if (!live || openRef.current) return;
+      setOverflows(el.scrollHeight - el.clientHeight > 2);
+    };
+    measure();
+    // The panel is resizable and the copy reflows with it, so a block that fits
+    // at one width may not at another.
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    // A web font landing after the first paint changes the line count.
+    void document.fonts?.ready?.then(measure).catch(() => {});
+    return () => {
+      live = false;
+      ro.disconnect();
+    };
+  }, [children]);
+
+  return (
+    <>
+      <div id={id} ref={ref} className={`${className} ${styles.clamp} ${open ? "" : styles.clampFolded}`}>
+        {children}
+      </div>
+      {overflows && (
+        <button
+          type="button"
+          className={`${styles.readMore} ${linkClassName ?? ""}`}
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          aria-controls={id}
+        >
+          {open ? "READ LESS ↑" : "READ MORE ↓"}
+        </button>
+      )}
+    </>
+  );
+}
+
 /* --------------------------------------------------------- destination */
 
 function DestinationPanel({
@@ -833,7 +903,7 @@ function DestinationPanel({
       {dest.description.source === "consultant" && consultant && (
         <div className={`${styles.attribution} ${styles.attributionMint}`}>CURATED FOR YOU BY {consultant.toUpperCase()}</div>
       )}
-      {dest.description.value && <p className={styles.description}>{dest.description.value}</p>}
+      {dest.description.value && <ReadMore className={styles.description}>{dest.description.value}</ReadMore>}
       {dest.consultantNote?.value && (
         <p className={styles.note}>
           {dest.consultantNote.value}
@@ -897,11 +967,15 @@ function ItineraryPanel({
       </button>
       <div className={styles.itEyebrow}>{itineraryEyebrow(itinerary)}</div>
       <h3 className={styles.itTitle}>{itinerary.title.toUpperCase()}</h3>
-      {itinerary.intro.map((para, i) => (
-        <p className={styles.itPara} key={i}>
-          {para}
-        </p>
-      ))}
+      {itinerary.intro.length > 0 && (
+        <ReadMore className={styles.itIntro}>
+          {itinerary.intro.map((para, i) => (
+            <p className={styles.itPara} key={i}>
+              {para}
+            </p>
+          ))}
+        </ReadMore>
+      )}
       <div className={styles.dayHead}>DAY TO DAY · SELECT A STOP</div>
       {/* Each row is a day heading as the website wrote it. Its narrative is
           a full paragraph, shown whole when the row is selected — never cut
@@ -931,7 +1005,11 @@ function ItineraryPanel({
                   {s.image && <img src={s.image} alt="" loading="lazy" decoding="async" />}
                 </span>
               </button>
-              {on && s.text && <p className={styles.dayText}>{s.text}</p>}
+              {on && s.text && (
+                <ReadMore className={styles.dayText} linkClassName={styles.readMoreDay}>
+                  {s.text}
+                </ReadMore>
+              )}
             </div>
           );
         })}
