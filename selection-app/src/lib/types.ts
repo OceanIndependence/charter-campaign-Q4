@@ -1,6 +1,6 @@
 /**
  * Data model per the Tier 3 handoff README. In production every PageConfig
- * is assembled by the Charter Portal (consultant form → publish → unique
+ * is assembled by the Retail Charter Portal (consultant form → publish → unique
  * client URL); this app only renders it.
  */
 

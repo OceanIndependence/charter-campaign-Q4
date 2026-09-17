@@ -7,11 +7,11 @@ to `/destinations/<slug>` and renamed `PersonalisedAtlasPage.tsx` to `Destinatio
 paths below use the new route; the `/api/atlas/destinations/<id>` endpoint and the `src/**/atlas/**` module
 paths are unchanged.
 
-**Carried onto `claude/tier2-website-itineraries` on 17 September 2026.** That branch was started fresh from
-`main` for the Tier 2 design handoff and only the itinerary work was cherry-picked onto it, so this change was
-not on it and the composed deck lines were still showing — Dubrovnik's deck line and the opening of its body
-were the same sentence. The change below is applied there unaltered; the file names in it are the current
-ones. `Personalised.module.css` named further down is now `Destinations.module.css`.
+**Also carried onto `claude/tier2-website-itineraries` on 17 September 2026,** before this branch reached
+`main`. That branch was started fresh from `main` for the Tier 2 design handoff and only the itinerary work
+was cherry-picked onto it, so the change was not on it and the composed deck lines were still showing there —
+Dubrovnik's deck line and the opening of its body were the same sentence. It was applied unaltered, so the two
+copies are identical. `Personalised.module.css` named further down is now `Destinations.module.css`.
 
 ## The principle
 

@@ -12,7 +12,7 @@ self-contained HTML file; the shared `assets/` folder serves the runtime
 | `/atlas/` | Tier 1 — The 2027 Atlas (interactive globe) |
 | `/personalised-atlas/` | Tier 2 — Personalised Atlas (Harrington) |
 | `/yacht-selection/` | Tier 3 — Yacht Selection (3D ring carousel) |
-| `/portal/` | Charter Portal — consultant form |
+| `/portal/` | Retail Charter Portal — consultant form |
 
 ## Deploy on Vercel
 
@@ -37,7 +37,7 @@ as a Next.js (App Router) + TypeScript app, recreated from the design handoff
 in `design_handoff_tier3_yacht_selection/` (see its README for the full spec).
 Client pages are served at `/selection/[slug]`, driven by one typed
 `PageConfig` object per client (demo config included; swap
-`getPageConfig()` in `src/lib/demo-config.ts` for the Charter Portal API).
+`getPageConfig()` in `src/lib/demo-config.ts` for the Retail Charter Portal API).
 Deploy it on Vercel as its own project with **Root Directory** set to
 `selection-app` — see the app's own structure for details.
 
@@ -74,7 +74,7 @@ only (title, description, Open Graph image, canonical) and no analytics.
 ## Tier 2 production page (`selection-app/` → `/destinations/<slug>`)
 
 The Personalised Atlas is the 2027 Atlas for one client: the consultant chooses three
-destinations and a shortlist of two to 10 yachts in the Charter Portal (choose
+destinations and a shortlist of two to 10 yachts in the Retail Charter Portal (choose
 "Personalised Atlas" when creating a new selection); the client gets the globe with
 those three pinned bright, a yacht rail and a Tier 3-style detail drawer. It composes
 the Tier 1 globe and content pipeline with the Tier 3 Yachtfolio, image, publishing and

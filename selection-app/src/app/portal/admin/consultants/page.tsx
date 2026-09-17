@@ -9,7 +9,7 @@ import { ADMIN_CONSULTANTS_PATH, adminNavLabel, PROFILE_PATH } from "@/lib/consu
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Charter Portal — Consultants",
+  title: "Retail Charter Portal — Consultants",
   robots: { index: false, follow: false },
 };
 

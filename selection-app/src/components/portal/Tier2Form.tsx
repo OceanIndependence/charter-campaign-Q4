@@ -814,7 +814,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
   if (loadError) {
     return (
       <main className={styles.main}>
-        <div className={styles.eyebrow}>CHARTER PORTAL</div>
+        <div className={styles.eyebrow}>RETAIL CHARTER PORTAL</div>
         <p className={styles.intro}>{loadError}</p>
         <p className={styles.intro}>
           <a className={styles.statusLink} href="/portal">
@@ -827,7 +827,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
   if (!draft) {
     return (
       <main className={styles.main}>
-        <div className={styles.eyebrow}>CHARTER PORTAL</div>
+        <div className={styles.eyebrow}>RETAIL CHARTER PORTAL</div>
         <p className={styles.intro}>Loading the form…</p>
       </main>
     );

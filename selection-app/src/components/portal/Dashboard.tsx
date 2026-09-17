@@ -227,7 +227,7 @@ export default function Dashboard() {
   if (items === null) {
     return (
       <main className={styles.main}>
-        <div className={styles.eyebrow}>CHARTER PORTAL</div>
+        <div className={styles.eyebrow}>RETAIL CHARTER PORTAL</div>
         <p className={styles.intro}>Loading your selections…</p>
       </main>
     );
@@ -239,7 +239,7 @@ export default function Dashboard() {
     <main className={`${styles.main} ${styles.dashMain}`}>
       <div className={styles.dashHead}>
         <div>
-          <div className={styles.eyebrow}>CHARTER PORTAL</div>
+          <div className={styles.eyebrow}>RETAIL CHARTER PORTAL</div>
           <h1 className={styles.title}>Your Selections</h1>
           <p className={styles.intro}>
             Every client presentation you have prepared, newest first. Open one to keep working on it,

@@ -65,7 +65,7 @@ export default function ProfileForm({ initial, gated }: { initial: ConsultantRec
 
   return (
     <main className={styles.main}>
-      <div className={styles.eyebrow}>CHARTER PORTAL</div>
+      <div className={styles.eyebrow}>RETAIL CHARTER PORTAL</div>
       <h1 className={styles.title}>Your Profile</h1>
       <p className={styles.intro}>
         What clients see beneath every page you publish: your photo, name, title and how to reach you. Your numbers are yours to keep

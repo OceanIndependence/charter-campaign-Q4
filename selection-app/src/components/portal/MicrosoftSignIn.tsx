@@ -8,7 +8,7 @@ function messageFor(error: string | null, detail: string | null, lockedReason: s
     case null:
       return null;
     case NO_RECORD_ERROR:
-      return "This Microsoft account has no consultant profile in the Charter Portal. Contact marketing to be added.";
+      return "This Microsoft account has no consultant profile in the Retail Charter Portal. Contact marketing to be added.";
     case "not-configured":
       return "Microsoft sign-in is not configured for this environment.";
     case "failed":
