@@ -11,7 +11,8 @@
  *    they hold a constant screen size at any zoom and can carry a CSS glow
  *    (point sprites could not, and misbehaved at narrow fields of view).
  *  - setViewShift offsets the camera's projection window so the globe frames
- *    its subject in the stage left of an open side panel.
+ *    its subject in the stage an open panel leaves: left of a side panel, or
+ *    above a bottom sheet.
  *
  *  - Telephoto zoom: the camera stays at a fixed distance and the field of
  *    view narrows, which keeps the texture-resolution maths exact.
@@ -182,6 +183,8 @@ export class AtlasGlobe {
   private zoomMax: number;
   /** Horizontal offset of the projection window, px (see setViewShift) */
   private viewShift = 0;
+  /** Vertical offset of the projection window, px (see setViewShift) */
+  private viewShiftY = 0;
   private route: RoutePoint[] | null = null;
   private routeLine: THREE.Line | null = null;
   private routeNodes: RouteNode[] = [];
@@ -605,12 +608,14 @@ export class AtlasGlobe {
   }
 
   /**
-   * Shift the projection window right by `px`, so a subject framed at the
-   * stage's centre lands at the centre of the part of the stage a side panel
-   * leaves uncovered. 0 clears it.
+   * Shift the projection window right by `px` and down by `py`, so a subject
+   * framed at the stage's centre lands at the centre of the part of the stage
+   * a panel leaves uncovered: `px` for a side panel, `py` for a bottom sheet.
+   * 0 clears either.
    */
-  setViewShift(px: number) {
+  setViewShift(px: number, py = 0) {
     this.viewShift = px || 0;
+    this.viewShiftY = py || 0;
   }
 
   /** Draw a route through the points (a hairline plus a trail of dots), or clear it with null or fewer than two points. */
@@ -1093,9 +1098,10 @@ export class AtlasGlobe {
     const targetPx = Math.max(40, (Math.min(this.w, this.h) / 2 - 24) * this.zoom);
     this.camera.position.z = CAMERA_D;
     this.camera.fov = (2 * Math.atan(this.h / 2 / (CAMERA_D * targetPx))) / d2r;
-    // With a side panel open the subject is framed in the uncovered part of
-    // the stage: the projection window is shifted rather than the camera.
-    if (this.viewShift) this.camera.setViewOffset(this.w, this.h, this.viewShift, 0, this.w, this.h);
+    // With a panel open the subject is framed in the uncovered part of the
+    // stage: the projection window is shifted rather than the camera — right
+    // for a side panel, down for a bottom sheet.
+    if (this.viewShift || this.viewShiftY) this.camera.setViewOffset(this.w, this.h, this.viewShift, this.viewShiftY, this.w, this.h);
     else if (this.camera.view?.enabled) this.camera.clearViewOffset();
     this.camera.updateProjectionMatrix();
     this.updateDetail(now);

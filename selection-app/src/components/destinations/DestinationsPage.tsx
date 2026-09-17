@@ -27,8 +27,12 @@ const PANEL_PX = 460;
 const PANEL_VW = 0.88;
 /** Below this width the panel's cover of the stage is compensated with a view shift. */
 const SHIFT_STAGE_MIN = 560;
-/** At or below this width the panel is a bottom sheet (see the module CSS), so no shift. */
-const SHEET_MAX = 420;
+/**
+ * At or below this width the panel is a bottom sheet (see the module CSS).
+ * It has to clear the widest phone in portrait: at 430px the side panel is
+ * 88vw, which left 52px of stage beside it — a sliver, not a globe.
+ */
+const SHEET_MAX = 480;
 /** Route pins are keyed by stop index with this prefix. */
 const STOP_PIN = "st-";
 
@@ -318,6 +322,26 @@ export default function DestinationsPage({ config }: { config: DestinationsPageC
 
   /* ---------------------------------------------------------- itineraries */
 
+  /**
+   * How much to ease a route's fitted zoom for the layout in front of it.
+   *
+   * `fitRoute` sizes a route against the stage's shorter side. On the
+   * bottom-sheet layout the globe's usable window is not the stage but the band
+   * of it above the sheet — about a third of its height — so a route fitted to
+   * the stage runs off the top of that band. Fitting it to the band instead
+   * keeps the whole route where it can be seen. Every wider layout leaves the
+   * stage's full height above the subject, so this is 1 there.
+   */
+  const routeZoomFactor = useCallback(() => {
+    const stage = stageRef.current;
+    const panel = panelRef.current;
+    if (!stage || !panel || window.innerWidth > SHEET_MAX) return 1;
+    const band = panel.getBoundingClientRect().top - stage.getBoundingClientRect().top;
+    const fitsTo = Math.min(window.innerWidth, stage.clientHeight);
+    if (band <= 0 || fitsTo <= 0) return 1;
+    return Math.max(0.5, Math.min(1, band / fitsTo));
+  }, []);
+
   /** A sample itinerary: swap the panel body, draw the route and fit the camera to it. */
   const openItinerary = useCallback(
     (destId: string, index: number) => {
@@ -340,9 +364,9 @@ export default function DestinationsPage({ config }: { config: DestinationsPageC
       g.setFocus(pins.map((p) => p.id));
       g.setSelected(null);
       const f = fitRoute(it.stops.flatMap((s) => s.points));
-      g.flyTo(f.lat, f.lon, f.zoom, 1500);
+      g.flyTo(f.lat, f.lon, f.zoom * routeZoomFactor(), 1500);
     },
-    [byId, scrollPanelTop]
+    [byId, scrollPanelTop, routeZoomFactor]
   );
 
   /** Back to the destination: route off, destination pinned and framed again. */
@@ -494,24 +518,46 @@ export default function DestinationsPage({ config }: { config: DestinationsPageC
   const selectedOther = selectedId && !selectedDest ? otherById.get(selectedId) ?? null : null;
   const panelOpen = Boolean(selectedDest || selectedOther);
 
-  // The side panel covers the right of the stage. Where the uncovered part is
-  // narrow (< 560px) the globe's projection window is shifted by half the
-  // panel width, so a route or a pin is framed in the visible part rather than
+  // An open panel covers part of the stage, so the globe's projection window
+  // is shifted and the subject is framed in what is left of it rather than
   // behind the panel; cleared when the panel closes. Re-evaluated on resize.
-  // The bottom-sheet layout (≤ 420px) covers no width, so it never shifts.
+  //
+  //  - Side panel: it covers the right. Where the uncovered part is narrow
+  //    (< 560px) the window shifts right by half the panel's width.
+  //  - Bottom sheet (SHEET_MAX): it covers the foot of the stage rather than one
+  //    side, so the window shifts down by half the sheet's height instead. On a
+  //    phone the sheet takes about two thirds of the stage, and without this a
+  //    route drawn at the stage's centre was drawn behind it.
   useEffect(() => {
     const apply = () => {
       const g = globeRef.current;
       const stage = stageRef.current;
       if (!g || !stage) return;
       const vw = window.innerWidth;
+      const sheet = vw <= SHEET_MAX;
       const pw = Math.min(PANEL_PX, vw * PANEL_VW);
-      const shift = panelOpen && vw > SHEET_MAX && stage.clientWidth - pw < SHIFT_STAGE_MIN ? pw / 2 : 0;
-      g.setViewShift(shift);
+      const shiftX = panelOpen && !sheet && stage.clientWidth - pw < SHIFT_STAGE_MIN ? pw / 2 : 0;
+      const sheetH = panelOpen && sheet ? panelRef.current?.getBoundingClientRect().height ?? 0 : 0;
+      g.setViewShift(shiftX, sheetH / 2);
     };
     apply();
     window.addEventListener("resize", apply);
     return () => window.removeEventListener("resize", apply);
+  }, [panelOpen]);
+
+  // On a phone the panel is a bottom sheet at the foot of the stage, and the
+  // stage starts well below the fold — so opening one put the sheet off screen
+  // and the destination looked as though nothing had happened. Bringing the
+  // stage's foot to the foot of the viewport puts the whole stage, sheet and
+  // the globe above it, on screen. Wider layouts need none of this: the panel
+  // is a side panel and the stage is already where it was.
+  useEffect(() => {
+    if (!panelOpen || window.innerWidth > SHEET_MAX) return;
+    const stage = stageRef.current;
+    if (!stage) return;
+    // A frame after the open, so the stage has taken its panel-open height.
+    const id = window.setTimeout(() => stage.scrollIntoView({ behavior: "smooth", block: "end" }), 60);
+    return () => window.clearTimeout(id);
   }, [panelOpen]);
 
   const scrollToRail = useCallback(() => {

@@ -1231,8 +1231,72 @@
   }
 }
 
-/* ≤ 420px: globe at 60vh, tab strip scrolls, panel and drawer as bottom sheets. */
-@media (max-width: 420px) {
+/* ≤ 560px: the itinerary in a narrow panel. Below this width the panel is
+   either a bottom sheet or a side panel barely wider than one, and the day row
+   — a 44px number column, a 92px photo and two 16px gaps — was spending 168px
+   of it on chrome and leaving the day's name 132px to wrap in. Everything here
+   is the same layout at a smaller gauge; nothing is dropped. */
+@media (max-width: 560px) {
+  .itinCard {
+    padding: 16px 16px;
+  }
+
+  .itinCardTitle {
+    letter-spacing: 0.18em;
+  }
+
+  .itTitle {
+    font-size: 18px;
+    letter-spacing: 0.18em;
+    margin-bottom: 14px;
+    /* The close button is two elements above the title here, so nothing needs
+       to be kept clear of it. */
+    padding-right: 0;
+  }
+
+  .dayRowBtn {
+    gap: 12px;
+    padding: 12px 0 12px 12px;
+  }
+
+  /* Narrower, but still wide enough for "DAY 1" on one line; a two-day label
+     wraps to two lines here exactly as it does on the desktop column. */
+  .dayNum {
+    flex-basis: 42px;
+    letter-spacing: 0.2em;
+  }
+
+  .dayThumb {
+    flex: 0 0 64px;
+    width: 64px;
+    height: 44px;
+  }
+
+  /* Indented to the day name above it, not to the wider desktop column. */
+  .dayText {
+    padding: 0 0 14px 54px;
+  }
+
+  /* A full-width target: the panel is too narrow for a button to sit in a
+     corner of it and still be easy to hit. */
+  .itCta {
+    display: block;
+    text-align: center;
+  }
+
+  /* A 12px-tall link is a poor target on a touch screen: the padding grows the
+     hit area and the margins absorb it, so the spacing is unchanged. */
+  .readMore {
+    padding: 8px 0;
+    margin: -22px 0 16px;
+  }
+}
+
+/* ≤ 480px — every phone in portrait, and in step with SHEET_MAX in
+   DestinationsPage.tsx: globe at 60vh, tab strip scrolls, panel and drawer as
+   bottom sheets. Below this a side panel would be 88vw and leave a sliver of
+   stage beside it rather than a globe. */
+@media (max-width: 480px) {
   .stage {
     height: 60vh;
     height: 60svh;
@@ -1249,11 +1313,22 @@
     display: none;
   }
 
+  /* A sheet over a 60svh globe left too little of either: 364px of sheet for a
+     seven-day itinerary, and a strip of globe above it. With a panel open the
+     stage takes most of the screen instead, so the sheet is tall enough to read
+     an itinerary in and what is left of the globe is still a map. The height
+     changes in one step rather than over a transition, so the globe canvas
+     resizes once. */
+  .stagePanelOpen {
+    height: 92vh;
+    height: 92svh;
+  }
+
   .panel {
     top: auto;
     left: 0;
     width: 100%;
-    max-height: 72%;
+    max-height: 64%;
     border-left: 0;
     border-top: 1px solid var(--hairline-strong);
     transform: translateY(100%);
