@@ -6,7 +6,7 @@
  * (Amalfi Coast, Sardinia, the Aeolian Islands), yachts from the demo fleet,
  * copy from the export. Two uses:
  *
- *  - /atlas/harrington-summer-2027 renders demoAtlasConfig() when no page has
+ *  - /destinations/harrington-summer-2027 renders demoDestinationsConfig() when no page has
  *    been published under that slug, so the build can be reviewed on a
  *    deployment with no storage and no Yachtfolio passkey;
  *  - the first dashboard load in demo mode seeds the same draft into the
@@ -17,10 +17,10 @@
  * by the shared mapping, never typed in.
  */
 
-import type { AtlasPageConfig } from "@/lib/types";
+import type { DestinationsPageConfig } from "@/lib/types";
 import type { AnySelection, ContentBlock, Tier2Draft, Tier2DraftYacht, Tier2DestinationDraft } from "@/lib/portal-types";
 import { TIER2_DEFAULT_DISCLAIMER, emptyTier2Yacht } from "@/lib/portal-types";
-import { tier2DraftToConfig } from "@/lib/atlas-map";
+import { tier2DraftToConfig } from "@/lib/destinations-map";
 import { atlasCopyFor, atlasResolutionFor, getAtlasIndex, imageCandidates } from "@/server/atlas/content";
 import { demoDetail, demoImages, isDemoFleet } from "./fleet.mjs";
 import { createSelection, listSelections, saveSelection } from "../pages.mjs";
@@ -162,14 +162,14 @@ export function demoTier2Draft(): Omit<Tier2Draft, "id" | "owner" | "createdAt" 
 }
 
 /** The published-shape config the demo page renders (same mapping as publish). */
-export function demoAtlasConfig(): AtlasPageConfig {
+export function demoDestinationsConfig(): DestinationsPageConfig {
   const now = new Date().toISOString();
   const draft: Tier2Draft = { ...demoTier2Draft(), id: "demo-harrington", createdAt: now, updatedAt: now };
   const ids = draft.destinations.map((d) => d.destinationId).filter((x): x is string => Boolean(x));
   return tier2DraftToConfig(draft, DEMO_TIER2_SLUG, atlasResolutionFor(ids));
 }
 
-/** Whether /atlas/<slug> may fall back to the demo page (DEMO_PAGES=false disables it). */
+/** Whether /destinations/<slug> may fall back to the demo page (DEMO_PAGES=false disables it). */
 export function demoPagesEnabled(): boolean {
   return String(process.env.DEMO_PAGES ?? "true").toLowerCase() !== "false";
 }

@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import type { AtlasPageConfig } from "@/lib/types";
-import { isAtlasPageConfig } from "@/lib/types";
-import PersonalisedAtlasPage from "@/components/personalised/PersonalisedAtlasPage";
+import type { DestinationsPageConfig } from "@/lib/types";
+import { isDestinationsPageConfig } from "@/lib/types";
+import DestinationsPage from "@/components/destinations/DestinationsPage";
 import HoldingPage from "@/components/HoldingPage";
 import { getPublishedPage } from "@/server/pages.mjs";
 import { resolveLiveImages } from "@/server/live-images.mjs";
 import { consultantForPage } from "@/server/consultant-render";
 import { noteStorageError } from "@/server/storage.mjs";
 import { CAMPAIGN_ATLAS_URL } from "@/lib/portal-map";
-import { DEMO_TIER2_SLUG, demoAtlasConfig, demoPagesEnabled } from "@/server/demo/harrington";
+import { DEMO_TIER2_SLUG, demoDestinationsConfig, demoPagesEnabled } from "@/server/demo/harrington";
 
 /**
  * Tier 2 client pages — a Personalised Atlas published from the Charter
@@ -31,26 +31,26 @@ export const metadata: Metadata = {
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  let published: { config?: AtlasPageConfig; consultantId?: string } | null;
+  let published: { config?: DestinationsPageConfig; consultantId?: string } | null;
   try {
-    published = (await getPublishedPage(slug)) as { config?: AtlasPageConfig; consultantId?: string } | null;
+    published = (await getPublishedPage(slug)) as { config?: DestinationsPageConfig; consultantId?: string } | null;
   } catch (err) {
     noteStorageError(`read published page ${slug}`, err);
     return <HoldingPage />;
   }
-  let config: AtlasPageConfig | null = null;
-  if (published?.config && isAtlasPageConfig(published.config)) config = published.config;
-  else if (!published && slug === DEMO_TIER2_SLUG && demoPagesEnabled()) config = demoAtlasConfig();
+  let config: DestinationsPageConfig | null = null;
+  if (published?.config && isDestinationsPageConfig(published.config)) config = published.config;
+  else if (!published && slug === DEMO_TIER2_SLUG && demoPagesEnabled()) config = demoDestinationsConfig();
   if (!config || config.destinations.length === 0 || config.yachts.length === 0) notFound();
   // The atlas link is campaign-wide, not part of the client's page.
-  const frozen: AtlasPageConfig = { ...config, atlasUrl: CAMPAIGN_ATLAS_URL };
-  let live: AtlasPageConfig;
+  const frozen: DestinationsPageConfig = { ...config, atlasUrl: CAMPAIGN_ATLAS_URL };
+  let live: DestinationsPageConfig;
   try {
     const consultant = await consultantForPage(published?.consultantId, frozen.consultant);
-    live = { ...((await resolveLiveImages(frozen)) as AtlasPageConfig), consultant };
+    live = { ...((await resolveLiveImages(frozen)) as DestinationsPageConfig), consultant };
   } catch (err) {
     noteStorageError(`resolve live images for ${slug}`, err);
     return <HoldingPage consultant={frozen.consultant} />;
   }
-  return <PersonalisedAtlasPage config={live} />;
+  return <DestinationsPage config={live} />;
 }

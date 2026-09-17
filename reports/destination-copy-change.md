@@ -2,6 +2,11 @@
 
 Branch `claude/dazzling-noether-6cqwu9` · snapshot `data/destinations.json` generated 08 September 2026 · report written 17 September 2026
 
+Merged with `main` on 17 September 2026, which had since moved the Tier 2 client pages from `/atlas/<slug>`
+to `/destinations/<slug>` and renamed `PersonalisedAtlasPage.tsx` to `DestinationsPage.tsx`. The client-page
+paths below use the new route; the `/api/atlas/destinations/<id>` endpoint and the `src/**/atlas/**` module
+paths are unchanged.
+
 ## The principle
 
 Website copy is displayed exactly as the content team wrote it. The code does not compose, truncate,
@@ -153,8 +158,8 @@ pickers, `ConsultantSummary` rows, the Twitter card type and fleet-sync log line
 
 | Function | Call site | Rendered surface |
 |---|---|---|
-| `atlasCopyFor()` | `src/server/atlas/content.ts:getDestinationContent()` | `/api/atlas/destinations/[id]` → the Tier 2 form's EYEBROW, DECK LINE and DESCRIPTION fields at `/portal/edit/[id]`, and from there the draft, `/portal/preview` and the published `/atlas/[slug]` |
-| `atlasCopyFor()` | `src/server/demo/harrington.ts:destination()` | the demo Tier 2 page `/atlas/harrington-summer-2027` |
+| `atlasCopyFor()` | `src/server/atlas/content.ts:getDestinationContent()` | `/api/atlas/destinations/[id]` → the Tier 2 form's EYEBROW, DECK LINE and DESCRIPTION fields at `/portal/edit/[id]`, and from there the draft, `/portal/preview` and the published `/destinations/[slug]` |
+| `atlasCopyFor()` | `src/server/demo/harrington.ts:destination()` | the demo Tier 2 page `/destinations/harrington-summer-2027` |
 | `deckLineFor()` | `atlasCopyFor()` only | as above (new function, extracted from the old inline chain) |
 | `introParagraph()` | `atlasCopyFor()` | as above |
 | `introParagraph()` | `src/components/atlas/AtlasPanel.tsx:137` | **Tier 1** — the destination panel lede on `/2027-charter-season`, for all 125 destinations |
@@ -167,8 +172,8 @@ pickers, `ConsultantSummary` rows, the Twitter card type and fleet-sync log line
 | `/2027-charter-season` (Tier 1) | Panel lede is the whole opening paragraph rather than its first two sentences. No deck line exists on Tier 1, so the deck change does not reach it. |
 | `/portal/edit/[id]` (Tier 2 form) | DECK LINE loads empty for the 65 destinations with no deck of their own; DESCRIPTION loads the whole paragraph. Existing drafts are not touched. |
 | `/portal/preview` | Renders the draft, so it follows whatever the form holds. |
-| `/atlas/[slug]` (published) | Unchanged for pages already published — they render their frozen config. Only the no-deck rendering and spacing are new code on this route. |
-| `/atlas/harrington-summer-2027` (demo) | Its eyebrows and deck lines are consultant-written fixtures, so they do not move. Its Sardinia and Aeolian Islands bodies come from the Atlas and do change. |
+| `/destinations/[slug]` (published) | Unchanged for pages already published — they render their frozen config. Only the no-deck rendering and spacing are new code on this route. |
+| `/destinations/harrington-summer-2027` (demo) | Its eyebrows and deck lines are consultant-written fixtures, so they do not move. Its Sardinia and Aeolian Islands bodies come from the Atlas and do change. |
 
 Two things on Tier 1 that were deliberately **not** changed, though they are adjacent:
 
@@ -247,7 +252,7 @@ The branch is pushed, so Vercel builds a preview for it. Append these paths to t
 | Path | What to look at |
 |---|---|
 | `/2027-charter-season` | **Tier 1.** Open Greece → The Ionian Islands → Corfu. The panel lede is now the whole opening paragraph rather than its first two sentences. This route exercises `introParagraph()` against all 125 destinations, so it is the quickest way to scan for a body that reads badly at full length. Tier 1 has no deck line, so nothing else moves here. |
-| `/atlas/harrington-summer-2027` | **Tier 2 demo.** Its eyebrows and deck lines are consultant-written fixtures and do not move, but the Sardinia and Aeolian Islands bodies come from the Atlas and do. Use it to check the longer body in the real panel, at both themes. |
+| `/destinations/harrington-summer-2027` | **Tier 2 demo.** Its eyebrows and deck lines are consultant-written fixtures and do not move, but the Sardinia and Aeolian Islands bodies come from the Atlas and do. Use it to check the longer body in the real panel, at both themes. |
 
 ### Needs a test selection (I could not create it from here)
 
@@ -290,7 +295,7 @@ If you would rather see the Amalfi Coast as the title-tail case instead of Greec
 
 - `/2027-charter-season?destination=…/corfu` rendered in a browser: the Tier 1 panel shows the whole opening
   paragraph, followed by the "Read the full guide" link as before.
-- `/atlas/harrington-summer-2027` rendered and its third tab opened: the Tier 2 panel is intact, with the
+- `/destinations/harrington-summer-2027` rendered and its third tab opened: the Tier 2 panel is intact, with the
   consultant's own deck line above the Atlas body.
 - All 125 destination pages fetched live and re-parsed, to establish that no lede is multi-paragraph and that
   the snapshot still matches the website (section 2).

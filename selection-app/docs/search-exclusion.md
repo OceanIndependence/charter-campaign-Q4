@@ -25,7 +25,7 @@ Both headers come from one catch-all rule in `next.config.ts`:
 
 `/:path*` matches the root and every path below it. Verified on a production
 build: HTML pages, API JSON, 404s, redirects, images and fonts in `public/`,
-`public/atlas/countries-110m.json`, and hashed `/_next/static/*` chunks all
+`public/geo/countries-110m.json`, and hashed `/_next/static/*` chunks all
 carry both headers. This is why the rule lives in `next.config.ts` rather than
 in middleware: it is applied at the edge for every path with no per-request
 invocation, and none of the usual middleware matchers exclude static assets.
@@ -57,7 +57,7 @@ request. Every one of these should show
 
 | Check | Request to look at | Expected |
 |---|---|---|
-| A client page | `/atlas/<slug>` or `/selection/<slug>`, the top document | Both headers; also `cache-control: private, no-store` |
+| A client page | `/destinations/<slug>` or `/selection/<slug>`, the top document | Both headers; also `cache-control: private, no-store` |
 | The public Atlas | `/2027-charter-season`, the top document | Both headers |
 | The portal | `/portal` | Both headers (on the 307 to sign-in as well) |
 | An API response | `/api/fleet` in the XHR/Fetch filter | Both headers on JSON |
@@ -89,7 +89,7 @@ Every **new** address now carries a random eight-character tail, drawn with
 easily-misread characters:
 
 ```
-/atlas/harrington-summer-2027-ck9qhhn4
+/destinations/harrington-summer-2027-ck9qhhn4
 ```
 
 That is about 3.8 × 10^11 possibilities, which cannot be walked. The tail is
@@ -127,6 +127,13 @@ repository root:
 ```
 
 They were **not** moved into `selection-app/public/`. A file at
-`public/atlas/index.html` or `public/portal/index.html` takes precedence over
-the app's own `/atlas/[slug]` and `/portal` routes, which would break the
-Tier 2 client pages and the portal outright.
+`public/destinations/index.html` or `public/portal/index.html` takes precedence
+over the app's own `/destinations/[slug]` and `/portal` routes, which would
+break the Tier 2 client pages and the portal outright.
+
+The same precedence rule is why the globe's country geometry sits at
+`public/geo/` rather than `public/atlas/`: `next.config.ts` redirects
+`/atlas/:slug` to `/destinations/:slug` for links issued before the Tier 2
+rename, and Next.js applies redirects *before* it serves anything from
+`public/`, so geometry left under `/atlas/` would be redirected away and the
+globe would fail to draw on both Tier 1 and Tier 2.

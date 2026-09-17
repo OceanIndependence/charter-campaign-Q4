@@ -2,7 +2,7 @@
 
 **Status: temporary. Requested 16 September 2026. Reverting is one line.**
 
-The Personalised Atlas (Tier 2, `/atlas/<slug>`) was built to show the whole
+The Personalised Atlas (Tier 2, `/destinations/<slug>`) was built to show the whole
 Atlas around the shortlist: the consultant's chosen destinations pinned bright,
 every other Atlas destination dimmed but clickable, opening a "beyond the
 shortlist" panel. The globe now carries the chosen destinations and nothing

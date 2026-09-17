@@ -777,7 +777,7 @@
 /* ------------------------------------------------------------ disclaimer */
 
 /* The foot (consultant block and disclaimer) is a dark theme scope on both
-   themes; see PersonalisedAtlasPage.tsx. */
+   themes; see DestinationsPage.tsx. */
 .foot {
   color: var(--fg);
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { AtlasPageConfig, AtlasPageDestination, AtlasPageYacht } from "@/lib/types";
+import type { DestinationsPageConfig, DestinationsPageDestination, DestinationsPageYacht } from "@/lib/types";
 import type { GlobePin } from "@/lib/atlas/globe";
 import { countWord, fmtCardRate, fmtCardTotal, fmtLengthShort } from "@/lib/format";
 import AtlasGlobe, { type GlobeHandle } from "@/components/atlas/AtlasGlobe";
@@ -12,7 +12,7 @@ import EnlargeableImage from "@/components/EnlargeableImage";
 import { CompareBar, CompareOverlay } from "@/components/Compare";
 import { CostsSection, ItinerarySection } from "@/components/CollapsibleSections";
 import { CompareToggleIcon, SmallChevronIcon } from "@/components/icons";
-import styles from "./Personalised.module.css";
+import styles from "./Destinations.module.css";
 
 /** Camera at rest: the Mediterranean, as in the design reference. */
 const HOME = { lat: 40.2, lon: 12.6, zoom: 2.6 };
@@ -22,7 +22,7 @@ const OTHER_ZOOM = 2.2;
 const firstName = (name: string) => (name.trim().split(/\s+/)[0] ?? "").trim();
 
 /** A brochure link the consultant actually filled in ("#" is the blank the mapping writes). */
-const hasBrochure = (y: AtlasPageYacht) => Boolean(y.brochureUrl && y.brochureUrl !== "#");
+const hasBrochure = (y: DestinationsPageYacht) => Boolean(y.brochureUrl && y.brochureUrl !== "#");
 
 /**
  * "38M · SUNSEEKER · 10 GUESTS · 5 STATEROOMS" as segments. A missing value
@@ -30,7 +30,7 @@ const hasBrochure = (y: AtlasPageYacht) => Boolean(y.brochureUrl && y.brochureUr
  * capitalised here to match the rest of the line; the drawer shows it as
  * stored.
  */
-function yachtMetaSegments(y: AtlasPageYacht): string[] {
+function yachtMetaSegments(y: DestinationsPageYacht): string[] {
   const parts: string[] = [];
   const len = fmtLengthShort(y);
   if (len) parts.push(len);
@@ -45,7 +45,7 @@ function yachtMetaSegments(y: AtlasPageYacht): string[] {
  * line wraps only between segments and is clamped to two lines, so a long
  * builder never splits mid-name and never pushes the card to a third line.
  */
-function YachtMeta({ yacht }: { yacht: AtlasPageYacht }) {
+function YachtMeta({ yacht }: { yacht: DestinationsPageYacht }) {
   const segments = yachtMetaSegments(yacht);
   if (!segments.length) return null;
   return (
@@ -63,7 +63,7 @@ function YachtMeta({ yacht }: { yacht: AtlasPageYacht }) {
   );
 }
 
-export default function PersonalisedAtlasPage({ config }: { config: AtlasPageConfig }) {
+export default function DestinationsPage({ config }: { config: DestinationsPageConfig }) {
   const { destinations, yachts, consultant } = config;
   const theme = config.theme === "light" ? "light" : "dark";
   // Pages published before the form had a Page Sections card carry no block
@@ -116,7 +116,7 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
   }, []);
 
   const compareYachts = useMemo(
-    () => compare.map((id) => yachts.find((y) => y.id === id)).filter((y): y is AtlasPageYacht => Boolean(y)),
+    () => compare.map((id) => yachts.find((y) => y.id === id)).filter((y): y is DestinationsPageYacht => Boolean(y)),
     [compare, yachts]
   );
 
@@ -576,7 +576,7 @@ export default function PersonalisedAtlasPage({ config }: { config: AtlasPageCon
 
 /* --------------------------------------------------------- destination */
 
-function DestinationPanel({ dest, consultant, onSeeYachts }: { dest: AtlasPageDestination; consultant: string; onSeeYachts: () => void }) {
+function DestinationPanel({ dest, consultant, onSeeYachts }: { dest: DestinationsPageDestination; consultant: string; onSeeYachts: () => void }) {
   // A destination whose own page carries no deck line renders no deck element
   // at all — no empty node and no reserved height. The heading takes the space
   // the deck's own margin would have left above the body instead.

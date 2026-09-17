@@ -18,7 +18,7 @@ import snapshot from "../../../data/destinations.json";
 import type { AtlasDestination, AtlasSnapshot } from "@/lib/atlas/types";
 import { buildIndex, children, eyebrowFor, introParagraph, parentOf, regionOf, topLevelPins, type AtlasIndex } from "@/lib/atlas/data";
 import type { AtlasDefaults, AtlasDestinationContent, AtlasDestinationOption } from "@/lib/portal-types";
-import type { AtlasPagePin } from "@/lib/types";
+import type { DestinationsPagePin } from "@/lib/types";
 import { parsePage, USER_AGENT } from "./website.mjs";
 import { cropToSizes } from "../yachtfolio/images.mjs";
 import { fileExists, fileUrl, putFile } from "../storage.mjs";
@@ -286,7 +286,7 @@ export function destinationGeo(id: string): DestinationGeo | null {
 }
 
 /** The resting Atlas pins (one per country / area) minus the chosen destinations. */
-export function otherPinsFor(chosenIds: string[]): AtlasPagePin[] {
+export function otherPinsFor(chosenIds: string[]): DestinationsPagePin[] {
   const chosen = new Set(chosenIds);
   return topLevelPins(getAtlasIndex())
     .filter((p) => !chosen.has(p.id))
@@ -294,7 +294,7 @@ export function otherPinsFor(chosenIds: string[]): AtlasPagePin[] {
 }
 
 /** The snapshot facts the publish mapping needs for a set of chosen destinations. */
-export function atlasResolutionFor(chosenIds: string[]): { destinations: Record<string, DestinationGeo>; otherPins: AtlasPagePin[] } {
+export function atlasResolutionFor(chosenIds: string[]): { destinations: Record<string, DestinationGeo>; otherPins: DestinationsPagePin[] } {
   const destinations: Record<string, DestinationGeo> = {};
   for (const id of chosenIds) {
     const geo = destinationGeo(id);

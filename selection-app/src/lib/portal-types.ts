@@ -279,7 +279,7 @@ export const TIER2_DEFAULT_SECTIONS: Tier2Sections = { costs: true, itinerary: t
 /** Tier 2 — Personalised Atlas. */
 export interface Tier2Draft extends SelectionBase {
   tier: 2;
-  /** Client page address under /atlas/ — auto from the client name, editable */
+  /** Client page address under /destinations/ — auto from the client name, editable */
   slug: string;
   /** The h1 line */
   clientGreeting: string;
@@ -374,9 +374,9 @@ export function selectionTitle(m: { headline?: string; clientNames?: string }): 
 
 export const TIER_LABEL: Record<Tier, string> = { 2: "Personalised destinations and shortlist", 3: "Yacht Selection" };
 
-/** Where a published selection lives: /atlas/<slug> for Tier 2, /selection/<slug> for Tier 3. */
+/** Where a published selection lives: /destinations/<slug> for Tier 2, /selection/<slug> for Tier 3. */
 export function clientPagePath(tier: Tier, slug: string): string {
-  return tier === 2 ? `/atlas/${slug}` : `/selection/${slug}`;
+  return tier === 2 ? `/destinations/${slug}` : `/selection/${slug}`;
 }
 
 /* --------------------------------------------- Tier 1 content for the form */

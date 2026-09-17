@@ -1,7 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { draftSlugBase, draftToPageConfig, freezeImagesAtPublish } from "@/lib/portal-map";
-import { chosenDestinationIds, tier2DraftToConfig, tier2PublishProblems, tier2SlugBase } from "@/lib/atlas-map";
+import { chosenDestinationIds, tier2DraftToConfig, tier2PublishProblems, tier2SlugBase } from "@/lib/destinations-map";
 import type { AnySelection, PortalDraft, Tier2Draft } from "@/lib/portal-types";
 import { atlasResolutionFor } from "@/server/atlas/content";
 import { clientPathFor, getSelection, publishSelection, scopingEnabled, tierOf } from "@/server/pages.mjs";
