@@ -1,0 +1,106 @@
+{
+  "destinationId": "mediterranean/france/corsica/calvi",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "calvi-5",
+      "nights": 5,
+      "title": "Five days around Corsica’s west coast",
+      "intro": "Calvi, Girolata and the red cliffs of Scandola.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Calvi",
+          "lat": 42.568,
+          "lng": 8.758,
+          "note": "Board in Calvi beneath the citadel."
+        },
+        {
+          "day": 2,
+          "place": "L’Île-Rousse",
+          "lat": 42.638,
+          "lng": 8.937,
+          "note": "The red islets and the market town."
+        },
+        {
+          "day": 3,
+          "place": "Scandola",
+          "lat": 42.37,
+          "lng": 8.55,
+          "note": "The volcanic reserve from the water."
+        },
+        {
+          "day": 4,
+          "place": "Girolata",
+          "lat": 42.349,
+          "lng": 8.612,
+          "note": "The village reached only by sea."
+        },
+        {
+          "day": 5,
+          "place": "Ajaccio",
+          "lat": 41.921,
+          "lng": 8.739,
+          "note": "Napoleon’s birthplace and the Sanguinaires islands at sunset."
+        }
+      ]
+    },
+    {
+      "id": "calvi-7",
+      "nights": 7,
+      "title": "Seven days from Calvi around Cap Corse",
+      "intro": "Calvi, the Balagne, Saint-Florent and the west coast.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Calvi",
+          "lat": 42.568,
+          "lng": 8.758,
+          "note": "The citadel over the bay and the long beach beneath the pines."
+        },
+        {
+          "day": 2,
+          "place": "L’Île-Rousse",
+          "lat": 42.638,
+          "lng": 8.937,
+          "note": "The red granite islets and the Balagne villages in the hills behind."
+        },
+        {
+          "day": 3,
+          "place": "Saint-Florent",
+          "lat": 42.681,
+          "lng": 9.304,
+          "note": "Saint-Florent and the Agriates."
+        },
+        {
+          "day": 4,
+          "place": "Calvi",
+          "lat": 42.568,
+          "lng": 8.758,
+          "note": "The citadel over the bay and the long beach beneath the pines."
+        },
+        {
+          "day": 5,
+          "place": "Scandola",
+          "lat": 42.37,
+          "lng": 8.55,
+          "note": "The red cliffs and sea caves of the reserve; osprey nests above the water."
+        },
+        {
+          "day": 6,
+          "place": "Girolata",
+          "lat": 42.349,
+          "lng": 8.612,
+          "note": "A village with no road, reached by sea, beneath its Genoese fort."
+        },
+        {
+          "day": 7,
+          "place": "Ajaccio",
+          "lat": 41.921,
+          "lng": 8.739,
+          "note": "Napoleon’s birthplace and the Sanguinaires islands at sunset."
+        }
+      ]
+    }
+  ]
+}

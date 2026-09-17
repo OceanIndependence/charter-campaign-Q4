@@ -1,0 +1,49 @@
+{
+  "destinationId": "caribbean/the-bahamas/grand-bahama",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "grand-bahama-5",
+      "nights": 5,
+      "title": "Five days around Grand Bahama",
+      "intro": "Port Lucaya, West End and across to Bimini.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Grand Bahama, Port Lucaya",
+          "lat": 26.516,
+          "lng": -78.633,
+          "note": "Board at Port Lucaya."
+        },
+        {
+          "day": 2,
+          "place": "West End",
+          "lat": 26.689,
+          "lng": -78.975,
+          "note": "West End."
+        },
+        {
+          "day": 3,
+          "place": "Bimini, Alice Town",
+          "lat": 25.726,
+          "lng": -79.298,
+          "note": "Bimini."
+        },
+        {
+          "day": 4,
+          "place": "Gun Cay",
+          "lat": 25.573,
+          "lng": -79.304,
+          "note": "Gun Cay."
+        },
+        {
+          "day": 5,
+          "place": "Grand Bahama, Port Lucaya",
+          "lat": 26.516,
+          "lng": -78.633,
+          "note": "Return; disembark."
+        }
+      ]
+    }
+  ]
+}

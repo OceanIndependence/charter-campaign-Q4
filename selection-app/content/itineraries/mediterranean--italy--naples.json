@@ -1,0 +1,106 @@
+{
+  "destinationId": "mediterranean/italy/naples",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "naples-5",
+      "nights": 5,
+      "title": "Five days around the Pontine Islands",
+      "intro": "Rome’s summer islands: Ponza’s chalk cliffs, Palmarola’s wild anchorages and a last night in the Gulf of Naples.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Gaeta",
+          "lat": 41.2131,
+          "lng": 13.5717,
+          "note": "Board in Gaeta; a first swim under the Montagna Spaccata."
+        },
+        {
+          "day": 2,
+          "place": "Ponza",
+          "lat": 40.8962,
+          "lng": 12.9628,
+          "note": "Chiaia di Luna and the Roman grottoes; dinner in the harbour."
+        },
+        {
+          "day": 3,
+          "place": "Palmarola",
+          "lat": 40.9333,
+          "lng": 12.85,
+          "note": "A day at anchor off the wildest of the islands; swimming in the coves."
+        },
+        {
+          "day": 4,
+          "place": "Ventotene",
+          "lat": 40.7958,
+          "lng": 13.43,
+          "note": "The Roman harbour cut from tufa; a quiet evening ashore."
+        },
+        {
+          "day": 5,
+          "place": "Ischia",
+          "lat": 40.7443,
+          "lng": 13.944,
+          "note": "Cross to Ischia for the thermal springs; disembark in Naples."
+        }
+      ]
+    },
+    {
+      "id": "naples-7",
+      "nights": 7,
+      "title": "Seven days from Rome to Naples",
+      "intro": "The Ocean Independence classic from Civitavecchia: Ponza, Ischia, Capri, Amalfi and Sorrento, ending in Naples.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Civitavecchia",
+          "lat": 42.0936,
+          "lng": 11.7896,
+          "note": "Board at Civitavecchia after a morning in Rome."
+        },
+        {
+          "day": 2,
+          "place": "Ponza",
+          "lat": 40.8962,
+          "lng": 12.9628,
+          "note": "Chiaia di Luna, the grottoes and dinner in the harbour."
+        },
+        {
+          "day": 3,
+          "place": "Ischia",
+          "lat": 40.7443,
+          "lng": 13.944,
+          "note": "Thermal springs and the Aragonese castle."
+        },
+        {
+          "day": 4,
+          "place": "Capri",
+          "lat": 40.5567,
+          "lng": 14.2431,
+          "note": "The Faraglioni and the piazzetta."
+        },
+        {
+          "day": 5,
+          "place": "Amalfi",
+          "lat": 40.634,
+          "lng": 14.6027,
+          "note": "Anchor off Nerano; the cathedral and Ravello."
+        },
+        {
+          "day": 6,
+          "place": "Sorrento",
+          "lat": 40.6263,
+          "lng": 14.3758,
+          "note": "Views over the Bay of Naples from the cliff-top town."
+        },
+        {
+          "day": 7,
+          "place": "Naples",
+          "lat": 40.8358,
+          "lng": 14.2488,
+          "note": "A morning at anchor; disembark at midday."
+        }
+      ]
+    }
+  ]
+}

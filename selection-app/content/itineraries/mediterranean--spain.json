@@ -1,0 +1,106 @@
+{
+  "destinationId": "mediterranean/spain",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "spain-5",
+      "nights": 5,
+      "title": "Five days around Mallorca",
+      "intro": "Palma, the Tramuntana coast and the southern calas.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Palma",
+          "lat": 39.565,
+          "lng": 2.63,
+          "note": "Board in Palma; the cathedral and the old town."
+        },
+        {
+          "day": 2,
+          "place": "Port d’Andratx",
+          "lat": 39.545,
+          "lng": 2.386,
+          "note": "Sa Dragonera and the western coves."
+        },
+        {
+          "day": 3,
+          "place": "Port de Sóller",
+          "lat": 39.796,
+          "lng": 2.692,
+          "note": "The Tramuntana from the sea."
+        },
+        {
+          "day": 4,
+          "place": "Formentor",
+          "lat": 39.92,
+          "lng": 3.13,
+          "note": "The cape and the bay of Pollença."
+        },
+        {
+          "day": 5,
+          "place": "Cala d’Or",
+          "lat": 39.376,
+          "lng": 3.234,
+          "note": "The south-east calas; disembark in Palma."
+        }
+      ]
+    },
+    {
+      "id": "spain-7",
+      "nights": 7,
+      "title": "Seven days from Palma to Menorca",
+      "intro": "Mallorca’s north coast, then Menorca’s calas and Mahón.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Palma",
+          "lat": 39.565,
+          "lng": 2.63,
+          "note": "The cathedral, the old quarter and dinner in Santa Catalina before sailing."
+        },
+        {
+          "day": 2,
+          "place": "Port de Sóller",
+          "lat": 39.796,
+          "lng": 2.692,
+          "note": "The tram to Sóller through the orange groves; the horseshoe harbour at night."
+        },
+        {
+          "day": 3,
+          "place": "Pollença",
+          "lat": 39.901,
+          "lng": 3.083,
+          "note": "The wide bay and Formentor’s cliffs; a swim at Cala Figuera."
+        },
+        {
+          "day": 4,
+          "place": "Ciutadella",
+          "lat": 40,
+          "lng": 3.833,
+          "note": "The old capital, its narrow harbour and the coves along the south coast."
+        },
+        {
+          "day": 5,
+          "place": "Cala Macarella",
+          "lat": 39.935,
+          "lng": 3.937,
+          "note": "The turquoise calas of the south."
+        },
+        {
+          "day": 6,
+          "place": "Fornells",
+          "lat": 40.057,
+          "lng": 4.131,
+          "note": "The long sheltered bay, known for its lobster stew, and the beaches to the west."
+        },
+        {
+          "day": 7,
+          "place": "Mahón",
+          "lat": 39.888,
+          "lng": 4.264,
+          "note": "The great natural harbour; disembark."
+        }
+      ]
+    }
+  ]
+}

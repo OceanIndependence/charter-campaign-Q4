@@ -1,0 +1,106 @@
+{
+  "destinationId": "mediterranean/italy/bari",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "bari-5",
+      "nights": 5,
+      "title": "Five days on the Puglian coast",
+      "intro": "Bari, Polignano’s cliffs and Monopoli’s white harbour.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Bari",
+          "lat": 41.1306,
+          "lng": 16.8703,
+          "note": "Board in Bari; the old town and Bari Vecchia."
+        },
+        {
+          "day": 2,
+          "place": "Trani",
+          "lat": 41.278,
+          "lng": 16.417,
+          "note": "The Romanesque cathedral on the water and the fishing harbour at sunset."
+        },
+        {
+          "day": 3,
+          "place": "Polignano a Mare",
+          "lat": 41,
+          "lng": 17.218,
+          "note": "The cliff town and its grottoes."
+        },
+        {
+          "day": 4,
+          "place": "Monopoli",
+          "lat": 40.953,
+          "lng": 17.304,
+          "note": "The white harbour and Capitolo beaches."
+        },
+        {
+          "day": 5,
+          "place": "Bari",
+          "lat": 41.1306,
+          "lng": 16.8703,
+          "note": "The old town’s pasta makers and the basilica of San Nicola; board in the evening."
+        }
+      ]
+    },
+    {
+      "id": "bari-7",
+      "nights": 7,
+      "title": "Seven days from Bari to Santa Maria di Leuca",
+      "intro": "Puglia’s Adriatic shore to the very tip of Italy.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Bari",
+          "lat": 41.1306,
+          "lng": 16.8703,
+          "note": "The old town’s pasta makers and the basilica of San Nicola; board in the evening."
+        },
+        {
+          "day": 2,
+          "place": "Polignano a Mare",
+          "lat": 41,
+          "lng": 17.218,
+          "note": "The town on its cliffs, the sea caves beneath it, and a swim at Lama Monachile."
+        },
+        {
+          "day": 3,
+          "place": "Monopoli",
+          "lat": 40.953,
+          "lng": 17.304,
+          "note": "The whitewashed harbour, the castle and the beaches south of town."
+        },
+        {
+          "day": 4,
+          "place": "Brindisi",
+          "lat": 40.64,
+          "lng": 17.946,
+          "note": "The Roman column at the end of the Via Appia."
+        },
+        {
+          "day": 5,
+          "place": "Otranto",
+          "lat": 40.145,
+          "lng": 18.492,
+          "note": "The Aragonese castle and the cathedral mosaic."
+        },
+        {
+          "day": 6,
+          "place": "Santa Maria di Leuca",
+          "lat": 39.795,
+          "lng": 18.358,
+          "note": "The lighthouse where the two seas meet."
+        },
+        {
+          "day": 7,
+          "place": "Gallipoli",
+          "lat": 40.056,
+          "lng": 17.992,
+          "note": "The island old town; disembark."
+        }
+      ]
+    }
+  ]
+}

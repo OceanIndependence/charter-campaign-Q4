@@ -97,6 +97,21 @@ to `true` restores the original globe with no other change and no republishing �
   rail card, up to three yachts side by side). Every section is on for a new
   selection; pages published before the card existed carry none. On the light
   theme the header and the foot stay dark, as on the Yacht Selection page.
+- Each destination panel carries three 16:10 images as a peek carousel (swipe, drag or
+  arrows; the next image is visibly cut off) and the website's sample itineraries for that
+  destination as cards. Opening one swaps the panel to the route — its paragraph, a
+  day-by-day list with a photo per stop and an ASK ABOUT THIS ROUTE button (WhatsApp with
+  a prefilled message, or EMAIL ME where the consultant has no number) — and draws it on
+  the globe as a trail of glowing dots; selecting a stop flies the camera to it. The
+  itineraries are the repo-held library in `selection-app/content/itineraries/` (one JSON
+  file per destination, coordinates included), aggregated by `npm run build:itineraries`
+  (a prebuild step) into `data/itineraries.json`, and frozen into the page at publish time
+  with the rest of the destination content. Stop photos reuse the Atlas image of the stop
+  where it is itself an Atlas destination, else one of the destination's carousel images.
+  The Page Sections card has a "Website itineraries" toggle; the older "Suggested
+  itinerary" links section stays alongside it. Pages published before the carousel carry
+  two images and render a two-slide carousel; pages published before the routes carry
+  none. See `selection-app/docs/tier2-website-itineraries.md`.
 - Without `YACHTFOLIO_PASSKEY` the fleet is served from a six-yacht demo set, and
   `/destinations/harrington-summer-2027` renders the demo page (`DEMO_PAGES=false` disables it).
 

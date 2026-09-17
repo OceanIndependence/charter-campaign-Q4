@@ -1,0 +1,106 @@
+{
+  "destinationId": "australia-and-new-zealand/australia/the-great-barrier-reef",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "australia-and-new-zealand-the-great-barrier-reef-5",
+      "nights": 5,
+      "title": "Five days from Cairns to Port Douglas",
+      "intro": "The inner reef: Fitzroy, Michaelmas Cay and the Low Isles.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Cairns",
+          "lat": -16.923,
+          "lng": 145.781,
+          "note": "Board in Cairns."
+        },
+        {
+          "day": 2,
+          "place": "Fitzroy Island",
+          "lat": -16.933,
+          "lng": 145.991,
+          "note": "Fitzroy Island."
+        },
+        {
+          "day": 3,
+          "place": "Michaelmas Cay",
+          "lat": -16.605,
+          "lng": 145.975,
+          "note": "Michaelmas Cay."
+        },
+        {
+          "day": 4,
+          "place": "Low Isles",
+          "lat": -16.383,
+          "lng": 145.56,
+          "note": "The Low Isles."
+        },
+        {
+          "day": 5,
+          "place": "Port Douglas",
+          "lat": -16.483,
+          "lng": 145.465,
+          "note": "Port Douglas; disembark."
+        }
+      ]
+    },
+    {
+      "id": "australia-and-new-zealand-the-great-barrier-reef-7",
+      "nights": 7,
+      "title": "Seven days from Cairns to Lizard Island",
+      "intro": "The Ribbon Reefs and the Cod Hole.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Cairns",
+          "lat": -16.923,
+          "lng": 145.781,
+          "note": "Board in Cairns."
+        },
+        {
+          "day": 2,
+          "place": "Green Island",
+          "lat": -16.759,
+          "lng": 145.972,
+          "note": "Green Island."
+        },
+        {
+          "day": 3,
+          "place": "Port Douglas",
+          "lat": -16.483,
+          "lng": 145.465,
+          "note": "Port Douglas."
+        },
+        {
+          "day": 4,
+          "place": "Agincourt Reef",
+          "lat": -15.99,
+          "lng": 145.82,
+          "note": "Agincourt Reef."
+        },
+        {
+          "day": 5,
+          "place": "Cooktown",
+          "lat": -15.472,
+          "lng": 145.25,
+          "note": "Cooktown."
+        },
+        {
+          "day": 6,
+          "place": "Ribbon Reefs, Cod Hole",
+          "lat": -14.666,
+          "lng": 145.666,
+          "note": "The Cod Hole."
+        },
+        {
+          "day": 7,
+          "place": "Lizard Island",
+          "lat": -14.669,
+          "lng": 145.456,
+          "note": "Lizard Island; disembark."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "destinationId": "mediterranean/greece/the-cyclades/santorini",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "santorini-5",
+      "nights": 5,
+      "title": "Five days from Santorini",
+      "intro": "The southern Cyclades from the caldera.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Santorini",
+          "lat": 36.46,
+          "lng": 25.366,
+          "note": "Into the caldera at first light; the villages on the rim and the sunset at Oia."
+        },
+        {
+          "day": 2,
+          "place": "Ios",
+          "lat": 36.72,
+          "lng": 25.281,
+          "note": "Chora’s lanes at night; Mylopotas for the morning swim."
+        },
+        {
+          "day": 3,
+          "place": "Folegandros",
+          "lat": 36.618,
+          "lng": 24.94,
+          "note": "Chora on its cliff and the church above it; a quiet night at Karavostasis."
+        },
+        {
+          "day": 4,
+          "place": "Milos, Adamas",
+          "lat": 36.725,
+          "lng": 24.447,
+          "note": "The white rocks of Sarakiniko and the fishing hamlet of Klima."
+        },
+        {
+          "day": 5,
+          "place": "Santorini",
+          "lat": 36.46,
+          "lng": 25.366,
+          "note": "Into the caldera at first light; the villages on the rim and the sunset at Oia."
+        }
+      ]
+    },
+    {
+      "id": "santorini-7",
+      "nights": 7,
+      "title": "Seven days from Mykonos to Santorini",
+      "intro": "The Cyclades from north to south, ending beneath the caldera.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Mykonos",
+          "lat": 37.455,
+          "lng": 25.326,
+          "note": "Little Venice and the windmills; a quieter anchorage on the south coast for the night."
+        },
+        {
+          "day": 2,
+          "place": "Delos",
+          "lat": 37.396,
+          "lng": 25.268,
+          "note": "The sanctuary of Apollo, seen early before the excursion boats arrive."
+        },
+        {
+          "day": 3,
+          "place": "Paros, Naoussa",
+          "lat": 37.124,
+          "lng": 25.238,
+          "note": "The fishing harbour and the bars on the quay; a swim at Kolymbithres."
+        },
+        {
+          "day": 4,
+          "place": "Naxos",
+          "lat": 37.106,
+          "lng": 25.373,
+          "note": "The Portara and the old town."
+        },
+        {
+          "day": 5,
+          "place": "Koufonisia",
+          "lat": 36.944,
+          "lng": 25.6,
+          "note": "The Small Cyclades: white sand at Pori and the clearest water of the week."
+        },
+        {
+          "day": 6,
+          "place": "Ios",
+          "lat": 36.72,
+          "lng": 25.281,
+          "note": "Chora’s lanes at night; Mylopotas for the morning swim."
+        },
+        {
+          "day": 7,
+          "place": "Santorini",
+          "lat": 36.46,
+          "lng": 25.366,
+          "note": "Into the caldera at first light; the villages on the rim and the sunset at Oia."
+        }
+      ]
+    }
+  ]
+}

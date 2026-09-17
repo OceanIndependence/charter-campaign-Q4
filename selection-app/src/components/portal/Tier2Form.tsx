@@ -198,7 +198,13 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
         if (next.sections.itineraryLinks.length === 0) {
           next.sections.itineraryLinks = [emptyItineraryLink(crypto.randomUUID())];
         }
-        const slots = (next.destinations ?? []).slice(0, 3);
+        const slots = (next.destinations ?? []).slice(0, 3).map((slot) => {
+          // A draft saved when the form had two image slots: the third opens
+          // on the next Atlas candidate, else empty for the consultant to fill.
+          const images = [...(slot.images ?? [])];
+          while (images.length < 3) images.push({ value: slot.atlas?.images[images.length] ?? "", source: "atlas" });
+          return { ...slot, images };
+        });
         while (slots.length < 3) slots.push(emptyTier2Destination());
         next.destinations = slots as Tier2Draft["destinations"];
         next.yachts = (next.yachts ?? []).map((y) => {
@@ -369,9 +375,10 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
   );
 
   const setImage = useCallback(
-    (i: number, n: 0 | 1, value: string, source: ContentBlock["source"]) => {
+    (i: number, n: 0 | 1 | 2, value: string, source: ContentBlock["source"]) => {
       setDestination(i, (slot) => {
-        const images = [...slot.images] as [ContentBlock, ContentBlock];
+        const images = [...slot.images];
+        while (images.length < 3) images.push({ value: "", source: "atlas" });
         images[n] = { value, source };
         return { ...slot, images };
       });
@@ -405,9 +412,10 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
           deckLine: atlas(content.atlas.deckLine),
           description: atlas(content.atlas.description),
           consultantNote: { value: "", source: "consultant" },
-          images: [atlas(content.atlas.images[0] ?? ""), atlas(content.atlas.images[1] ?? content.atlas.images[0] ?? "")],
+          images: [0, 1, 2].map((n) => atlas(content.atlas.images[n] ?? content.atlas.images[0] ?? "")),
           atlas: content.atlas,
           areaTerms: content.areaTerms,
+          websiteItineraries: content.itineraries ?? [],
         });
         setDestState((s) => ({ ...s, [i]: { fetching: false, error: null } }));
       } catch (err) {
@@ -960,11 +968,11 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                       </div>
                       <div className={styles.field}>
                         <span className={styles.fieldLabel}>
-                          TWO IMAGES <span className={styles.fieldLabelHint}>— from the website, replaceable</span>
+                          THREE IMAGES <span className={styles.fieldLabelHint}>— from the website, replaceable; the client swipes through them</span>
                         </span>
                         <div className={styles.imageSlots}>
-                          {([0, 1] as const).map((n) => {
-                            const img = slot.images[n];
+                          {([0, 1, 2] as const).map((n) => {
+                            const img = slot.images[n] ?? { value: "", source: "atlas" as const };
                             const candidates = slot.atlas?.images ?? [];
                             const fromAtlas = img.source === "atlas";
                             return (
@@ -1009,6 +1017,22 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                             );
                           })}
                         </div>
+                      </div>
+                      <div className={styles.field}>
+                        <span className={styles.fieldLabel}>
+                          SAMPLE ITINERARIES <span className={styles.fieldLabelHint}>— from the website, drawn on the globe when a client opens one</span>
+                        </span>
+                        {slot.websiteItineraries?.length ? (
+                          <ul className={styles.itinSummary}>
+                            {slot.websiteItineraries.map((it) => (
+                              <li key={it.id}>
+                                {it.title} <span className={styles.fieldLabelHint}>— {it.stops} stops</span>
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <p className={styles.fieldLabelHint}>The website has no sample itinerary for this destination, so the panel shows none.</p>
+                        )}
                       </div>
                     </>
                   )}
@@ -1397,6 +1421,17 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                 }
               />
               <span className={styles.checkLabel}>Compare feature (side-by-side specifications)</span>
+            </label>
+            <label className={styles.checkRow}>
+              <input
+                type="checkbox"
+                className={styles.checkbox}
+                checked={draft.sections?.routes ?? TIER2_DEFAULT_SECTIONS.routes}
+                onChange={(e) =>
+                  update((d) => ({ ...d, sections: { ...TIER2_DEFAULT_SECTIONS, ...d.sections, routes: e.target.checked } }))
+                }
+              />
+              <span className={styles.checkLabel}>Website itineraries (sample routes in each destination panel, drawn on the globe)</span>
             </label>
           </div>
         </section>

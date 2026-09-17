@@ -1,0 +1,106 @@
+{
+  "destinationId": "north-america/florida",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "florida-5",
+      "nights": 5,
+      "title": "Five days down the Florida Keys",
+      "intro": "Miami to Key West along the reef.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Miami Beach",
+          "lat": 25.77,
+          "lng": -80.133,
+          "note": "Board in Miami Beach."
+        },
+        {
+          "day": 2,
+          "place": "Key Largo",
+          "lat": 25.087,
+          "lng": -80.447,
+          "note": "Key Largo and Pennekamp."
+        },
+        {
+          "day": 3,
+          "place": "Islamorada",
+          "lat": 24.924,
+          "lng": -80.628,
+          "note": "Islamorada."
+        },
+        {
+          "day": 4,
+          "place": "Marathon",
+          "lat": 24.713,
+          "lng": -81.09,
+          "note": "Marathon and Sombrero Reef."
+        },
+        {
+          "day": 5,
+          "place": "Key West",
+          "lat": 24.559,
+          "lng": -81.805,
+          "note": "Key West; disembark."
+        }
+      ]
+    },
+    {
+      "id": "florida-7",
+      "nights": 7,
+      "title": "Seven days from Fort Lauderdale to Key West",
+      "intro": "The Keys with a day at the Dry Tortugas.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Fort Lauderdale",
+          "lat": 26.122,
+          "lng": -80.105,
+          "note": "Board in Fort Lauderdale."
+        },
+        {
+          "day": 2,
+          "place": "Miami Beach",
+          "lat": 25.77,
+          "lng": -80.133,
+          "note": "Miami Beach."
+        },
+        {
+          "day": 3,
+          "place": "Key Largo",
+          "lat": 25.087,
+          "lng": -80.447,
+          "note": "Key Largo."
+        },
+        {
+          "day": 4,
+          "place": "Islamorada",
+          "lat": 24.924,
+          "lng": -80.628,
+          "note": "Islamorada."
+        },
+        {
+          "day": 5,
+          "place": "Marathon",
+          "lat": 24.713,
+          "lng": -81.09,
+          "note": "Marathon."
+        },
+        {
+          "day": 6,
+          "place": "Dry Tortugas",
+          "lat": 24.628,
+          "lng": -82.873,
+          "note": "Fort Jefferson."
+        },
+        {
+          "day": 7,
+          "place": "Key West",
+          "lat": 24.559,
+          "lng": -81.805,
+          "note": "Key West; disembark."
+        }
+      ]
+    }
+  ]
+}

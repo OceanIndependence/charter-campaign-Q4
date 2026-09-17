@@ -1,0 +1,106 @@
+{
+  "destinationId": "middle-east/the-red-sea",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "the-red-sea-5",
+      "nights": 5,
+      "title": "Five days from Hurghada",
+      "intro": "Giftun, Abu Nuhas and Ras Mohammed.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Hurghada",
+          "lat": 27.228,
+          "lng": 33.846,
+          "note": "Board in Hurghada."
+        },
+        {
+          "day": 2,
+          "place": "Giftun Island",
+          "lat": 27.197,
+          "lng": 33.945,
+          "note": "Giftun Island."
+        },
+        {
+          "day": 3,
+          "place": "Abu Nuhas",
+          "lat": 27.58,
+          "lng": 33.926,
+          "note": "Abu Nuhas wrecks."
+        },
+        {
+          "day": 4,
+          "place": "Ras Mohammed",
+          "lat": 27.73,
+          "lng": 34.25,
+          "note": "Ras Mohammed."
+        },
+        {
+          "day": 5,
+          "place": "Hurghada",
+          "lat": 27.228,
+          "lng": 33.846,
+          "note": "Return; disembark."
+        }
+      ]
+    },
+    {
+      "id": "the-red-sea-7",
+      "nights": 7,
+      "title": "Seven days from Sharm El Sheikh to Hurghada",
+      "intro": "Tiran, Ras Mohammed, the northern wrecks and El Gouna.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Sharm El Sheikh",
+          "lat": 27.86,
+          "lng": 34.3,
+          "note": "Board in Sharm El Sheikh."
+        },
+        {
+          "day": 2,
+          "place": "Tiran, Gordon Reef",
+          "lat": 27.97,
+          "lng": 34.5,
+          "note": "Tiran."
+        },
+        {
+          "day": 3,
+          "place": "Ras Mohammed",
+          "lat": 27.73,
+          "lng": 34.25,
+          "note": "Ras Mohammed."
+        },
+        {
+          "day": 4,
+          "place": "Abu Nuhas",
+          "lat": 27.58,
+          "lng": 33.926,
+          "note": "Abu Nuhas."
+        },
+        {
+          "day": 5,
+          "place": "El Gouna",
+          "lat": 27.402,
+          "lng": 33.679,
+          "note": "El Gouna."
+        },
+        {
+          "day": 6,
+          "place": "Giftun Island",
+          "lat": 27.197,
+          "lng": 33.945,
+          "note": "Giftun."
+        },
+        {
+          "day": 7,
+          "place": "Hurghada",
+          "lat": 27.228,
+          "lng": 33.846,
+          "note": "Hurghada; disembark."
+        }
+      ]
+    }
+  ]
+}

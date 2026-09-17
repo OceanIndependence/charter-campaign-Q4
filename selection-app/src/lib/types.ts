@@ -174,8 +174,45 @@ export interface DestinationsPageDestination {
   description: AtlasBlock;
   /** Absent when the consultant left it blank */
   consultantNote?: AtlasBlock;
-  /** Two 16:10 images */
-  images: [AtlasBlock, AtlasBlock];
+  /**
+   * Two or three 16:10 images for the panel's peek carousel. Pages published
+   * before the form had a third slot carry two and render a two-slide carousel.
+   */
+  images: AtlasBlock[];
+  /**
+   * The website's sample itineraries for this destination, frozen at publish
+   * time (up to MAX_WEBSITE_ITINERARIES). Absent on pages published before
+   * the panel drew routes, which render no itinerary cards.
+   */
+  itineraries?: DestinationsPageItinerary[];
+}
+
+/** The most sample itineraries one destination panel lists. */
+export const MAX_WEBSITE_ITINERARIES = 3;
+
+/** One stop on a sample itinerary: a day row in the panel and a pin on the route. */
+export interface DestinationsPageStop {
+  day: number;
+  place: string;
+  lat: number;
+  lon: number;
+  note: string;
+  /**
+   * The 92 × 62 thumbnail beside the day row: the Atlas image of the stop
+   * where the stop is itself an Atlas destination, else one of the
+   * destination's own carousel images. Absent when neither exists.
+   */
+  image?: string;
+}
+
+/** A sample itinerary from the website's library, as frozen into a published page. */
+export interface DestinationsPageItinerary {
+  id: string;
+  title: string;
+  nights: number;
+  /** The route's own introductory paragraph, verbatim */
+  intro: string;
+  stops: DestinationsPageStop[];
 }
 
 /**
@@ -205,6 +242,12 @@ export interface DestinationsPageSections {
   /** Up to MAX_ITINERARY_LINKS itinerary buttons, in the consultant's order */
   itineraryLinks?: ItineraryLink[];
   compare: boolean;
+  /**
+   * The website's sample itineraries in each destination panel, drawn on the
+   * globe. Absent on pages published before the panel had them; only false
+   * hides cards a page carries.
+   */
+  routes?: boolean;
 }
 
 export interface DestinationsPageConfig {

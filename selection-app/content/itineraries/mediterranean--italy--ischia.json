@@ -1,0 +1,106 @@
+{
+  "destinationId": "mediterranean/italy/ischia",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "ischia-5",
+      "nights": 5,
+      "title": "Five days from Ischia",
+      "intro": "Ischia and Procida, then Capri across the gulf.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Ischia",
+          "lat": 40.7443,
+          "lng": 13.944,
+          "note": "The thermal gardens at Poseidon and a quiet evening at Sant’Angelo."
+        },
+        {
+          "day": 2,
+          "place": "Procida",
+          "lat": 40.7616,
+          "lng": 14.021,
+          "note": "The pastel harbour of Corricella, then a swim at Chiaiolella."
+        },
+        {
+          "day": 3,
+          "place": "Capri",
+          "lat": 40.5567,
+          "lng": 14.2431,
+          "note": "The Faraglioni at first light, then lunch on board at Marina Piccola."
+        },
+        {
+          "day": 4,
+          "place": "Nerano",
+          "lat": 40.5836,
+          "lng": 14.3533,
+          "note": "A swim off Li Galli before the day boats, then a long lunch at Marina del Cantone."
+        },
+        {
+          "day": 5,
+          "place": "Ischia",
+          "lat": 40.7443,
+          "lng": 13.944,
+          "note": "The thermal gardens at Poseidon and a quiet evening at Sant’Angelo."
+        }
+      ]
+    },
+    {
+      "id": "ischia-7",
+      "nights": 7,
+      "title": "Seven days from Naples to Amalfi",
+      "intro": "The classic week: the Gulf of Naples, Ischia and Procida, then Capri and the Amalfi Coast at an unhurried pace.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Naples",
+          "lat": 40.8358,
+          "lng": 14.2488,
+          "note": "Board in Naples; a first evening at anchor off Posillipo."
+        },
+        {
+          "day": 2,
+          "place": "Ischia",
+          "lat": 40.7443,
+          "lng": 13.944,
+          "note": "Thermal gardens and the Aragonese castle; a quiet evening at Sant’Angelo."
+        },
+        {
+          "day": 3,
+          "place": "Procida",
+          "lat": 40.7616,
+          "lng": 14.021,
+          "note": "The pastel harbour of Corricella, then a swim at Chiaiolella."
+        },
+        {
+          "day": 4,
+          "place": "Capri",
+          "lat": 40.5567,
+          "lng": 14.2431,
+          "note": "The Faraglioni at first light; lunch on board at Marina Piccola."
+        },
+        {
+          "day": 5,
+          "place": "Nerano",
+          "lat": 40.5836,
+          "lng": 14.3533,
+          "note": "Li Galli in the morning, a long lunch at Marina del Cantone."
+        },
+        {
+          "day": 6,
+          "place": "Positano",
+          "lat": 40.6281,
+          "lng": 14.485,
+          "note": "The boutiques ashore; dinner on deck off the bay."
+        },
+        {
+          "day": 7,
+          "place": "Amalfi",
+          "lat": 40.634,
+          "lng": 14.6027,
+          "note": "The cathedral steps and Ravello; disembark in Amalfi or return to Naples."
+        }
+      ]
+    }
+  ]
+}

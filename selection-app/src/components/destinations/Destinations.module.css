@@ -169,10 +169,34 @@
   position: absolute;
   left: 40px;
   bottom: 24px;
+  display: grid;
+  gap: 10px;
+  pointer-events: none;
+  z-index: 4;
+  transition: opacity 420ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* A destination is open: the instruction is stale and would sit under the
+   shifted zoom cluster, so it fades and is taken out of the tree. */
+.hintHidden {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 420ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    visibility 0s linear 420ms;
+}
+
+.hintLine {
   display: flex;
   align-items: center;
   gap: 12px;
-  pointer-events: none;
+}
+
+.hintSub {
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--fg-35);
+  font-weight: 400;
 }
 
 .hintDot {
@@ -195,7 +219,8 @@
   bottom: 24px;
   display: flex;
   border: 1px solid var(--fg-3);
-  z-index: 3;
+  /* Above the panel, as in the design; it steps left of it when open. */
+  z-index: 7;
   transition: right 480ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
@@ -224,7 +249,7 @@
 
 /* With the panel open the zoom control steps left of it. */
 .stagePanelOpen .zoom {
-  right: calc(min(460px, 100%) + 40px);
+  right: calc(min(460px, 88vw) + 20px);
 }
 
 /* ---------------------------------------------------------------- panel */
@@ -234,7 +259,7 @@
   top: 0;
   right: 0;
   bottom: 0;
-  width: min(460px, 100%);
+  width: min(460px, 88vw);
   background: var(--panel);
   border-left: 1px solid var(--hairline-strong);
   overflow-y: auto;
@@ -364,19 +389,7 @@
   text-wrap: pretty;
 }
 
-.images {
-  display: grid;
-  gap: 16px;
-  margin-top: 32px;
-}
 
-.image {
-  position: relative;
-  aspect-ratio: 2000 / 1250;
-  background: var(--fg-03);
-  border: 1px solid var(--hairline-strong);
-  overflow: hidden;
-}
 
 .image img {
   position: absolute;
@@ -791,6 +804,313 @@
 }
 
 /* ---------------------------------------------------------------- mobile */
+
+/* ------------------------------------------------------------ carousel */
+
+.carousel {
+  position: relative;
+  margin: 0 0 26px;
+}
+
+.carTrack {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.carTrack::-webkit-scrollbar {
+  display: none;
+}
+
+/* One image: nothing to peek at, so it fills the track. */
+.carTrackSingle {
+  cursor: default;
+}
+
+.carSlide {
+  flex: 0 0 82%;
+  aspect-ratio: 2000 / 1250;
+  position: relative;
+  scroll-snap-align: start;
+  background: var(--fg-03);
+  border: 1px solid var(--hairline-strong);
+  overflow: hidden;
+}
+
+.carTrackSingle .carSlide {
+  flex-basis: 100%;
+}
+
+.carArrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: rgba(6, 8, 9, 0.65);
+  transition: background 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.carArrow:hover {
+  background: rgba(6, 8, 9, 0.9);
+}
+
+.carArrowPrev {
+  left: 10px;
+}
+
+.carArrowNext {
+  right: 10px;
+}
+
+.carCount {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  font-weight: 500;
+  color: #fff;
+  background: rgba(6, 8, 9, 0.65);
+  padding: 5px 10px 5px calc(10px + 0.3em);
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------- itinerary cards */
+
+.itins {
+  margin-top: 32px;
+  border-top: 1px solid var(--hairline-strong);
+  padding-top: 24px;
+  display: grid;
+  gap: 12px;
+}
+
+.itinsHead {
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  font-weight: 500;
+  color: var(--fg-45);
+  margin-bottom: 4px;
+}
+
+.itinCard {
+  display: grid;
+  text-align: left;
+  border: 1px solid var(--fg-25);
+  padding: 20px 22px;
+  color: var(--fg);
+  transition: border-color 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.itinCard:hover {
+  border-color: var(--mint-hairline-strong);
+}
+
+.itinCardEyebrow {
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  font-weight: 500;
+  color: var(--mint);
+  margin-bottom: 10px;
+}
+
+.itinCardTitle {
+  font-size: 13px;
+  letter-spacing: 0.24em;
+  font-weight: 500;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.itinCardStops {
+  font-size: 11.5px;
+  color: var(--fg-5);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+
+.itinCardCta {
+  font-size: 9.5px;
+  letter-spacing: 0.28em;
+  font-weight: 500;
+  color: var(--fg-72);
+}
+
+/* --------------------------------------------------- itinerary state */
+
+.itBack {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 9.5px;
+  letter-spacing: 0.3em;
+  font-weight: 500;
+  color: var(--fg-6);
+  margin-bottom: 20px;
+  transition: color 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.itBack:hover {
+  color: var(--mint);
+}
+
+.itEyebrow {
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  font-weight: 500;
+  color: var(--mint);
+  margin-bottom: 12px;
+}
+
+.itTitle {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 22px;
+  letter-spacing: 0.22em;
+  line-height: 1.4;
+  margin: 0 0 18px;
+  padding-right: 32px;
+  text-wrap: balance;
+}
+
+.itPara {
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--fg-72);
+  margin: 0 0 24px;
+  text-wrap: pretty;
+}
+
+.dayHead {
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  font-weight: 500;
+  color: var(--fg-45);
+  margin-bottom: 6px;
+}
+
+.days {
+  display: grid;
+}
+
+.dayRow {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  text-align: left;
+  padding: 14px 0 14px 14px;
+  border-bottom: 1px solid var(--hairline);
+  border-left: 2px solid var(--hairline-strong);
+  color: var(--fg);
+  transition: border-color 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.dayRow:hover {
+  border-left-color: var(--mint-hairline-strong);
+}
+
+.dayRowOn {
+  border-left-color: var(--mint);
+}
+
+.dayNum {
+  flex: 0 0 44px;
+  font-size: 9px;
+  letter-spacing: 0.26em;
+  font-weight: 500;
+  color: var(--fg-4);
+  padding-top: 2px;
+}
+
+.dayRowOn .dayNum {
+  color: var(--mint);
+}
+
+.dayBody {
+  flex: 1;
+  display: grid;
+  gap: 5px;
+}
+
+.dayName {
+  font-size: 11.5px;
+  letter-spacing: 0.24em;
+  font-weight: 500;
+}
+
+.dayRowOn .dayName {
+  color: var(--mint);
+}
+
+.dayNote {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--fg-6);
+  line-height: 1.6;
+}
+
+.dayThumb {
+  flex: 0 0 92px;
+  width: 92px;
+  height: 62px;
+  align-self: center;
+  border: 1px solid var(--hairline-strong);
+  background: var(--fg-03);
+  overflow: hidden;
+  transition: border-color 240ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.dayRowOn .dayThumb {
+  border-color: var(--mint);
+}
+
+.dayThumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.itCta {
+  margin-top: 24px;
+}
+
+/* Light theme: the design's deep-teal accent stands in for mint on the
+   light panel, where mint cannot be read. */
+[data-theme="light"] .itinCardEyebrow,
+[data-theme="light"] .itEyebrow,
+[data-theme="light"] .dayRowOn .dayNum,
+[data-theme="light"] .dayRowOn .dayName,
+[data-theme="light"] .itBack:hover {
+  color: #257d6b;
+}
+
+[data-theme="light"] .dayRowOn {
+  border-left-color: #257d6b;
+}
+
+[data-theme="light"] .dayRowOn .dayThumb {
+  border-color: #257d6b;
+}
+
+[data-theme="light"] .itinCard:hover {
+  border-color: rgba(37, 125, 107, 0.6);
+}
+
+[data-theme="light"] .dayRow:hover {
+  border-left-color: rgba(37, 125, 107, 0.6);
+}
 
 @media (max-width: 760px) {
   .header {

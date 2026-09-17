@@ -1,0 +1,106 @@
+{
+  "destinationId": "arctic/svalbard",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "svalbard-5",
+      "nights": 5,
+      "title": "Five days from Longyearbyen",
+      "intro": "Isfjord and the west coast to Ny-Ålesund.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Longyearbyen",
+          "lat": 78.223,
+          "lng": 15.626,
+          "note": "Board in Longyearbyen."
+        },
+        {
+          "day": 2,
+          "place": "Pyramiden",
+          "lat": 78.656,
+          "lng": 16.324,
+          "note": "Pyramiden."
+        },
+        {
+          "day": 3,
+          "place": "Barentsburg",
+          "lat": 78.065,
+          "lng": 14.21,
+          "note": "Barentsburg."
+        },
+        {
+          "day": 4,
+          "place": "Ny-Ålesund",
+          "lat": 78.924,
+          "lng": 11.923,
+          "note": "Ny-Ålesund."
+        },
+        {
+          "day": 5,
+          "place": "Longyearbyen",
+          "lat": 78.223,
+          "lng": 15.626,
+          "note": "Return; disembark."
+        }
+      ]
+    },
+    {
+      "id": "svalbard-7",
+      "nights": 7,
+      "title": "Seven days from Longyearbyen to Longyearbyen",
+      "intro": "Ocean Independence’s Svalbard: the north-west fjords and the ice edge.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Longyearbyen",
+          "lat": 78.223,
+          "lng": 15.626,
+          "note": "Board in Longyearbyen."
+        },
+        {
+          "day": 2,
+          "place": "Ny-Ålesund",
+          "lat": 78.924,
+          "lng": 11.923,
+          "note": "Ny-Ålesund."
+        },
+        {
+          "day": 3,
+          "place": "Magdalenefjord",
+          "lat": 79.57,
+          "lng": 11,
+          "note": "Magdalenefjord."
+        },
+        {
+          "day": 4,
+          "place": "Smeerenburg",
+          "lat": 79.73,
+          "lng": 11,
+          "note": "Smeerenburg."
+        },
+        {
+          "day": 5,
+          "place": "Liefdefjord, Monacobreen",
+          "lat": 79.4,
+          "lng": 12.5,
+          "note": "Monacobreen."
+        },
+        {
+          "day": 6,
+          "place": "Alkefjellet",
+          "lat": 79.58,
+          "lng": 18.5,
+          "note": "Alkefjellet."
+        },
+        {
+          "day": 7,
+          "place": "Longyearbyen",
+          "lat": 78.223,
+          "lng": 15.626,
+          "note": "Return; disembark."
+        }
+      ]
+    }
+  ]
+}

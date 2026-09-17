@@ -15,10 +15,13 @@
 
 import { createHash } from "node:crypto";
 import snapshot from "../../../data/destinations.json";
+import itineraryData from "../../../data/itineraries.json";
 import type { AtlasDestination, AtlasSnapshot } from "@/lib/atlas/types";
-import { buildIndex, children, eyebrowFor, parentOf, regionOf, shortIntro, topLevelPins, type AtlasIndex } from "@/lib/atlas/data";
-import type { AtlasDefaults, AtlasDestinationContent, AtlasDestinationOption } from "@/lib/portal-types";
-import type { DestinationsPagePin } from "@/lib/types";
+import { buildIndex, children, eyebrowFor, parentOf, regionOf, shortIntro, sirv, topLevelPins, type AtlasIndex } from "@/lib/atlas/data";
+import type { ItinerariesData } from "@/lib/atlas/itineraries";
+import type { AtlasDefaults, AtlasDestinationContent, AtlasDestinationOption, WebsiteItinerarySummary } from "@/lib/portal-types";
+import type { DestinationsPageItinerary, DestinationsPagePin } from "@/lib/types";
+import { MAX_WEBSITE_ITINERARIES } from "@/lib/types";
 import { parsePage, USER_AGENT } from "./website.mjs";
 import { cropToSizes } from "../yachtfolio/images.mjs";
 import { fileExists, fileUrl, putFile } from "../storage.mjs";
@@ -253,7 +256,82 @@ export async function getDestinationContent(id: string, { live = true, images = 
       fetchedAt: new Date().toISOString(),
     },
     areaTerms: [...areaTerms, ...regionTerms.map((t) => `region:${t}`)],
+    itineraries: itinerarySummariesFor(dest.id),
   };
+}
+
+/* ------------------------------------------------------------ itineraries */
+
+const itineraries = itineraryData as unknown as ItinerariesData;
+
+/**
+ * Stop names are matched to Atlas destinations loosely but safely: case,
+ * accents, hyphens and a leading "The" are ignored and "Saint" reads as "St",
+ * so "Saint-Tropez" finds St Tropez and "Îles Lavezzi" finds Iles Lavezzi.
+ * Nothing looser: a substring match would hand Fort-de-France the image of
+ * France.
+ */
+const placeKey = (name: string) =>
+  name
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim()
+    .replace(/^the\s+/, "")
+    .replace(/\bsaint\b/g, "st")
+    .replace(/[-\u2013]/g, " ")
+    .replace(/[^a-z0-9 ]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+let placeIndexCache: Map<string, string> | null = null;
+
+/**
+ * Atlas destination image by place name: the stop thumbnails reuse the
+ * website's own imagery for the places that are Atlas destinations
+ * themselves (Capri, Positano, Porto Cervo…). Sirv renditions are requested
+ * at 400px; other hosts are used as-is. Null when the place is not an Atlas
+ * destination or that destination carries no image.
+ */
+export function stopImageFor(place: string, index: AtlasIndex = getAtlasIndex()): string | null {
+  if (!placeIndexCache) {
+    placeIndexCache = new Map();
+    // Shallower destinations win a name clash (a country over a town of the same name).
+    const ordered = [...index.byId.values()].sort((a, b) => b.level - a.level);
+    for (const d of ordered) {
+      const img = d.cardImage ?? d.heroImage ?? d.ogImage;
+      if (d.name && img) placeIndexCache.set(placeKey(d.name), img);
+    }
+  }
+  // "St Barts, Gustavia" is the stop on St Barts: the part before the comma is tried too.
+  const url = placeIndexCache.get(placeKey(place)) ?? placeIndexCache.get(placeKey(place.split(",")[0]));
+  return url ? (sirv(url, 400) ?? url) : null;
+}
+
+/**
+ * The website's sample itineraries for a destination, in the shape the page
+ * freezes: up to MAX_WEBSITE_ITINERARIES, each stop with its Atlas thumbnail
+ * where one exists. A destination without a library file has none.
+ */
+export function itinerariesFor(destId: string, index: AtlasIndex = getAtlasIndex()): DestinationsPageItinerary[] {
+  const list = itineraries.destinations[destId] ?? [];
+  return list.slice(0, MAX_WEBSITE_ITINERARIES).map((it) => ({
+    id: it.id,
+    title: it.title,
+    nights: it.nights,
+    intro: it.intro,
+    stops: it.days.map((d) => {
+      const image = stopImageFor(d.place, index);
+      return { day: d.day, place: d.place, lat: d.lat, lon: d.lng, note: d.note, ...(image ? { image } : {}) };
+    }),
+  }));
+}
+
+/** What the form shows under a chosen destination about its sample itineraries. */
+export function itinerarySummariesFor(destId: string): WebsiteItinerarySummary[] {
+  return (itineraries.destinations[destId] ?? [])
+    .slice(0, MAX_WEBSITE_ITINERARIES)
+    .map((it) => ({ id: it.id, title: it.title, nights: it.nights, stops: it.days.length }));
 }
 
 /* ----------------------------------------------------------------- geo */
@@ -281,12 +359,23 @@ export function otherPinsFor(chosenIds: string[]): DestinationsPagePin[] {
     .map((p) => ({ id: p.id, name: p.name, lat: p.lat, lon: p.lon }));
 }
 
-/** The snapshot facts the publish mapping needs for a set of chosen destinations. */
-export function atlasResolutionFor(chosenIds: string[]): { destinations: Record<string, DestinationGeo>; otherPins: DestinationsPagePin[] } {
+/**
+ * The snapshot facts the publish mapping needs for a set of chosen
+ * destinations: coordinates, the surrounding pins and the website's sample
+ * itineraries with their stop thumbnails.
+ */
+export function atlasResolutionFor(chosenIds: string[]): {
+  destinations: Record<string, DestinationGeo>;
+  otherPins: DestinationsPagePin[];
+  itineraries: Record<string, DestinationsPageItinerary[]>;
+} {
   const destinations: Record<string, DestinationGeo> = {};
+  const routes: Record<string, DestinationsPageItinerary[]> = {};
   for (const id of chosenIds) {
     const geo = destinationGeo(id);
-    if (geo) destinations[id] = geo;
+    if (!geo) continue;
+    destinations[id] = geo;
+    routes[id] = itinerariesFor(id);
   }
-  return { destinations, otherPins: otherPinsFor(Object.keys(destinations)) };
+  return { destinations, otherPins: otherPinsFor(Object.keys(destinations)), itineraries: routes };
 }

@@ -1,0 +1,49 @@
+{
+  "destinationId": "caribbean/the-bahamas/bimini-islands",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "bimini-islands-5",
+      "nights": 5,
+      "title": "Five days from Miami to Bimini",
+      "intro": "Across the Gulf Stream to Bimini and Gun Cay.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Miami Beach",
+          "lat": 25.77,
+          "lng": -80.133,
+          "note": "Board in Miami Beach."
+        },
+        {
+          "day": 2,
+          "place": "Bimini, Alice Town",
+          "lat": 25.726,
+          "lng": -79.298,
+          "note": "Alice Town."
+        },
+        {
+          "day": 3,
+          "place": "Gun Cay",
+          "lat": 25.573,
+          "lng": -79.304,
+          "note": "Gun Cay and Honeymoon Harbour."
+        },
+        {
+          "day": 4,
+          "place": "Bimini, Alice Town",
+          "lat": 25.726,
+          "lng": -79.298,
+          "note": "Bimini."
+        },
+        {
+          "day": 5,
+          "place": "Miami Beach",
+          "lat": 25.77,
+          "lng": -80.133,
+          "note": "Return; disembark."
+        }
+      ]
+    }
+  ]
+}

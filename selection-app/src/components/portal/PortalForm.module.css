@@ -529,6 +529,23 @@
   color: #1d1d1d;
 }
 
+/* The website's sample itineraries for a chosen destination — read-only. */
+.itinSummary {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #1d1d1d;
+}
+
+.itinSummary li::before {
+  content: "· ";
+  color: #257d6b;
+}
+
 .checkChild {
   display: grid;
   gap: 8px;

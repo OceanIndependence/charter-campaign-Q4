@@ -1,0 +1,106 @@
+{
+  "destinationId": "mediterranean/italy/italian-riviera/genoa",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "genoa-5",
+      "nights": 5,
+      "title": "Five days on the Italian Riviera",
+      "intro": "Portofino, San Fruttuoso, Camogli and the Cinque Terre, all within a morning’s cruise of one another.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Genoa",
+          "lat": 44.41,
+          "lng": 8.927,
+          "note": "Board in the Porto Antico; an evening at anchor off Camogli."
+        },
+        {
+          "day": 2,
+          "place": "Camogli",
+          "lat": 44.349,
+          "lng": 9.155,
+          "note": "The tall painted houses and the fishing harbour."
+        },
+        {
+          "day": 3,
+          "place": "Portofino",
+          "lat": 44.3032,
+          "lng": 9.2098,
+          "note": "The piazzetta and Castello Brown; swims at San Fruttuoso."
+        },
+        {
+          "day": 4,
+          "place": "Vernazza",
+          "lat": 44.135,
+          "lng": 9.684,
+          "note": "The Cinque Terre from the sea: Vernazza and Monterosso."
+        },
+        {
+          "day": 5,
+          "place": "Portovenere",
+          "lat": 44.052,
+          "lng": 9.834,
+          "note": "The church on the rocks and Byron’s grotto; disembark in Lerici."
+        }
+      ]
+    },
+    {
+      "id": "genoa-7",
+      "nights": 7,
+      "title": "Seven days from Genoa to Lerici",
+      "intro": "A slow Ligurian week: Portofino’s bay, the Cinque Terre and the Gulf of Poets.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Genoa",
+          "lat": 44.41,
+          "lng": 8.927,
+          "note": "Board in the old port; the palazzi of Via Garibaldi before the first crossing."
+        },
+        {
+          "day": 2,
+          "place": "Camogli",
+          "lat": 44.349,
+          "lng": 9.155,
+          "note": "The fishing harbour and Punta Chiappa."
+        },
+        {
+          "day": 3,
+          "place": "San Fruttuoso",
+          "lat": 44.316,
+          "lng": 9.174,
+          "note": "The abbey in its cove; the Christ of the Abyss."
+        },
+        {
+          "day": 4,
+          "place": "Portofino",
+          "lat": 44.3032,
+          "lng": 9.2098,
+          "note": "The piazzetta, Castello Brown and the lighthouse walk."
+        },
+        {
+          "day": 5,
+          "place": "Sestri Levante",
+          "lat": 44.274,
+          "lng": 9.396,
+          "note": "The Bay of Silence at dusk; the old town’s seafront trattorie."
+        },
+        {
+          "day": 6,
+          "place": "Monterosso al Mare",
+          "lat": 44.146,
+          "lng": 9.654,
+          "note": "The Cinque Terre villages from the sea."
+        },
+        {
+          "day": 7,
+          "place": "Lerici",
+          "lat": 44.0756,
+          "lng": 9.9169,
+          "note": "Portovenere and the Gulf of Poets; disembark in Lerici."
+        }
+      ]
+    }
+  ]
+}

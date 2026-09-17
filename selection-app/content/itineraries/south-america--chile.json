@@ -1,0 +1,106 @@
+{
+  "destinationId": "south-america/chile",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "chile-5",
+      "nights": 5,
+      "title": "Five days in the Chilean fjords",
+      "intro": "Puerto Montt, Chiloé and the fjords of the Comau.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Puerto Montt",
+          "lat": -41.485,
+          "lng": -72.94,
+          "note": "Board in Puerto Montt."
+        },
+        {
+          "day": 2,
+          "place": "Chiloé, Castro",
+          "lat": -42.482,
+          "lng": -73.762,
+          "note": "Castro."
+        },
+        {
+          "day": 3,
+          "place": "Quintupeu Fjord",
+          "lat": -42.16,
+          "lng": -72.44,
+          "note": "Quintupeu Fjord."
+        },
+        {
+          "day": 4,
+          "place": "Cahuelmó",
+          "lat": -42.253,
+          "lng": -72.437,
+          "note": "Cahuelmó hot springs."
+        },
+        {
+          "day": 5,
+          "place": "Puerto Montt",
+          "lat": -41.485,
+          "lng": -72.94,
+          "note": "Return; disembark."
+        }
+      ]
+    },
+    {
+      "id": "chile-7",
+      "nights": 7,
+      "title": "Seven days from Puerto Montt to Laguna San Rafael",
+      "intro": "The northern Patagonian channels to the glacier.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Puerto Montt",
+          "lat": -41.485,
+          "lng": -72.94,
+          "note": "Board in Puerto Montt."
+        },
+        {
+          "day": 2,
+          "place": "Chiloé, Castro",
+          "lat": -42.482,
+          "lng": -73.762,
+          "note": "Chiloé."
+        },
+        {
+          "day": 3,
+          "place": "Quintupeu Fjord",
+          "lat": -42.16,
+          "lng": -72.44,
+          "note": "Quintupeu."
+        },
+        {
+          "day": 4,
+          "place": "Puyuhuapi",
+          "lat": -44.326,
+          "lng": -72.561,
+          "note": "Puyuhuapi."
+        },
+        {
+          "day": 5,
+          "place": "Puerto Aguirre",
+          "lat": -45.162,
+          "lng": -73.53,
+          "note": "Puerto Aguirre."
+        },
+        {
+          "day": 6,
+          "place": "Laguna San Rafael",
+          "lat": -46.66,
+          "lng": -73.88,
+          "note": "Laguna San Rafael."
+        },
+        {
+          "day": 7,
+          "place": "Puerto Chacabuco",
+          "lat": -45.463,
+          "lng": -72.825,
+          "note": "Puerto Chacabuco; disembark."
+        }
+      ]
+    }
+  ]
+}

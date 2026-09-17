@@ -1,0 +1,106 @@
+{
+  "destinationId": "mediterranean/france/corsica",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "corsica-5",
+      "nights": 5,
+      "title": "Five days around Corsica’s west coast",
+      "intro": "Calvi, Girolata and the red cliffs of Scandola.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Calvi",
+          "lat": 42.568,
+          "lng": 8.758,
+          "note": "Board in Calvi beneath the citadel."
+        },
+        {
+          "day": 2,
+          "place": "L’Île-Rousse",
+          "lat": 42.638,
+          "lng": 8.937,
+          "note": "The red islets and the market town."
+        },
+        {
+          "day": 3,
+          "place": "Scandola",
+          "lat": 42.37,
+          "lng": 8.55,
+          "note": "The volcanic reserve from the water."
+        },
+        {
+          "day": 4,
+          "place": "Girolata",
+          "lat": 42.349,
+          "lng": 8.612,
+          "note": "The village reached only by sea."
+        },
+        {
+          "day": 5,
+          "place": "Ajaccio",
+          "lat": 41.921,
+          "lng": 8.739,
+          "note": "Napoleon’s birthplace and the Sanguinaires islands at sunset."
+        }
+      ]
+    },
+    {
+      "id": "corsica-7",
+      "nights": 7,
+      "title": "Seven days from Calvi to Cala di Volpe",
+      "intro": "Ocean Independence’s classic: Corsica’s west coast, Bonifacio and across the strait to Sardinia.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Calvi",
+          "lat": 42.568,
+          "lng": 8.758,
+          "note": "The citadel over the bay and the long beach beneath the pines."
+        },
+        {
+          "day": 2,
+          "place": "Girolata",
+          "lat": 42.349,
+          "lng": 8.612,
+          "note": "Scandola and the fishing hamlet."
+        },
+        {
+          "day": 3,
+          "place": "Ajaccio",
+          "lat": 41.921,
+          "lng": 8.739,
+          "note": "Napoleon’s birthplace and the Sanguinaires islands at sunset."
+        },
+        {
+          "day": 4,
+          "place": "Propriano",
+          "lat": 41.676,
+          "lng": 8.904,
+          "note": "The Gulf of Valinco: prehistoric Filitosa inland and quiet beaches along the shore."
+        },
+        {
+          "day": 5,
+          "place": "Bonifacio",
+          "lat": 41.387,
+          "lng": 9.159,
+          "note": "The citadel above the white cliffs."
+        },
+        {
+          "day": 6,
+          "place": "Îles Lavezzi",
+          "lat": 41.335,
+          "lng": 9.256,
+          "note": "The granite islets of the strait."
+        },
+        {
+          "day": 7,
+          "place": "Cala di Volpe",
+          "lat": 41.084,
+          "lng": 9.545,
+          "note": "The Costa Smeralda; disembark in Olbia."
+        }
+      ]
+    }
+  ]
+}

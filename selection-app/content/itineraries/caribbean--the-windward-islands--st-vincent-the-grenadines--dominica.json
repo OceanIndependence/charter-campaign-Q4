@@ -1,0 +1,49 @@
+{
+  "destinationId": "caribbean/the-windward-islands/st-vincent-the-grenadines/dominica",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "dominica-5",
+      "nights": 5,
+      "title": "Five days from Dominica to the Saintes",
+      "intro": "Portsmouth, Roseau and the Îles des Saintes.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Dominica, Portsmouth",
+          "lat": 15.576,
+          "lng": -61.461,
+          "note": "Board at Prince Rupert Bay."
+        },
+        {
+          "day": 2,
+          "place": "Roseau",
+          "lat": 15.301,
+          "lng": -61.388,
+          "note": "Roseau and Champagne Reef."
+        },
+        {
+          "day": 3,
+          "place": "Dominica, Portsmouth",
+          "lat": 15.576,
+          "lng": -61.461,
+          "note": "Indian River."
+        },
+        {
+          "day": 4,
+          "place": "Îles des Saintes",
+          "lat": 15.868,
+          "lng": -61.585,
+          "note": "The Îles des Saintes."
+        },
+        {
+          "day": 5,
+          "place": "Deshaies",
+          "lat": 16.306,
+          "lng": -61.796,
+          "note": "Deshaies; disembark."
+        }
+      ]
+    }
+  ]
+}

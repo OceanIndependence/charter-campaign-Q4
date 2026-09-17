@@ -42,9 +42,14 @@ function destination(id: string, edits: { eyebrow: string; deckLine: string; des
   if (!dest) throw new Error(`Demo destination ${id} is not in the Atlas snapshot.`);
   const copy = atlasCopyFor(dest, index);
   const candidates = imageCandidates(dest, index);
-  const images: [ContentBlock, ContentBlock] = [
-    edits.firstImage ? consultant(edits.firstImage) : atlas(candidates[0] ?? ""),
-    atlas(candidates.find((u) => u !== (edits.firstImage ?? candidates[0])) ?? candidates[0] ?? ""),
+  // Three carousel images: the consultant's own first image where given,
+  // then the next distinct Atlas candidates.
+  const first = edits.firstImage ?? candidates[0] ?? "";
+  const rest = candidates.filter((u) => u !== first);
+  const images: ContentBlock[] = [
+    edits.firstImage ? consultant(edits.firstImage) : atlas(first),
+    atlas(rest[0] ?? candidates[0] ?? ""),
+    atlas(rest[1] ?? rest[0] ?? candidates[0] ?? ""),
   ];
   return {
     destinationId: id,
@@ -104,7 +109,7 @@ export function demoTier2Draft(): Omit<Tier2Draft, "id" | "owner" | "createdAt" 
     },
     footerDisclaimer: TIER2_DEFAULT_DISCLAIMER,
     theme: "dark",
-    sections: { costs: true, itinerary: true, itineraryLinks: [], compare: true },
+    sections: { costs: true, itinerary: true, itineraryLinks: [], compare: true, routes: true },
     destinations: [
       destination(AMALFI, {
         eyebrow: "RETURN, BUT DEEPER",

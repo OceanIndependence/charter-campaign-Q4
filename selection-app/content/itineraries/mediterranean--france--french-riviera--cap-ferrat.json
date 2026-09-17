@@ -1,0 +1,106 @@
+{
+  "destinationId": "mediterranean/france/french-riviera/cap-ferrat",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "cap-ferrat-5",
+      "nights": 5,
+      "title": "Five days around Cap Ferrat",
+      "intro": "Cannes for lunch, Cap Ferrat by afternoon, Monaco after dark. Short hops, deep glamour.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Saint-Jean-Cap-Ferrat",
+          "lat": 43.689,
+          "lng": 7.332,
+          "note": "The Rothschild villa and gardens, then the paths around the peninsula."
+        },
+        {
+          "day": 2,
+          "place": "Beaulieu-sur-Mer",
+          "lat": 43.707,
+          "lng": 7.333,
+          "note": "The Villa Kérylos on its point, and a quiet anchorage below the Basse Corniche."
+        },
+        {
+          "day": 3,
+          "place": "Villefranche-sur-Mer",
+          "lat": 43.704,
+          "lng": 7.311,
+          "note": "The deep bay, Cocteau’s chapel and the citadel; dinner on the quay."
+        },
+        {
+          "day": 4,
+          "place": "Monaco",
+          "lat": 43.735,
+          "lng": 7.426,
+          "note": "The Prince’s Palace, the oceanographic museum and the casino square."
+        },
+        {
+          "day": 5,
+          "place": "Antibes",
+          "lat": 43.586,
+          "lng": 7.125,
+          "note": "The Picasso museum in the Grimaldi castle and the Provençal market."
+        }
+      ]
+    },
+    {
+      "id": "cap-ferrat-7",
+      "nights": 7,
+      "title": "Seven days from Saint-Tropez to Monaco",
+      "intro": "The full Riviera: Pampelonne, the Lérins, Antibes, Villefranche and Monaco.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Saint-Tropez",
+          "lat": 43.272,
+          "lng": 6.64,
+          "note": "Board in Saint-Tropez; the Place des Lices."
+        },
+        {
+          "day": 2,
+          "place": "Pampelonne",
+          "lat": 43.234,
+          "lng": 6.662,
+          "note": "Lunch at a beach club on the long sand, then the afternoon at anchor."
+        },
+        {
+          "day": 3,
+          "place": "Îles de Lérins",
+          "lat": 43.521,
+          "lng": 7.046,
+          "note": "The monastery island and Sainte-Marguerite."
+        },
+        {
+          "day": 4,
+          "place": "Cannes",
+          "lat": 43.551,
+          "lng": 7.013,
+          "note": "Board at the Vieux Port; La Croisette and the old town of Le Suquet before sailing."
+        },
+        {
+          "day": 5,
+          "place": "Antibes",
+          "lat": 43.586,
+          "lng": 7.125,
+          "note": "The Picasso museum in the Grimaldi castle and the Provençal market."
+        },
+        {
+          "day": 6,
+          "place": "Villefranche-sur-Mer",
+          "lat": 43.704,
+          "lng": 7.311,
+          "note": "The deep bay, Cocteau’s chapel and the citadel; dinner on the quay."
+        },
+        {
+          "day": 7,
+          "place": "Monaco",
+          "lat": 43.735,
+          "lng": 7.426,
+          "note": "The Prince’s Palace, the oceanographic museum and the casino square."
+        }
+      ]
+    }
+  ]
+}

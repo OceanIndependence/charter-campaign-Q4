@@ -1,0 +1,106 @@
+{
+  "destinationId": "mediterranean/malta",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "malta-5",
+      "nights": 5,
+      "title": "Five days around Malta and Gozo",
+      "intro": "Valletta’s Grand Harbour, Comino’s Blue Lagoon and Gozo.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Valletta",
+          "lat": 35.896,
+          "lng": 14.513,
+          "note": "Board in the Grand Harbour; the baroque city and the Upper Barrakka gardens."
+        },
+        {
+          "day": 2,
+          "place": "Comino, Blue Lagoon",
+          "lat": 36.014,
+          "lng": 14.326,
+          "note": "The Blue Lagoon before the day boats."
+        },
+        {
+          "day": 3,
+          "place": "Gozo, Mġarr",
+          "lat": 36.025,
+          "lng": 14.299,
+          "note": "Gozo: Mġarr and the Citadella."
+        },
+        {
+          "day": 4,
+          "place": "Dwejra",
+          "lat": 36.05,
+          "lng": 14.19,
+          "note": "The inland sea and the Fungus Rock on Gozo’s wild west coast."
+        },
+        {
+          "day": 5,
+          "place": "Valletta",
+          "lat": 35.896,
+          "lng": 14.513,
+          "note": "Board in the Grand Harbour; the baroque city and the Upper Barrakka gardens."
+        }
+      ]
+    },
+    {
+      "id": "malta-7",
+      "nights": 7,
+      "title": "Seven days around the Maltese islands",
+      "intro": "Every side of the three islands from the Grand Harbour.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Valletta",
+          "lat": 35.896,
+          "lng": 14.513,
+          "note": "Board in the Grand Harbour; the baroque city and the Upper Barrakka gardens."
+        },
+        {
+          "day": 2,
+          "place": "Marsaxlokk",
+          "lat": 35.842,
+          "lng": 14.544,
+          "note": "The painted luzzu boats and the Sunday fish market."
+        },
+        {
+          "day": 3,
+          "place": "St Paul’s Bay",
+          "lat": 35.95,
+          "lng": 14.4,
+          "note": "The bay where St Paul is said to have landed; the islets and a swim."
+        },
+        {
+          "day": 4,
+          "place": "Comino, Blue Lagoon",
+          "lat": 36.014,
+          "lng": 14.326,
+          "note": "The Blue Lagoon early, before the boats arrive from Malta and Gozo."
+        },
+        {
+          "day": 5,
+          "place": "Ramla Bay",
+          "lat": 36.062,
+          "lng": 14.284,
+          "note": "The red-sand beach and Calypso’s cave above it, on Gozo’s north coast."
+        },
+        {
+          "day": 6,
+          "place": "Xlendi",
+          "lat": 36.029,
+          "lng": 14.217,
+          "note": "Gozo’s little fishing harbour in its steep-sided inlet."
+        },
+        {
+          "day": 7,
+          "place": "Valletta",
+          "lat": 35.896,
+          "lng": 14.513,
+          "note": "Board in the Grand Harbour; the baroque city and the Upper Barrakka gardens."
+        }
+      ]
+    }
+  ]
+}

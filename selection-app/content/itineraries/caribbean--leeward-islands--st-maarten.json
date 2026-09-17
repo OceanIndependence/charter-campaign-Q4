@@ -1,0 +1,106 @@
+{
+  "destinationId": "caribbean/leeward-islands/st-maarten",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "st-maarten-5",
+      "nights": 5,
+      "title": "Five days from St Maarten to St Barts",
+      "intro": "Simpson Bay, Anguilla’s beaches and Gustavia.",
+      "days": [
+        {
+          "day": 1,
+          "place": "St Maarten, Simpson Bay",
+          "lat": 18.029,
+          "lng": -63.098,
+          "note": "Board in Simpson Bay."
+        },
+        {
+          "day": 2,
+          "place": "Anguilla, Road Bay",
+          "lat": 18.199,
+          "lng": -63.099,
+          "note": "Road Bay and Sandy Ground."
+        },
+        {
+          "day": 3,
+          "place": "Prickly Pear Cays",
+          "lat": 18.265,
+          "lng": -63.17,
+          "note": "The Prickly Pear cays."
+        },
+        {
+          "day": 4,
+          "place": "Colombier",
+          "lat": 17.924,
+          "lng": -62.863,
+          "note": "St Barts’ Anse de Colombier."
+        },
+        {
+          "day": 5,
+          "place": "St Barts, Gustavia",
+          "lat": 17.896,
+          "lng": -62.85,
+          "note": "Gustavia; disembark."
+        }
+      ]
+    },
+    {
+      "id": "st-maarten-7",
+      "nights": 7,
+      "title": "Seven days from Antigua to St Barts",
+      "intro": "Antigua’s harbours, Barbuda, Nevis, St Kitts and St Barts.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Antigua, Falmouth Harbour",
+          "lat": 17.01,
+          "lng": -61.77,
+          "note": "Board in Falmouth Harbour; Nelson’s Dockyard."
+        },
+        {
+          "day": 2,
+          "place": "Green Island",
+          "lat": 17.07,
+          "lng": -61.67,
+          "note": "Green Island and Nonsuch Bay."
+        },
+        {
+          "day": 3,
+          "place": "Barbuda, Low Bay",
+          "lat": 17.59,
+          "lng": -61.85,
+          "note": "Barbuda’s pink sand."
+        },
+        {
+          "day": 4,
+          "place": "Nevis, Charlestown",
+          "lat": 17.139,
+          "lng": -62.621,
+          "note": "Nevis."
+        },
+        {
+          "day": 5,
+          "place": "St Kitts, Basseterre",
+          "lat": 17.296,
+          "lng": -62.724,
+          "note": "St Kitts."
+        },
+        {
+          "day": 6,
+          "place": "Colombier",
+          "lat": 17.924,
+          "lng": -62.863,
+          "note": "Anse de Colombier."
+        },
+        {
+          "day": 7,
+          "place": "St Barts, Gustavia",
+          "lat": 17.896,
+          "lng": -62.85,
+          "note": "Gustavia; disembark."
+        }
+      ]
+    }
+  ]
+}

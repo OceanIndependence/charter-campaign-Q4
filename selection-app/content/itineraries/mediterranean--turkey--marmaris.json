@@ -1,0 +1,106 @@
+{
+  "destinationId": "mediterranean/turkey/marmaris",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "marmaris-5",
+      "nights": 5,
+      "title": "Five days from Marmaris around the Bozburun peninsula",
+      "intro": "The Carian coast: Selimiye, Bozburun and Serçe Limanı.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Marmaris",
+          "lat": 36.85,
+          "lng": 28.274,
+          "note": "The castle and the bazaar; the pine-lined bays around the gulf."
+        },
+        {
+          "day": 2,
+          "place": "Serçe Limanı",
+          "lat": 36.581,
+          "lng": 28.043,
+          "note": "A near-landlocked cove on the Bozburun peninsula, once a Byzantine wreck site."
+        },
+        {
+          "day": 3,
+          "place": "Bozburun",
+          "lat": 36.689,
+          "lng": 28.045,
+          "note": "The gulet-building village and the empty bays of the peninsula."
+        },
+        {
+          "day": 4,
+          "place": "Selimiye",
+          "lat": 36.704,
+          "lng": 28.09,
+          "note": "The quiet village at the head of its bay; dinner at a waterside table."
+        },
+        {
+          "day": 5,
+          "place": "Marmaris",
+          "lat": 36.85,
+          "lng": 28.274,
+          "note": "The castle and the bazaar; the pine-lined bays around the gulf."
+        }
+      ]
+    },
+    {
+      "id": "marmaris-7",
+      "nights": 7,
+      "title": "Seven days from Marmaris to Bodrum",
+      "intro": "The Carian coast west to Bodrum: Datça, Knidos and the Gulf of Gökova.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Marmaris",
+          "lat": 36.85,
+          "lng": 28.274,
+          "note": "The castle and the bazaar; the pine-lined bays around the gulf."
+        },
+        {
+          "day": 2,
+          "place": "Serçe Limanı",
+          "lat": 36.581,
+          "lng": 28.043,
+          "note": "A near-landlocked cove on the Bozburun peninsula, once a Byzantine wreck site."
+        },
+        {
+          "day": 3,
+          "place": "Bozburun",
+          "lat": 36.689,
+          "lng": 28.045,
+          "note": "The gulet-building village and the empty bays of the peninsula."
+        },
+        {
+          "day": 4,
+          "place": "Selimiye",
+          "lat": 36.704,
+          "lng": 28.09,
+          "note": "The quiet village at the head of its bay; dinner at a waterside table."
+        },
+        {
+          "day": 5,
+          "place": "Datça",
+          "lat": 36.724,
+          "lng": 27.687,
+          "note": "The almond and olive peninsula; a swim at Palamutbükü."
+        },
+        {
+          "day": 6,
+          "place": "Knidos",
+          "lat": 36.687,
+          "lng": 27.376,
+          "note": "The ancient city at the tip of the peninsula, its two harbours still in use."
+        },
+        {
+          "day": 7,
+          "place": "Bodrum",
+          "lat": 37.033,
+          "lng": 27.43,
+          "note": "The Crusader castle and the museum of underwater archaeology."
+        }
+      ]
+    }
+  ]
+}

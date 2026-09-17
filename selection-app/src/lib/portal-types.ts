@@ -199,6 +199,14 @@ export interface AtlasDefaults {
   fetchedAt: string;
 }
 
+/** What the form shows about a destination's sample itineraries. */
+export interface WebsiteItinerarySummary {
+  id: string;
+  title: string;
+  nights: number;
+  stops: number;
+}
+
 /** One of the three destination slots on a Tier 2 draft. */
 export interface Tier2DestinationDraft {
   /** Tier 1 destination id (data/destinations.json), null while unchosen */
@@ -211,7 +219,18 @@ export interface Tier2DestinationDraft {
   /** Optional — blank hides the note */
   consultantNote: ContentBlock;
   /** Two 16:10 images */
-  images: [ContentBlock, ContentBlock];
+  /**
+   * Three 16:10 images for the panel's peek carousel. A draft saved when the
+   * form had two slots carries two; the form pads it to three on load.
+   */
+  images: ContentBlock[];
+  /**
+   * The website's sample itineraries for the chosen destination — a read-only
+   * summary shown in the form, so the consultant knows what the client page
+   * will draw. The routes themselves are resolved from the library at preview
+   * and publish time.
+   */
+  websiteItineraries?: WebsiteItinerarySummary[];
   atlas: AtlasDefaults | null;
   /** Cruising-area terms from the Atlas, used to pre-tick yachts (region terms prefixed "region:") */
   areaTerms?: string[];
@@ -270,10 +289,12 @@ export interface Tier2Sections {
   itineraryLinks: DraftItineraryLink[];
   /** Side-by-side specifications, picked from the yacht rail */
   compare: boolean;
+  /** The website's sample itineraries in each destination panel, drawn on the globe */
+  routes: boolean;
 }
 
 /** What a new Personalised Atlas starts with, and what an older draft is read as. */
-export const TIER2_DEFAULT_SECTIONS: Tier2Sections = { costs: true, itinerary: true, itineraryLinks: [], compare: true };
+export const TIER2_DEFAULT_SECTIONS: Tier2Sections = { costs: true, itinerary: true, itineraryLinks: [], compare: true, routes: true };
 
 /** Tier 2 — Personalised Atlas. */
 export interface Tier2Draft extends SelectionBase {
@@ -309,7 +330,7 @@ export function emptyTier2Destination(): Tier2DestinationDraft {
     deckLine: emptyContentBlock(),
     description: emptyContentBlock(),
     consultantNote: emptyContentBlock("", "consultant"),
-    images: [emptyContentBlock(), emptyContentBlock()],
+    images: [emptyContentBlock(), emptyContentBlock(), emptyContentBlock()],
     atlas: null,
   };
 }
@@ -401,6 +422,8 @@ export interface AtlasDestinationContent {
   atlas: AtlasDefaults;
   /** Terms (destination and place names) used to map Yachtfolio cruising areas onto it */
   areaTerms: string[];
+  /** The website's sample itineraries for it, for the form's read-only summary */
+  itineraries: WebsiteItinerarySummary[];
 }
 
 export interface FleetEntry {

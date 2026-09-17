@@ -1,0 +1,106 @@
+{
+  "destinationId": "caribbean/virgin-islands/us-virgin-islands",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "us-virgin-islands-5",
+      "nights": 5,
+      "title": "Five days from St Thomas around St John",
+      "intro": "Charlotte Amalie, the north-shore bays of St John and Christmas Cove.",
+      "days": [
+        {
+          "day": 1,
+          "place": "St Thomas, Charlotte Amalie",
+          "lat": 18.334,
+          "lng": -64.923,
+          "note": "Board at Charlotte Amalie."
+        },
+        {
+          "day": 2,
+          "place": "Christmas Cove",
+          "lat": 18.307,
+          "lng": -64.835,
+          "note": "Christmas Cove."
+        },
+        {
+          "day": 3,
+          "place": "St John, Cruz Bay",
+          "lat": 18.332,
+          "lng": -64.794,
+          "note": "Cruz Bay and Trunk Bay."
+        },
+        {
+          "day": 4,
+          "place": "Francis Bay",
+          "lat": 18.366,
+          "lng": -64.742,
+          "note": "Francis Bay and Maho."
+        },
+        {
+          "day": 5,
+          "place": "St Thomas, Charlotte Amalie",
+          "lat": 18.334,
+          "lng": -64.923,
+          "note": "Return; disembark."
+        }
+      ]
+    },
+    {
+      "id": "us-virgin-islands-7",
+      "nights": 7,
+      "title": "Seven days from St Thomas to St Thomas",
+      "intro": "St John’s park bays, then across to the British islands and back.",
+      "days": [
+        {
+          "day": 1,
+          "place": "St Thomas, Charlotte Amalie",
+          "lat": 18.334,
+          "lng": -64.923,
+          "note": "Board in Charlotte Amalie."
+        },
+        {
+          "day": 2,
+          "place": "St John, Cruz Bay",
+          "lat": 18.332,
+          "lng": -64.794,
+          "note": "Cruz Bay."
+        },
+        {
+          "day": 3,
+          "place": "Francis Bay",
+          "lat": 18.366,
+          "lng": -64.742,
+          "note": "Francis Bay."
+        },
+        {
+          "day": 4,
+          "place": "Norman Island, The Bight",
+          "lat": 18.317,
+          "lng": -64.618,
+          "note": "Norman Island."
+        },
+        {
+          "day": 5,
+          "place": "Virgin Gorda, The Baths",
+          "lat": 18.43,
+          "lng": -64.445,
+          "note": "Virgin Gorda."
+        },
+        {
+          "day": 6,
+          "place": "Jost Van Dyke",
+          "lat": 18.444,
+          "lng": -64.75,
+          "note": "Jost Van Dyke."
+        },
+        {
+          "day": 7,
+          "place": "St Thomas, Charlotte Amalie",
+          "lat": 18.334,
+          "lng": -64.923,
+          "note": "Return; disembark."
+        }
+      ]
+    }
+  ]
+}

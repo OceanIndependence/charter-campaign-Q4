@@ -1,0 +1,106 @@
+{
+  "destinationId": "mediterranean/italy/sicily/aeolian-islands",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "aeolian-islands-5",
+      "nights": 5,
+      "title": "Five days in the Aeolian Islands",
+      "intro": "Stromboli after dark, black-sand anchorages off Panarea and long volcanic ridgelines from Milazzo.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Milazzo",
+          "lat": 38.221,
+          "lng": 15.241,
+          "note": "Board in Milazzo; cross to Vulcano for the mud baths."
+        },
+        {
+          "day": 2,
+          "place": "Lipari",
+          "lat": 38.467,
+          "lng": 14.956,
+          "note": "The castle and the pumice cliffs; dinner in the town."
+        },
+        {
+          "day": 3,
+          "place": "Salina",
+          "lat": 38.56,
+          "lng": 14.872,
+          "note": "Malvasia at Santa Marina; Pollara’s bay for a swim."
+        },
+        {
+          "day": 4,
+          "place": "Panarea",
+          "lat": 38.638,
+          "lng": 15.072,
+          "note": "Cala Junco and the islets; the island’s summer evening."
+        },
+        {
+          "day": 5,
+          "place": "Stromboli",
+          "lat": 38.796,
+          "lng": 15.235,
+          "note": "The Sciara del Fuoco after dark; return to Milazzo."
+        }
+      ]
+    },
+    {
+      "id": "aeolian-islands-7",
+      "nights": 7,
+      "title": "Seven days from Catania around the Aeolians",
+      "intro": "Taormina, then every island of the Aeolian arc, ending in Milazzo.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Catania",
+          "lat": 37.504,
+          "lng": 15.098,
+          "note": "Board in Catania; Etna from the water."
+        },
+        {
+          "day": 2,
+          "place": "Taormina",
+          "lat": 37.825,
+          "lng": 15.273,
+          "note": "The Greek theatre and Isola Bella."
+        },
+        {
+          "day": 3,
+          "place": "Vulcano",
+          "lat": 38.411,
+          "lng": 14.964,
+          "note": "The Gran Cratere and the black beaches."
+        },
+        {
+          "day": 4,
+          "place": "Lipari",
+          "lat": 38.467,
+          "lng": 14.956,
+          "note": "The castle, the pumice cliffs and Lipari town."
+        },
+        {
+          "day": 5,
+          "place": "Salina",
+          "lat": 38.56,
+          "lng": 14.872,
+          "note": "Pollara bay and the Malvasia vineyards."
+        },
+        {
+          "day": 6,
+          "place": "Panarea",
+          "lat": 38.638,
+          "lng": 15.072,
+          "note": "Cala Junco and the islets of Basiluzzo."
+        },
+        {
+          "day": 7,
+          "place": "Stromboli",
+          "lat": 38.796,
+          "lng": 15.235,
+          "note": "The eruptions after dark; disembark in Milazzo."
+        }
+      ]
+    }
+  ]
+}

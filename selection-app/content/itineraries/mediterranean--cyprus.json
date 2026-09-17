@@ -1,0 +1,106 @@
+{
+  "destinationId": "mediterranean/cyprus",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "cyprus-5",
+      "nights": 5,
+      "title": "Five days from Limassol to the Akamas",
+      "intro": "Limassol, Paphos and the Akamas peninsula.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Limassol",
+          "lat": 34.671,
+          "lng": 33.044,
+          "note": "Board at the marina; the castle and the wine villages in the hills behind."
+        },
+        {
+          "day": 2,
+          "place": "Pissouri",
+          "lat": 34.662,
+          "lng": 32.703,
+          "note": "The bay under the cliffs and the village on the ridge above it."
+        },
+        {
+          "day": 3,
+          "place": "Paphos",
+          "lat": 34.755,
+          "lng": 32.406,
+          "note": "The mosaics and the harbour."
+        },
+        {
+          "day": 4,
+          "place": "Akamas, Blue Lagoon",
+          "lat": 35.057,
+          "lng": 32.322,
+          "note": "Lara Bay and the Blue Lagoon."
+        },
+        {
+          "day": 5,
+          "place": "Latchi",
+          "lat": 35.043,
+          "lng": 32.396,
+          "note": "Latchi; disembark or return."
+        }
+      ]
+    },
+    {
+      "id": "cyprus-7",
+      "nights": 7,
+      "title": "Seven days around southern Cyprus",
+      "intro": "From the Akamas to Cape Greco along the south coast.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Latchi",
+          "lat": 35.043,
+          "lng": 32.396,
+          "note": "The Akamas peninsula and the Baths of Aphrodite, with the Blue Lagoon by tender."
+        },
+        {
+          "day": 2,
+          "place": "Lara Bay",
+          "lat": 34.942,
+          "lng": 32.312,
+          "note": "Lara Bay and the turtle beach."
+        },
+        {
+          "day": 3,
+          "place": "Paphos",
+          "lat": 34.755,
+          "lng": 32.406,
+          "note": "The Roman mosaics and the Tombs of the Kings; the harbour castle at sunset."
+        },
+        {
+          "day": 4,
+          "place": "Pissouri",
+          "lat": 34.662,
+          "lng": 32.703,
+          "note": "The bay under the cliffs and the village on the ridge above it."
+        },
+        {
+          "day": 5,
+          "place": "Limassol",
+          "lat": 34.671,
+          "lng": 33.044,
+          "note": "Board at the marina; the castle and the wine villages in the hills behind."
+        },
+        {
+          "day": 6,
+          "place": "Larnaca",
+          "lat": 34.917,
+          "lng": 33.638,
+          "note": "The salt lake and the church of St Lazarus; disembark at the marina."
+        },
+        {
+          "day": 7,
+          "place": "Ayia Napa",
+          "lat": 34.985,
+          "lng": 33.999,
+          "note": "The sea caves at Cape Greco and the sands of Nissi beach."
+        }
+      ]
+    }
+  ]
+}

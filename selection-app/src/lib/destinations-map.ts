@@ -7,7 +7,8 @@
  * the website, the Atlas or Yachtfolio do.
  */
 
-import type { AtlasBlock, DestinationsPageConfig, DestinationsPageDestination, DestinationsPageYacht } from "./types";
+import type { AtlasBlock, DestinationsPageConfig, DestinationsPageDestination, DestinationsPageItinerary, DestinationsPageYacht } from "./types";
+import { MAX_WEBSITE_ITINERARIES } from "./types";
 import type { ContentBlock, Tier2Draft, Tier2DraftYacht } from "./portal-types";
 import { TIER2_DEFAULT_DISCLAIMER, TIER2_DEFAULT_SECTIONS, TIER2_DEFAULT_VAT_TEXT, TIER2_MAX_YACHTS, TIER2_MIN_YACHTS, tier2VatPctFromText } from "./portal-types";
 import { CAMPAIGN_ATLAS_URL, mapDraftYacht, mapItineraryLinks } from "./portal-map";
@@ -17,7 +18,12 @@ import { slugify } from "@/server/yachtfolio/normalise.mjs";
 export interface AtlasResolution {
   destinations: Record<string, { name: string; lat: number; lon: number; guideUrl: string }>;
   otherPins: DestinationsPageConfig["otherPins"];
+  /** The website's sample itineraries per chosen destination id, stop thumbnails resolved */
+  itineraries: Record<string, DestinationsPageItinerary[]>;
 }
+
+/** The most carousel images a destination carries. */
+export const TIER2_MAX_IMAGES = 3;
 
 const str = (v: string | undefined | null): string | undefined => {
   const t = (v ?? "").trim();
@@ -58,6 +64,16 @@ export function tier2DraftToConfig(draft: Tier2Draft, slug: string, atlas: Atlas
     const geo = atlas.destinations[d.destinationId];
     if (!geo) continue;
     const note = block(d.consultantNote);
+    // Two or three images, blanks dropped: what the carousel shows. A stop on a
+    // route that is not itself an Atlas destination borrows one of them.
+    const images = (d.images ?? [])
+      .slice(0, TIER2_MAX_IMAGES)
+      .map((img) => block(img))
+      .filter((img) => img.value);
+    const itineraries = (atlas.itineraries[d.destinationId] ?? []).slice(0, MAX_WEBSITE_ITINERARIES).map((it) => ({
+      ...it,
+      stops: it.stops.map((stop, i) => (stop.image || !images.length ? stop : { ...stop, image: images[i % images.length].value })),
+    }));
     destinations.push({
       id: d.destinationId,
       name: (str(d.name) ?? geo.name).trim(),
@@ -68,7 +84,8 @@ export function tier2DraftToConfig(draft: Tier2Draft, slug: string, atlas: Atlas
       deckLine: block(d.deckLine),
       description: block(d.description),
       ...(note.value ? { consultantNote: note } : {}),
-      images: [block(d.images?.[0]), block(d.images?.[1])],
+      images,
+      ...(itineraries.length ? { itineraries } : {}),
     });
   }
   const valid = new Set(destinations.map((d) => d.id));
@@ -98,6 +115,7 @@ export function tier2DraftToConfig(draft: Tier2Draft, slug: string, atlas: Atlas
       itinerary: draft.sections?.itinerary ?? TIER2_DEFAULT_SECTIONS.itinerary,
       itineraryLinks: mapItineraryLinks({ itineraryLinks: draft.sections?.itineraryLinks }),
       compare: draft.sections?.compare ?? TIER2_DEFAULT_SECTIONS.compare,
+      routes: draft.sections?.routes ?? TIER2_DEFAULT_SECTIONS.routes,
     },
     theme: draft.theme === "light" ? "light" : "dark",
     consultant: {

@@ -1,0 +1,106 @@
+{
+  "destinationId": "south-east-asia/thailand",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "thailand-5",
+      "nights": 5,
+      "title": "Five days in Phang Nga Bay",
+      "intro": "Phuket’s limestone bay and the Phi Phi islands.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Phuket, Ao Po",
+          "lat": 8.063,
+          "lng": 98.43,
+          "note": "Board at Ao Po."
+        },
+        {
+          "day": 2,
+          "place": "Phang Nga Bay",
+          "lat": 8.274,
+          "lng": 98.501,
+          "note": "Phang Nga Bay."
+        },
+        {
+          "day": 3,
+          "place": "Ko Hong",
+          "lat": 8.063,
+          "lng": 98.702,
+          "note": "Ko Hong."
+        },
+        {
+          "day": 4,
+          "place": "Ko Phi Phi Don",
+          "lat": 7.739,
+          "lng": 98.777,
+          "note": "Phi Phi Don and Maya Bay."
+        },
+        {
+          "day": 5,
+          "place": "Phuket, Ao Po",
+          "lat": 8.063,
+          "lng": 98.43,
+          "note": "Return; disembark."
+        }
+      ]
+    },
+    {
+      "id": "thailand-7",
+      "nights": 7,
+      "title": "Seven days from Phuket to Ko Lanta",
+      "intro": "Phang Nga, Krabi and the islands of the Trang coast.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Phuket, Ao Po",
+          "lat": 8.063,
+          "lng": 98.43,
+          "note": "Board at Ao Po."
+        },
+        {
+          "day": 2,
+          "place": "Ko Yao Noi",
+          "lat": 8.113,
+          "lng": 98.607,
+          "note": "Ko Yao Noi."
+        },
+        {
+          "day": 3,
+          "place": "Ko Hong",
+          "lat": 8.063,
+          "lng": 98.702,
+          "note": "Ko Hong and Railay."
+        },
+        {
+          "day": 4,
+          "place": "Ko Phi Phi Don",
+          "lat": 7.739,
+          "lng": 98.777,
+          "note": "Phi Phi."
+        },
+        {
+          "day": 5,
+          "place": "Ko Lanta",
+          "lat": 7.532,
+          "lng": 99.038,
+          "note": "Ko Lanta."
+        },
+        {
+          "day": 6,
+          "place": "Ko Rok",
+          "lat": 7.213,
+          "lng": 99.062,
+          "note": "Ko Rok."
+        },
+        {
+          "day": 7,
+          "place": "Ko Muk",
+          "lat": 7.366,
+          "lng": 99.287,
+          "note": "Ko Muk and the Emerald Cave; disembark at Ko Lanta."
+        }
+      ]
+    }
+  ]
+}

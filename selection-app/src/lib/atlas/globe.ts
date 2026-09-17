@@ -1,8 +1,17 @@
 /**
  * AtlasGlobe — true WebGL 3D globe (three.js), ported from the design
  * handoff's <atlas-globe-3d> prototype engine. Same behaviour and public API:
- * setPins / setSubPins / setFocus / setSelected / setOptions / flyTo / zoomBy /
- * reset, plus pin-select and deselect callbacks.
+ * setPins / setSubPins / setRoute / setFocus / setSelected / setOptions /
+ * setViewShift / flyTo / zoomBy / reset, plus pin-select and deselect
+ * callbacks.
+ *
+ *  - A route (Tier 2 itineraries) is a trail of glowing mint dots along each
+ *    leg over a faint deep-teal hairline. The dots are DOM elements in their
+ *    own layer between the canvas and the pins, projected every frame, so
+ *    they hold a constant screen size at any zoom and can carry a CSS glow
+ *    (point sprites could not, and misbehaved at narrow fields of view).
+ *  - setViewShift offsets the camera's projection window so the globe frames
+ *    its subject in the stage left of an open side panel.
  *
  *  - Telephoto zoom: the camera stays at a fixed distance and the field of
  *    view narrows, which keeps the texture-resolution maths exact.
@@ -59,6 +68,25 @@ export interface GlobeConfig {
   onDeselect?: () => void;
   /** Initial view (lat, lon, zoom). Defaults to the Mediterranean. */
   home?: { lat: number; lon: number; zoom: number };
+  /**
+   * Upper zoom limit. The Atlas keeps the default (8); the Tier 2 page, which
+   * flies down to a single anchorage on a route, allows 80.
+   */
+  zoomMax?: number;
+}
+
+/** One point on a drawn route; `day` and `place` are carried for callers, not drawn. */
+export interface RoutePoint {
+  lat: number;
+  lon: number;
+  day?: number;
+  place?: string;
+}
+
+interface RouteNode {
+  /** Position on the unit sphere, in the globe's own (unrotated) frame */
+  v: THREE.Vector3;
+  el: HTMLDivElement;
 }
 
 interface PinState extends GlobePin {
@@ -134,15 +162,30 @@ const DOT_HIT_PAD = 8;
 const ZOOM_MIN = 0.7;
 const ZOOM_MAX = 8;
 const CAMERA_D = 3.2;
-
-const clampZoom = (z: number) => Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, z));
+/** The selected stop on a route: a solid 9px disc under a layered glow. */
+const STOP_SELECTED_DOT = 9;
+const STOP_SELECTED_GLOW = "0 0 0 1.5px rgba(29,29,29,0.5), 0 0 0 5px rgba(167,230,215,0.35), 0 0 16px 6px rgba(167,230,215,0.9), 0 0 28px 10px rgba(167,230,215,0.5)";
+/** Route trail: hairline segments per leg, and dots per leg (n - 1 of them) */
+const ROUTE_SEGMENTS = 24;
+const ROUTE_DOTS_PER_LEG = 10;
+const ROUTE_LINE_COLOUR = 0x257d6b;
+const ROUTE_DOT_GLOW = "0 0 0 1px rgba(29,29,29,0.28), 0 0 7px 2px rgba(167,230,215,0.85), 0 0 14px 5px rgba(167,230,215,0.35)";
 
 export class AtlasGlobe {
   private host: HTMLElement;
   private glWrap: HTMLDivElement;
+  /** Route dots: between the canvas and the pins, so pins stay on top */
+  private routeLayer: HTMLDivElement;
   private pinLayer: HTMLDivElement;
   private cfg: GlobeConfig;
   private home: { lat: number; lon: number; zoom: number };
+  private zoomMax: number;
+  /** Horizontal offset of the projection window, px (see setViewShift) */
+  private viewShift = 0;
+  private route: RoutePoint[] | null = null;
+  private routeLine: THREE.Line | null = null;
+  private routeNodes: RouteNode[] = [];
+  private frameErrAt = 0;
 
   private yaw: number;
   private pitch: number;
@@ -193,6 +236,7 @@ export class AtlasGlobe {
     this.host = host;
     this.cfg = cfg;
     this.home = cfg.home ?? { lat: 38, lon: 12, zoom: 1 };
+    this.zoomMax = cfg.zoomMax ?? ZOOM_MAX;
     this.yaw = -Math.PI / 2 - this.home.lon * d2r;
     this.pitch = this.home.lat * d2r;
 
@@ -203,9 +247,12 @@ export class AtlasGlobe {
 
     this.glWrap = document.createElement("div");
     Object.assign(this.glWrap.style, { position: "absolute", inset: "0" });
+    this.routeLayer = document.createElement("div");
+    Object.assign(this.routeLayer.style, { position: "absolute", inset: "0", overflow: "hidden", pointerEvents: "none" });
     this.pinLayer = document.createElement("div");
     Object.assign(this.pinLayer.style, { position: "absolute", inset: "0", overflow: "hidden", pointerEvents: "none" });
     host.appendChild(this.glWrap);
+    host.appendChild(this.routeLayer);
     host.appendChild(this.pinLayer);
 
     this.ro = new ResizeObserver(() => this.resize());
@@ -221,6 +268,7 @@ export class AtlasGlobe {
     for (const off of this.unbind) off();
     this.unbind = [];
     for (const p of this.allPins) p._anchor?.removeFromParent();
+    this.clearRoute();
     if (this.detail) {
       this.detail.geometry.dispose();
       this.detail.material.map?.dispose();
@@ -232,6 +280,7 @@ export class AtlasGlobe {
     this.renderer = null;
     this.detailCv = null;
     this.glWrap.remove();
+    this.routeLayer.remove();
     this.pinLayer.remove();
   }
 
@@ -240,10 +289,21 @@ export class AtlasGlobe {
   private startLoop() {
     if (!this.renderer) return;
     if (this.raf) cancelAnimationFrame(this.raf);
+    // A transient error inside a frame (a pin whose element has just been
+    // removed, say) must cost one frame, not freeze the globe: the next frame
+    // is requested in `finally`, and the error is logged at most every 2s.
     const loop = (t: number) => {
       this.lastFrameAt = t;
-      this.frame(t);
-      this.raf = requestAnimationFrame(loop);
+      try {
+        this.frame(t);
+      } catch (err) {
+        if (t - this.frameErrAt > 2000) {
+          this.frameErrAt = t;
+          console.warn("AtlasGlobe: frame skipped", err);
+        }
+      } finally {
+        if (!this.destroyed) this.raf = requestAnimationFrame(loop);
+      }
     };
     this.raf = requestAnimationFrame(loop);
   }
@@ -298,8 +358,9 @@ export class AtlasGlobe {
     halo.renderOrder = -1;
     this.scene.add(halo);
 
-    // Pins created before the scene existed get their anchors now.
+    // Pins and a route set before the scene existed are built now.
     for (const p of this.allPins) this.anchorPin(p);
+    if (this.route) this.applyRoute();
 
     this.resize();
     if (!this.destroyed) this.startLoop();
@@ -507,6 +568,10 @@ export class AtlasGlobe {
     this.camera.updateProjectionMatrix();
   }
 
+  private clampZoom(z: number) {
+    return Math.max(ZOOM_MIN, Math.min(this.zoomMax, z));
+  }
+
   private latLonToVec(lat: number, lon: number) {
     const phi = (90 - lat) * d2r;
     const theta = (lon + 180) * d2r;
@@ -537,6 +602,105 @@ export class AtlasGlobe {
 
   setFocus(ids: string[] | null) {
     this.focus = ids && ids.length ? new Set(ids) : null;
+  }
+
+  /**
+   * Shift the projection window right by `px`, so a subject framed at the
+   * stage's centre lands at the centre of the part of the stage a side panel
+   * leaves uncovered. 0 clears it.
+   */
+  setViewShift(px: number) {
+    this.viewShift = px || 0;
+  }
+
+  /** Draw a route through the points (a hairline plus a trail of dots), or clear it with null or fewer than two points. */
+  setRoute(points: RoutePoint[] | null) {
+    this.route = points && points.length > 1 ? points.map((p) => ({ ...p })) : null;
+    this.applyRoute();
+  }
+
+  private clearRoute() {
+    if (this.routeLine) {
+      this.routeLine.geometry.dispose();
+      (this.routeLine.material as THREE.Material).dispose();
+      this.routeLine.removeFromParent();
+      this.routeLine = null;
+    }
+    for (const n of this.routeNodes) n.el.remove();
+    this.routeNodes = [];
+  }
+
+  private applyRoute() {
+    this.clearRoute();
+    if (!this.route || !this.yawG) return;
+    const pts = this.route;
+    const verts: number[] = [];
+    const nodes: THREE.Vector3[] = [];
+    for (let i = 0; i < pts.length - 1; i++) {
+      const a = this.latLonToVec(pts[i].lat, pts[i].lon);
+      const b = this.latLonToVec(pts[i + 1].lat, pts[i + 1].lon);
+      // The leg follows the sphere: interpolate the chord and push each point
+      // back onto the surface (a hair above it, so it is not swallowed by land).
+      for (let j = 0; j <= ROUTE_SEGMENTS; j++) {
+        const v = a.clone().lerp(b, j / ROUTE_SEGMENTS).normalize().multiplyScalar(1.004);
+        verts.push(v.x, v.y, v.z);
+      }
+      for (let j = 1; j < ROUTE_DOTS_PER_LEG; j++) nodes.push(a.clone().lerp(b, j / ROUTE_DOTS_PER_LEG).normalize().multiplyScalar(1.002));
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.Float32BufferAttribute(verts, 3));
+    const line = new THREE.Line(geo, new THREE.LineBasicMaterial({ color: ROUTE_LINE_COLOUR, transparent: true, opacity: 0.2, depthTest: false }));
+    line.renderOrder = 5;
+    line.frustumCulled = false;
+    this.yawG.add(line);
+    this.routeLine = line;
+    for (const v of nodes) {
+      const el = document.createElement("div");
+      // Born invisible: the first transform is written by the frame loop, and
+      // an element shown before that would flash at the layer's origin.
+      Object.assign(el.style, {
+        position: "absolute",
+        left: "0",
+        top: "0",
+        width: "5px",
+        height: "5px",
+        borderRadius: "50%",
+        background: MINT,
+        opacity: "0",
+        boxShadow: ROUTE_DOT_GLOW,
+        willChange: "transform, opacity",
+      });
+      this.routeLayer.appendChild(el);
+      this.routeNodes.push({ v, el });
+    }
+  }
+
+  /**
+   * Project the route dots for this frame and run the travelling pulse: each
+   * dot's opacity and scale follow sin(t·1.5 − i·0.45), a slow flow along the
+   * route rather than a uniform blink. Dots past the horizon fade with the
+   * same limb test as the pins.
+   */
+  private updateRouteDots(now: number) {
+    if (!this.routeNodes.length) return;
+    const V = this.scratch;
+    const camD = this.camera.position.z;
+    const t = now / 1000;
+    for (let i = 0; i < this.routeNodes.length; i++) {
+      const n = this.routeNodes[i];
+      V.copy(n.v).applyMatrix4(this.yawG.matrixWorld);
+      const fade = Math.max(0, Math.min(1, (V.z * camD - 1) * 5));
+      if (fade <= 0) {
+        n.el.style.opacity = "0";
+        continue;
+      }
+      const ndc = V.project(this.camera);
+      const x = ((ndc.x + 1) / 2) * this.w;
+      const y = ((1 - ndc.y) / 2) * this.h;
+      const wave = 0.5 + 0.5 * Math.sin(t * 1.5 - i * 0.45);
+      n.el.style.opacity = String(fade * (0.5 + 0.5 * wave));
+      n.el.style.transform = `translate(${x}px,${y}px) translate(-50%,-50%) scale(${0.85 + 0.3 * wave})`;
+    }
   }
 
   setSelected(id: string | null) {
@@ -576,7 +740,7 @@ export class AtlasGlobe {
   }
 
   zoomBy(factor: number) {
-    const target = clampZoom(this.zoom * factor);
+    const target = this.clampZoom(this.zoom * factor);
     const from = this.zoom;
     const start = performance.now();
     const dur = 320;
@@ -654,8 +818,9 @@ export class AtlasGlobe {
    */
   private pinTier(p: PinState) {
     const k = this.uiScale;
+    // The selected stop on a route grows into a 9px disc (see stylePin).
     const t = p.sub
-      ? { fontSize: 9, tracking: 0.2, weight: "400", stem: 9, dot: 3.5, gap: 4 }
+      ? { fontSize: 9, tracking: 0.2, weight: "400", stem: 9, dot: this.selected === p.id ? STOP_SELECTED_DOT : 3.5, gap: 4 }
       : p.featured
         ? { fontSize: 12.5, tracking: 0.34, weight: "500", stem: 20, dot: 5.5, gap: 6 }
         : { fontSize: 11.5, tracking: 0.3, weight: "500", stem: 14, dot: 4, gap: 6 };
@@ -685,7 +850,7 @@ export class AtlasGlobe {
     const dotCls = sel || p.featured ? cls : pal.other;
     const ink = cls.label;
     const dotInk = dotCls.dot;
-    const glow = dotCls.glow;
+    const glow = sel && p.sub ? STOP_SELECTED_GLOW : dotCls.glow;
     p._el!.style.gap = `${tier.gap}px`;
     Object.assign(label.style, {
       fontSize: `${tier.fontSize}px`,
@@ -714,6 +879,8 @@ export class AtlasGlobe {
       // The ring is pulled inside the hit-area border so it hugs the dot.
       outline: `1px solid ${dotCls.ring}`,
       outlineOffset: `-${DOT_HIT_PAD}px`,
+      // A stop grows into its selected state rather than snapping.
+      transition: p.sub ? "width 240ms, height 240ms, box-shadow 240ms" : "",
     });
     this.applyPlacement(p, p._place ?? "up", true);
   }
@@ -852,7 +1019,7 @@ export class AtlasGlobe {
       (e) => {
         if (this.opts.lockZoom) return;
         e.preventDefault();
-        this.zoom = clampZoom(this.zoom * Math.exp(-e.deltaY * 0.0014));
+        this.zoom = this.clampZoom(this.zoom * Math.exp(-e.deltaY * 0.0014));
         this.idleAt = performance.now() + 4000;
         this.anim = null;
       },
@@ -878,7 +1045,7 @@ export class AtlasGlobe {
       if (touches.size === 2 && !this.opts.lockZoom) {
         const [a, b] = [...touches.values()];
         const d = Math.hypot(a[0] - b[0], a[1] - b[1]);
-        if (pinchDist > 0) this.zoom = clampZoom(this.zoom * (d / pinchDist));
+        if (pinchDist > 0) this.zoom = this.clampZoom(this.zoom * (d / pinchDist));
         pinchDist = d;
         this.idleAt = performance.now() + 4000;
         this.anim = null;
@@ -926,9 +1093,14 @@ export class AtlasGlobe {
     const targetPx = Math.max(40, (Math.min(this.w, this.h) / 2 - 24) * this.zoom);
     this.camera.position.z = CAMERA_D;
     this.camera.fov = (2 * Math.atan(this.h / 2 / (CAMERA_D * targetPx))) / d2r;
+    // With a side panel open the subject is framed in the uncovered part of
+    // the stage: the projection window is shifted rather than the camera.
+    if (this.viewShift) this.camera.setViewOffset(this.w, this.h, this.viewShift, 0, this.w, this.h);
+    else if (this.camera.view?.enabled) this.camera.clearViewOffset();
     this.camera.updateProjectionMatrix();
     this.updateDetail(now);
     this.pitchG.updateMatrixWorld(true);
+    this.updateRouteDots(now);
 
     const camD = this.camera.position.z;
     const V = this.scratch;

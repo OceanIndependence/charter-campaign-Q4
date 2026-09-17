@@ -10,7 +10,8 @@
     "import:destinations": "node scripts/import-destinations.mjs",
     "sirv:backfill": "node scripts/backfill-sirv.mjs",
     "consultants:import": "node scripts/import-consultants.mjs",
-    "prebuild": "node scripts/build-consultants-seed.mjs",
+    "build:itineraries": "node scripts/build-itineraries.mjs",
+    "prebuild": "node scripts/build-consultants-seed.mjs && node scripts/build-itineraries.mjs",
     "consultants:seed:build": "node scripts/build-consultants-seed.mjs"
   },
   "dependencies": {

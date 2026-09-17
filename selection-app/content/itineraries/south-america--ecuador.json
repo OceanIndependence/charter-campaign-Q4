@@ -1,0 +1,106 @@
+{
+  "destinationId": "south-america/ecuador",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "ecuador-5",
+      "nights": 5,
+      "title": "Five days in the central Galápagos",
+      "intro": "Santa Cruz, Bartolomé, Santiago and North Seymour.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Baltra",
+          "lat": -0.453,
+          "lng": -90.264,
+          "note": "Board at Baltra."
+        },
+        {
+          "day": 2,
+          "place": "Bartolomé",
+          "lat": -0.281,
+          "lng": -90.554,
+          "note": "Bartolomé."
+        },
+        {
+          "day": 3,
+          "place": "Santiago, Puerto Egas",
+          "lat": -0.256,
+          "lng": -90.862,
+          "note": "Santiago."
+        },
+        {
+          "day": 4,
+          "place": "North Seymour",
+          "lat": -0.396,
+          "lng": -90.287,
+          "note": "North Seymour."
+        },
+        {
+          "day": 5,
+          "place": "Santa Cruz, Puerto Ayora",
+          "lat": -0.748,
+          "lng": -90.313,
+          "note": "Puerto Ayora; disembark at Baltra."
+        }
+      ]
+    },
+    {
+      "id": "ecuador-7",
+      "nights": 7,
+      "title": "Seven days around the western and southern islands",
+      "intro": "Isabela, Fernandina, Floreana and Española.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Baltra",
+          "lat": -0.453,
+          "lng": -90.264,
+          "note": "Board at Baltra."
+        },
+        {
+          "day": 2,
+          "place": "Rábida",
+          "lat": -0.407,
+          "lng": -90.708,
+          "note": "Rábida."
+        },
+        {
+          "day": 3,
+          "place": "Fernandina, Punta Espinoza",
+          "lat": -0.266,
+          "lng": -91.443,
+          "note": "Fernandina."
+        },
+        {
+          "day": 4,
+          "place": "Isabela, Puerto Villamil",
+          "lat": -0.956,
+          "lng": -90.965,
+          "note": "Isabela."
+        },
+        {
+          "day": 5,
+          "place": "Floreana, Post Office Bay",
+          "lat": -1.238,
+          "lng": -90.448,
+          "note": "Floreana."
+        },
+        {
+          "day": 6,
+          "place": "Española, Gardner Bay",
+          "lat": -1.36,
+          "lng": -89.65,
+          "note": "Española."
+        },
+        {
+          "day": 7,
+          "place": "San Cristóbal, Puerto Baquerizo Moreno",
+          "lat": -0.902,
+          "lng": -89.61,
+          "note": "San Cristóbal; disembark."
+        }
+      ]
+    }
+  ]
+}

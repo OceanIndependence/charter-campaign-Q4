@@ -1,0 +1,106 @@
+{
+  "destinationId": "mediterranean/greece/the-dodecanese",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "the-dodecanese-5",
+      "nights": 5,
+      "title": "Five days from Rhodes to Symi",
+      "intro": "Rhodes, Lindos and the amphitheatre harbour of Symi.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Rhodes",
+          "lat": 36.449,
+          "lng": 28.227,
+          "note": "Board at Mandraki; the walled city."
+        },
+        {
+          "day": 2,
+          "place": "Lindos",
+          "lat": 36.093,
+          "lng": 28.09,
+          "note": "The acropolis and St Paul’s Bay."
+        },
+        {
+          "day": 3,
+          "place": "Chalki",
+          "lat": 36.223,
+          "lng": 27.613,
+          "note": "The pastel harbour and the deserted village beneath the castle."
+        },
+        {
+          "day": 4,
+          "place": "Symi",
+          "lat": 36.616,
+          "lng": 27.841,
+          "note": "The neoclassical harbour and the monastery of Panormitis on the south coast."
+        },
+        {
+          "day": 5,
+          "place": "Rhodes",
+          "lat": 36.449,
+          "lng": 28.227,
+          "note": "The walled medieval town and the Street of the Knights; board in the evening."
+        }
+      ]
+    },
+    {
+      "id": "the-dodecanese-7",
+      "nights": 7,
+      "title": "Seven days from Rhodes to Bodrum",
+      "intro": "The Dodecanese trace the Turkish coast; crossings short enough for a swim between islands.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Rhodes",
+          "lat": 36.449,
+          "lng": 28.227,
+          "note": "The walled medieval town and the Street of the Knights; board in the evening."
+        },
+        {
+          "day": 2,
+          "place": "Symi",
+          "lat": 36.616,
+          "lng": 27.841,
+          "note": "The neoclassical harbour and the monastery of Panormitis on the south coast."
+        },
+        {
+          "day": 3,
+          "place": "Tilos",
+          "lat": 36.418,
+          "lng": 27.383,
+          "note": "A quiet island of walking paths, with a swim at Eristos."
+        },
+        {
+          "day": 4,
+          "place": "Nisyros",
+          "lat": 36.615,
+          "lng": 27.145,
+          "note": "The volcano’s crater floor and the white village of Mandraki."
+        },
+        {
+          "day": 5,
+          "place": "Kos",
+          "lat": 36.894,
+          "lng": 27.288,
+          "note": "The Asklepion and the castle by the harbour; a swim at Kefalos."
+        },
+        {
+          "day": 6,
+          "place": "Kalymnos",
+          "lat": 36.949,
+          "lng": 26.984,
+          "note": "The sponge divers’ island; Vathy’s fjord and the climbing crags."
+        },
+        {
+          "day": 7,
+          "place": "Bodrum",
+          "lat": 37.033,
+          "lng": 27.43,
+          "note": "The Crusader castle and the museum of underwater archaeology."
+        }
+      ]
+    }
+  ]
+}

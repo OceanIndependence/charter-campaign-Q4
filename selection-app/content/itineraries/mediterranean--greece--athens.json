@@ -1,0 +1,106 @@
+{
+  "destinationId": "mediterranean/greece/athens",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "athens-5",
+      "nights": 5,
+      "title": "Five days from the Athenian Riviera",
+      "intro": "Sounion, Kea and the Saronic in reach of the capital.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Athens, Flisvos",
+          "lat": 37.933,
+          "lng": 23.684,
+          "note": "Board at Flisvos; the Riviera coves."
+        },
+        {
+          "day": 2,
+          "place": "Cape Sounion",
+          "lat": 37.65,
+          "lng": 24.025,
+          "note": "The temple of Poseidon on the cape, best from the water at sunset."
+        },
+        {
+          "day": 3,
+          "place": "Kea, Vourkari",
+          "lat": 37.666,
+          "lng": 24.32,
+          "note": "The first Cycladic stop: Vourkari’s tavernas and the lion of Kea inland."
+        },
+        {
+          "day": 4,
+          "place": "Hydra",
+          "lat": 37.349,
+          "lng": 23.467,
+          "note": "No cars, stone mansions and the harbour front; anchor off the island for the night."
+        },
+        {
+          "day": 5,
+          "place": "Athens, Flisvos",
+          "lat": 37.933,
+          "lng": 23.684,
+          "note": "Board at Flisvos marina; the Acropolis before the first evening at anchor."
+        }
+      ]
+    },
+    {
+      "id": "athens-7",
+      "nights": 7,
+      "title": "Seven days from Athens around the Saronic and Argolic gulfs",
+      "intro": "The islands closest to Athens and the Peloponnese shore.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Athens, Flisvos",
+          "lat": 37.933,
+          "lng": 23.684,
+          "note": "Board at Flisvos marina; the Acropolis before the first evening at anchor."
+        },
+        {
+          "day": 2,
+          "place": "Aegina",
+          "lat": 37.748,
+          "lng": 23.427,
+          "note": "The temple of Aphaia and the pistachio harbour; a swim at Moni islet."
+        },
+        {
+          "day": 3,
+          "place": "Poros",
+          "lat": 37.501,
+          "lng": 23.458,
+          "note": "The clock tower over the strait; the pine forest of Kalavria behind."
+        },
+        {
+          "day": 4,
+          "place": "Hydra",
+          "lat": 37.349,
+          "lng": 23.467,
+          "note": "No cars, stone mansions and the harbour front; anchor off the island for the night."
+        },
+        {
+          "day": 5,
+          "place": "Ermioni",
+          "lat": 37.383,
+          "lng": 23.249,
+          "note": "A quiet Peloponnese village on its peninsula, with pine woods to the point."
+        },
+        {
+          "day": 6,
+          "place": "Spetses",
+          "lat": 37.262,
+          "lng": 23.159,
+          "note": "Horse carriages and the old harbour; a swim at Zogeria."
+        },
+        {
+          "day": 7,
+          "place": "Porto Heli",
+          "lat": 37.323,
+          "lng": 23.147,
+          "note": "Porto Heli; disembark or return to Athens."
+        }
+      ]
+    }
+  ]
+}

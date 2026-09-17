@@ -1,0 +1,106 @@
+{
+  "destinationId": "mediterranean/italy/ravenna",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "ravenna-5",
+      "nights": 5,
+      "title": "Five days from Ravenna along the Adriatic",
+      "intro": "Mosaics in Ravenna, then the Romagna coast and the Marche.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Ravenna, Marinara",
+          "lat": 44.493,
+          "lng": 12.283,
+          "note": "Board at Marinara; the Byzantine mosaics in the city."
+        },
+        {
+          "day": 2,
+          "place": "Cesenatico",
+          "lat": 44.2,
+          "lng": 12.403,
+          "note": "Leonardo’s canal port and the museum fleet."
+        },
+        {
+          "day": 3,
+          "place": "Rimini",
+          "lat": 44.074,
+          "lng": 12.571,
+          "note": "Roman Rimini and the long beach."
+        },
+        {
+          "day": 4,
+          "place": "Ancona",
+          "lat": 43.62,
+          "lng": 13.51,
+          "note": "The Conero headland’s coves."
+        },
+        {
+          "day": 5,
+          "place": "Ravenna, Marinara",
+          "lat": 44.493,
+          "lng": 12.283,
+          "note": "Return along the coast; disembark."
+        }
+      ]
+    },
+    {
+      "id": "ravenna-7",
+      "nights": 7,
+      "title": "Seven days from Venice to Ravenna",
+      "intro": "The northern Adriatic from the lagoon to the mosaics.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Venice",
+          "lat": 45.429,
+          "lng": 12.343,
+          "note": "Arrive by water along the Giudecca canal; a quiet evening after the day visitors leave."
+        },
+        {
+          "day": 2,
+          "place": "Lido di Venezia",
+          "lat": 45.411,
+          "lng": 12.37,
+          "note": "The Lido and the outer lagoon."
+        },
+        {
+          "day": 3,
+          "place": "Chioggia",
+          "lat": 45.219,
+          "lng": 12.279,
+          "note": "The fishing town at the lagoon’s edge."
+        },
+        {
+          "day": 4,
+          "place": "Ravenna, Marinara",
+          "lat": 44.493,
+          "lng": 12.283,
+          "note": "The Byzantine mosaics of San Vitale and Galla Placidia, a short drive from the marina."
+        },
+        {
+          "day": 5,
+          "place": "Cesenatico",
+          "lat": 44.2,
+          "lng": 12.403,
+          "note": "Leonardo’s canal harbour with its fleet of historic sailing boats."
+        },
+        {
+          "day": 6,
+          "place": "Rimini",
+          "lat": 44.074,
+          "lng": 12.571,
+          "note": "Tiberius’s bridge and the Roman arch; the long beach for a late swim."
+        },
+        {
+          "day": 7,
+          "place": "Ravenna, Marinara",
+          "lat": 44.493,
+          "lng": 12.283,
+          "note": "Return to Marinara; disembark."
+        }
+      ]
+    }
+  ]
+}

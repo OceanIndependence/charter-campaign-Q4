@@ -1,0 +1,106 @@
+{
+  "destinationId": "indian-ocean/tanzania",
+  "status": "placeholder",
+  "itineraries": [
+    {
+      "id": "tanzania-5",
+      "nights": 5,
+      "title": "Five days around Zanzibar",
+      "intro": "Stone Town, Mnemba and Menai Bay.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Zanzibar, Stone Town",
+          "lat": -6.162,
+          "lng": 39.188,
+          "note": "Board in Stone Town."
+        },
+        {
+          "day": 2,
+          "place": "Nungwi",
+          "lat": -5.726,
+          "lng": 39.296,
+          "note": "Nungwi."
+        },
+        {
+          "day": 3,
+          "place": "Mnemba",
+          "lat": -5.821,
+          "lng": 39.385,
+          "note": "Mnemba atoll."
+        },
+        {
+          "day": 4,
+          "place": "Kizimkazi, Menai Bay",
+          "lat": -6.437,
+          "lng": 39.477,
+          "note": "Menai Bay and the dolphins."
+        },
+        {
+          "day": 5,
+          "place": "Zanzibar, Stone Town",
+          "lat": -6.162,
+          "lng": 39.188,
+          "note": "Return; disembark."
+        }
+      ]
+    },
+    {
+      "id": "tanzania-7",
+      "nights": 7,
+      "title": "Seven days from Zanzibar to Pemba",
+      "intro": "The Zanzibar archipelago north to Pemba.",
+      "days": [
+        {
+          "day": 1,
+          "place": "Zanzibar, Stone Town",
+          "lat": -6.162,
+          "lng": 39.188,
+          "note": "Board in Stone Town."
+        },
+        {
+          "day": 2,
+          "place": "Chumbe",
+          "lat": -6.279,
+          "lng": 39.175,
+          "note": "Chumbe."
+        },
+        {
+          "day": 3,
+          "place": "Kizimkazi, Menai Bay",
+          "lat": -6.437,
+          "lng": 39.477,
+          "note": "Menai Bay."
+        },
+        {
+          "day": 4,
+          "place": "Mnemba",
+          "lat": -5.821,
+          "lng": 39.385,
+          "note": "Mnemba."
+        },
+        {
+          "day": 5,
+          "place": "Nungwi",
+          "lat": -5.726,
+          "lng": 39.296,
+          "note": "Nungwi."
+        },
+        {
+          "day": 6,
+          "place": "Misali",
+          "lat": -5.241,
+          "lng": 39.601,
+          "note": "Misali."
+        },
+        {
+          "day": 7,
+          "place": "Pemba, Mkoani",
+          "lat": -5.366,
+          "lng": 39.654,
+          "note": "Pemba; disembark."
+        }
+      ]
+    }
+  ]
+}

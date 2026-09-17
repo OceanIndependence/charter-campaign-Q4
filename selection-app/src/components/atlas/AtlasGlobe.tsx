@@ -1,7 +1,7 @@
 "use client";
 
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
-import type { AtlasGlobe as Engine, GlobeConfig, GlobeOptions, GlobePin } from "@/lib/atlas/globe";
+import type { AtlasGlobe as Engine, GlobeConfig, GlobeOptions, GlobePin, RoutePoint } from "@/lib/atlas/globe";
 
 /** Imperative surface the page drives after a pin is chosen. */
 export interface GlobeHandle {
@@ -11,6 +11,10 @@ export interface GlobeHandle {
   setSubPins(pins: GlobePin[]): void;
   setFocus(ids: string[] | null): void;
   setSelected(id: string | null): void;
+  /** Draw a route through the points, or clear it with null */
+  setRoute(points: RoutePoint[] | null): void;
+  /** Shift the projection window right by px (0 clears); see the engine */
+  setViewShift(px: number): void;
 }
 
 interface Props {
@@ -21,6 +25,8 @@ interface Props {
   options?: Partial<GlobeOptions>;
   /** Resting view (lat, lon, zoom); the engine defaults to the Mediterranean at zoom 1 */
   home?: GlobeConfig["home"];
+  /** Upper zoom limit; the engine defaults to 8 */
+  zoomMax?: number;
   className?: string;
 }
 
@@ -29,18 +35,28 @@ interface Props {
  * on the client after mount, so the page shell and panel arrive first.
  * Calls made before the engine is ready are remembered and replayed.
  */
-const AtlasGlobe = forwardRef<GlobeHandle, Props>(function AtlasGlobe({ pins, onPinSelect, onDeselect, onReady, options, home, className }, ref) {
+const AtlasGlobe = forwardRef<GlobeHandle, Props>(function AtlasGlobe({ pins, onPinSelect, onDeselect, onReady, options, home, zoomMax, className }, ref) {
   const hostRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<Engine | null>(null);
   const pinsRef = useRef(pins);
   const optionsRef = useRef(options);
   const homeRef = useRef(home);
+  const zoomMaxRef = useRef(zoomMax);
   const callbacks = useRef({ onPinSelect, onDeselect, onReady });
-  const pending = useRef<{ subPins: GlobePin[]; focus: string[] | null; selected: string | null; fly: [number, number, number, number] | null }>({
+  const pending = useRef<{
+    subPins: GlobePin[];
+    focus: string[] | null;
+    selected: string | null;
+    fly: [number, number, number, number] | null;
+    route: RoutePoint[] | null;
+    viewShift: number;
+  }>({
     subPins: [],
     focus: null,
     selected: null,
     fly: null,
+    route: null,
+    viewShift: 0,
   });
 
   pinsRef.current = pins;
@@ -58,6 +74,7 @@ const AtlasGlobe = forwardRef<GlobeHandle, Props>(function AtlasGlobe({ pins, on
         onPinSelect: (id) => callbacks.current.onPinSelect(id),
         onDeselect: () => callbacks.current.onDeselect(),
         ...(homeRef.current ? { home: homeRef.current } : {}),
+        ...(zoomMaxRef.current ? { zoomMax: zoomMaxRef.current } : {}),
       });
       engine.setPins(pinsRef.current);
       // Idle drift stays on, as in the design reference; pass options.drift
@@ -67,6 +84,8 @@ const AtlasGlobe = forwardRef<GlobeHandle, Props>(function AtlasGlobe({ pins, on
       if (p.subPins.length) engine.setSubPins(p.subPins);
       if (p.focus) engine.setFocus(p.focus);
       if (p.selected) engine.setSelected(p.selected);
+      if (p.route) engine.setRoute(p.route);
+      if (p.viewShift) engine.setViewShift(p.viewShift);
       if (p.fly) engine.flyTo(...p.fly);
       engineRef.current = engine;
       callbacks.current.onReady?.();
@@ -98,7 +117,7 @@ const AtlasGlobe = forwardRef<GlobeHandle, Props>(function AtlasGlobe({ pins, on
       },
       zoomBy: (f) => engineRef.current?.zoomBy(f),
       reset: () => {
-        pending.current = { subPins: [], focus: null, selected: null, fly: null };
+        pending.current = { subPins: [], focus: null, selected: null, fly: null, route: null, viewShift: 0 };
         engineRef.current?.reset();
       },
       setSubPins: (p) => {
@@ -112,6 +131,14 @@ const AtlasGlobe = forwardRef<GlobeHandle, Props>(function AtlasGlobe({ pins, on
       setSelected: (id) => {
         pending.current.selected = id;
         engineRef.current?.setSelected(id);
+      },
+      setRoute: (points) => {
+        pending.current.route = points;
+        engineRef.current?.setRoute(points);
+      },
+      setViewShift: (px) => {
+        pending.current.viewShift = px;
+        engineRef.current?.setViewShift(px);
       },
     }),
     []
