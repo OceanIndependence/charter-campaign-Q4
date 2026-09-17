@@ -190,28 +190,46 @@ export interface DestinationsPageDestination {
 /** The most sample itineraries one destination panel lists. */
 export const MAX_WEBSITE_ITINERARIES = 3;
 
-/** One stop on a sample itinerary: a day row in the panel and a pin on the route. */
-export interface DestinationsPageStop {
-  day: number;
-  place: string;
+/** A located place named in a day heading; a pin on the route. */
+export interface DestinationsPagePoint {
+  name: string;
   lat: number;
   lon: number;
-  note: string;
+}
+
+/**
+ * One DAY TO DAY entry of a sample itinerary: a day row in the panel. The
+ * heading is the website's, verbatim ("Bonifacio - Maddalena Islands"); the
+ * points are its places located in order, the last being where the day ends,
+ * which is where the camera flies when the row is selected.
+ */
+export interface DestinationsPageStop {
+  day: number;
+  /** Present when the heading covers several days ("Day One - Three") */
+  dayEnd?: number;
+  heading: string;
+  /** The day's narrative, verbatim */
+  text: string;
+  points: DestinationsPagePoint[];
   /**
-   * The 92 × 62 thumbnail beside the day row: the Atlas image of the stop
-   * where the stop is itself an Atlas destination, else one of the
+   * The 92 × 62 thumbnail beside the day row: the Atlas image of one of the
+   * day's places where it is itself an Atlas destination, else one of the
    * destination's own carousel images. Absent when neither exists.
    */
   image?: string;
 }
 
-/** A sample itinerary from the website's library, as frozen into a published page. */
+/** A sample itinerary from the website, as frozen into a published page. */
 export interface DestinationsPageItinerary {
   id: string;
+  /** The itinerary page on the website */
+  url: string;
   title: string;
-  nights: number;
-  /** The route's own introductory paragraph, verbatim */
-  intro: string;
+  days: number;
+  /** Introductory paragraphs, verbatim */
+  intro: string[];
+  /** The card blurb on the destination page that links to it, where one exists */
+  teaser?: string;
   stops: DestinationsPageStop[];
 }
 

@@ -1026,7 +1026,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
                           <ul className={styles.itinSummary}>
                             {slot.websiteItineraries.map((it) => (
                               <li key={it.id}>
-                                {it.title} <span className={styles.fieldLabelHint}>— {it.stops} stops</span>
+                                {it.title} <span className={styles.fieldLabelHint}>— {it.days} days, {it.stops} day headings</span>
                               </li>
                             ))}
                           </ul>

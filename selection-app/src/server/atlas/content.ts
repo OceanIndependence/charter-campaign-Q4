@@ -310,19 +310,34 @@ export function stopImageFor(place: string, index: AtlasIndex = getAtlasIndex())
 
 /**
  * The website's sample itineraries for a destination, in the shape the page
- * freezes: up to MAX_WEBSITE_ITINERARIES, each stop with its Atlas thumbnail
- * where one exists. A destination without a library file has none.
+ * freezes: up to MAX_WEBSITE_ITINERARIES, each day with its Atlas thumbnail
+ * where one of the day's places is itself an Atlas destination (the day's
+ * last place — where it ends — is tried first). A destination whose page
+ * links to no itinerary has none.
  */
 export function itinerariesFor(destId: string, index: AtlasIndex = getAtlasIndex()): DestinationsPageItinerary[] {
   const list = itineraries.destinations[destId] ?? [];
   return list.slice(0, MAX_WEBSITE_ITINERARIES).map((it) => ({
     id: it.id,
+    url: it.url,
     title: it.title,
-    nights: it.nights,
+    days: it.days,
     intro: it.intro,
-    stops: it.days.map((d) => {
-      const image = stopImageFor(d.place, index);
-      return { day: d.day, place: d.place, lat: d.lat, lon: d.lng, note: d.note, ...(image ? { image } : {}) };
+    ...(it.teaser ? { teaser: it.teaser } : {}),
+    stops: it.stops.map((s) => {
+      let image: string | null = null;
+      for (const p of [...s.points].reverse()) {
+        image = stopImageFor(p.name, index);
+        if (image) break;
+      }
+      return {
+        day: s.day,
+        ...(s.dayEnd ? { dayEnd: s.dayEnd } : {}),
+        heading: s.heading,
+        text: s.text,
+        points: s.points.map((p) => ({ name: p.name, lat: p.lat, lon: p.lon })),
+        ...(image ? { image } : {}),
+      };
     }),
   }));
 }
@@ -331,7 +346,7 @@ export function itinerariesFor(destId: string, index: AtlasIndex = getAtlasIndex
 export function itinerarySummariesFor(destId: string): WebsiteItinerarySummary[] {
   return (itineraries.destinations[destId] ?? [])
     .slice(0, MAX_WEBSITE_ITINERARIES)
-    .map((it) => ({ id: it.id, title: it.title, nights: it.nights, stops: it.days.length }));
+    .map((it) => ({ id: it.id, title: it.title, days: it.days, stops: it.stops.length }));
 }
 
 /* ----------------------------------------------------------------- geo */

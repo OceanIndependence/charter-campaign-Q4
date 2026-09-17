@@ -203,7 +203,7 @@ export interface AtlasDefaults {
 export interface WebsiteItinerarySummary {
   id: string;
   title: string;
-  nights: number;
+  days: number;
   stops: number;
 }
 

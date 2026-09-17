@@ -8,31 +8,82 @@ into the production `DestinationsPage`, with the decisions taken in review recor
 
 | Question | Decision |
 |---|---|
-| Itinerary content | The repo-held library from PR #22 (`content/itineraries/`, one JSON per destination, coordinates included), sourced from the website. |
-| PR #22 | Only its itinerary pieces are taken (below); the fleet page and Tier 1 restructure are not. PR #22 itself is untouched. |
+| Itinerary content | The website's own itinerary pages, captured verbatim (PR #22's crawl). Its placeholder library is not used. |
+| PR #22 | Only its itinerary crawl is taken (below); the fleet page and Tier 1 restructure are not. PR #22 itself is untouched. |
 | Existing "Suggested itinerary" links section | Kept alongside. Consultants can switch either off: the links section as before, the website itineraries with a new Page Sections toggle. |
 | Other Atlas pins | Stay hidden on Tier 2 (`SHOW_OTHER_PINS` unchanged). |
 | Images | Three per destination in a peek carousel; pages already published with two render a two-slide carousel. Stop thumbnails reuse Atlas imagery. |
-| Itineraries per destination | Up to three (`MAX_WEBSITE_ITINERARIES`); the library holds at most two today. |
+| Itineraries per destination | Up to three (`MAX_WEBSITE_ITINERARIES`), whichever the website's pages give. |
 | Contact CTA | WhatsApp with a prefilled message; where the consultant has no WhatsApp number, EMAIL ME (mailto with the same words as the subject). Applied to the consultant block on every tier as well. |
 | Brochure link | Unchanged: the consultant-typed URL per yacht. |
 | Paragraph label | Unchanged — the FROM THE 2027 ATLAS label in the screenshots is not implemented, as instructed. |
 
-## Taken from PR #22 (`claude/atlas-restructure-itineraries-fleet`)
+## Where the itineraries come from
 
-Copied as files, not merged — PR #22 is 121 commits behind main and conflicts in six files.
+The website's own itinerary pages, not the placeholder library. PR #22's crawl of
+`/yacht-charter/itineraries/` is the source; its placeholder JSON files are not used and are
+not on this branch.
 
-| File | Role |
+| Piece | What it is |
 |---|---|
-| `content/itineraries/*.json` (125 files) | The library: `{ destinationId, status, itineraries: [{ id, nights, title, intro, days: [{ day, place, lat, lng, note }] }] }`. All 125 are `status: "placeholder"`; the status never reaches the page. |
-| `scripts/build-itineraries.mjs` | Validates the files (ids, day numbering, coordinates), flags legs over 120 nm, writes `data/itineraries.json` and the coverage table. The coverage document now lands at `docs/itinerary-coverage.md` (PR #22 wrote to a `design/` folder main does not have). |
-| `data/itineraries.json` | The aggregate the app imports. 113 destinations with routes, 221 itineraries, 1,321 stops. Regenerated on every `npm run build` (prebuild), so its `generatedAt` changes with each build. |
-| `src/lib/atlas/itineraries.ts` | The shared types and client loader. |
+| `data/destinations.json` → `itineraries` | **32 website itinerary pages, verbatim**: title, length, intro paragraphs, the DAY TO DAY headings and their narrative, hero image and the page's map pins. Refreshed by `npm run import:itineraries` (this branch's parser, on PR #22's `parseItineraryPage`). |
+| `data/destinations.json` → each destination's `itineraryLinks` | Which itineraries a destination page links to, with the card blurb. 75 of 125 destinations link to at least one. |
+| `content/itinerary-stops.json` | The **located places** of each day heading — `npm run geocode:itineraries`, reviewed by hand. |
+| `data/itineraries.json` | The join, per destination — `npm run build:itineraries`, also a prebuild step. |
+| `docs/itinerary-coverage.md`, `docs/itinerary-stops-review.md` | What each destination draws, every day and its coordinates, and every gap. |
 
-Not taken: PR #22's `globe.ts` route rendering (a different approach from the design's DOM dots), its
-website itinerary-page parser, the fleet page, the Tier 1 panel and AtlasPage changes.
+### The problem the geocoding solves
 
-`package.json`: `build:itineraries` added; `prebuild` runs the consultants seed then the itinerary build.
+The website writes a day as a **leg**, not a stop — "Bonifacio - Maddalena Islands", "Day One -
+Three  Nassau to Compass Cay", "Return To Sopers Hole Marina, Tortola" — and its map carries only
+the start and end pins. So a heading is split into its places (`legPlaces`) and each is located:
+from the itinerary's own map pins, then the Atlas destinations, then Nominatim. A route is
+sequential, so among Nominatim's candidates **the one nearest the previous located place wins** —
+that is what tells Maratea in Basilicata, an afternoon from Capri, from the Maratea in Sicily.
+
+Nothing is geocoded at build or run time, and `--refresh` aside, a coordinate corrected by hand in
+the JSON survives every re-run.
+
+### Coverage, honestly
+
+| | |
+|---|---|
+| Website itinerary pages captured | 32 |
+| Day headings | 234 |
+| Places named in them | 364 |
+| Located and drawn | 300 (81 from the page's own map pins, 23 Atlas destinations, 162 Nominatim, **31 corrected by hand**) |
+| Not drawn | 64 — 43 Nominatim could not resolve, 21 it placed outside the itinerary's own area |
+| Itineraries drawable | 31 of 32 |
+| Destinations with at least one route | **91 of 125** |
+
+A day whose places could not be located **keeps its row and its narrative** and simply draws no
+pin; the route runs from the previous located day to the next. An itinerary is dropped only when
+fewer than two of its places are located (one: "Fiji Itinerary").
+
+Two safeguards sit in the build, because a wrong coordinate is worse than a missing one: a place
+the geocoder could not put near the itinerary's own map pins is recorded but **not drawn**
+(`nominatim-far`), and a place far from the median of the route's own places is dropped as an
+outlier. Both are listed in `docs/itinerary-coverage.md`, 32 entries at present.
+
+I corrected 31 entries by hand across the eight Mediterranean itineraries (Li Galli was landing in
+the Canaries, Maratea in Sicily, Lefkada in Cyprus), so **no Mediterranean route now has a leg over
+300 km**. Thirteen legs elsewhere still exceed it — la Paz, St Thomas, Langkawi, and the polar
+routes, where several are real ocean crossings and several are not. They are in the coverage
+document for review; correcting one is an edit to `content/itinerary-stops.json`, no re-crawl.
+
+### How a destination gets its itineraries
+
+In order, up to three:
+
+1. the itineraries its **own website page** links to;
+2. for a place (level 4) with none, its **cruising ground's**;
+3. the itineraries that **sail there** — at least two located stops inside the destination's radius
+   (260 km for a country, 150 km for a cruising ground, 60 km for a place), most stops first.
+
+Rule 3 is what gives Sardinia the Corsica-and-Sardinia route its own page does not link to, and it
+takes the count from 76 to 91 destinations. Nothing is inherited downward from a country or a
+region, whose itineraries cover other coasts. The coverage document names the rule that applied to
+each destination.
 
 ## Ported from the design's globe (`atlas-globe-3d.js`) into `src/lib/atlas/globe.ts`
 
@@ -61,12 +112,16 @@ from `scrollLeft`), SEE THE YACHTS ↓, then the **itinerary cards** (§3: count
 ITINERARIES heading; each card `<N> DAYS · <FIRST> TO <LAST>` or `· <PORT> RETURN`, the title, the stops
 joined with `·`, VIEW ROUTE ON THE MAP →). The old two-image grid is gone.
 
-**Itinerary state** replaces the body in place (§1): ← BACK TO ⟨DESTINATION⟩, the days eyebrow, the title, the
-route's own paragraph, DAY TO DAY · SELECT A STOP, one row per stop (44px day column, name, note, 92 × 62
-thumbnail; 2px left rule and thumbnail border turn mint when selected), then the contact button.
+**Itinerary state** replaces the body in place (§1): ← BACK TO ⟨DESTINATION⟩, the days eyebrow, the title,
+the route's own intro paragraphs, DAY TO DAY · SELECT A STOP, one row per day (44px day column — "DAY 1" or
+"DAYS 1–3" where the website gives a range — the heading as written, 92 × 62 thumbnail; 2px left rule and
+thumbnail border turn mint when selected), then a link to the itinerary on the website and the contact button.
+The website's day narrative is a full paragraph, not a line, so it opens beneath its row when the row is
+selected rather than being cut to fit.
 
-**Globe choreography** (§5): opening a route sets sub-pins and the route, focuses the stop pins and flies to
-`fitRoute` (mean centre, `zoom = clamp(1.15 / angularSpan, 4, 34)`); selecting a stop flies to
+**Globe choreography** (§5): opening a route sets one sub-pin per day, at the place where that day ends, and
+draws the route through **every** located place, so a leg's departure is on the line too; the camera flies to
+`fitRoute` (mean centre, `zoom = clamp(1.15 / angularSpan, 4, 34)`); selecting a day flies to where it ends at
 `clamp(fitZoom × 2.2, 18, 48)` over 1,250ms; an ocean tap releases a selected stop and re-fits, and closes
 the panel only when no route is open; selecting another destination, a yacht, or closing the panel clears
 the route. The view shift is half the panel width whenever a panel is open and the remaining stage is under
@@ -84,7 +139,7 @@ stop's rule, name and thumbnail border.
 | Type | Change |
 |---|---|
 | `DestinationsPageDestination.images` | `[AtlasBlock, AtlasBlock]` → `AtlasBlock[]` (two or three, blanks dropped at mapping). |
-| `DestinationsPageDestination.itineraries?` | `DestinationsPageItinerary[]`, frozen at publish: `{ id, title, nights, intro, stops: [{ day, place, lat, lon, note, image? }] }`. |
+| `DestinationsPageDestination.itineraries?` | `DestinationsPageItinerary[]`, frozen at publish: `{ id, url, title, days, intro[], teaser?, stops: [{ day, dayEnd?, heading, text, points[], image? }] }` — the website's words, with its day headings located as `points`. |
 | `DestinationsPageSections.routes?` | The Website itineraries toggle. Absent on older pages, which carry no itineraries anyway. |
 | `Tier2DestinationDraft.images` | `ContentBlock[]`; the form pads a two-image draft to three on load, using the next Atlas candidate. |
 | `Tier2DestinationDraft.websiteItineraries?` | Read-only summary shown in the form under the destination. |
@@ -97,18 +152,15 @@ stop's rule, name and thumbnail border.
 `atlasResolutionFor(chosenIds)` now returns `itineraries` alongside coordinates and pins, so preview, publish
 and the demo page share one path. `itinerariesFor(id)` reads the aggregate and resolves a thumbnail per stop:
 
-- **Stop thumbnails** (`stopImageFor`): the stop's name is matched to an Atlas destination — ignoring case,
-  accents, hyphens, a leading "The", with "Saint" read as "St", and trying the part before a comma
-  ("St Barts, Gustavia") — and that destination's card or hero image is used (Sirv renditions at 400px; other
-  hosts as-is). Nothing looser: a substring match would give Fort-de-France the image of France.
-- Where no Atlas destination matches, the mapping (`destinations-map.ts`) gives the stop one of the
-  destination's own carousel images, rotating through them, so a day list is never ragged.
-
-Across the whole library, **291 of 1,321 stops (22%) get an Atlas thumbnail**; 1,030 borrow a carousel image.
-The Amalfi Coast routes match well (Capri, Positano, Sorrento, Ischia…); the Aeolian and Sardinian anchorages
-mostly do not, because the Atlas has no page for Panarea or Cala di Volpe. If per-stop photography is wanted
-later, an `image` field on a day in the library file is the natural place; the mapping already prefers a
-stop's own image.
+- **Day thumbnails** (`stopImageFor`): each of the day's places, last first (where the day ends), is matched
+  to an Atlas destination — ignoring case, accents, hyphens, a leading "The", with "Saint" read as "St", and
+  trying the part before a comma ("St Barts, Gustavia") — and that destination's card or hero image is used
+  (Sirv renditions at 400px; other hosts as-is). Nothing looser: a substring match would give Fort-de-France
+  the image of France.
+- Where no Atlas destination matches, the mapping (`destinations-map.ts`) gives the day one of the
+  destination's own carousel images, rotating through them, so a day list is never ragged. If per-day
+  photography is wanted later, an `image` field on a day in `content/itinerary-stops.json` is the natural
+  place; the mapping already prefers a day's own image.
 
 ## The form (`Tier2Form.tsx`)
 
@@ -138,23 +190,25 @@ by the consultant block at the foot of every client page on both tiers (WHATSAPP
 ## Verification
 
 - `npx tsc --noEmit` and a full `npm run build` (both prebuild steps included) — clean.
-- `npm run build:itineraries` — 125 files, 221 itineraries, no validation problems; three long-leg warnings
-  (Antarctica ×2, Chile), listed in `docs/itinerary-coverage.md`.
+- `npm run import:itineraries` — all 32 website pages re-read and parsed; `npm run geocode:itineraries` —
+  364 places, 300 drawn; `npm run build:itineraries` — 31 drawable, 91 destinations, 32 gaps listed.
 - The app run locally (`PORTAL_AUTH_PROVIDER=solo` as Lucy Oliver) and driven in Chromium on
-  `/destinations/harrington-summer-2027`: Sardinia → its first itinerary → day four → back, at 1440px, then
-  at 900px, then with the light theme applied. Observed: three carousel slides, counter 1 / 3 → 2 / 3 on the
-  arrow; hint at opacity 0 and hidden while open; two itinerary cards; on opening, 36 route dots (four legs
-  × nine) all visible and pulsing, five labelled stop pins beside the three destination pins, the camera on
-  the route fit; on selecting day four, the row's rule and thumbnail turn mint and the camera flies in; the
-  CTA reads ASK ABOUT THIS ROUTE and links to `wa.me/41440000000?text=Hello%20Lucy%2C%20I%20would%20like…`;
-  BACK TO SARDINIA restores the destination body and removes every dot. No page errors. The only console
-  entries were the sandbox refusing the Sirv CDN's certificate, which is why the screenshots show alt text
-  in the image slots.
+  `/destinations/harrington-summer-2027`: the Amalfi Coast → NAPLES TO SICILY → day four → back, at 1440px
+  and at 900px, and again with the light theme. Observed: three carousel slides filling their 16:10 boxes
+  (`object-fit: cover`, 302 × 188 for a 2000 × 1250 photo); counter 1 / 3 → 2 / 3 on the arrow; hint at
+  opacity 0 and hidden while open; two itinerary cards, the first carrying the website's own card blurb and
+  the second the stop line; on opening, 81 route dots pulsing along Naples → Ischia → Li Galli → Capri →
+  Maratea → Lipari → Sicily → Catania with a labelled pin per day; on selecting day four, the row's rule and
+  thumbnail turn mint, its paragraph opens beneath it and the camera flies to Maratea; the CTA reads ASK
+  ABOUT THIS ROUTE and links to `wa.me/41440000000?text=Hello%20Lucy…`; BACK TO AMALFI COAST restores the
+  destination body and removes every dot. No page errors. The only console entries were the sandbox refusing
+  the Sirv CDN's certificate, which is why some image slots show alt text in the screenshots.
 - `/2027-charter-season` (Tier 1) loads and opens a destination with no errors; its zoom limit is unchanged.
 - `/api/atlas/demo` returns three images per destination, every demo stop with an image, `sections.routes: true`.
 
+![Itinerary cards under a destination](tier2-itinerary-cards.jpg)
 ![Route drawn](tier2-itinerary-route.jpg)
-![Stop selected](tier2-itinerary-stop.jpg)
+![A day selected](tier2-itinerary-stop.jpg)
 ![Light theme](tier2-itinerary-light.jpg)
 
 ## To check on preview
@@ -171,8 +225,13 @@ by the consultant block at the foot of every client page on both tiers (WHATSAPP
 
 ## Not done, and why
 
-- The itinerary copy is the library's, all files still `status: "placeholder"`; approving is editorial work
-  in `content/itineraries/`, not code.
-- Per-stop photography beyond the Atlas match (22% of stops) needs images the repo does not have.
+- 64 of 364 places are not drawn (43 Nominatim could not resolve, 21 it placed outside the itinerary's area),
+  and 13 legs outside the Mediterranean are longer than 300 km. Every one is listed in
+  `docs/itinerary-coverage.md` and `docs/itinerary-stops-review.md`; correcting one is an edit to
+  `content/itinerary-stops.json` and a rebuild, with no re-crawl. I corrected the Mediterranean set by hand;
+  the rest wants someone who knows those waters.
+- Per-day photography beyond the Atlas match needs images the repo does not have.
+- The Bahamas picks up "The Florida Keys" under rule 3 (its stops fall within the 260 km country radius).
+  Defensible, but worth an eye on preview.
 - The destination-copy change (deck line and body, PR #56) is on `claude/dazzling-noether-6cqwu9`, not
   here; it touches `DestinationPanel` too, so whichever lands second needs a small merge.

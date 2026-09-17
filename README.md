@@ -102,12 +102,17 @@ to `true` restores the original globe with no other change and no republishing �
   destination as cards. Opening one swaps the panel to the route — its paragraph, a
   day-by-day list with a photo per stop and an ASK ABOUT THIS ROUTE button (WhatsApp with
   a prefilled message, or EMAIL ME where the consultant has no number) — and draws it on
-  the globe as a trail of glowing dots; selecting a stop flies the camera to it. The
-  itineraries are the repo-held library in `selection-app/content/itineraries/` (one JSON
-  file per destination, coordinates included), aggregated by `npm run build:itineraries`
-  (a prebuild step) into `data/itineraries.json`, and frozen into the page at publish time
-  with the rest of the destination content. Stop photos reuse the Atlas image of the stop
-  where it is itself an Atlas destination, else one of the destination's carousel images.
+  the globe as a trail of glowing dots; selecting a day flies the camera to where it ends.
+  The itineraries are the website's own itinerary pages, captured verbatim into
+  `data/destinations.json` (`npm run import:itineraries` refreshes them; the destinations
+  import discovers new ones) with the places in each day heading located once into
+  `selection-app/content/itinerary-stops.json` (`npm run geocode:itineraries`, reviewed in
+  `docs/itinerary-stops-review.md`, hand corrections kept). `npm run build:itineraries` (a
+  prebuild step) joins the two into `data/itineraries.json` per destination — a destination
+  draws the itineraries its own website page links to, a place its cruising ground's — and
+  the page freezes them at publish time with the rest of the destination content. Day
+  photos reuse the Atlas image of a place on that day where it is itself an Atlas
+  destination, else one of the destination's carousel images.
   The Page Sections card has a "Website itineraries" toggle; the older "Suggested
   itinerary" links section stays alongside it. Pages published before the carousel carry
   two images and render a two-slide carousel; pages published before the routes carry

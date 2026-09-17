@@ -36,14 +36,14 @@ const STOP_PIN = "st-";
  * Camera to fit a route: centred on the stops, zoom from their angular span
  * (clamped 4–34), as in the design prototype.
  */
-function fitRoute(stops: DestinationsPageStop[]) {
+function fitRoute(points: Array<{ lat: number; lon: number }>) {
   let lat = 0;
   let lon = 0;
   let latMin = 90;
   let latMax = -90;
   let lonMin = 180;
   let lonMax = -180;
-  for (const s of stops) {
+  for (const s of points) {
     lat += s.lat;
     lon += s.lon;
     latMin = Math.min(latMin, s.lat);
@@ -51,29 +51,50 @@ function fitRoute(stops: DestinationsPageStop[]) {
     lonMin = Math.min(lonMin, s.lon);
     lonMax = Math.max(lonMax, s.lon);
   }
-  lat /= stops.length;
-  lon /= stops.length;
+  lat /= points.length;
+  lon /= points.length;
   const d2r = Math.PI / 180;
   const span = Math.max((latMax - latMin) * d2r, (lonMax - lonMin) * d2r * Math.cos(lat * d2r), 0.008);
   return { lat, lon, zoom: Math.max(4, Math.min(34, 1.15 / span)) };
 }
 
-/** "SEVEN DAYS · OLBIA TO LA MADDALENA", or "· OLBIA RETURN" when the route ends where it began. */
+/** "SEVEN DAYS" — from the website's own day count. */
 function itineraryEyebrow(it: DestinationsPageItinerary): string {
-  const n = it.stops.length;
-  const first = it.stops[0]?.place ?? "";
-  const last = it.stops[n - 1]?.place ?? "";
-  const days = `${countWord(n)} ${n === 1 ? "DAY" : "DAYS"}`;
-  const ports = first && last ? (first.toLowerCase() === last.toLowerCase() ? `${first} RETURN` : `${first} TO ${last}`) : "";
-  return `${days}${ports ? ` · ${ports}` : ""}`.toUpperCase();
+  const n = it.days || it.stops.length;
+  return `${countWord(n)} ${n === 1 ? "DAY" : "DAYS"}`.toUpperCase();
 }
 
-/** "Olbia · Porto Cervo · La Maddalena": the stops, with a repeated final port dropped. */
+/** Place names as the website writes them vary in case; they are names, so they are capitalised. */
+const titleCase = (s: string) => s.replace(/(^|[\s'\u2019-])([a-z\u00e0-\u00ff])/g, (_, pre, ch) => pre + ch.toUpperCase());
+
+/** "Rome · Ponza · Ischia · Capri": where each day ends, consecutive repeats dropped. */
 function stopsLine(it: DestinationsPageItinerary): string {
   const names: string[] = [];
-  for (const s of it.stops) if (names[names.length - 1]?.toLowerCase() !== s.place.toLowerCase()) names.push(s.place);
+  for (const s of it.stops) {
+    const end = s.points[s.points.length - 1]?.name;
+    if (end && names[names.length - 1]?.toLowerCase() !== end.toLowerCase()) names.push(titleCase(end));
+  }
   return names.join(" · ");
 }
+
+/** Where a day ends: its last located place, or null when none could be located. */
+const dayEnd = (s: DestinationsPageStop) => s.points[s.points.length - 1] ?? null;
+
+/** Every located place along the route, in order, consecutive repeats dropped. */
+function routeOf(it: DestinationsPageItinerary): RoutePoint[] {
+  const out: RoutePoint[] = [];
+  for (const s of it.stops) {
+    for (const p of s.points) {
+      const last = out[out.length - 1];
+      if (last && last.lat === p.lat && last.lon === p.lon) continue;
+      out.push({ lat: p.lat, lon: p.lon, day: s.day, place: p.name });
+    }
+  }
+  return out;
+}
+
+/** "DAY 1" or "DAYS 1–3". */
+const dayLabel = (s: DestinationsPageStop) => (s.dayEnd ? `DAYS ${s.day}–${s.dayEnd}` : `DAY ${s.day}`);
 
 const stopPinId = (i: number) => `${STOP_PIN}${i}`;
 
@@ -307,13 +328,18 @@ export default function DestinationsPage({ config }: { config: DestinationsPageC
       scrollPanelTop();
       const g = globeRef.current;
       if (!g) return;
-      const pins: GlobePin[] = it.stops.map((s, i) => ({ id: stopPinId(i), name: s.place, lat: s.lat, lon: s.lon, featured: false }));
-      const route: RoutePoint[] = it.stops.map((s) => ({ lat: s.lat, lon: s.lon, day: s.day, place: s.place }));
+      // One pin per day, at the place where the day ends; the route runs
+      // through every located place, so a leg's departure is drawn too. A day
+      // whose places could not be located carries no pin.
+      const pins: GlobePin[] = it.stops.flatMap((s, i) => {
+        const end = dayEnd(s);
+        return end ? [{ id: stopPinId(i), name: end.name, lat: end.lat, lon: end.lon, featured: false }] : [];
+      });
       g.setSubPins(pins);
-      g.setRoute(route);
+      g.setRoute(routeOf(it));
       g.setFocus(pins.map((p) => p.id));
       g.setSelected(null);
-      const f = fitRoute(it.stops);
+      const f = fitRoute(it.stops.flatMap((s) => s.points));
       g.flyTo(f.lat, f.lon, f.zoom, 1500);
     },
     [byId, scrollPanelTop]
@@ -341,12 +367,14 @@ export default function DestinationsPage({ config }: { config: DestinationsPageC
       const it = openItinerary_;
       const s = it?.stops[i];
       if (!it || !s) return;
+      const end = dayEnd(s);
+      if (!end) return;
       setStop(i);
       const g = globeRef.current;
       if (!g) return;
       g.setSelected(stopPinId(i));
-      const f = fitRoute(it.stops);
-      g.flyTo(s.lat, s.lon, Math.min(48, Math.max(18, f.zoom * 2.2)), 1250);
+      const f = fitRoute(it.stops.flatMap((x) => x.points));
+      g.flyTo(end.lat, end.lon, Math.min(48, Math.max(18, f.zoom * 2.2)), 1250);
     },
     [openItinerary_]
   );
@@ -359,7 +387,7 @@ export default function DestinationsPage({ config }: { config: DestinationsPageC
     const g = globeRef.current;
     if (g) {
       g.setSelected(null);
-      const f = fitRoute(it.stops);
+      const f = fitRoute(it.stops.flatMap((x) => x.points));
       g.flyTo(f.lat, f.lon, f.zoom, 1200);
     }
     return true;
@@ -823,7 +851,7 @@ function DestinationPanel({
             <button type="button" key={it.id} className={styles.itinCard} onClick={() => onOpenItinerary(i)}>
               <span className={styles.itinCardEyebrow}>{itineraryEyebrow(it)}</span>
               <span className={styles.itinCardTitle}>{it.title.toUpperCase()}</span>
-              <span className={styles.itinCardStops}>{stopsLine(it)}</span>
+              <span className={styles.itinCardStops}>{it.teaser || stopsLine(it)}</span>
               <span className={styles.itinCardCta}>VIEW ROUTE ON THE MAP →</span>
             </button>
           ))}
@@ -869,33 +897,48 @@ function ItineraryPanel({
       </button>
       <div className={styles.itEyebrow}>{itineraryEyebrow(itinerary)}</div>
       <h3 className={styles.itTitle}>{itinerary.title.toUpperCase()}</h3>
-      {itinerary.intro && <p className={styles.itPara}>{itinerary.intro}</p>}
+      {itinerary.intro.map((para, i) => (
+        <p className={styles.itPara} key={i}>
+          {para}
+        </p>
+      ))}
       <div className={styles.dayHead}>DAY TO DAY · SELECT A STOP</div>
+      {/* Each row is a day heading as the website wrote it. Its narrative is
+          a full paragraph, shown whole when the row is selected — never cut
+          to a line. */}
       <div className={styles.days} role="list">
         {itinerary.stops.map((s, i) => {
           const on = selectedStop === i;
+          // A day with no located place still shows its heading and narrative;
+          // it simply has nothing to fly to.
+          const flyable = s.points.length > 0;
           return (
-            <button
-              type="button"
-              role="listitem"
-              key={`${s.day}-${s.place}`}
-              className={`${styles.dayRow} ${on ? styles.dayRowOn : ""}`}
-              onClick={() => onSelectStop(i)}
-              aria-pressed={on}
-            >
-              <span className={styles.dayNum}>DAY {s.day}</span>
-              <span className={styles.dayBody}>
-                <span className={styles.dayName}>{s.place.toUpperCase()}</span>
-                {s.note && <span className={styles.dayNote}>{s.note}</span>}
-              </span>
-              <span className={styles.dayThumb}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                {s.image && <img src={s.image} alt="" loading="lazy" decoding="async" />}
-              </span>
-            </button>
+            <div role="listitem" key={`${s.day}-${s.heading}`} className={`${styles.dayRow} ${on ? styles.dayRowOn : ""}`}>
+              <button
+                type="button"
+                className={styles.dayRowBtn}
+                onClick={() => onSelectStop(i)}
+                aria-pressed={on}
+                aria-expanded={on}
+                {...(flyable ? {} : { "aria-label": `${s.heading} — not shown on the map` })}
+              >
+                <span className={styles.dayNum}>{dayLabel(s)}</span>
+                <span className={styles.dayBody}>
+                  <span className={styles.dayName}>{s.heading.toUpperCase()}</span>
+                </span>
+                <span className={styles.dayThumb}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  {s.image && <img src={s.image} alt="" loading="lazy" decoding="async" />}
+                </span>
+              </button>
+              {on && s.text && <p className={styles.dayText}>{s.text}</p>}
+            </div>
           );
         })}
       </div>
+      <a className={styles.textLink} href={itinerary.url} target="_blank" rel="noopener">
+        READ THIS ITINERARY ON THE WEBSITE →
+      </a>
       {cta && (
         <a className={`${styles.btnOutline} ${styles.itCta}`} href={cta.href} {...(cta.external ? { target: "_blank", rel: "noopener" } : {})}>
           {cta.label}

@@ -1,0 +1,3909 @@
+{
+  "generatedAt": "2026-09-17T12:43:38.731Z",
+  "itineraries": {
+    "https://www.oceanindependence.com/yacht-charter/itineraries/antarctica/antarctica-itinerary/": {
+      "title": "Antarctica Itinerary",
+      "days": {
+        "1": {
+          "heading": "punta arenas to king george island",
+          "places": [
+            {
+              "name": "punta arenas",
+              "lat": -53.6657968,
+              "lon": -72.125165,
+              "source": "nominatim-far",
+              "query": "punta arenas, Antarctica",
+              "label": "Punta Arenas, Provincia de Magallanes, Magallanes and Chilean Antarctica Region, Chile",
+              "flag": "not drawn — 1630 km from the itinerary's map pins; correct it here to draw it"
+            },
+            {
+              "name": "king george island",
+              "lat": -62.07613,
+              "lon": -58.6319154,
+              "source": "nominatim",
+              "query": "king george island",
+              "label": "King George Island"
+            }
+          ]
+        },
+        "2": {
+          "heading": "the southern shetland islands",
+          "places": [
+            {
+              "name": "the southern shetland islands",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "3": {
+          "heading": "deception island",
+          "places": [
+            {
+              "name": "deception island",
+              "lat": -62.9569512,
+              "lon": -60.552172,
+              "source": "nominatim",
+              "query": "deception island",
+              "label": "Deception Island"
+            }
+          ]
+        },
+        "4": {
+          "heading": "antarctic sound",
+          "places": [
+            {
+              "name": "antarctic sound",
+              "lat": -63.4010814,
+              "lon": -56.7192182,
+              "source": "nominatim",
+              "query": "antarctic sound",
+              "label": "Antarctic Sound"
+            }
+          ]
+        },
+        "5": {
+          "heading": "the danco coast & gerlache strait",
+          "places": [
+            {
+              "name": "the danco coast",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            },
+            {
+              "name": "gerlache strait",
+              "lat": -64.2910062,
+              "lon": -61.6665287,
+              "source": "nominatim",
+              "query": "gerlache strait",
+              "label": "Gerlache Strait"
+            }
+          ]
+        },
+        "7": {
+          "heading": "south shetland to punta arenas",
+          "places": [
+            {
+              "name": "south shetland",
+              "lat": 60.0249367,
+              "lon": -1.3553058,
+              "source": "nominatim-far",
+              "query": "south shetland",
+              "label": "South Havra, Burra and Trondra, Shetland, Scotland, United Kingdom",
+              "flag": "not drawn — 15197 km from the itinerary's map pins; correct it here to draw it"
+            },
+            {
+              "name": "punta arenas",
+              "lat": -53.6657968,
+              "lon": -72.125165,
+              "source": "nominatim-far",
+              "query": "punta arenas, Antarctica",
+              "label": "Punta Arenas, Provincia de Magallanes, Magallanes and Chilean Antarctica Region, Chile",
+              "flag": "not drawn — 1630 km from the itinerary's map pins; correct it here to draw it"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/arctic/east-greenland/": {
+      "title": "East Greenland",
+      "days": {
+        "1": {
+          "heading": "Constable Point",
+          "places": [
+            {
+              "name": "Constable Point",
+              "lat": 70.74403197062057,
+              "lon": -22.64610511515993,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "2": {
+          "heading": "Viking Bay To Danmark Island",
+          "places": [
+            {
+              "name": "Viking Bay",
+              "lat": 51.3579386,
+              "lon": 1.4434103,
+              "source": "nominatim-far",
+              "query": "Viking Bay",
+              "label": "Viking Bay, Dumpton Gap, Broadstairs and St Peters, Broadstairs, Thanet, Kent, England, United Kingdom",
+              "flag": "not drawn — 2527 km from the itinerary's map pins; correct it here to draw it"
+            },
+            {
+              "name": "Danmark Island",
+              "lat": 70.51690938981069,
+              "lon": -26.24798290428327,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "5": {
+          "heading": "Hare Fjord, Ofjord, Bear Island, Sydkap",
+          "places": [
+            {
+              "name": "Hare Fjord, Ofjord, Bear Island, Sydkap",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "7": {
+          "heading": "Thule Remains & Northeast Greenland National Park",
+          "places": [
+            {
+              "name": "Thule Remains",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            },
+            {
+              "name": "Northeast Greenland National Park",
+              "lat": 75.46074,
+              "lon": -26.0469821,
+              "source": "nominatim",
+              "query": "Northeast Greenland National Park",
+              "label": "Northeast Greenland National Park, Greenland"
+            }
+          ]
+        },
+        "8": {
+          "heading": "Ittoqqortoormiit",
+          "places": [
+            {
+              "name": "Ittoqqortoormiit",
+              "lat": 70.48723322979835,
+              "lon": -21.97412870561281,
+              "source": "map-pin"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/arctic/longyearbyen-to-longyearbyen/": {
+      "title": "Longyearbyen to Longyearbyen",
+      "days": {
+        "1": {
+          "heading": "Longyearbyen - Western Fjords",
+          "places": [
+            {
+              "name": "Longyearbyen",
+              "lat": 78.2250051119333,
+              "lon": 15.625905249625152,
+              "source": "map-pin"
+            },
+            {
+              "name": "Western Fjords",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "2": {
+          "heading": "Western Fjords",
+          "places": [
+            {
+              "name": "Western Fjords",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "3": {
+          "heading": "Western Fjords - Northern Fjords & Ice Edge",
+          "places": [
+            {
+              "name": "Western Fjords",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            },
+            {
+              "name": "Northern Fjords",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "5": {
+          "heading": "Northern Fjords & Ice Edge - East Coast",
+          "places": [
+            {
+              "name": "Northern Fjords",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            },
+            {
+              "name": "East Coast",
+              "lat": 1.2996787,
+              "lon": 103.908685,
+              "source": "nominatim-far",
+              "query": "East Coast",
+              "label": "East Coast, Marine Parade, Central Region, Singapore",
+              "flag": "not drawn — 9836 km from the itinerary's map pins; correct it here to draw it"
+            }
+          ]
+        },
+        "7": {
+          "heading": "East Coast - Southern Fjords",
+          "places": [
+            {
+              "name": "East Coast",
+              "lat": 1.2996787,
+              "lon": 103.908685,
+              "source": "nominatim-far",
+              "query": "East Coast",
+              "label": "East Coast, Marine Parade, Central Region, Singapore",
+              "flag": "not drawn — 9836 km from the itinerary's map pins; correct it here to draw it"
+            },
+            {
+              "name": "Southern Fjords",
+              "lat": 55.2379327,
+              "lon": 10.4787831,
+              "source": "nominatim-far",
+              "query": "Southern Fjords",
+              "label": "Fjords Bog & Idé, Algade, Gluemose, Ringe, Faaborg-Midtfyn Municipality, Region of Southern Denmark, 5750, Denmark",
+              "flag": "not drawn — 2598 km from the itinerary's map pins; correct it here to draw it"
+            }
+          ]
+        },
+        "9": {
+          "heading": "Southern Fjords - Isfjorden",
+          "places": [
+            {
+              "name": "Southern Fjords",
+              "lat": 55.2379327,
+              "lon": 10.4787831,
+              "source": "nominatim-far",
+              "query": "Southern Fjords",
+              "label": "Fjords Bog & Idé, Algade, Gluemose, Ringe, Faaborg-Midtfyn Municipality, Region of Southern Denmark, 5750, Denmark",
+              "flag": "not drawn — 2598 km from the itinerary's map pins; correct it here to draw it"
+            },
+            {
+              "name": "Isfjorden",
+              "lat": 78.09528926315484,
+              "lon": 14.145138761902782,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "10": {
+          "heading": "Isfjorden - Longyearbyen",
+          "places": [
+            {
+              "name": "Isfjorden",
+              "lat": 78.09528926315484,
+              "lon": 14.145138761902782,
+              "source": "map-pin"
+            },
+            {
+              "name": "Longyearbyen",
+              "lat": 78.2250051119333,
+              "lon": 15.625905249625152,
+              "source": "map-pin"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/australasia/the-kimberley/": {
+      "title": "The Kimberley",
+      "days": {
+        "1": {
+          "heading": "cygnet bay & buccaneer archipelago",
+          "places": [
+            {
+              "name": "cygnet bay",
+              "lat": -16.56636,
+              "lon": 123.03784,
+              "source": "nominatim",
+              "query": "cygnet bay, Australia",
+              "label": "Cygnet Bay, Western Australia, Australia"
+            },
+            {
+              "name": "buccaneer archipelago",
+              "lat": -16.1032443,
+              "lon": 123.3370901,
+              "source": "nominatim",
+              "query": "buccaneer archipelago, Australia",
+              "label": "Buccaneer Archipelago, Western Australia, Australia"
+            }
+          ]
+        },
+        "2": {
+          "heading": "king sound to silver gull creek",
+          "places": [
+            {
+              "name": "king sound",
+              "lat": -17.15174,
+              "lon": 123.45655,
+              "source": "nominatim",
+              "query": "king sound, Australia",
+              "label": "King Sound, Western Australia, Australia"
+            },
+            {
+              "name": "silver gull creek",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "3": {
+          "heading": "cockatoo island to the horizontal falls",
+          "places": [
+            {
+              "name": "cockatoo island",
+              "lat": -16.0939495,
+              "lon": 123.6106163,
+              "source": "nominatim",
+              "query": "cockatoo island, Australia",
+              "label": "Cockatoo Island, Cockatoo Island Village, Western Australia, Australia"
+            },
+            {
+              "name": "the horizontal falls",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "4": {
+          "heading": "montgomery reef to raft point",
+          "places": [
+            {
+              "name": "montgomery reef",
+              "lat": -15.9332731,
+              "lon": 124.2681287,
+              "source": "nominatim",
+              "query": "montgomery reef, Australia",
+              "label": "Montgomery Reef, Western Australia, Australia"
+            },
+            {
+              "name": "raft point",
+              "lat": -17.0915778,
+              "lon": 139.5680994,
+              "source": "nominatim-far",
+              "query": "raft point, Australia",
+              "label": "Njinjilki, South Wellesley Islands, Queensland, 4892, Australia",
+              "flag": "not drawn — 1889 km from the itinerary's map pins; correct it here to draw it"
+            }
+          ]
+        },
+        "5": {
+          "heading": "raft point",
+          "places": [
+            {
+              "name": "raft point",
+              "lat": -17.0915778,
+              "lon": 139.5680994,
+              "source": "nominatim-far",
+              "query": "raft point, Australia",
+              "label": "Njinjilki, South Wellesley Islands, Queensland, 4892, Australia",
+              "flag": "not drawn — 1889 km from the itinerary's map pins; correct it here to draw it"
+            }
+          ]
+        },
+        "6": {
+          "heading": "raft point to boondook bay",
+          "places": [
+            {
+              "name": "raft point",
+              "lat": -17.0915778,
+              "lon": 139.5680994,
+              "source": "nominatim-far",
+              "query": "raft point, Australia",
+              "label": "Njinjilki, South Wellesley Islands, Queensland, 4892, Australia",
+              "flag": "not drawn — 1889 km from the itinerary's map pins; correct it here to draw it"
+            },
+            {
+              "name": "boondook bay",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "7": {
+          "heading": "boondook bay to cygnet bay",
+          "places": [
+            {
+              "name": "boondook bay",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            },
+            {
+              "name": "cygnet bay",
+              "lat": -16.56636,
+              "lon": 123.03784,
+              "source": "nominatim",
+              "query": "cygnet bay, Australia",
+              "label": "Cygnet Bay, Western Australia, Australia"
+            }
+          ]
+        },
+        "8": {
+          "heading": "Felicite Island",
+          "places": [
+            {
+              "name": "Felicite Island",
+              "lat": -4.3276273,
+              "lon": 55.8747462,
+              "source": "nominatim-far",
+              "query": "Felicite Island",
+              "label": "Felicite Island, La Digue, La Digue Group, Seychelles",
+              "flag": "not drawn — 7318 km from the itinerary's map pins; correct it here to draw it"
+            }
+          ]
+        },
+        "9": {
+          "heading": "fregate island",
+          "places": [
+            {
+              "name": "fregate island",
+              "lat": -4.5858958,
+              "lon": 55.9402282,
+              "source": "nominatim-far",
+              "query": "fregate island",
+              "label": "Frégate Island, La Digue, La Digue Group, Seychelles",
+              "flag": "not drawn — 7302 km from the itinerary's map pins; correct it here to draw it"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/caribbean/antigua-to-st-lucia/": {
+      "title": "antigua to st lucia",
+      "days": {
+        "1": {
+          "heading": "antigua to guadeloupe",
+          "places": [
+            {
+              "name": "antigua",
+              "lat": 17.0858167,
+              "lon": -61.8719884,
+              "source": "map-pin"
+            },
+            {
+              "name": "guadeloupe",
+              "lat": 16.2528827,
+              "lon": -61.5686855,
+              "source": "nominatim",
+              "query": "guadeloupe, Caribbean",
+              "label": "Guadeloupe, France"
+            }
+          ]
+        },
+        "2": {
+          "heading": "guadeloupe",
+          "places": [
+            {
+              "name": "guadeloupe",
+              "lat": 16.2528827,
+              "lon": -61.5686855,
+              "source": "nominatim",
+              "query": "guadeloupe, Caribbean",
+              "label": "Guadeloupe, France"
+            }
+          ]
+        },
+        "3": {
+          "heading": "guadeloupe to dominica",
+          "places": [
+            {
+              "name": "guadeloupe",
+              "lat": 16.2528827,
+              "lon": -61.5686855,
+              "source": "nominatim",
+              "query": "guadeloupe, Caribbean",
+              "label": "Guadeloupe, France"
+            },
+            {
+              "name": "dominica",
+              "lat": 15.4021,
+              "lon": -61.4273,
+              "source": "atlas:caribbean/the-windward-islands/st-vincent-the-grenadines/dominica"
+            }
+          ]
+        },
+        "4": {
+          "heading": "dominica to martinique",
+          "places": [
+            {
+              "name": "dominica",
+              "lat": 15.4021,
+              "lon": -61.4273,
+              "source": "atlas:caribbean/the-windward-islands/st-vincent-the-grenadines/dominica"
+            },
+            {
+              "name": "martinique",
+              "lat": 14.6415,
+              "lon": -61.0242,
+              "source": "atlas:caribbean/the-windward-islands/st-vincent-the-grenadines/martinique"
+            }
+          ]
+        },
+        "5": {
+          "heading": "martinique to st lucia",
+          "places": [
+            {
+              "name": "martinique",
+              "lat": 14.6415,
+              "lon": -61.0242,
+              "source": "atlas:caribbean/the-windward-islands/st-vincent-the-grenadines/martinique"
+            },
+            {
+              "name": "st lucia",
+              "lat": 13.9131308,
+              "lon": -61.1357109,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "6": {
+          "heading": "the pitons to vieux fort",
+          "places": [
+            {
+              "name": "the pitons",
+              "lat": 51.0012651,
+              "lon": -1.3695788,
+              "source": "nominatim-far",
+              "query": "the pitons",
+              "label": "The Pitons, 39, Hocombe Road, Chandler's Ford, Otterbourne, Eastleigh, Hampshire, England, SO53 5SP, United Kingdom",
+              "flag": "not drawn — 6600 km from the itinerary's map pins; correct it here to draw it"
+            },
+            {
+              "name": "vieux fort",
+              "lat": 13.7381064,
+              "lon": -60.971736,
+              "source": "nominatim",
+              "query": "vieux fort, Caribbean",
+              "label": "Caribbean's metal, Soufrière - Vieux Fort Highway, Hewanorra Orchard, Black Bay, Vieux Fort, LC11 101, Saint Lucia"
+            }
+          ]
+        },
+        "7": {
+          "heading": "vieux fort",
+          "places": [
+            {
+              "name": "vieux fort",
+              "lat": 13.7381064,
+              "lon": -60.971736,
+              "source": "nominatim",
+              "query": "vieux fort, Caribbean",
+              "label": "Caribbean's metal, Soufrière - Vieux Fort Highway, Hewanorra Orchard, Black Bay, Vieux Fort, LC11 101, Saint Lucia"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/caribbean/nassau-to-nassau/": {
+      "title": "Nassau to Nassau",
+      "days": {
+        "1": {
+          "heading": "Nassau to Compass Cay",
+          "places": [
+            {
+              "name": "Nassau",
+              "lat": 25.0326348,
+              "lon": -77.5629836,
+              "source": "map-pin"
+            },
+            {
+              "name": "Compass Cay",
+              "lat": 24.2706873,
+              "lon": -76.5208111,
+              "source": "nominatim",
+              "query": "Compass Cay, The Bahamas",
+              "label": "Compass Cay, Exuma, Bahamas"
+            }
+          ]
+        },
+        "3": {
+          "heading": "Compass cay to staniel cay",
+          "places": [
+            {
+              "name": "Compass cay",
+              "lat": 24.2706873,
+              "lon": -76.5208111,
+              "source": "nominatim",
+              "query": "Compass cay, The Bahamas",
+              "label": "Compass Cay, Exuma, Bahamas"
+            },
+            {
+              "name": "staniel cay",
+              "lat": 24.1706517,
+              "lon": -76.4415881,
+              "source": "nominatim",
+              "query": "staniel cay, The Bahamas",
+              "label": "Staniel Cay, Exuma, Bahamas"
+            }
+          ]
+        },
+        "4": {
+          "heading": "staniel cay to little bells cay",
+          "places": [
+            {
+              "name": "staniel cay",
+              "lat": 24.1706517,
+              "lon": -76.4415881,
+              "source": "nominatim",
+              "query": "staniel cay, The Bahamas",
+              "label": "Staniel Cay, Exuma, Bahamas"
+            },
+            {
+              "name": "little bells cay",
+              "lat": 24.2997066,
+              "lon": -76.5344383,
+              "source": "nominatim",
+              "query": "little bells cay, The Bahamas",
+              "label": "Little Bells Cay, Exuma, Bahamas"
+            }
+          ]
+        },
+        "5": {
+          "heading": "little bells cay to highbourne cay",
+          "places": [
+            {
+              "name": "little bells cay",
+              "lat": 24.2997066,
+              "lon": -76.5344383,
+              "source": "nominatim",
+              "query": "little bells cay, The Bahamas",
+              "label": "Little Bells Cay, Exuma, Bahamas"
+            },
+            {
+              "name": "highbourne cay",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/caribbean/st-maarten-to-st-maarten/": {
+      "title": "St Maarten to St Maarten",
+      "days": {
+        "1": {
+          "heading": "simpson bay, st maarten",
+          "places": [
+            {
+              "name": "simpson bay, st maarten",
+              "lat": 18.0390302,
+              "lon": -63.0960794,
+              "source": "nominatim",
+              "query": "simpson bay, st maarten, Caribbean",
+              "label": "Caribbean Alliance Insurance Company, Airport Road, Pelican Key, Simpson Bay, Sint Maarten, Netherlands"
+            }
+          ]
+        },
+        "2": {
+          "heading": "simpson bay to grand case",
+          "places": [
+            {
+              "name": "simpson bay",
+              "lat": 18.0390302,
+              "lon": -63.0960794,
+              "source": "nominatim",
+              "query": "simpson bay, Caribbean",
+              "label": "Caribbean Alliance Insurance Company, Airport Road, Pelican Key, Simpson Bay, Sint Maarten, Netherlands"
+            },
+            {
+              "name": "grand case",
+              "lat": 18.100531,
+              "lon": -63.0575966,
+              "source": "nominatim",
+              "query": "grand case, St Maarten",
+              "label": "Grand Case, Saint Martin, 97150, France"
+            }
+          ]
+        },
+        "3": {
+          "heading": "gustavia",
+          "places": [
+            {
+              "name": "gustavia",
+              "lat": 17.8957043,
+              "lon": -62.8508372,
+              "source": "nominatim",
+              "query": "gustavia, St Barts",
+              "label": "Gustavia, Saint Barthélemy, 97133, France"
+            }
+          ]
+        },
+        "4": {
+          "heading": "st barts to barbuda",
+          "places": [
+            {
+              "name": "st barts",
+              "lat": 17.9197,
+              "lon": -62.8543,
+              "source": "atlas:caribbean/leeward-islands/st-barts"
+            },
+            {
+              "name": "barbuda",
+              "lat": 17.1350568,
+              "lon": -61.8347553,
+              "source": "nominatim",
+              "query": "barbuda, Caribbean",
+              "label": "Caribbean Cinemas, Friars Hill Road, St. John's, Saint John, Antigua, Antigua and Barbuda"
+            }
+          ]
+        },
+        "5": {
+          "heading": "barbuda to st kitts",
+          "places": [
+            {
+              "name": "barbuda",
+              "lat": 17.1350568,
+              "lon": -61.8347553,
+              "source": "nominatim",
+              "query": "barbuda, Caribbean",
+              "label": "Caribbean Cinemas, Friars Hill Road, St. John's, Saint John, Antigua, Antigua and Barbuda"
+            },
+            {
+              "name": "st kitts",
+              "lat": 17.2973973,
+              "lon": -62.7077438,
+              "source": "nominatim",
+              "query": "st kitts, Caribbean",
+              "label": "Eastern Caribbean Central Bank, Bird Rock Road, Basseterre, Saint George Basseterre, Saint Kitts, Saint Kitts and Nevis"
+            }
+          ]
+        },
+        "6": {
+          "heading": "st kitts",
+          "places": [
+            {
+              "name": "st kitts",
+              "lat": 17.2973973,
+              "lon": -62.7077438,
+              "source": "nominatim",
+              "query": "st kitts, Caribbean",
+              "label": "Eastern Caribbean Central Bank, Bird Rock Road, Basseterre, Saint George Basseterre, Saint Kitts, Saint Kitts and Nevis"
+            }
+          ]
+        },
+        "7": {
+          "heading": "anguilla",
+          "places": [
+            {
+              "name": "anguilla",
+              "lat": 18.2142457,
+              "lon": -63.0491488,
+              "source": "nominatim",
+              "query": "anguilla, Caribbean",
+              "label": "First Caribbean National Bank, Albert Lake Drive, Cauls Bottom, The Valley, AI-2640, Anguilla"
+            }
+          ]
+        },
+        "8": {
+          "heading": "st maarten",
+          "places": [
+            {
+              "name": "st maarten",
+              "lat": 18.0634022,
+              "lon": -63.1077032,
+              "source": "map-pin"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/caribbean/st-thomas-to-st-thomas/": {
+      "title": "St. Thomas to St. Thomas",
+      "days": {
+        "1": {
+          "heading": "St. Thomas to Magens Bay",
+          "places": [
+            {
+              "name": "St. Thomas",
+              "lat": 13.1447989,
+              "lon": -59.6096766,
+              "source": "nominatim",
+              "query": "St. Thomas, Caribbean",
+              "label": "Rubis Eastern Caribbean SRL, Warrens Industrial Park W, Warrens Industrial Park, Warrens, Arthur Seat, Saint Thomas, BB22026, Barbados"
+            },
+            {
+              "name": "Magens Bay",
+              "lat": 18.37208702658329,
+              "lon": -64.93652238250155,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "2": {
+          "heading": "Magens Bay to Botany Bay",
+          "places": [
+            {
+              "name": "Magens Bay",
+              "lat": 18.37208702658329,
+              "lon": -64.93652238250155,
+              "source": "map-pin"
+            },
+            {
+              "name": "Botany Bay",
+              "lat": 18.35776441403241,
+              "lon": -65.03497183168804,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "3": {
+          "heading": "Botany Bay to Francis Bay, St. John (via Lovango and Congo Cut)",
+          "places": [
+            {
+              "name": "Botany Bay",
+              "lat": 18.35776441403241,
+              "lon": -65.03497183168804,
+              "source": "map-pin"
+            },
+            {
+              "name": "Francis Bay, St. John",
+              "lat": 18.36518070384286,
+              "lon": -64.7474779195154,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "4": {
+          "heading": "Francis Bay to Cruz Bay and Waterlemon Cay",
+          "places": [
+            {
+              "name": "Francis Bay",
+              "lat": 18.3646755,
+              "lon": -64.7495817,
+              "source": "nominatim",
+              "query": "Francis Bay, U.S. Virgin Islands",
+              "label": "Francis Bay, Mary Point, Coral Bay, Saint Thomas - Saint John District, United States Virgin Islands, 00831, United States"
+            },
+            {
+              "name": "Cruz Bay",
+              "lat": 18.330505332616205,
+              "lon": -64.79367434838431,
+              "source": "map-pin"
+            },
+            {
+              "name": "Waterlemon Cay",
+              "lat": 18.36712786377558,
+              "lon": -64.72310869464827,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "5": {
+          "heading": "Waterlemon Cay to Coral Bay",
+          "places": [
+            {
+              "name": "Waterlemon Cay",
+              "lat": 18.36712786377558,
+              "lon": -64.72310869464827,
+              "source": "map-pin"
+            },
+            {
+              "name": "Coral Bay",
+              "lat": 18.348705709517322,
+              "lon": -64.71547598362426,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "6": {
+          "heading": "Coral Bay to Reef Bay",
+          "places": [
+            {
+              "name": "Coral Bay",
+              "lat": 18.348705709517322,
+              "lon": -64.71547598362426,
+              "source": "map-pin"
+            },
+            {
+              "name": "Reef Bay",
+              "lat": 18.329686371488542,
+              "lon": -64.73777967463768,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "7": {
+          "heading": "Reef Bay to Honeymoon Beach and Disembark at Charlotte Amalie",
+          "places": [
+            {
+              "name": "Reef Bay",
+              "lat": 18.329686371488542,
+              "lon": -64.73777967463768,
+              "source": "map-pin"
+            },
+            {
+              "name": "Honeymoon Beach",
+              "lat": 18.34035283458682,
+              "lon": -64.79119634795781,
+              "source": "map-pin"
+            },
+            {
+              "name": "to  Charlotte Amalie",
+              "lat": 18.3414575,
+              "lon": -64.9335173,
+              "source": "nominatim",
+              "query": "to  Charlotte Amalie, U.S. Virgin Islands",
+              "label": "Charlotte Amalie, Saint Thomas - Saint John District, United States Virgin Islands, 00804, United States"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/caribbean/tortola-to-tortola/": {
+      "title": "Tortola to Tortola",
+      "days": {
+        "1": {
+          "heading": "Tortola",
+          "places": [
+            {
+              "name": "Tortola",
+              "lat": 18.43342322238214,
+              "lon": -64.63480684741198,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "2": {
+          "heading": "Tortola to Norman Island",
+          "places": [
+            {
+              "name": "Tortola",
+              "lat": 18.43342322238214,
+              "lon": -64.63480684741198,
+              "source": "map-pin"
+            },
+            {
+              "name": "Norman Island",
+              "lat": 18.317107730569102,
+              "lon": -64.61186197253272,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "3": {
+          "heading": "Norman Island to Peter Island",
+          "places": [
+            {
+              "name": "Norman Island",
+              "lat": 18.317107730569102,
+              "lon": -64.61186197253272,
+              "source": "map-pin"
+            },
+            {
+              "name": "Peter Island",
+              "lat": 18.351937142803017,
+              "lon": -64.57227263606673,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "4": {
+          "heading": "Peter Island To Salt, Cooper, And Beef Islands",
+          "places": [
+            {
+              "name": "Peter Island",
+              "lat": 18.351937142803017,
+              "lon": -64.57227263606673,
+              "source": "map-pin"
+            },
+            {
+              "name": "Salt, Cooper",
+              "lat": 38.922441,
+              "lon": -92.9488578,
+              "source": "nominatim-far",
+              "query": "Salt, Cooper",
+              "label": "Salt Branch, Cooper County, Missouri, United States",
+              "flag": "not drawn — 3559 km from the itinerary's map pins; correct it here to draw it"
+            },
+            {
+              "name": "Beef Islands",
+              "lat": 18.4394817,
+              "lon": -64.5233511,
+              "source": "nominatim",
+              "query": "Beef Islands, British Virgin Islands",
+              "label": "Beef Island, Little Mountain, Other British Virgin Islands, British Virgin Islands"
+            }
+          ]
+        },
+        "5": {
+          "heading": "Trellis Bay to Virgin Gorda",
+          "places": [
+            {
+              "name": "Trellis Bay",
+              "lat": 18.445502954021215,
+              "lon": -64.53032263435578,
+              "source": "map-pin"
+            },
+            {
+              "name": "Virgin Gorda",
+              "lat": 18.493990714387156,
+              "lon": -64.40508525219838,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "6": {
+          "heading": "Virgin Gorda To Guana Island Or Anegada",
+          "places": [
+            {
+              "name": "Virgin Gorda",
+              "lat": 18.493990714387156,
+              "lon": -64.40508525219838,
+              "source": "map-pin"
+            },
+            {
+              "name": "Guana Island",
+              "lat": 18.475314102181848,
+              "lon": -64.56949354893055,
+              "source": "map-pin"
+            },
+            {
+              "name": "Anegada",
+              "lat": 18.72754586821141,
+              "lon": -64.34239417739147,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "7": {
+          "heading": "Guana Island To Great Camanoe",
+          "places": [
+            {
+              "name": "Guana Island",
+              "lat": 18.475314102181848,
+              "lon": -64.56949354893055,
+              "source": "map-pin"
+            },
+            {
+              "name": "Great Camanoe",
+              "lat": 18.481282219910334,
+              "lon": -64.53408421543863,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "8": {
+          "heading": "Guana Island to Jost Van Dyke",
+          "places": [
+            {
+              "name": "Guana Island",
+              "lat": 18.475314102181848,
+              "lon": -64.56949354893055,
+              "source": "map-pin"
+            },
+            {
+              "name": "Jost Van Dyke",
+              "lat": 18.44615347360411,
+              "lon": -64.74096131473766,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "9": {
+          "heading": "Jost Van Dyke to Tortola",
+          "places": [
+            {
+              "name": "Jost Van Dyke",
+              "lat": 18.44615347360411,
+              "lon": -64.74096131473766,
+              "source": "map-pin"
+            },
+            {
+              "name": "Tortola",
+              "lat": 18.43342322238214,
+              "lon": -64.63480684741198,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "10": {
+          "heading": "Return To Sopers Hole Marina, Tortola",
+          "places": [
+            {
+              "name": "Sopers Hole Marina, Tortola",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/central-america/la-paz-to-la-paz/": {
+      "title": "la paz to la paz",
+      "days": {
+        "1": {
+          "heading": "la paz to balandra cove",
+          "places": [
+            {
+              "name": "la paz",
+              "lat": 23.7329966,
+              "lon": -110.257699,
+              "source": "map-pin"
+            },
+            {
+              "name": "balandra cove",
+              "lat": -35.0742395,
+              "lon": 138.5212355,
+              "source": "nominatim-far",
+              "query": "balandra cove",
+              "label": "Balandra Street, Hallett Cove, Adelaide, South Australia, 5158, Australia",
+              "flag": "not drawn — 13362 km from the itinerary's map pins; correct it here to draw it"
+            }
+          ]
+        },
+        "2": {
+          "heading": "balandra cove to isla espiritu santo",
+          "places": [
+            {
+              "name": "balandra cove",
+              "lat": -35.0742395,
+              "lon": 138.5212355,
+              "source": "nominatim-far",
+              "query": "balandra cove",
+              "label": "Balandra Street, Hallett Cove, Adelaide, South Australia, 5158, Australia",
+              "flag": "not drawn — 13362 km from the itinerary's map pins; correct it here to draw it"
+            },
+            {
+              "name": "isla espiritu santo",
+              "lat": 24.4673777,
+              "lon": -110.3245473,
+              "source": "nominatim",
+              "query": "isla espiritu santo, Mexico",
+              "label": "Isla Espíritu Santo, Municipio de La Paz, Baja California Sur, Mexico"
+            }
+          ]
+        },
+        "3": {
+          "heading": "espiritu santo to isla partida",
+          "places": [
+            {
+              "name": "espiritu santo",
+              "lat": 22.604234,
+              "lon": -101.4393569,
+              "source": "nominatim",
+              "query": "espiritu santo, Mexico",
+              "label": "Espíritu Santo, Pinos, Zacatecas, Mexico"
+            },
+            {
+              "name": "isla partida",
+              "lat": 28.8919105,
+              "lon": -113.0384676,
+              "source": "nominatim",
+              "query": "isla partida, Mexico",
+              "label": "Isla Partida, Baja California, Mexico"
+            }
+          ]
+        },
+        "4": {
+          "heading": "isla partida to isla san francisco",
+          "places": [
+            {
+              "name": "isla partida",
+              "lat": 28.8919105,
+              "lon": -113.0384676,
+              "source": "nominatim",
+              "query": "isla partida, Mexico",
+              "label": "Isla Partida, Baja California, Mexico"
+            },
+            {
+              "name": "isla san francisco",
+              "lat": 31.8967137,
+              "lon": -116.6889497,
+              "source": "nominatim",
+              "query": "isla san francisco, Mexico",
+              "label": "Calle Isla San Fran, El Sauzal, Ensenada, Municipio de Ensenada, Baja California, 22760, Mexico",
+              "flag": "near the edge of the itinerary's area (1106 km)"
+            }
+          ]
+        },
+        "5": {
+          "heading": "isla san francisco to isla carmen",
+          "places": [
+            {
+              "name": "isla san francisco",
+              "lat": 31.8967137,
+              "lon": -116.6889497,
+              "source": "nominatim",
+              "query": "isla san francisco, Mexico",
+              "label": "Calle Isla San Fran, El Sauzal, Ensenada, Municipio de Ensenada, Baja California, 22760, Mexico",
+              "flag": "near the edge of the itinerary's area (1106 km)"
+            },
+            {
+              "name": "isla carmen",
+              "lat": 25.9396089,
+              "lon": -111.1761077,
+              "source": "nominatim",
+              "query": "isla carmen, Mexico",
+              "label": "Isla del Carmen, Municipio de Loreto, Baja California Sur, Mexico"
+            }
+          ]
+        },
+        "6": {
+          "heading": "isla carmen to isla monserrate",
+          "places": [
+            {
+              "name": "isla carmen",
+              "lat": 25.9396089,
+              "lon": -111.1761077,
+              "source": "nominatim",
+              "query": "isla carmen, Mexico",
+              "label": "Isla del Carmen, Municipio de Loreto, Baja California Sur, Mexico"
+            },
+            {
+              "name": "isla monserrate",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "7": {
+          "heading": "isla monserrate to isla pardita",
+          "places": [
+            {
+              "name": "isla monserrate",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            },
+            {
+              "name": "isla pardita",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "8": {
+          "heading": "isla pardita to la paz",
+          "places": [
+            {
+              "name": "isla pardita",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            },
+            {
+              "name": "la paz",
+              "lat": 23.7329966,
+              "lon": -110.257699,
+              "source": "map-pin"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/central-america/panama-to-costa-rica/": {
+      "title": "panama to costa rica",
+      "days": {
+        "1": {
+          "heading": "panama city",
+          "places": [
+            {
+              "name": "panama city",
+              "lat": 9.4450883,
+              "lon": -84.1371403,
+              "source": "nominatim",
+              "query": "panama city, Costa Rica",
+              "label": "Ticabus from Panama city, Carretera Pacífica Fernández Oreamuno, CNP, La Laguna, Quepos, Puntarenas Province, 60601, Costa Rica"
+            }
+          ]
+        },
+        "2": {
+          "heading": "panama city to pearl islands",
+          "places": [
+            {
+              "name": "panama city",
+              "lat": 9.4450883,
+              "lon": -84.1371403,
+              "source": "nominatim",
+              "query": "panama city, Costa Rica",
+              "label": "Ticabus from Panama city, Carretera Pacífica Fernández Oreamuno, CNP, La Laguna, Quepos, Puntarenas Province, 60601, Costa Rica"
+            },
+            {
+              "name": "pearl islands",
+              "lat": 8.3480622,
+              "lon": -78.896185,
+              "source": "nominatim",
+              "query": "pearl islands",
+              "label": "Pearl Islands, Balboa, Panamá Province, Panama"
+            }
+          ]
+        },
+        "3": {
+          "heading": "mogue embera reserve",
+          "places": [
+            {
+              "name": "mogue embera reserve",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "4": {
+          "heading": "restingue island",
+          "places": [
+            {
+              "name": "restingue island",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "5": {
+          "heading": "casa orquideas",
+          "places": [
+            {
+              "name": "casa orquideas",
+              "lat": 9.9321546,
+              "lon": -84.0623748,
+              "source": "nominatim",
+              "query": "casa orquideas, Costa Rica",
+              "label": "Hotel Casa Las Orquídeas, 0083, Paseo Rubén Darío, Empalme, Carmen, San José, San Jose Province, 10104, Costa Rica"
+            }
+          ]
+        },
+        "6": {
+          "heading": "puerto jimenez",
+          "places": [
+            {
+              "name": "puerto jimenez",
+              "lat": 8.5337895,
+              "lon": -83.4584484,
+              "source": "nominatim",
+              "query": "puerto jimenez, Costa Rica",
+              "label": "Puerto Jiménez, Puntarenas Province, Costa Rica"
+            }
+          ]
+        },
+        "7": {
+          "heading": "quepos",
+          "places": [
+            {
+              "name": "quepos",
+              "lat": 9.4127862,
+              "lon": -84.0649206,
+              "source": "nominatim",
+              "query": "quepos, Costa Rica",
+              "label": "Quepos, Puntarenas Province, Costa Rica"
+            }
+          ]
+        },
+        "8": {
+          "heading": "playa bisanz to puerto caldera",
+          "places": [
+            {
+              "name": "playa bisanz",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            },
+            {
+              "name": "puerto caldera",
+              "lat": 9.9117149,
+              "lon": -84.7146574,
+              "source": "nominatim",
+              "query": "puerto caldera, Costa Rica",
+              "label": "MOPT - Capitanía de Puerto Caldera, Corredor del Pacífico, Boca de Barranca, Caldera, Puntarenas, Puntarenas Province, 60115, Costa Rica"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/indian-ocean/eden-island-to-fregate-island-seychelles/": {
+      "title": "Eden Island to Fregate Island, Seychelles",
+      "days": {
+        "1": {
+          "heading": "eden island",
+          "places": [
+            {
+              "name": "eden island",
+              "lat": -4.6399268,
+              "lon": 55.4729748,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "2": {
+          "heading": "beau vallon beach",
+          "places": [
+            {
+              "name": "beau vallon beach",
+              "lat": -4.6109438,
+              "lon": 55.430151,
+              "source": "nominatim",
+              "query": "beau vallon beach, Seychelles",
+              "label": "Beau Vallon, Mare Anglaise, Beau Vallon, Seychelles"
+            }
+          ]
+        },
+        "3": {
+          "heading": "cap ternay marine park",
+          "places": [
+            {
+              "name": "cap ternay marine park",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "4": {
+          "heading": "petite anse",
+          "places": [
+            {
+              "name": "petite anse",
+              "lat": -4.7545002,
+              "lon": 55.4648587,
+              "source": "nominatim",
+              "query": "petite anse, Seychelles",
+              "label": "Petite Anse (Liberty Cove), Baie Lazare, Seychelles"
+            }
+          ]
+        },
+        "5": {
+          "heading": "anse lazio",
+          "places": [
+            {
+              "name": "anse lazio",
+              "lat": -4.2942343,
+              "lon": 55.7015159,
+              "source": "nominatim",
+              "query": "anse lazio, Seychelles",
+              "label": "Anse Lazio, Anse Boudin, Baie Sainte Anne Praslin, Praslin, Seychelles"
+            }
+          ]
+        },
+        "6": {
+          "heading": "curieuse island",
+          "places": [
+            {
+              "name": "curieuse island",
+              "lat": -4.2842772,
+              "lon": 55.7210423,
+              "source": "nominatim",
+              "query": "curieuse island, Seychelles",
+              "label": "Curieuse Island, Baie Sainte Anne Praslin, Praslin, Seychelles"
+            }
+          ]
+        },
+        "7": {
+          "heading": "la digue island",
+          "places": [
+            {
+              "name": "la digue island",
+              "lat": -4.3600875,
+              "lon": 55.8384775,
+              "source": "nominatim",
+              "query": "la digue island, Seychelles",
+              "label": "La Digue, La Digue Group, Seychelles"
+            }
+          ]
+        },
+        "8": {
+          "heading": "Felicite Island",
+          "places": [
+            {
+              "name": "Felicite Island",
+              "lat": -4.3276273,
+              "lon": 55.8747462,
+              "source": "nominatim",
+              "query": "Felicite Island, Seychelles",
+              "label": "Felicite Island, La Digue, La Digue Group, Seychelles"
+            }
+          ]
+        },
+        "9": {
+          "heading": "fregate island",
+          "places": [
+            {
+              "name": "fregate island",
+              "lat": -4.5844511,
+              "lon": 55.9354197,
+              "source": "map-pin"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/indian-ocean/luxury-7-day-yacht-itinerary-langkawi-to-phuket-exploration-ocean-independence/": {
+      "title": "Langkawi to Phuket",
+      "days": {
+        "1": {
+          "heading": "langkawi to butang islands",
+          "places": [
+            {
+              "name": "langkawi",
+              "lat": 6.3500211,
+              "lon": 99.7897003,
+              "source": "map-pin"
+            },
+            {
+              "name": "butang islands",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "2": {
+          "heading": "the butang islands",
+          "places": [
+            {
+              "name": "the butang islands",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "3": {
+          "heading": "the butang islands to krabi",
+          "places": [
+            {
+              "name": "the butang islands",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            },
+            {
+              "name": "krabi",
+              "lat": 6.1248554,
+              "lon": 100.3688676,
+              "source": "nominatim",
+              "query": "krabi, Malaysia",
+              "label": "Krabi Thai Food Restaurant, Jalan Istana Kuning, Kampung Khatijah, Alor Setar, Kota Setar, Kedah, 05100, Malaysia"
+            }
+          ]
+        },
+        "4": {
+          "heading": "krabi to koh hong",
+          "places": [
+            {
+              "name": "krabi",
+              "lat": 6.1248554,
+              "lon": 100.3688676,
+              "source": "nominatim",
+              "query": "krabi, Malaysia",
+              "label": "Krabi Thai Food Restaurant, Jalan Istana Kuning, Kampung Khatijah, Alor Setar, Kota Setar, Kedah, 05100, Malaysia"
+            },
+            {
+              "name": "koh hong",
+              "lat": 13.3767506,
+              "lon": 101.002234,
+              "source": "nominatim",
+              "query": "koh hong, Thailand",
+              "label": "San Chao Chi Hong Koh, Suk Prayun Road, Chon Buri, Ban Suan, Mueang Chon Buri District, Chon Buri Province, 20000, Thailand"
+            }
+          ]
+        },
+        "5": {
+          "heading": "koh hong to koh racha",
+          "places": [
+            {
+              "name": "koh hong",
+              "lat": 13.3767506,
+              "lon": 101.002234,
+              "source": "nominatim",
+              "query": "koh hong, Thailand",
+              "label": "San Chao Chi Hong Koh, Suk Prayun Road, Chon Buri, Ban Suan, Mueang Chon Buri District, Chon Buri Province, 20000, Thailand"
+            },
+            {
+              "name": "koh racha",
+              "lat": 7.6080824,
+              "lon": 98.3690464,
+              "source": "nominatim",
+              "query": "koh racha, Thailand",
+              "label": "OK Supermart, Batok Bay, Koh Racha Yai, Old track but completely unusable, Phuket Province, 83100, Thailand"
+            }
+          ]
+        },
+        "7": {
+          "heading": "koh racha to phuket",
+          "places": [
+            {
+              "name": "koh racha",
+              "lat": 7.6080824,
+              "lon": 98.3690464,
+              "source": "nominatim",
+              "query": "koh racha, Thailand",
+              "label": "OK Supermart, Batok Bay, Koh Racha Yai, Old track but completely unusable, Phuket Province, 83100, Thailand"
+            },
+            {
+              "name": "phuket",
+              "lat": 7.892854,
+              "lon": 98.259666,
+              "source": "map-pin"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/indian-ocean/male-to-male/": {
+      "title": "Male to Male",
+      "days": {
+        "1": {
+          "heading": "male",
+          "places": [
+            {
+              "name": "male",
+              "lat": 4.1887032,
+              "lon": 73.5246201,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "2": {
+          "heading": "hembadhu",
+          "places": [
+            {
+              "name": "hembadhu",
+              "lat": 4.4816819,
+              "lon": 73.3930824,
+              "source": "nominatim",
+              "query": "hembadhu",
+              "label": "Hembadhu, Malé Atoll, Maldives"
+            }
+          ]
+        },
+        "3": {
+          "heading": "huvafen",
+          "places": [
+            {
+              "name": "huvafen",
+              "lat": 4.3684412,
+              "lon": 73.3700674,
+              "source": "nominatim",
+              "query": "huvafen",
+              "label": "Nakachcchaafushi, Malé Atoll, Maldives"
+            }
+          ]
+        },
+        "4": {
+          "heading": "maadhu finolhu",
+          "places": [
+            {
+              "name": "maadhu finolhu",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "5": {
+          "heading": "makunufshi",
+          "places": [
+            {
+              "name": "makunufshi",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "6": {
+          "heading": "emboodhu finolhu",
+          "places": [
+            {
+              "name": "emboodhu finolhu",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "7": {
+          "heading": "male",
+          "places": [
+            {
+              "name": "male",
+              "lat": 4.1887032,
+              "lon": 73.5246201,
+              "source": "map-pin"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/aeolian-islands-catania-to-palermo/": {
+      "title": "Aeolian Islands: Catania to Palermo",
+      "days": {
+        "1": {
+          "heading": "catania",
+          "places": [
+            {
+              "name": "catania",
+              "lat": 37.5079,
+              "lon": 15.083,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "2": {
+          "heading": "taormina",
+          "places": [
+            {
+              "name": "taormina",
+              "lat": 37.8512218,
+              "lon": 15.2830191,
+              "source": "nominatim",
+              "query": "taormina",
+              "label": "Taormina, Messina, Sicily, 98039, Italy"
+            }
+          ]
+        },
+        "3": {
+          "heading": "stromboli",
+          "places": [
+            {
+              "name": "stromboli",
+              "lat": 38.7917963,
+              "lon": 15.2111752,
+              "source": "nominatim",
+              "query": "stromboli",
+              "label": "Isola di Stromboli, Lipari, Messina, Sicily, Italy"
+            }
+          ]
+        },
+        "4": {
+          "heading": "panarea",
+          "places": [
+            {
+              "name": "panarea",
+              "lat": 38.6360134,
+              "lon": 15.0672476,
+              "source": "nominatim",
+              "query": "panarea",
+              "label": "Panarea, Lipari, Messina, Sicily, Italy"
+            }
+          ]
+        },
+        "5": {
+          "heading": "lipari",
+          "places": [
+            {
+              "name": "lipari",
+              "lat": 38.48137,
+              "lon": 14.9396624,
+              "source": "nominatim",
+              "query": "lipari",
+              "label": "Aeolian Islands, Messina, Sicily, 98055, Italy"
+            }
+          ]
+        },
+        "6": {
+          "heading": "vulcano",
+          "places": [
+            {
+              "name": "vulcano",
+              "lat": 38.4044215,
+              "lon": 14.9618006,
+              "source": "nominatim",
+              "query": "vulcano",
+              "label": "Vulcano, Lipari, Messina, Sicily, Italy"
+            }
+          ]
+        },
+        "7": {
+          "heading": "salina",
+          "places": [
+            {
+              "name": "salina",
+              "lat": 38.5590495,
+              "lon": 14.8358646,
+              "source": "nominatim",
+              "query": "salina",
+              "label": "Isola di Salina, Leni, Messina, Sicily, 98050, Italy"
+            }
+          ]
+        },
+        "8": {
+          "heading": "filicudi",
+          "places": [
+            {
+              "name": "filicudi",
+              "lat": 38.5697605,
+              "lon": 14.5623568,
+              "source": "nominatim",
+              "query": "filicudi",
+              "label": "Filicudi, Lipari, Messina, Sicily, Italy"
+            }
+          ]
+        },
+        "9": {
+          "heading": "palermo",
+          "places": [
+            {
+              "name": "palermo",
+              "lat": 38.1157,
+              "lon": 13.3615,
+              "source": "map-pin"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/calvi-to-cala-di-volpe/": {
+      "title": "calvi to cala di volpe",
+      "days": {
+        "1": {
+          "heading": "calvi to girolata",
+          "places": [
+            {
+              "name": "calvi",
+              "lat": 42.1514291,
+              "lon": 9.1995459,
+              "source": "map-pin"
+            },
+            {
+              "name": "girolata",
+              "lat": 42.3496868,
+              "lon": 8.6124546,
+              "source": "nominatim",
+              "query": "girolata",
+              "label": "Girolata, Osani, Ajaccio, South Corsica, Corsica, Metropolitan France, 20147, France"
+            }
+          ]
+        },
+        "2": {
+          "heading": "girolata - ajaccio",
+          "places": [
+            {
+              "name": "girolata",
+              "lat": 42.3496868,
+              "lon": 8.6124546,
+              "source": "nominatim",
+              "query": "girolata",
+              "label": "Girolata, Osani, Ajaccio, South Corsica, Corsica, Metropolitan France, 20147, France"
+            },
+            {
+              "name": "ajaccio",
+              "lat": 41.9192,
+              "lon": 8.7386,
+              "source": "reviewed"
+            }
+          ]
+        },
+        "3": {
+          "heading": "ajaccio - bonifacio",
+          "places": [
+            {
+              "name": "ajaccio",
+              "lat": 41.9192,
+              "lon": 8.7386,
+              "source": "reviewed"
+            },
+            {
+              "name": "bonifacio",
+              "lat": 41.3872348,
+              "lon": 9.1590609,
+              "source": "nominatim",
+              "query": "bonifacio",
+              "label": "Bonifacio / Bunifaziu, Sartène, South Corsica, Corsica, Metropolitan France, 20169, France"
+            }
+          ]
+        },
+        "4": {
+          "heading": "bonifacio - maddalena islands",
+          "places": [
+            {
+              "name": "bonifacio",
+              "lat": 41.3872348,
+              "lon": 9.1590609,
+              "source": "nominatim",
+              "query": "bonifacio",
+              "label": "Bonifacio / Bunifaziu, Sartène, South Corsica, Corsica, Metropolitan France, 20169, France"
+            },
+            {
+              "name": "maddalena islands",
+              "lat": 41.2392733,
+              "lon": 9.4133654,
+              "source": "nominatim",
+              "query": "maddalena islands",
+              "label": "La Maddalena, Gallura Nord-Est Sardegna, Sardinia, 07024, Italy"
+            }
+          ]
+        },
+        "5": {
+          "heading": "maddalena islands - porto cervo",
+          "places": [
+            {
+              "name": "maddalena islands",
+              "lat": 41.2392733,
+              "lon": 9.4133654,
+              "source": "nominatim",
+              "query": "maddalena islands",
+              "label": "La Maddalena, Gallura Nord-Est Sardegna, Sardinia, 07024, Italy"
+            },
+            {
+              "name": "porto cervo",
+              "lat": 41.1318983,
+              "lon": 9.5353646,
+              "source": "nominatim",
+              "query": "porto cervo",
+              "label": "Porto Cervo, Alzachèna/Arzachena, Gallura Nord-Est Sardegna, Sardinia, Italy"
+            }
+          ]
+        },
+        "6": {
+          "heading": "porto cervo - cala di volpe",
+          "places": [
+            {
+              "name": "porto cervo",
+              "lat": 41.1318983,
+              "lon": 9.5353646,
+              "source": "nominatim",
+              "query": "porto cervo",
+              "label": "Porto Cervo, Alzachèna/Arzachena, Gallura Nord-Est Sardegna, Sardinia, Italy"
+            },
+            {
+              "name": "cala di volpe",
+              "lat": 41.0945296,
+              "lon": 9.533843,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "7": {
+          "heading": "cala di volpe - porto rotondo",
+          "places": [
+            {
+              "name": "cala di volpe",
+              "lat": 41.0945296,
+              "lon": 9.533843,
+              "source": "map-pin"
+            },
+            {
+              "name": "porto rotondo",
+              "lat": 41.0283101,
+              "lon": 9.5477055,
+              "source": "nominatim",
+              "query": "porto rotondo",
+              "label": "Porto Rotondo, Olbia, Gallura Nord-Est Sardegna, Sardinia, 07026, Italy"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/cannes-to-monaco/": {
+      "title": "Cannes to Monaco",
+      "days": {
+        "1": {
+          "heading": "cannes",
+          "places": [
+            {
+              "name": "cannes",
+              "lat": 43.5391881,
+              "lon": 6.9682519,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "2": {
+          "heading": "the lerin islands",
+          "places": [
+            {
+              "name": "the lerin islands",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "3": {
+          "heading": "antibes",
+          "places": [
+            {
+              "name": "antibes",
+              "lat": 43.5804,
+              "lon": 7.1251,
+              "source": "atlas:mediterranean/france/french-riviera/antibes"
+            }
+          ]
+        },
+        "4": {
+          "heading": "nice",
+          "places": [
+            {
+              "name": "nice",
+              "lat": 43.7009358,
+              "lon": 7.2683912,
+              "source": "nominatim",
+              "query": "nice, France",
+              "label": "Nice, Maritime Alps, Provence-Alpes-Côte d'Azur, Metropolitan France, France"
+            }
+          ]
+        },
+        "5": {
+          "heading": "st jean cap ferrat",
+          "places": [
+            {
+              "name": "st jean cap ferrat",
+              "lat": 43.6899651,
+              "lon": 7.3327399,
+              "source": "nominatim",
+              "query": "st jean cap ferrat, France",
+              "label": "Saint-Jean-Cap-Ferrat, Nice, Maritime Alps, Provence-Alpes-Côte d'Azur, Metropolitan France, 06230, France"
+            }
+          ]
+        },
+        "6": {
+          "heading": "eze",
+          "places": [
+            {
+              "name": "eze",
+              "lat": 43.7278,
+              "lon": 7.3618,
+              "source": "atlas:mediterranean/france/french-riviera/eze"
+            }
+          ]
+        },
+        "7": {
+          "heading": "monaco",
+          "places": [
+            {
+              "name": "monaco",
+              "lat": 43.7378664,
+              "lon": 7.4155527,
+              "source": "map-pin"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/corfu-to-zakynthos/": {
+      "title": "corfu to zakynthos",
+      "days": {
+        "1": {
+          "heading": "corfu",
+          "places": [
+            {
+              "name": "corfu",
+              "lat": 39.6110476,
+              "lon": 19.8888994,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "2": {
+          "heading": "corfu - paxos",
+          "places": [
+            {
+              "name": "corfu",
+              "lat": 39.6110476,
+              "lon": 19.8888994,
+              "source": "map-pin"
+            },
+            {
+              "name": "paxos",
+              "lat": 39.2093982,
+              "lon": 20.1616339,
+              "source": "nominatim",
+              "query": "paxos, Corfu",
+              "label": "Paxos, Lakka, Municipality of Paxos, Corfu Regional Unit, Ioanian Islands, Peloponnese, Western Greece and the Ionian, 490 82, Greece"
+            }
+          ]
+        },
+        "3": {
+          "heading": "paxos - anti paxos - levkas",
+          "places": [
+            {
+              "name": "paxos",
+              "lat": 39.2093982,
+              "lon": 20.1616339,
+              "source": "nominatim",
+              "query": "paxos, Corfu",
+              "label": "Paxos, Lakka, Municipality of Paxos, Corfu Regional Unit, Ioanian Islands, Peloponnese, Western Greece and the Ionian, 490 82, Greece"
+            },
+            {
+              "name": "anti paxos",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            },
+            {
+              "name": "levkas",
+              "lat": 38.8333,
+              "lon": 20.7,
+              "source": "reviewed"
+            }
+          ]
+        },
+        "4": {
+          "heading": "levkas - meganissi - levkas",
+          "places": [
+            {
+              "name": "levkas",
+              "lat": 38.8333,
+              "lon": 20.7,
+              "source": "reviewed"
+            },
+            {
+              "name": "meganissi",
+              "lat": 38.6578118,
+              "lon": 20.7892758,
+              "source": "nominatim",
+              "query": "meganissi",
+              "label": "Hotel Meganissi, Κατωμέρι - Βαθύ, Community of Katomeri, Katomeri, Meganisi Municipality, Lefkada Regional Unit, Ioanian Islands, Peloponnese, Western Greece and the Ionian, 310 83, Greece"
+            }
+          ]
+        },
+        "5": {
+          "heading": "levkas - ithaca",
+          "places": [
+            {
+              "name": "levkas",
+              "lat": 38.8333,
+              "lon": 20.7,
+              "source": "reviewed"
+            },
+            {
+              "name": "ithaca",
+              "lat": 38.4,
+              "lon": 20.7167,
+              "source": "reviewed"
+            }
+          ]
+        },
+        "6": {
+          "heading": "ithaca - kefalonia",
+          "places": [
+            {
+              "name": "ithaca",
+              "lat": 38.4,
+              "lon": 20.7167,
+              "source": "reviewed"
+            },
+            {
+              "name": "kefalonia",
+              "lat": 38.25,
+              "lon": 20.55,
+              "source": "reviewed"
+            }
+          ]
+        },
+        "7": {
+          "heading": "kefalonia - zakynthos",
+          "places": [
+            {
+              "name": "kefalonia",
+              "lat": 38.25,
+              "lon": 20.55,
+              "source": "reviewed"
+            },
+            {
+              "name": "zakynthos",
+              "lat": 37.7892119,
+              "lon": 20.6416409,
+              "source": "map-pin"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/cyclades-itinerary/": {
+      "title": "Cyclades Itinerary",
+      "days": {
+        "1": {
+          "heading": "athens to kea",
+          "places": [
+            {
+              "name": "athens",
+              "lat": 37.9715,
+              "lon": 23.7258,
+              "source": "atlas:mediterranean/greece/athens"
+            },
+            {
+              "name": "kea",
+              "lat": 37.6048603,
+              "lon": 24.3274958,
+              "source": "nominatim",
+              "query": "kea",
+              "label": "Kea, Kea-Kythnos Regional Unit, South Aegean, Aegean, Greece"
+            }
+          ]
+        },
+        "2": {
+          "heading": "kea to sifnos",
+          "places": [
+            {
+              "name": "kea",
+              "lat": 37.6048603,
+              "lon": 24.3274958,
+              "source": "nominatim",
+              "query": "kea",
+              "label": "Kea, Kea-Kythnos Regional Unit, South Aegean, Aegean, Greece"
+            },
+            {
+              "name": "sifnos",
+              "lat": 36.9312277,
+              "lon": 24.7285799,
+              "source": "nominatim",
+              "query": "sifnos, The Cyclades",
+              "label": "Cyclades, Φάρος - Χρυσοπηγή, Φασολού, Community of Apollonia, Πλατύς Γιαλός, Municipality of Sifnos, Milos Regional Unit, South Aegean, Aegean, 840 03, Greece"
+            }
+          ]
+        },
+        "3": {
+          "heading": "sifnos to milos",
+          "places": [
+            {
+              "name": "sifnos",
+              "lat": 36.9312277,
+              "lon": 24.7285799,
+              "source": "nominatim",
+              "query": "sifnos, The Cyclades",
+              "label": "Cyclades, Φάρος - Χρυσοπηγή, Φασολού, Community of Apollonia, Πλατύς Γιαλός, Municipality of Sifnos, Milos Regional Unit, South Aegean, Aegean, 840 03, Greece"
+            },
+            {
+              "name": "milos",
+              "lat": 36.7333,
+              "lon": 24.4167,
+              "source": "reviewed"
+            }
+          ]
+        },
+        "4": {
+          "heading": "milos to santorini",
+          "places": [
+            {
+              "name": "milos",
+              "lat": 36.7333,
+              "lon": 24.4167,
+              "source": "reviewed"
+            },
+            {
+              "name": "santorini",
+              "lat": 36.3932,
+              "lon": 25.4615,
+              "source": "atlas:mediterranean/greece/the-cyclades/santorini"
+            }
+          ]
+        },
+        "5": {
+          "heading": "Santorini to Ios",
+          "places": [
+            {
+              "name": "Santorini",
+              "lat": 36.3932,
+              "lon": 25.4615,
+              "source": "atlas:mediterranean/greece/the-cyclades/santorini"
+            },
+            {
+              "name": "Ios",
+              "lat": 36.7173241,
+              "lon": 25.3331121,
+              "source": "nominatim",
+              "query": "Ios",
+              "label": "Ios, Thira Regional Unit, South Aegean, Aegean, 840 01, Greece"
+            }
+          ]
+        },
+        "6": {
+          "heading": "Ios to Paros",
+          "places": [
+            {
+              "name": "Ios",
+              "lat": 36.7173241,
+              "lon": 25.3331121,
+              "source": "nominatim",
+              "query": "Ios",
+              "label": "Ios, Thira Regional Unit, South Aegean, Aegean, 840 01, Greece"
+            },
+            {
+              "name": "Paros",
+              "lat": 37.0853,
+              "lon": 25.15,
+              "source": "reviewed"
+            }
+          ]
+        },
+        "7": {
+          "heading": "paros to mykonos",
+          "places": [
+            {
+              "name": "paros",
+              "lat": 37.0853,
+              "lon": 25.15,
+              "source": "reviewed"
+            },
+            {
+              "name": "mykonos",
+              "lat": 37.4467,
+              "lon": 25.3289,
+              "source": "atlas:mediterranean/greece/the-cyclades/mykonos"
+            }
+          ]
+        },
+        "8": {
+          "heading": "mykonos to athens",
+          "places": [
+            {
+              "name": "mykonos",
+              "lat": 37.4467,
+              "lon": 25.3289,
+              "source": "atlas:mediterranean/greece/the-cyclades/mykonos"
+            },
+            {
+              "name": "athens",
+              "lat": 37.9715,
+              "lon": 23.7258,
+              "source": "atlas:mediterranean/greece/athens"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/dubrovnik-to-trogir/": {
+      "title": "Dubrovnik to Trogir",
+      "days": {
+        "1": {
+          "heading": "dubrovnik",
+          "places": [
+            {
+              "name": "dubrovnik",
+              "lat": 42.6481608,
+              "lon": 18.0840907,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "2": {
+          "heading": "mljet",
+          "places": [
+            {
+              "name": "mljet",
+              "lat": 42.7459771,
+              "lon": 17.5465663,
+              "source": "nominatim",
+              "query": "mljet, Croatia",
+              "label": "Mljet, Dubrovnik-Neretva County, Croatia"
+            }
+          ]
+        },
+        "3": {
+          "heading": "vis",
+          "places": [
+            {
+              "name": "vis",
+              "lat": 43.0614,
+              "lon": 16.1833,
+              "source": "reviewed"
+            }
+          ]
+        },
+        "4": {
+          "heading": "hvar",
+          "places": [
+            {
+              "name": "hvar",
+              "lat": 43.1756,
+              "lon": 16.444,
+              "source": "atlas:mediterranean/croatia/hvar"
+            }
+          ]
+        },
+        "5": {
+          "heading": "brac",
+          "places": [
+            {
+              "name": "brac",
+              "lat": 43.3239449,
+              "lon": 16.6548451,
+              "source": "nominatim",
+              "query": "brac, Croatia",
+              "label": "Brač, Split-Dalmatia County, Croatia"
+            }
+          ]
+        },
+        "6": {
+          "heading": "split",
+          "places": [
+            {
+              "name": "split",
+              "lat": 43.5081,
+              "lon": 16.4402,
+              "source": "reviewed"
+            }
+          ]
+        },
+        "7": {
+          "heading": "trogir",
+          "places": [
+            {
+              "name": "trogir",
+              "lat": 43.5278499,
+              "lon": 16.2383224,
+              "source": "map-pin"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/gocek-to-gocek/": {
+      "title": "Gocek to Gocek",
+      "days": {
+        "1": {
+          "heading": "gocek to oraklar",
+          "places": [
+            {
+              "name": "gocek",
+              "lat": 36.7534,
+              "lon": 28.9425,
+              "source": "map-pin"
+            },
+            {
+              "name": "oraklar",
+              "lat": 36.6903,
+              "lon": 28.9364,
+              "source": "reviewed"
+            }
+          ]
+        },
+        "2": {
+          "heading": "knidos to datca",
+          "places": [
+            {
+              "name": "knidos",
+              "lat": 36.686356,
+              "lon": 27.3739492,
+              "source": "nominatim",
+              "query": "knidos, Turkey",
+              "label": "Knidos, Datça, Muğla, Aegean Region, Turkey"
+            },
+            {
+              "name": "datca",
+              "lat": 36.7263403,
+              "lon": 27.6873855,
+              "source": "nominatim",
+              "query": "datca, Turkey",
+              "label": "Datça, Muğla, Aegean Region, 48900, Turkey"
+            }
+          ]
+        },
+        "3": {
+          "heading": "datca to kadirga",
+          "places": [
+            {
+              "name": "datca",
+              "lat": 36.7263403,
+              "lon": 27.6873855,
+              "source": "nominatim",
+              "query": "datca, Turkey",
+              "label": "Datça, Muğla, Aegean Region, 48900, Turkey"
+            },
+            {
+              "name": "kadirga",
+              "lat": 36.6592,
+              "lon": 28.0642,
+              "source": "reviewed"
+            }
+          ]
+        },
+        "4": {
+          "heading": "kadirga to marmaris",
+          "places": [
+            {
+              "name": "kadirga",
+              "lat": 36.6592,
+              "lon": 28.0642,
+              "source": "reviewed"
+            },
+            {
+              "name": "marmaris",
+              "lat": 36.8157,
+              "lon": 28.2881,
+              "source": "atlas:mediterranean/turkey/marmaris"
+            }
+          ]
+        },
+        "5": {
+          "heading": "marmaris to ekincik",
+          "places": [
+            {
+              "name": "marmaris",
+              "lat": 36.8157,
+              "lon": 28.2881,
+              "source": "atlas:mediterranean/turkey/marmaris"
+            },
+            {
+              "name": "ekincik",
+              "lat": 36.8167,
+              "lon": 28.55,
+              "source": "reviewed"
+            }
+          ]
+        },
+        "6": {
+          "heading": "ekincik to gocek",
+          "places": [
+            {
+              "name": "ekincik",
+              "lat": 36.8167,
+              "lon": 28.55,
+              "source": "reviewed"
+            },
+            {
+              "name": "gocek",
+              "lat": 36.7534,
+              "lon": 28.9425,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "7": {
+          "heading": "gocek",
+          "places": [
+            {
+              "name": "gocek",
+              "lat": 36.7534,
+              "lon": 28.9425,
+              "source": "map-pin"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/naples-to-sicily/": {
+      "title": "Naples to Sicily",
+      "days": {
+        "1": {
+          "heading": "naples - ischia",
+          "places": [
+            {
+              "name": "naples",
+              "lat": 40.8539584,
+              "lon": 14.0907155,
+              "source": "map-pin"
+            },
+            {
+              "name": "ischia",
+              "lat": 40.7361,
+              "lon": 13.9555,
+              "source": "atlas:mediterranean/italy/ischia"
+            }
+          ]
+        },
+        "2": {
+          "heading": "ischia - galli islands",
+          "places": [
+            {
+              "name": "ischia",
+              "lat": 40.7361,
+              "lon": 13.9555,
+              "source": "atlas:mediterranean/italy/ischia"
+            },
+            {
+              "name": "galli islands",
+              "lat": 40.5772,
+              "lon": 14.4342,
+              "source": "reviewed"
+            }
+          ]
+        },
+        "3": {
+          "heading": "galli islands - capri",
+          "places": [
+            {
+              "name": "galli islands",
+              "lat": 40.5772,
+              "lon": 14.4342,
+              "source": "reviewed"
+            },
+            {
+              "name": "capri",
+              "lat": 40.5532,
+              "lon": 14.2222,
+              "source": "atlas:mediterranean/italy/amalfi-coast/capri"
+            }
+          ]
+        },
+        "4": {
+          "heading": "capri - maratea",
+          "places": [
+            {
+              "name": "capri",
+              "lat": 40.5532,
+              "lon": 14.2222,
+              "source": "atlas:mediterranean/italy/amalfi-coast/capri"
+            },
+            {
+              "name": "maratea",
+              "lat": 39.9942,
+              "lon": 15.7156,
+              "source": "reviewed"
+            }
+          ]
+        },
+        "5": {
+          "heading": "maratea - lipari",
+          "places": [
+            {
+              "name": "maratea",
+              "lat": 39.9942,
+              "lon": 15.7156,
+              "source": "reviewed"
+            },
+            {
+              "name": "lipari",
+              "lat": 38.48137,
+              "lon": 14.9396624,
+              "source": "nominatim",
+              "query": "lipari, Sicily",
+              "label": "Aeolian Islands, Messina, Sicily, 98055, Italy"
+            }
+          ]
+        },
+        "6": {
+          "heading": "lipari",
+          "places": [
+            {
+              "name": "lipari",
+              "lat": 38.48137,
+              "lon": 14.9396624,
+              "source": "nominatim",
+              "query": "lipari, Sicily",
+              "label": "Aeolian Islands, Messina, Sicily, 98055, Italy"
+            }
+          ]
+        },
+        "7": {
+          "heading": "lipari - taormina - sicily",
+          "places": [
+            {
+              "name": "lipari",
+              "lat": 38.48137,
+              "lon": 14.9396624,
+              "source": "nominatim",
+              "query": "lipari, Sicily",
+              "label": "Aeolian Islands, Messina, Sicily, 98055, Italy"
+            },
+            {
+              "name": "taormina",
+              "lat": 37.8512218,
+              "lon": 15.2830191,
+              "source": "nominatim",
+              "query": "taormina, Sicily",
+              "label": "Taormina, Messina, Sicily, 98039, Italy"
+            },
+            {
+              "name": "sicily",
+              "lat": 38.2681,
+              "lon": 15.2344,
+              "source": "atlas:mediterranean/italy/sicily"
+            }
+          ]
+        },
+        "8": {
+          "heading": "Taormina - Catania",
+          "places": [
+            {
+              "name": "Taormina",
+              "lat": 37.8512218,
+              "lon": 15.2830191,
+              "source": "nominatim",
+              "query": "Taormina, Sicily",
+              "label": "Taormina, Messina, Sicily, 98039, Italy"
+            },
+            {
+              "name": "Catania",
+              "lat": 37.5079,
+              "lon": 15.083,
+              "source": "reviewed"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/palma-to-cala-morell/": {
+      "title": "Palma to Cala Morell",
+      "days": {
+        "1": {
+          "heading": "palma to cabrera island",
+          "places": [
+            {
+              "name": "palma",
+              "lat": 39.5700115,
+              "lon": 2.6395556,
+              "source": "map-pin"
+            },
+            {
+              "name": "cabrera island",
+              "lat": 39.1453231,
+              "lon": 2.9466726,
+              "source": "nominatim",
+              "query": "cabrera island, Spain",
+              "label": "Cabrera, Palma de Mallorca, Palma, Balearic Islands, Spain"
+            }
+          ]
+        },
+        "2": {
+          "heading": "cabrera island to ibiza town",
+          "places": [
+            {
+              "name": "cabrera island",
+              "lat": 39.1453231,
+              "lon": 2.9466726,
+              "source": "nominatim",
+              "query": "cabrera island, Spain",
+              "label": "Cabrera, Palma de Mallorca, Palma, Balearic Islands, Spain"
+            },
+            {
+              "name": "ibiza town",
+              "lat": 38.9072784,
+              "lon": 1.4353783,
+              "source": "nominatim",
+              "query": "ibiza town, Spain",
+              "label": "Dalt Vila - Old Town Ibiza City, Carrer de Joan Roman, Dalt Vila, Ibiza, Balearic Islands, 07800, Spain"
+            }
+          ]
+        },
+        "3": {
+          "heading": "ibiza town to formentera",
+          "places": [
+            {
+              "name": "ibiza town",
+              "lat": 38.9072784,
+              "lon": 1.4353783,
+              "source": "nominatim",
+              "query": "ibiza town, Spain",
+              "label": "Dalt Vila - Old Town Ibiza City, Carrer de Joan Roman, Dalt Vila, Ibiza, Balearic Islands, 07800, Spain"
+            },
+            {
+              "name": "formentera",
+              "lat": 38.7062,
+              "lon": 1.4,
+              "source": "atlas:mediterranean/spain/the-balearics/formentera"
+            }
+          ]
+        },
+        "4": {
+          "heading": "formentera to isla es vedra",
+          "places": [
+            {
+              "name": "formentera",
+              "lat": 38.7062,
+              "lon": 1.4,
+              "source": "atlas:mediterranean/spain/the-balearics/formentera"
+            },
+            {
+              "name": "isla es vedra",
+              "lat": 38.87,
+              "lon": 1.2,
+              "source": "reviewed"
+            }
+          ]
+        },
+        "5": {
+          "heading": "isla es vedra to andraitx, mallorca",
+          "places": [
+            {
+              "name": "isla es vedra",
+              "lat": 38.87,
+              "lon": 1.2,
+              "source": "reviewed"
+            },
+            {
+              "name": "andraitx, mallorca",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "6": {
+          "heading": "to puerto soller",
+          "places": [
+            {
+              "name": "to puerto soller",
+              "lat": 39.795,
+              "lon": 2.6928,
+              "source": "reviewed"
+            }
+          ]
+        },
+        "7": {
+          "heading": "puerto soller to pollensa",
+          "places": [
+            {
+              "name": "puerto soller",
+              "lat": 39.795,
+              "lon": 2.6928,
+              "source": "reviewed"
+            },
+            {
+              "name": "pollensa",
+              "lat": 39.8792073,
+              "lon": 3.0157098,
+              "source": "nominatim",
+              "query": "pollensa, Spain",
+              "label": "Pollença, Serra de Tramuntana, Balearic Islands, Spain"
+            }
+          ]
+        },
+        "8": {
+          "heading": "pollensa to cala morell, menorca",
+          "places": [
+            {
+              "name": "pollensa",
+              "lat": 39.8792073,
+              "lon": 3.0157098,
+              "source": "nominatim",
+              "query": "pollensa, Spain",
+              "label": "Pollença, Serra de Tramuntana, Balearic Islands, Spain"
+            },
+            {
+              "name": "cala morell, menorca",
+              "lat": 40.0536371,
+              "lon": 3.8805538,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "9": {
+          "heading": "cala morell to palma, mallorca",
+          "places": [
+            {
+              "name": "cala morell",
+              "lat": 40.0536371,
+              "lon": 3.8805538,
+              "source": "map-pin"
+            },
+            {
+              "name": "palma, mallorca",
+              "lat": 39.5700115,
+              "lon": 2.6395556,
+              "source": "map-pin"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/rhodes-to-bodrum/": {
+      "title": "Rhodes to Bodrum",
+      "days": {
+        "1": {
+          "heading": "rhodes",
+          "places": [
+            {
+              "name": "rhodes",
+              "lat": 36.1677658,
+              "lon": 27.6358734,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "2": {
+          "heading": "rhodes to symi",
+          "places": [
+            {
+              "name": "rhodes",
+              "lat": 36.1677658,
+              "lon": 27.6358734,
+              "source": "map-pin"
+            },
+            {
+              "name": "symi",
+              "lat": 36.5904011,
+              "lon": 27.8411975,
+              "source": "nominatim",
+              "query": "symi",
+              "label": "Symi, Pedi, Municipality of Symi, Rhodes Regional Unit, South Aegean, Aegean, 856 00, Greece"
+            }
+          ]
+        },
+        "3": {
+          "heading": "symi to arki",
+          "places": [
+            {
+              "name": "symi",
+              "lat": 36.5904011,
+              "lon": 27.8411975,
+              "source": "nominatim",
+              "query": "symi",
+              "label": "Symi, Pedi, Municipality of Symi, Rhodes Regional Unit, South Aegean, Aegean, 856 00, Greece"
+            },
+            {
+              "name": "arki",
+              "lat": 37.38,
+              "lon": 26.74,
+              "source": "reviewed"
+            }
+          ]
+        },
+        "4": {
+          "heading": "arki to lipsi",
+          "places": [
+            {
+              "name": "arki",
+              "lat": 37.38,
+              "lon": 26.74,
+              "source": "reviewed"
+            },
+            {
+              "name": "lipsi",
+              "lat": 37.2955537,
+              "lon": 26.7687298,
+              "source": "nominatim",
+              "query": "lipsi",
+              "label": "Lipsi Municipality, Kalymnos Regional Unit, South Aegean, Aegean, Greece"
+            }
+          ]
+        },
+        "5": {
+          "heading": "lipsi to patmos",
+          "places": [
+            {
+              "name": "lipsi",
+              "lat": 37.2955537,
+              "lon": 26.7687298,
+              "source": "nominatim",
+              "query": "lipsi",
+              "label": "Lipsi Municipality, Kalymnos Regional Unit, South Aegean, Aegean, Greece"
+            },
+            {
+              "name": "patmos",
+              "lat": 37.3867725,
+              "lon": 26.7341062,
+              "source": "nominatim",
+              "query": "patmos",
+              "label": "Patmos Municipality, Kalymnos Regional Unit, South Aegean, Aegean, 855 00, Greece"
+            }
+          ]
+        },
+        "6": {
+          "heading": "patmos to kos",
+          "places": [
+            {
+              "name": "patmos",
+              "lat": 37.3867725,
+              "lon": 26.7341062,
+              "source": "nominatim",
+              "query": "patmos",
+              "label": "Patmos Municipality, Kalymnos Regional Unit, South Aegean, Aegean, 855 00, Greece"
+            },
+            {
+              "name": "kos",
+              "lat": 36.8853544,
+              "lon": 27.2476021,
+              "source": "nominatim",
+              "query": "kos, The Dodecanese",
+              "label": "DODECANESE TRAVEL SERVICE, Κώ - Κέφαλου, Πελαργός, Kos, Municipality of Kos, Kos Regional Unit, South Aegean, Aegean, 853 00, Greece"
+            }
+          ]
+        },
+        "7": {
+          "heading": "kos to bodrum",
+          "places": [
+            {
+              "name": "kos",
+              "lat": 36.8853544,
+              "lon": 27.2476021,
+              "source": "nominatim",
+              "query": "kos, The Dodecanese",
+              "label": "DODECANESE TRAVEL SERVICE, Κώ - Κέφαλου, Πελαργός, Kos, Municipality of Kos, Kos Regional Unit, South Aegean, Aegean, 853 00, Greece"
+            },
+            {
+              "name": "bodrum",
+              "lat": 37.0358229,
+              "lon": 27.3921743,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "8": {
+          "heading": "bodrum",
+          "places": [
+            {
+              "name": "bodrum",
+              "lat": 37.0358229,
+              "lon": 27.3921743,
+              "source": "map-pin"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/rome-to-naples/": {
+      "title": "Rome to Naples",
+      "days": {
+        "1": {
+          "heading": "rome",
+          "places": [
+            {
+              "name": "rome",
+              "lat": 41.9102088,
+              "lon": 12.3711919,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "2": {
+          "heading": "ponza",
+          "places": [
+            {
+              "name": "ponza",
+              "lat": 40.8932368,
+              "lon": 12.9630622,
+              "source": "nominatim",
+              "query": "ponza, Italy",
+              "label": "Ponza, Latina, Lazio, Italy"
+            }
+          ]
+        },
+        "3": {
+          "heading": "ischia",
+          "places": [
+            {
+              "name": "ischia",
+              "lat": 40.7361,
+              "lon": 13.9555,
+              "source": "atlas:mediterranean/italy/ischia"
+            }
+          ]
+        },
+        "4": {
+          "heading": "capri",
+          "places": [
+            {
+              "name": "capri",
+              "lat": 40.5532,
+              "lon": 14.2222,
+              "source": "atlas:mediterranean/italy/amalfi-coast/capri"
+            }
+          ]
+        },
+        "5": {
+          "heading": "amalfi",
+          "places": [
+            {
+              "name": "amalfi",
+              "lat": 40.634,
+              "lon": 14.6027,
+              "source": "atlas:mediterranean/italy/amalfi-coast/amalfi"
+            }
+          ]
+        },
+        "6": {
+          "heading": "sorrento",
+          "places": [
+            {
+              "name": "sorrento",
+              "lat": 40.624906,
+              "lon": 14.374836,
+              "source": "nominatim",
+              "query": "sorrento, Italy",
+              "label": "Sorrento, Naples, Campania, 80067, Italy"
+            }
+          ]
+        },
+        "7": {
+          "heading": "naples",
+          "places": [
+            {
+              "name": "naples",
+              "lat": 40.8539584,
+              "lon": 14.0907155,
+              "source": "map-pin"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/north-america/new-england/": {
+      "title": "New England",
+      "days": {
+        "1": {
+          "heading": "newport",
+          "places": [
+            {
+              "name": "newport",
+              "lat": 41.5046524,
+              "lon": -71.3213828,
+              "source": "nominatim",
+              "query": "newport, New England",
+              "label": "Naval Health Clinic New England, 43, Smith Road, Newport, Newport County, Rhode Island, 02840, United States"
+            }
+          ]
+        },
+        "2": {
+          "heading": "edgartown",
+          "places": [
+            {
+              "name": "edgartown",
+              "lat": 41.3930256,
+              "lon": -70.6034012,
+              "source": "nominatim",
+              "query": "edgartown, New England",
+              "label": "Supply New England, 25, East Line Road, Edgartown, Dukes County, Massachusetts, 02539, United States"
+            }
+          ]
+        },
+        "3": {
+          "heading": "nantucket",
+          "places": [
+            {
+              "name": "nantucket",
+              "lat": 39.9342867,
+              "lon": -82.7427263,
+              "source": "nominatim",
+              "query": "nantucket, New England",
+              "label": "Nantucket Avenue Northwest, New England Estates, Violet Township, Fairfield County, Ohio, 43147, United States"
+            }
+          ]
+        },
+        "4": {
+          "heading": "hyannis",
+          "places": [
+            {
+              "name": "hyannis",
+              "lat": 41.6475248,
+              "lon": -70.3040216,
+              "source": "nominatim",
+              "query": "hyannis, New England",
+              "label": "New England Pizza Haus, 187, West Main Street, Hyannis, Barnstable, Barnstable County, Massachusetts, 02601, United States"
+            }
+          ]
+        },
+        "5": {
+          "heading": "vineyard haven",
+          "places": [
+            {
+              "name": "vineyard haven",
+              "lat": 35.4620428,
+              "lon": -81.482705,
+              "source": "nominatim",
+              "query": "vineyard haven, North America",
+              "label": "Farm Haven Vineyard and Event Venue, 168, Latham Wilson Road, Lawndale, Cleveland County, North Carolina, 28090, United States",
+              "flag": "near the edge of the itinerary's area (1139 km)"
+            }
+          ]
+        },
+        "6": {
+          "heading": "block island",
+          "places": [
+            {
+              "name": "block island",
+              "lat": 41.660934,
+              "lon": -71.5526448,
+              "source": "nominatim",
+              "query": "block island, New England",
+              "label": "H&R Block, Centre of New England Boulevard, Centre Of New England, Coventry, Kent County, Rhode Island, 02816, United States"
+            }
+          ]
+        },
+        "7": {
+          "heading": "newport",
+          "places": [
+            {
+              "name": "newport",
+              "lat": 41.5046524,
+              "lon": -71.3213828,
+              "source": "nominatim",
+              "query": "newport, New England",
+              "label": "Naval Health Clinic New England, 43, Smith Road, Newport, Newport County, Rhode Island, 02840, United States"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/north-america/sitka-to-juneau-alaska/": {
+      "title": "Sitka to Juneau, Alaska",
+      "days": {
+        "1": {
+          "heading": "sitka to appleton cove",
+          "places": [
+            {
+              "name": "sitka",
+              "lat": 57.0934675,
+              "lon": -135.3111146,
+              "source": "map-pin"
+            },
+            {
+              "name": "appleton cove",
+              "lat": 57.4716667,
+              "lon": -135.2780556,
+              "source": "nominatim",
+              "query": "appleton cove, Alaska",
+              "label": "Appleton Cove, Sitka, Alaska, United States"
+            }
+          ]
+        },
+        "2": {
+          "heading": "appleton cove to sitkoh bay",
+          "places": [
+            {
+              "name": "appleton cove",
+              "lat": 57.4716667,
+              "lon": -135.2780556,
+              "source": "nominatim",
+              "query": "appleton cove, Alaska",
+              "label": "Appleton Cove, Sitka, Alaska, United States"
+            },
+            {
+              "name": "sitkoh bay",
+              "lat": 57.5063889,
+              "lon": -134.9222222,
+              "source": "nominatim",
+              "query": "sitkoh bay, Alaska",
+              "label": "Sitkoh Bay, Sitka, Alaska, United States"
+            }
+          ]
+        },
+        "3": {
+          "heading": "banarof island",
+          "places": [
+            {
+              "name": "banarof island",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "4": {
+          "heading": "frederick sound",
+          "places": [
+            {
+              "name": "frederick sound",
+              "lat": 57.1766667,
+              "lon": -133.9063889,
+              "source": "nominatim",
+              "query": "frederick sound, Alaska",
+              "label": "Frederick Sound, Unorganized Borough, Alaska, United States"
+            }
+          ]
+        },
+        "5": {
+          "heading": "pleasant bay",
+          "places": [
+            {
+              "name": "pleasant bay",
+              "lat": 57.6405556,
+              "lon": -133.9941667,
+              "source": "nominatim",
+              "query": "pleasant bay, Alaska",
+              "label": "Pleasant Bay, Unorganized Borough, Alaska, United States"
+            }
+          ]
+        },
+        "6": {
+          "heading": "pleasant bay to tracy arm",
+          "places": [
+            {
+              "name": "pleasant bay",
+              "lat": 57.6405556,
+              "lon": -133.9941667,
+              "source": "nominatim",
+              "query": "pleasant bay, Alaska",
+              "label": "Pleasant Bay, Unorganized Borough, Alaska, United States"
+            },
+            {
+              "name": "tracy arm",
+              "lat": 57.9113889,
+              "lon": -133.4022222,
+              "source": "nominatim",
+              "query": "tracy arm, Alaska",
+              "label": "Tracy Arm, Unorganized Borough, Alaska, United States"
+            }
+          ]
+        },
+        "7": {
+          "heading": "tracy arm",
+          "places": [
+            {
+              "name": "tracy arm",
+              "lat": 57.9113889,
+              "lon": -133.4022222,
+              "source": "nominatim",
+              "query": "tracy arm, Alaska",
+              "label": "Tracy Arm, Unorganized Borough, Alaska, United States"
+            }
+          ]
+        },
+        "8": {
+          "heading": "taku to juneau",
+          "places": [
+            {
+              "name": "taku",
+              "lat": 58.2956853,
+              "lon": -134.3992306,
+              "source": "nominatim",
+              "query": "taku, Alaska",
+              "label": "Taku, South Franklin Street, Downtown, Juneau, Alaska, 99824, United States"
+            },
+            {
+              "name": "juneau",
+              "lat": 58.280835,
+              "lon": -134.5200039,
+              "source": "map-pin"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/north-america/the-florida-keys/": {
+      "title": "The Florida Keys",
+      "days": {
+        "1": {
+          "heading": "biscayne bay & south beach",
+          "places": [
+            {
+              "name": "biscayne bay",
+              "lat": 25.8565324,
+              "lon": -80.2316344,
+              "source": "map-pin"
+            },
+            {
+              "name": "south beach",
+              "lat": 25.7744291,
+              "lon": -80.1332415,
+              "source": "nominatim",
+              "query": "south beach, Florida",
+              "label": "South Beach, Miami Beach, Miami-Dade County, Florida, 33139, United States"
+            }
+          ]
+        },
+        "2": {
+          "heading": "the keys",
+          "places": [
+            {
+              "name": "the keys",
+              "lat": 24.6736205,
+              "lon": -81.4981792,
+              "source": "nominatim",
+              "query": "the keys, Florida",
+              "label": "Florida Keys, Monroe County, Florida, United States"
+            }
+          ]
+        },
+        "3": {
+          "heading": "key largo",
+          "places": [
+            {
+              "name": "key largo",
+              "lat": 25.091338,
+              "lon": -80.4677741,
+              "source": "nominatim",
+              "query": "key largo, Florida",
+              "label": "Key Largo, Monroe County, Florida, United States"
+            }
+          ]
+        },
+        "4": {
+          "heading": "key west",
+          "places": [
+            {
+              "name": "key west",
+              "lat": 24.5645887,
+              "lon": -81.7650512,
+              "source": "nominatim",
+              "query": "key west, Florida",
+              "label": "Key West, Monroe County, Florida, United States"
+            }
+          ]
+        },
+        "5": {
+          "heading": "the marquesas keys",
+          "places": [
+            {
+              "name": "the marquesas keys",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "6": {
+          "heading": "the keys",
+          "places": [
+            {
+              "name": "the keys",
+              "lat": 24.6736205,
+              "lon": -81.4981792,
+              "source": "nominatim",
+              "query": "the keys, Florida",
+              "label": "Florida Keys, Monroe County, Florida, United States"
+            }
+          ]
+        },
+        "7": {
+          "heading": "miami",
+          "places": [
+            {
+              "name": "miami",
+              "lat": 25.7741566,
+              "lon": -80.1935973,
+              "source": "nominatim",
+              "query": "miami, Florida",
+              "label": "Miami, Miami-Dade County, Florida, United States"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/northern-europe/stavanger-to-bergen/": {
+      "title": "Stavanger to Bergen",
+      "days": {
+        "1": {
+          "heading": "lysefjorden",
+          "places": [
+            {
+              "name": "lysefjorden",
+              "lat": 60.2006761,
+              "lon": 5.3046797,
+              "source": "nominatim",
+              "query": "lysefjorden, Norway",
+              "label": "Lysefjorden, Bjørnafjorden, Vestland, Norway"
+            }
+          ]
+        },
+        "2": {
+          "heading": "vagen to rosendal",
+          "places": [
+            {
+              "name": "vagen",
+              "lat": 60.3981404,
+              "lon": 5.3166647,
+              "source": "nominatim",
+              "query": "vagen, Norway",
+              "label": "Vågen, Skuteviken, Bergenhus, Bergen, Vestland, Norway"
+            },
+            {
+              "name": "rosendal",
+              "lat": 59.9869792,
+              "lon": 6.0067979,
+              "source": "nominatim",
+              "query": "rosendal, Norway",
+              "label": "Rosendal, Kvinnherad, Vestland, 5470, Norway"
+            }
+          ]
+        },
+        "4": {
+          "heading": "rosendal",
+          "places": [
+            {
+              "name": "rosendal",
+              "lat": 59.9869792,
+              "lon": 6.0067979,
+              "source": "nominatim",
+              "query": "rosendal, Norway",
+              "label": "Rosendal, Kvinnherad, Vestland, 5470, Norway"
+            }
+          ]
+        },
+        "5": {
+          "heading": "utne to ulvik",
+          "places": [
+            {
+              "name": "utne",
+              "lat": 60.4227624,
+              "lon": 6.6245927,
+              "source": "nominatim",
+              "query": "utne, Norway",
+              "label": "Utne, Ullensvang, Vestland, 5778, Norway"
+            },
+            {
+              "name": "ulvik",
+              "lat": 60.5677975,
+              "lon": 6.9165306,
+              "source": "nominatim",
+              "query": "ulvik, Norway",
+              "label": "Ulvik, Vestland, 5730, Norway"
+            }
+          ]
+        },
+        "6": {
+          "heading": "bergen",
+          "places": [
+            {
+              "name": "bergen",
+              "lat": 60.3651176,
+              "lon": 5.0995516,
+              "source": "map-pin"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/south-america/patagonia-itinerary/": {
+      "title": "Patagonia Itinerary",
+      "days": {
+        "1": {
+          "heading": "puerto montt to tic toc bay",
+          "places": [
+            {
+              "name": "puerto montt",
+              "lat": -41.4836123,
+              "lon": -72.8476067,
+              "source": "nominatim",
+              "query": "puerto montt, Patagonia",
+              "label": "Patagonia, Carretera Austral, Santa Filomena, Coihuín, Puerto Montt, Provincia de Llanquihue, Los Lagos Region, 5480001, Chile"
+            },
+            {
+              "name": "tic toc bay",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "3": {
+          "heading": "auchemo bay",
+          "places": [
+            {
+              "name": "auchemo bay",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "4": {
+          "heading": "piti palena fjord",
+          "places": [
+            {
+              "name": "piti palena fjord",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "5": {
+          "heading": "guateca archipelago",
+          "places": [
+            {
+              "name": "guateca archipelago",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "7": {
+          "heading": "chonos archipelago",
+          "places": [
+            {
+              "name": "chonos archipelago",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/south-pacific/bay-of-islands/": {
+      "title": "Bay of Islands",
+      "days": {
+        "1": {
+          "heading": "auckland to coromandel",
+          "places": [
+            {
+              "name": "auckland",
+              "lat": -36.8594224,
+              "lon": 174.5413154,
+              "source": "map-pin"
+            },
+            {
+              "name": "coromandel",
+              "lat": -36.7601611,
+              "lon": 175.4972742,
+              "source": "nominatim",
+              "query": "coromandel, New Zealand",
+              "label": "Coromandel, Thames-Coromandel District, Waikato, 3543, New Zealand"
+            }
+          ]
+        },
+        "2": {
+          "heading": "opito bay to port charles",
+          "places": [
+            {
+              "name": "opito bay",
+              "lat": -35.2639553,
+              "lon": 174.1530859,
+              "source": "nominatim",
+              "query": "opito bay, New Zealand",
+              "label": "Ōpito Bay, Bay of Islands, Far North District, Northland, 0272, New Zealand"
+            },
+            {
+              "name": "port charles",
+              "lat": -36.517028,
+              "lon": 175.462611,
+              "source": "nominatim",
+              "query": "port charles, New Zealand",
+              "label": "Port Charles, Waikato, New Zealand"
+            }
+          ]
+        },
+        "3": {
+          "heading": "broken islands to port fitzroy",
+          "places": [
+            {
+              "name": "broken islands",
+              "lat": -36.2220197,
+              "lon": 175.3008576,
+              "source": "nominatim",
+              "query": "broken islands, New Zealand",
+              "label": "Broken Islands / Pig Islands, Aotea Great Barrier, Auckland, New Zealand"
+            },
+            {
+              "name": "port fitzroy",
+              "lat": -36.1638478,
+              "lon": 175.3637436,
+              "source": "nominatim",
+              "query": "port fitzroy, New Zealand",
+              "label": "Port Fitzroy, Aotea Great Barrier, Auckland, New Zealand"
+            }
+          ]
+        },
+        "4": {
+          "heading": "port fitzroy to great barrier islands",
+          "places": [
+            {
+              "name": "port fitzroy",
+              "lat": -36.1638478,
+              "lon": 175.3637436,
+              "source": "nominatim",
+              "query": "port fitzroy, New Zealand",
+              "label": "Port Fitzroy, Aotea Great Barrier, Auckland, New Zealand"
+            },
+            {
+              "name": "great barrier islands",
+              "lat": -36.1994214,
+              "lon": 175.4172916,
+              "source": "nominatim",
+              "query": "great barrier islands, New Zealand",
+              "label": "Great Barrier Island, Auckland, 0991, New Zealand"
+            }
+          ]
+        },
+        "5": {
+          "heading": "the poor knights islands",
+          "places": [
+            {
+              "name": "the poor knights islands",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "6": {
+          "heading": "bay of islands",
+          "places": [
+            {
+              "name": "bay of islands",
+              "lat": -35.2550085,
+              "lon": 174.1626731,
+              "source": "nominatim",
+              "query": "bay of islands, New Zealand",
+              "label": "Bay of Islands, Far North District, Northland, 0247, New Zealand"
+            }
+          ]
+        },
+        "7": {
+          "heading": "robertson island to russell island",
+          "places": [
+            {
+              "name": "robertson island",
+              "lat": -47.154992,
+              "lon": 167.7878661,
+              "source": "nominatim-far",
+              "query": "robertson island, New Zealand",
+              "label": "Robertson River, Stewart Island / Rakiura Community, Southland District, Southland, New Zealand",
+              "flag": "not drawn — 1332 km from the itinerary's map pins; correct it here to draw it"
+            },
+            {
+              "name": "russell island",
+              "lat": -41.319247,
+              "lon": 174.780436,
+              "source": "nominatim",
+              "query": "russell island, New Zealand",
+              "label": "Russell Terrace at Te Wharepouri Street, Russell Terrace, Berhampore, Wellington, Wellington City, Wellington, 6242, New Zealand"
+            }
+          ]
+        },
+        "8": {
+          "heading": "kerikeri",
+          "places": [
+            {
+              "name": "kerikeri",
+              "lat": -35.4691075,
+              "lon": 173.853186,
+              "source": "map-pin"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/south-pacific/fiji-itinerary/": {
+      "title": "Fiji Itinerary",
+      "days": {
+        "1": {
+          "heading": "denarau marina to the mamanuca islands",
+          "places": [
+            {
+              "name": "denarau marina",
+              "lat": -17.7727161,
+              "lon": 177.3817175,
+              "source": "nominatim",
+              "query": "denarau marina, Fiji",
+              "label": "Port Denarau Marina, Paradise Point, Nadi, Ba, Western, Fiji"
+            },
+            {
+              "name": "the mamanuca islands",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "2": {
+          "heading": "malolo and tavarua islands",
+          "places": [
+            {
+              "name": "malolo",
+              "lat": -17.7963235,
+              "lon": 177.4170827,
+              "source": "nominatim",
+              "query": "malolo, Fiji",
+              "label": "Malolo, Queens Road, Namotomoto Village, Ba, Western, Fiji"
+            },
+            {
+              "name": "tavarua islands",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "3": {
+          "heading": "navadra and vanua islands",
+          "places": [
+            {
+              "name": "navadra",
+              "lat": -17.4547705,
+              "lon": 177.0522078,
+              "source": "nominatim",
+              "query": "navadra, Fiji",
+              "label": "Navadra, Nadroga-Navosa, Western, Fiji"
+            },
+            {
+              "name": "vanua islands",
+              "lat": -16.5788332,
+              "lon": 179.1930927,
+              "source": "nominatim",
+              "query": "vanua islands, Fiji",
+              "label": "Vanua Levu, Northern, Fiji"
+            }
+          ]
+        },
+        "4": {
+          "heading": "naviti island",
+          "places": [
+            {
+              "name": "naviti island",
+              "lat": -17.1163891,
+              "lon": 177.2407025,
+              "source": "nominatim",
+              "query": "naviti island, Fiji",
+              "label": "Naviti Island, Muaira, Ba, Western, Fiji"
+            }
+          ]
+        },
+        "5": {
+          "heading": "the blue lagoon",
+          "places": [
+            {
+              "name": "the blue lagoon",
+              "lat": -21.0364917,
+              "lon": 149.1831342,
+              "source": "nominatim-far",
+              "query": "the blue lagoon",
+              "label": "The Blue Lagoon, Dolphin Heads, Mackay, Queensland, 4740, Australia",
+              "flag": "not drawn — 3048 km from the itinerary's map pins; correct it here to draw it"
+            }
+          ]
+        },
+        "6": {
+          "heading": "yasawa island and champagne beach",
+          "places": [
+            {
+              "name": "yasawa island",
+              "lat": -16.7704523,
+              "lon": 177.5275618,
+              "source": "nominatim",
+              "query": "yasawa island, Fiji",
+              "label": "Yasawa Island, Bukama, Ba, Western, Fiji"
+            },
+            {
+              "name": "champagne beach",
+              "lat": -15.1435167,
+              "lon": 167.1194587,
+              "source": "nominatim-far",
+              "query": "champagne beach",
+              "label": "Champagne Beach, Sanma, Vanuatu",
+              "flag": "not drawn — 1202 km from the itinerary's map pins; correct it here to draw it"
+            }
+          ]
+        },
+        "7": {
+          "heading": "island hopping",
+          "places": [
+            {
+              "name": "island hopping",
+              "lat": 7.0775982,
+              "lon": 125.6020795,
+              "source": "nominatim-far",
+              "query": "island hopping",
+              "label": "Roshaimy Samal Island Hopping, Lopez Jaena Street, Brokenshire Heights, Barangay 8-A, Poblacion District, Davao City, Davao Region, 8000, Philippines",
+              "flag": "not drawn — 6385 km from the itinerary's map pins; correct it here to draw it"
+            }
+          ]
+        },
+        "9": {
+          "heading": "vomo island",
+          "places": [
+            {
+              "name": "vomo island",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "10": {
+          "heading": "namotu island",
+          "places": [
+            {
+              "name": "namotu island",
+              "lat": -17.84417,
+              "lon": 177.1833865,
+              "source": "nominatim",
+              "query": "namotu island, Fiji",
+              "label": "Namotu Island, Nadroga-Navosa, Western, Fiji"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
