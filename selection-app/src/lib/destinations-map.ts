@@ -1,5 +1,5 @@
 /**
- * Tier 2 draft → AtlasPageConfig: what PREVIEW renders and PUBLISH freezes.
+ * Tier 2 draft → DestinationsPageConfig: what PREVIEW renders and PUBLISH freezes.
  * Yachts go through the Tier 3 mapping (mapDraftYacht) so the Yachtfolio
  * facts, the 16:10 image slots and the price maths are identical across
  * tiers; the destination blocks and the surrounding Atlas pins are resolved
@@ -7,7 +7,7 @@
  * the website, the Atlas or Yachtfolio do.
  */
 
-import type { AtlasBlock, AtlasPageConfig, AtlasPageDestination, AtlasPageYacht } from "./types";
+import type { AtlasBlock, DestinationsPageConfig, DestinationsPageDestination, DestinationsPageYacht } from "./types";
 import type { ContentBlock, Tier2Draft, Tier2DraftYacht } from "./portal-types";
 import { TIER2_DEFAULT_DISCLAIMER, TIER2_DEFAULT_SECTIONS, TIER2_DEFAULT_VAT_TEXT, TIER2_MAX_YACHTS, TIER2_MIN_YACHTS, tier2VatPctFromText } from "./portal-types";
 import { CAMPAIGN_ATLAS_URL, mapDraftYacht, mapItineraryLinks } from "./portal-map";
@@ -16,7 +16,7 @@ import { slugify } from "@/server/yachtfolio/normalise.mjs";
 /** What the mapping needs from the Atlas for the chosen destinations. */
 export interface AtlasResolution {
   destinations: Record<string, { name: string; lat: number; lon: number; guideUrl: string }>;
-  otherPins: AtlasPageConfig["otherPins"];
+  otherPins: DestinationsPageConfig["otherPins"];
 }
 
 const str = (v: string | undefined | null): string | undefined => {
@@ -33,7 +33,7 @@ export function chosenDestinationIds(draft: Tier2Draft): string[] {
   return draft.destinations.map((d) => d.destinationId).filter((id): id is string => Boolean(id));
 }
 
-export function mapTier2Yacht(y: Tier2DraftYacht, validDestinationIds: Set<string>): AtlasPageYacht | null {
+export function mapTier2Yacht(y: Tier2DraftYacht, validDestinationIds: Set<string>): DestinationsPageYacht | null {
   // VAT is a percentage on both tiers: the shared mapping turns it into an
   // amount and folds it into the total, so the rail card, the drawer and the
   // comparison grid read as they do on Tier 3. A yacht whose VAT was typed as
@@ -51,8 +51,8 @@ export function mapTier2Yacht(y: Tier2DraftYacht, validDestinationIds: Set<strin
   };
 }
 
-export function tier2DraftToConfig(draft: Tier2Draft, slug: string, atlas: AtlasResolution): AtlasPageConfig {
-  const destinations: AtlasPageDestination[] = [];
+export function tier2DraftToConfig(draft: Tier2Draft, slug: string, atlas: AtlasResolution): DestinationsPageConfig {
+  const destinations: DestinationsPageDestination[] = [];
   for (const d of draft.destinations) {
     if (!d.destinationId) continue;
     const geo = atlas.destinations[d.destinationId];
@@ -75,7 +75,7 @@ export function tier2DraftToConfig(draft: Tier2Draft, slug: string, atlas: Atlas
   const yachts = draft.yachts
     .slice(0, TIER2_MAX_YACHTS)
     .map((y) => mapTier2Yacht(y, valid))
-    .filter((y): y is AtlasPageYacht => y !== null);
+    .filter((y): y is DestinationsPageYacht => y !== null);
   const seasonEyebrow = str(draft.seasonNote?.eyebrow);
   const seasonBody = str(draft.seasonNote?.body);
   return {
@@ -122,7 +122,7 @@ export function tier2DraftToConfig(draft: Tier2Draft, slug: string, atlas: Atlas
  * keeps whatever was typed into it.
  */
 export function tier2SlugBase(draft: Tier2Draft): string {
-  return slugify(draft.slug || "") || suggestTier2Slug(draft.clientNames ?? "") || `atlas-${draft.id.slice(0, 8)}`;
+  return slugify(draft.slug || "") || suggestTier2Slug(draft.clientNames ?? "") || `destinations-${draft.id.slice(0, 8)}`;
 }
 
 /** Slug built from a client name: "Mr and Mrs Harrington" → "harrington-summer-2027". */

@@ -71,7 +71,7 @@ ENQUIRE links out to the website's enquiry form; the page carries meta tags
 only (title, description, Open Graph image, canonical) and no analytics.
 
 
-## Tier 2 production page (`selection-app/` → `/atlas/<slug>`)
+## Tier 2 production page (`selection-app/` → `/destinations/<slug>`)
 
 The Personalised Atlas is the 2027 Atlas for one client: the consultant chooses three
 destinations and a shortlist of two to 10 yachts in the Charter Portal (choose
@@ -98,7 +98,7 @@ to `true` restores the original globe with no other change and no republishing �
   selection; pages published before the card existed carry none. On the light
   theme the header and the foot stay dark, as on the Yacht Selection page.
 - Without `YACHTFOLIO_PASSKEY` the fleet is served from a six-yacht demo set, and
-  `/atlas/harrington-summer-2027` renders the demo page (`DEMO_PAGES=false` disables it).
+  `/destinations/harrington-summer-2027` renders the demo page (`DEMO_PAGES=false` disables it).
 
 See `selection-app/docs/tier2-build-report.md` for the modules reused, the globe API
 adaptations, the destination ids and a sample page config.
@@ -148,7 +148,7 @@ signed-in user sees every selection, no route checks ownership, selections
 are found by id through `portal/selection-locations.json`, and a selection
 with no consultant publishes with the block frozen in its draft. Set
 `CONSULTANT_SCOPING=on` to enable scoping. Client pages resolve the consultant
-live: every render of `/selection/<slug>` or `/atlas/<slug>` reads the
+live: every render of `/selection/<slug>` or `/destinations/<slug>` reads the
 current record (`src/server/consultant-render.ts`). An inactive consultant's
 page carries no contact block at all. Publishing is blocked while the
 selection's consultant has no phone number. The import page also carries a

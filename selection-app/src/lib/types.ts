@@ -161,7 +161,7 @@ export interface AtlasBlock {
 }
 
 /** One of the three chosen destinations, resolved from the Atlas at publish time. */
-export interface AtlasPageDestination {
+export interface DestinationsPageDestination {
   /** Tier 1 destination id, e.g. "mediterranean/italy/amalfi-coast" */
   id: string;
   name: string;
@@ -182,7 +182,7 @@ export interface AtlasPageDestination {
  * A Tier 2 yacht: the Tier 3 yacht (frozen Yachtfolio facts, with keyFeatures
  * as the drawer highlights) plus rail and drawer fields.
  */
-export interface AtlasPageYacht extends Yacht {
+export interface DestinationsPageYacht extends Yacht {
   destinationIds: string[];
   /** One line, rendered signed with the consultant's first name */
   consultantNote?: string;
@@ -191,7 +191,7 @@ export interface AtlasPageYacht extends Yacht {
 }
 
 /** Every other Atlas destination, pinned dim on the globe; frozen at publish. */
-export interface AtlasPagePin {
+export interface DestinationsPagePin {
   id: string;
   name: string;
   lat: number;
@@ -199,7 +199,7 @@ export interface AtlasPagePin {
 }
 
 /** The optional sections of a Tier 2 page: the same set as a Tier 3 page. */
-export interface AtlasPageSections {
+export interface DestinationsPageSections {
   costs: boolean;
   itinerary: boolean;
   /** Up to MAX_ITINERARY_LINKS itinerary buttons, in the consultant's order */
@@ -207,7 +207,7 @@ export interface AtlasPageSections {
   compare: boolean;
 }
 
-export interface AtlasPageConfig {
+export interface DestinationsPageConfig {
   tier: 2;
   slug: string;
   clientNames: string;
@@ -215,14 +215,14 @@ export interface AtlasPageConfig {
   introNote: string;
   seasonNote?: { eyebrow: string; body: string };
   footerDisclaimer: string;
-  destinations: AtlasPageDestination[];
-  yachts: AtlasPageYacht[];
-  otherPins: AtlasPagePin[];
+  destinations: DestinationsPageDestination[];
+  yachts: DestinationsPageYacht[];
+  otherPins: DestinationsPagePin[];
   /**
    * Absent on pages published before the Tier 2 form had a Page Sections
    * card: those pages carry neither section, exactly as they were published.
    */
-  sections?: AtlasPageSections;
+  sections?: DestinationsPageSections;
   /** Colour theme; absent means dark */
   theme?: PageTheme;
   /** Null when the consultant is inactive: no contact block, no signatures, no "ask" button */
@@ -233,8 +233,8 @@ export interface AtlasPageConfig {
   contentSources?: Record<string, "live" | "cache">;
 }
 
-export type AnyPageConfig = PageConfig | AtlasPageConfig;
+export type AnyPageConfig = PageConfig | DestinationsPageConfig;
 
-export function isAtlasPageConfig(c: AnyPageConfig | null | undefined): c is AtlasPageConfig {
-  return (c as AtlasPageConfig | undefined)?.tier === 2;
+export function isDestinationsPageConfig(c: AnyPageConfig | null | undefined): c is DestinationsPageConfig {
+  return (c as DestinationsPageConfig | undefined)?.tier === 2;
 }

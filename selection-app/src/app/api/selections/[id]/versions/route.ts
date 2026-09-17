@@ -28,7 +28,7 @@ export async function POST(request: NextRequest, { params }: Params) {
     if (!session.ok) return session.response;
     const result = await rollbackSelection(selectionAccess(session), id, body?.version);
     revalidatePath(`/selection/${result.slug}`);
-    revalidatePath(`/atlas/${result.slug}`);
+    revalidatePath(`/destinations/${result.slug}`);
     return NextResponse.json(result);
   } catch (err) {
     return errorResponse(err);

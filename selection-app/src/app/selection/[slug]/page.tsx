@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { PageConfig } from "@/lib/types";
-import { isAtlasPageConfig } from "@/lib/types";
+import { isDestinationsPageConfig } from "@/lib/types";
 import SelectionPage from "@/components/SelectionPage";
 import HoldingPage from "@/components/HoldingPage";
 import { getPublishedPage } from "@/server/pages.mjs";
@@ -41,8 +41,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
     noteStorageError(`read published page ${slug}`, err);
     return <HoldingPage />;
   }
-  // Tier 2 pages live at /atlas/<slug>.
-  if (!published?.config || isAtlasPageConfig(published.config) || published.config.yachts.length === 0) notFound();
+  // Tier 2 pages live at /destinations/<slug>.
+  if (!published?.config || isDestinationsPageConfig(published.config) || published.config.yachts.length === 0) notFound();
   // Pages published before the slots were renamed (deck → exterior,
   // watertoys → lifestyle) froze the old keys; carry them across.
   type LegacyYacht = PageConfig["yachts"][number] & { deckImageUrl?: string; watertoysImageUrl?: string };

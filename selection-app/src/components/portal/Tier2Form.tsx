@@ -26,7 +26,7 @@ import {
   emptyTier2Yacht,
   tier2VatPctFromText,
 } from "@/lib/portal-types";
-import { tier2PublishProblems, tier2Warnings } from "@/lib/atlas-map";
+import { tier2PublishProblems, tier2Warnings } from "@/lib/destinations-map";
 import FleetSelect from "./FleetSelect";
 import ImagePicker from "./ImagePicker";
 import ConfirmDialog from "./ConfirmDialog";
@@ -216,7 +216,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
           };
         });
         setDraft(next);
-        if (next.publishedSlug) setPublished({ slug: next.publishedSlug, url: `/atlas/${next.publishedSlug}` });
+        if (next.publishedSlug) setPublished({ slug: next.publishedSlug, url: `/destinations/${next.publishedSlug}` });
         setOpenIds(new Set(next.yachts.slice(0, 1).map((y) => y.uid)));
       } catch {
         setLoadError("Could not load this selection — check the connection and reload.");
@@ -1482,7 +1482,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
             <>
               {" "}
               <a className={styles.statusLink} href={published.url} target="_blank" rel="noopener noreferrer">
-                /atlas/{published.slug}
+                /destinations/{published.slug}
               </a>
             </>
           )}
