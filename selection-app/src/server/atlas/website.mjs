@@ -245,7 +245,11 @@ export function parsePage(url, html) {
     heroImage,
     heroMobile,
     heroVideo,
+    // `lede` stays the joined string for callers that want the whole block;
+    // `ledeParagraphs` keeps the paragraph boundaries, so a caller can show
+    // the first paragraph exactly as the content team wrote it.
     lede: lede.join(" "),
+    ledeParagraphs: lede,
     paragraphs,
     keyFacts,
     mapPins,

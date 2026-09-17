@@ -17,7 +17,7 @@ import { createHash } from "node:crypto";
 import snapshot from "../../../data/destinations.json";
 import itineraryData from "../../../data/itineraries.json";
 import type { AtlasDestination, AtlasSnapshot } from "@/lib/atlas/types";
-import { buildIndex, children, eyebrowFor, parentOf, regionOf, shortIntro, sirv, topLevelPins, type AtlasIndex } from "@/lib/atlas/data";
+import { buildIndex, children, eyebrowFor, introParagraph, parentOf, regionOf, sirv, topLevelPins, type AtlasIndex } from "@/lib/atlas/data";
 import type { ItinerariesData } from "@/lib/atlas/itineraries";
 import type { AtlasDefaults, AtlasDestinationContent, AtlasDestinationOption, WebsiteItinerarySummary } from "@/lib/portal-types";
 import type { DestinationsPageItinerary, DestinationsPagePin } from "@/lib/types";
@@ -102,6 +102,7 @@ export async function resolveDestination(id: string, { live = true }: { live?: b
       heroImage: string | null;
       heroMobile: string | null;
       lede: string;
+      ledeParagraphs: string[];
       paragraphs: string[];
       keyFacts: Array<{ label: string; value: string }>;
     };
@@ -114,6 +115,9 @@ export async function resolveDestination(id: string, { live = true }: { live?: b
       heroImage: page.heroImage ?? cached.heroImage,
       heroMobile: page.heroMobile ?? cached.heroMobile,
       lede: page.lede || cached.lede,
+      // Kept in step with `lede`: a live parse must not leave the fresh joined
+      // text beside the snapshot's paragraphs, or the body would be stale.
+      ledeParagraphs: page.ledeParagraphs.length ? page.ledeParagraphs : cached.ledeParagraphs,
       paragraphs: page.paragraphs.length ? page.paragraphs : cached.paragraphs,
       keyFacts: page.keyFacts.length ? page.keyFacts : cached.keyFacts,
     };
@@ -127,31 +131,39 @@ export async function resolveDestination(id: string, { live = true }: { live?: b
 
 /* --------------------------------------------------------------- copy */
 
-function firstSentence(text: string): string {
-  const m = text.match(/^[^.!?]+[.!?]/);
-  return (m ? m[0] : text).trim();
-}
-
 /** "Positano, Capri and Ravello" from "Amalfi Coast Yacht Charter: Positano, Capri and Ravello". */
 function titleTail(metaTitle: string): string | null {
   const m = metaTitle.split("|")[0].match(/:\s*(.+)$/);
   return m ? m[1].trim() : null;
 }
 
+/**
+ * The deck line under the destination name, from the destination's own page:
+ *
+ *   a. the tail of <title> after the colon, else
+ *   b. the "Popular destinations" key fact.
+ *
+ * Both are distinct pieces of copy the content team wrote for this page. When
+ * neither exists the destination HAS no deck line and this returns undefined,
+ * so the panel renders no deck element — rather than composing one out of
+ * child names or the opening of the body copy, which read as a duplicate.
+ *
+ * The text is passed through whole: trimmed of surrounding whitespace, never
+ * otherwise edited (trailing full stops included).
+ */
+export function deckLineFor(dest: AtlasDestination): string | undefined {
+  const fromTitle = titleTail(dest.metaTitle);
+  if (fromTitle) return fromTitle;
+  const popular = dest.keyFacts.find((f) => /popular destinations/i.test(f.label))?.value.trim();
+  return popular || undefined;
+}
+
 /** The Atlas default for each copy block. */
 export function atlasCopyFor(dest: AtlasDestination, index: AtlasIndex): Pick<AtlasDefaults, "eyebrow" | "deckLine" | "description"> {
-  const popular = dest.keyFacts.find((f) => /popular destinations/i.test(f.label))?.value;
-  const kids = children(dest, index).map((c) => c.name).filter(Boolean);
-  const deckLine =
-    titleTail(dest.metaTitle) ??
-    (popular ? popular : null) ??
-    (kids.length ? kids.join(" · ") : null) ??
-    firstSentence(dest.summary || dest.metaDescription || "");
-  const description = shortIntro(dest, 2) || dest.summary || dest.metaDescription;
   return {
     eyebrow: eyebrowFor(dest, index).toUpperCase(),
-    deckLine: deckLine.replace(/\.$/, ""),
-    description,
+    deckLine: deckLineFor(dest),
+    description: introParagraph(dest),
   };
 }
 

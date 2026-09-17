@@ -190,7 +190,8 @@ export interface ContentBlock {
 /** The website defaults for a destination, kept so "Restore the original text" works offline. */
 export interface AtlasDefaults {
   eyebrow: string;
-  deckLine: string;
+  /** Absent when the destination's page carries no deck line of its own */
+  deckLine?: string;
   description: string;
   /** Prepared 2000×1250 URLs, most relevant first */
   images: string[];

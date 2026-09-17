@@ -895,11 +895,15 @@ function DestinationPanel({
   onSeeYachts: () => void;
 }) {
   const images = dest.images.filter((img) => img.value);
+  // A destination whose own page carries no deck line renders no deck element
+  // at all — no empty node and no reserved height. The heading takes the space
+  // the deck's own margin would have left above the body instead.
+  const deck = dest.deckLine.value.trim();
   return (
     <div className={styles.panelInner} data-screen-label={`Panel — ${dest.name}`}>
       {dest.eyebrow.value && <div className={styles.eyebrow}>{dest.eyebrow.value.toUpperCase()}</div>}
-      <h3 className={styles.panelHeading}>{dest.name.toUpperCase()}</h3>
-      {dest.deckLine.value && <div className={styles.deck}>{dest.deckLine.value}</div>}
+      <h3 className={`${styles.panelHeading} ${deck ? "" : styles.panelHeadingNoDeck}`}>{dest.name.toUpperCase()}</h3>
+      {deck && <div className={styles.deck}>{deck}</div>}
       {dest.description.source === "consultant" && consultant && (
         <div className={`${styles.attribution} ${styles.attributionMint}`}>CURATED FOR YOU BY {consultant.toUpperCase()}</div>
       )}
