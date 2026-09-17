@@ -8,10 +8,10 @@ import {
   eyebrowFor,
   fmtYachtMeta,
   fmtYachtRate,
+  introParagraph,
   parentOf,
   placesLine,
   POPULAR_IDS,
-  shortIntro,
   sirv,
   sirvSrcSet,
   type AtlasIndex,
@@ -134,7 +134,7 @@ export function DestinationPanel({ dest, index, onSelect, onBack }: DestinationP
   const shownYachts = yachts.slice(0, MAX_YACHTS);
   const hero = dest.heroImage ?? dest.cardImage ?? dest.ogImage;
   const facts = dest.keyFacts.filter((f) => !/popular destinations/i.test(f.label));
-  const intro = shortIntro(dest);
+  const intro = introParagraph(dest);
   const kidsLabel = childrenLabel(dest, kids.length);
   const kidsSub =
     dest.level <= 1

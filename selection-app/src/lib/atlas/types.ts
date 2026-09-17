@@ -47,6 +47,11 @@ export interface AtlasDestination {
   metaDescription: string;
   /** Intro copy, verbatim: the large lede block then the body paragraphs */
   lede: string;
+  /**
+   * The lede block's paragraphs, unjoined. Absent on snapshots written before
+   * the importer recorded it; `introParagraph()` falls back to `lede`.
+   */
+  ledeParagraphs?: string[];
   paragraphs: string[];
   keyFacts: AtlasKeyFact[];
   childIds: string[];

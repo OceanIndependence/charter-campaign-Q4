@@ -406,6 +406,7 @@ async function main() {
       metaTitle: p.metaTitle,
       metaDescription: p.metaDescription,
       lede: p.lede,
+      ledeParagraphs: p.ledeParagraphs,
       paragraphs: p.paragraphs,
       keyFacts: p.keyFacts,
       childIds: sortIds(childrenOf.get(id) || []),
