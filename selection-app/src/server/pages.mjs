@@ -118,7 +118,7 @@ export function tierOf(record) {
 
 /** Client page path for a published record of either tier. */
 export function clientPathFor(tier, slug) {
-  return tier === 2 ? `/atlas/${slug}` : `/selection/${slug}`;
+  return tier === 2 ? `/destinations/${slug}` : `/selection/${slug}`;
 }
 
 export function isValidSlug(slug) {

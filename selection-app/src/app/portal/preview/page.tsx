@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import SelectionPage from "@/components/SelectionPage";
-import PersonalisedAtlasPage from "@/components/personalised/PersonalisedAtlasPage";
+import DestinationsPage from "@/components/destinations/DestinationsPage";
 import { draftToPageConfig } from "@/lib/portal-map";
-import { chosenDestinationIds, tier2DraftToConfig } from "@/lib/atlas-map";
+import { chosenDestinationIds, tier2DraftToConfig } from "@/lib/destinations-map";
 import type { AnySelection, PortalDraft, Tier2Draft } from "@/lib/portal-types";
 import { atlasResolutionFor } from "@/server/atlas/content";
 import { getSelection, tierOf } from "@/server/pages.mjs";
@@ -62,7 +62,7 @@ export default async function PreviewPage({
     if (config.yachts.length === 0) {
       return <Message text="Add at least one named yacht to preview the client page." />;
     }
-    return <PersonalisedAtlasPage config={config} />;
+    return <DestinationsPage config={config} />;
   }
   const t3 = draft as PortalDraft;
   const base3 = draftToPageConfig(t3, t3.publishedSlug ?? "preview");

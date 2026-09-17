@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { demoAtlasConfig, DEMO_TIER2_SLUG } from "@/server/demo/harrington";
+import { demoDestinationsConfig, DEMO_TIER2_SLUG } from "@/server/demo/harrington";
 import { requirePortalSession } from "@/server/auth";
 
 export const runtime = "nodejs";
@@ -8,5 +8,5 @@ export const runtime = "nodejs";
 export async function GET(request: NextRequest) {
   const session = requirePortalSession(request);
   if (!session.ok) return session.response;
-  return NextResponse.json({ slug: DEMO_TIER2_SLUG, config: demoAtlasConfig() });
+  return NextResponse.json({ slug: DEMO_TIER2_SLUG, config: demoDestinationsConfig() });
 }

@@ -304,8 +304,8 @@ export class AtlasGlobe {
     this.resize();
     if (!this.destroyed) this.startLoop();
 
-    const geoUrl = this.cfg.geoUrl ?? "/atlas/countries-110m.json";
-    const geoHiUrl = this.cfg.geoHiUrl ?? "/atlas/countries-50m.json";
+    const geoUrl = this.cfg.geoUrl ?? "/geo/countries-110m.json";
+    const geoHiUrl = this.cfg.geoHiUrl ?? "/geo/countries-50m.json";
     try {
       const lo = (await (await fetch(geoUrl)).json()) as CountriesTopology;
       if (this.destroyed) return;

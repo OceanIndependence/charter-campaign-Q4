@@ -28,9 +28,23 @@ const nextConfig: NextConfig = {
       // /api/*, /_next/* and everything served from public/.
       { source: "/:path*", headers: NOINDEX_HEADERS },
       { source: "/selection/:path*", headers: noStore },
-      { source: "/atlas/:path*", headers: noStore },
+      { source: "/destinations/:path*", headers: noStore },
       { source: "/portal/preview", headers: noStore },
     ];
+  },
+  /**
+   * Tier 2 client pages moved from /atlas/<slug> to /destinations/<slug>.
+   * Links already in clients' hands — emails, short links, QR codes — are
+   * permanent, so this redirect is too. It has to stay for as long as any
+   * of those links might be followed, which is indefinitely.
+   *
+   * Note that redirects are evaluated before files in public/ are served,
+   * which is why the globe's country geometry now lives at /geo/ rather
+   * than /atlas/: left where it was, it would be redirected into nothing
+   * and the globe would fail to draw on both Tier 1 and Tier 2.
+   */
+  async redirects() {
+    return [{ source: "/atlas/:slug", destination: "/destinations/:slug", permanent: true }];
   },
 };
 
