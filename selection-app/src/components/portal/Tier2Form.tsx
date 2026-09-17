@@ -363,7 +363,7 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
 
   const restoreBlock = useCallback(
     (i: number, key: CopyBlockKey) => {
-      setDestination(i, (slot) => (slot.atlas ? { ...slot, [key]: { value: slot.atlas[key], source: "atlas" } } : slot));
+      setDestination(i, (slot) => (slot.atlas ? { ...slot, [key]: { value: slot.atlas[key] ?? "", source: "atlas" } } : slot));
     },
     [setDestination]
   );
@@ -402,7 +402,9 @@ export default function Tier2Form({ selectionId }: { selectionId: string }) {
           destinationId: content.id,
           name: content.name,
           eyebrow: atlas(content.atlas.eyebrow),
-          deckLine: atlas(content.atlas.deckLine),
+          // No deck line on the destination's page: the field starts empty and the
+          // client page shows no deck unless the consultant writes one.
+          deckLine: atlas(content.atlas.deckLine ?? ""),
           description: atlas(content.atlas.description),
           consultantNote: { value: "", source: "consultant" },
           images: [atlas(content.atlas.images[0] ?? ""), atlas(content.atlas.images[1] ?? content.atlas.images[0] ?? "")],

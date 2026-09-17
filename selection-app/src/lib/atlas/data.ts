@@ -167,16 +167,18 @@ export function fmtYachtMeta(y: AtlasYacht): string {
 }
 
 /**
- * A sentence or two of the page's own copy — the panel leads with this and
- * moves straight on to the cruising grounds; the full guide stays a link away.
+ * The destination's own opening paragraph, whole and unedited — the panel
+ * leads with this and the full guide stays a link away.
+ *
+ * The copy is shown exactly as the content team wrote it: no sentence
+ * counting, no truncation, no composing. `ledeParagraphs[0]` is the lede
+ * block's first paragraph; `lede` (that block's paragraphs joined) is the
+ * fallback for snapshots written before the importer recorded them. Where
+ * there is no lede at all the page's first body paragraph stands in, then the
+ * meta description. The card summary from the PARENT page is deliberately not
+ * in this chain — it is another page's copy about this one.
  */
-export function shortIntro(d: AtlasDestination, sentences = 2): string {
-  const source = d.lede || d.paragraphs[0] || d.summary || "";
-  const parts = source.match(/[^.!?]+[.!?]+(?:["”’'])?(?=\s|$)/g);
-  if (!parts) return source.trim();
-  return parts
-    .slice(0, sentences)
-    .map((s) => s.trim())
-    .join(" ");
+export function introParagraph(d: AtlasDestination): string {
+  return (d.ledeParagraphs?.[0] || d.lede || d.paragraphs[0] || d.metaDescription || "").trim();
 }
 
