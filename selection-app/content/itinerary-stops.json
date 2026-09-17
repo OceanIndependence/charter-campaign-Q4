@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-17T12:43:38.731Z",
+  "generatedAt": "2026-09-17T14:09:46.298Z",
   "itineraries": {
     "https://www.oceanindependence.com/yacht-charter/itineraries/antarctica/antarctica-itinerary/": {
       "title": "Antarctica Itinerary",
@@ -102,6 +102,122 @@
               "query": "punta arenas, Antarctica",
               "label": "Punta Arenas, Provincia de Magallanes, Magallanes and Chilean Antarctica Region, Chile",
               "flag": "not drawn — 1630 km from the itinerary's map pins; correct it here to draw it"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/antarctica/scenic-eclipse-in-antarctica/": {
+      "title": "Scenic Eclipse in Antarctica",
+      "days": {
+        "1": {
+          "heading": "ushuaia",
+          "places": [
+            {
+              "name": "ushuaia",
+              "lat": -54.807306,
+              "lon": -68.3084133,
+              "source": "nominatim-far",
+              "query": "ushuaia",
+              "label": "Ushuaia, Departamento Ushuaia, Tierra del Fuego, Argentina",
+              "flag": "not drawn — 1483 km from the itinerary's map pins; correct it here to draw it"
+            }
+          ]
+        },
+        "2": {
+          "heading": "ushuaia to antarctic peninsula",
+          "places": [
+            {
+              "name": "ushuaia",
+              "lat": -54.807306,
+              "lon": -68.3084133,
+              "source": "nominatim-far",
+              "query": "ushuaia",
+              "label": "Ushuaia, Departamento Ushuaia, Tierra del Fuego, Argentina",
+              "flag": "not drawn — 1483 km from the itinerary's map pins; correct it here to draw it"
+            },
+            {
+              "name": "antarctic peninsula",
+              "lat": -69.9896303,
+              "lon": -65.4005046,
+              "source": "nominatim",
+              "query": "antarctic peninsula",
+              "label": "Antarctic Peninsula"
+            }
+          ]
+        },
+        "4": {
+          "heading": "antarctic peninsula",
+          "places": [
+            {
+              "name": "antarctic peninsula",
+              "lat": -69.9896303,
+              "lon": -65.4005046,
+              "source": "nominatim",
+              "query": "antarctic peninsula",
+              "label": "Antarctic Peninsula"
+            }
+          ]
+        },
+        "5": {
+          "heading": "antarctic peninsula",
+          "places": [
+            {
+              "name": "antarctic peninsula",
+              "lat": -69.9896303,
+              "lon": -65.4005046,
+              "source": "nominatim",
+              "query": "antarctic peninsula",
+              "label": "Antarctic Peninsula"
+            }
+          ]
+        },
+        "9": {
+          "heading": "antarctic peninsula",
+          "places": [
+            {
+              "name": "antarctic peninsula",
+              "lat": -69.9896303,
+              "lon": -65.4005046,
+              "source": "nominatim",
+              "query": "antarctic peninsula",
+              "label": "Antarctic Peninsula"
+            }
+          ]
+        },
+        "10": {
+          "heading": "antarctic peninsula to ushuaia",
+          "places": [
+            {
+              "name": "antarctic peninsula",
+              "lat": -69.9896303,
+              "lon": -65.4005046,
+              "source": "nominatim",
+              "query": "antarctic peninsula",
+              "label": "Antarctic Peninsula"
+            },
+            {
+              "name": "ushuaia",
+              "lat": -54.807306,
+              "lon": -68.3084133,
+              "source": "nominatim-far",
+              "query": "ushuaia",
+              "label": "Ushuaia, Departamento Ushuaia, Tierra del Fuego, Argentina",
+              "flag": "not drawn — 1483 km from the itinerary's map pins; correct it here to draw it"
+            }
+          ]
+        },
+        "12": {
+          "heading": "ushuaia",
+          "places": [
+            {
+              "name": "ushuaia",
+              "lat": -54.807306,
+              "lon": -68.3084133,
+              "source": "nominatim-far",
+              "query": "ushuaia",
+              "label": "Ushuaia, Departamento Ushuaia, Tierra del Fuego, Argentina",
+              "flag": "not drawn — 1483 km from the itinerary's map pins; correct it here to draw it"
             }
           ]
         }
@@ -314,7 +430,7 @@
         }
       }
     },
-    "https://www.oceanindependence.com/yacht-charter/itineraries/australasia/the-kimberley/": {
+    "https://www.oceanindependence.com/yacht-charter/itineraries/australia-and-new-zealand/the-kimberley/": {
       "title": "The Kimberley",
       "days": {
         "1": {
@@ -2217,6 +2333,143 @@
         }
       }
     },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/croatia-yacht-charter-itinerary-split-to-dubrovnik/": {
+      "title": "Split to Dubrovnik",
+      "days": {
+        "1": {
+          "heading": "Split and Maslinica",
+          "places": [
+            {
+              "name": "Split",
+              "lat": 43.514645,
+              "lon": 16.442607,
+              "source": "map-pin"
+            },
+            {
+              "name": "Maslinica",
+              "lat": 43.396945,
+              "lon": 16.20633,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "2": {
+          "heading": "Maslinica to Vis",
+          "places": [
+            {
+              "name": "Maslinica",
+              "lat": 43.396945,
+              "lon": 16.20633,
+              "source": "map-pin"
+            },
+            {
+              "name": "Vis",
+              "lat": 43.060467,
+              "lon": 16.183262,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "3": {
+          "heading": "The Pakleni Islands and Hvar",
+          "places": [
+            {
+              "name": "The Pakleni Islands",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            },
+            {
+              "name": "Hvar",
+              "lat": 43.172517,
+              "lon": 16.444329,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "4": {
+          "heading": "Hvar to Korčula",
+          "places": [
+            {
+              "name": "Hvar",
+              "lat": 43.172517,
+              "lon": 16.444329,
+              "source": "map-pin"
+            },
+            {
+              "name": "Korčula",
+              "lat": 42.959041,
+              "lon": 17.132855,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "5": {
+          "heading": "Korčula to Mljet National Park",
+          "places": [
+            {
+              "name": "Korčula",
+              "lat": 42.959041,
+              "lon": 17.132855,
+              "source": "map-pin"
+            },
+            {
+              "name": "Mljet National Park",
+              "lat": 42.774991,
+              "lon": 17.408564,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "6": {
+          "heading": "Mljet to Šipan",
+          "places": [
+            {
+              "name": "Mljet",
+              "lat": 42.7459771,
+              "lon": 17.5465663,
+              "source": "nominatim",
+              "query": "Mljet",
+              "label": "Mljet, Dubrovnik-Neretva County, Croatia"
+            },
+            {
+              "name": "Šipan",
+              "lat": 42.729407,
+              "lon": 17.863925,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "7": {
+          "heading": "Šipan to Dubrovnik: Disembark",
+          "places": [
+            {
+              "name": "Šipan",
+              "lat": 42.729407,
+              "lon": 17.863925,
+              "source": "map-pin"
+            },
+            {
+              "name": "Dubrovnik: Disembark",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "8": {
+          "heading": "Optional Extension: Montenegro",
+          "places": [
+            {
+              "name": "Optional Extension: Montenegro",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        }
+      }
+    },
     "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/cyclades-itinerary/": {
       "title": "Cyclades Itinerary",
       "days": {
@@ -2574,6 +2827,120 @@
               "name": "gocek",
               "lat": 36.7534,
               "lon": 28.9425,
+              "source": "map-pin"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/monaco-to-rome/": {
+      "title": "monaco to rome",
+      "days": {
+        "1": {
+          "heading": "monaco",
+          "places": [
+            {
+              "name": "monaco",
+              "lat": 43.7378664,
+              "lon": 7.4155527,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "2": {
+          "heading": "portofino",
+          "places": [
+            {
+              "name": "portofino",
+              "lat": 44.3032,
+              "lon": 9.2098,
+              "source": "atlas:mediterranean/italy/italian-riviera/portofino"
+            }
+          ]
+        },
+        "3": {
+          "heading": "rapallo",
+          "places": [
+            {
+              "name": "rapallo",
+              "lat": 44.3492083,
+              "lon": 9.2316102,
+              "source": "nominatim",
+              "query": "rapallo",
+              "label": "Rapallo, Genoa, Liguria, 16035, Italy"
+            }
+          ]
+        },
+        "4": {
+          "heading": "cingue terre",
+          "places": [
+            {
+              "name": "cingue terre",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "5": {
+          "heading": "portovenere",
+          "places": [
+            {
+              "name": "portovenere",
+              "lat": 44.0506605,
+              "lon": 9.8344585,
+              "source": "nominatim",
+              "query": "portovenere",
+              "label": "Portovenere, La Spezia, Liguria, 19025, Italy"
+            }
+          ]
+        },
+        "6": {
+          "heading": "forte dei marmi",
+          "places": [
+            {
+              "name": "forte dei marmi",
+              "lat": 43.9595891,
+              "lon": 10.1699392,
+              "source": "nominatim",
+              "query": "forte dei marmi",
+              "label": "Forte dei Marmi, Unione dei comuni della Versilia, Lucca, Tuscany, 55042, Italy"
+            }
+          ]
+        },
+        "7": {
+          "heading": "elba",
+          "places": [
+            {
+              "name": "elba",
+              "lat": 42.7902379,
+              "lon": 10.3402239,
+              "source": "nominatim",
+              "query": "elba",
+              "label": "Elba, Livorno, Tuscany, Italy"
+            }
+          ]
+        },
+        "8": {
+          "heading": "isola del giglio",
+          "places": [
+            {
+              "name": "isola del giglio",
+              "lat": 42.353166,
+              "lon": 10.8964294,
+              "source": "nominatim",
+              "query": "isola del giglio",
+              "label": "Isola del Giglio, Grosseto, Tuscany, 58012, Italy"
+            }
+          ]
+        },
+        "9": {
+          "heading": "rome",
+          "places": [
+            {
+              "name": "rome",
+              "lat": 41.9102088,
+              "lon": 12.3711919,
               "source": "map-pin"
             }
           ]
@@ -3126,6 +3493,240 @@
         }
       }
     },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/middle-east/dubai-to-abu-dhabi/": {
+      "title": "Dubai to Abu Dhabi",
+      "days": {
+        "1": {
+          "heading": "arrive in dubai",
+          "places": [
+            {
+              "name": "dubai",
+              "lat": 25.1457229,
+              "lon": 55.1691097,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "2": {
+          "heading": "dubai moon island and sunset cruise",
+          "places": [
+            {
+              "name": "dubai moon island",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            },
+            {
+              "name": "sunset cruise",
+              "lat": 21.1754354,
+              "lon": 94.8578669,
+              "source": "nominatim-far",
+              "query": "sunset cruise",
+              "label": "HMWE-check in for Myanmar bus ticket sunset cruise, Bagan - Nyaung-U Main Road, Wetkyi-In, Taung Bi, Nyaung-U Township, Nyaung-U District, Mandalay, 05231, Myanmar",
+              "flag": "not drawn — 4108 km from the itinerary's map pins; correct it here to draw it"
+            }
+          ]
+        },
+        "3": {
+          "heading": "dubai world islands cruise and desert safari",
+          "places": [
+            {
+              "name": "dubai world islands cruise",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            },
+            {
+              "name": "desert safari",
+              "lat": 25.1925232,
+              "lon": 55.6046252,
+              "source": "nominatim",
+              "query": "desert safari",
+              "label": "Desert Safari, Maleha Road, AL TAY EAST, Al Seyouh, Sharjah, Sharjah Emirate, United Arab Emirates"
+            }
+          ]
+        },
+        "4": {
+          "heading": "explore the city of dubai before a world-class meal at atlantis hotel",
+          "places": [
+            {
+              "name": "explore the city of dubai before a world-class meal at atlantis hotel",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "5": {
+          "heading": "cruise from dubai to abu dhabi",
+          "places": [
+            {
+              "name": "cruise from dubai",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            },
+            {
+              "name": "abu dhabi",
+              "lat": 24.4281662,
+              "lon": 54.388319,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "6": {
+          "heading": "explore abu dhabi",
+          "places": [
+            {
+              "name": "explore abu dhabi",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        },
+        "7": {
+          "heading": "house of artisans and departure from abu dhabi",
+          "places": [
+            {
+              "name": "house of artisans",
+              "lat": 24.4814055,
+              "lon": 54.3552298,
+              "source": "nominatim",
+              "query": "house of artisans",
+              "label": "House of Artisans, Al Hisn Street, Al Hisn, Abu Dhabi, Abu Dhabi Emirate, United Arab Emirates"
+            },
+            {
+              "name": "departure from abu dhabi",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/north-america/california-coast-marina-del-rey-to-marina-del-rey/": {
+      "title": "Marina del Rey to Marina del Rey",
+      "days": {
+        "1": {
+          "heading": "Marina del Rey to Malibu",
+          "places": [
+            {
+              "name": "Marina del Rey",
+              "lat": 33.98198680608402,
+              "lon": -118.44203307607032,
+              "source": "map-pin"
+            },
+            {
+              "name": "Malibu",
+              "lat": 34.002527647191364,
+              "lon": -118.79905494193088,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "2": {
+          "heading": "Malibu to Santa Cruz Island, Channel Islands",
+          "places": [
+            {
+              "name": "Malibu",
+              "lat": 34.002527647191364,
+              "lon": -118.79905494193088,
+              "source": "map-pin"
+            },
+            {
+              "name": "Santa Cruz Island, Channel Islands",
+              "lat": 34.01433684099572,
+              "lon": -119.7484106070519,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "3": {
+          "heading": "Santa Cruz Island to Catalina (Two Harbors / Little Geiger Cove)",
+          "places": [
+            {
+              "name": "Santa Cruz Island",
+              "lat": 34.01433684099572,
+              "lon": -119.7484106070519,
+              "source": "map-pin"
+            },
+            {
+              "name": "Catalina (Two Harbors",
+              "lat": null,
+              "lon": null,
+              "source": "unresolved"
+            },
+            {
+              "name": "Little Geiger Cove)",
+              "lat": 33.4574038,
+              "lon": -118.515495,
+              "source": "nominatim",
+              "query": "Little Geiger Cove)",
+              "label": "Little Geiger Cove, Los Angeles County, California, United States"
+            }
+          ]
+        },
+        "4": {
+          "heading": "Catalina",
+          "places": [
+            {
+              "name": "Catalina",
+              "lat": 32.4996147,
+              "lon": -110.926146,
+              "source": "nominatim",
+              "query": "Catalina",
+              "label": "Catalina, Pima County, Arizona, 85739, United States"
+            }
+          ]
+        },
+        "5": {
+          "heading": "Avalon",
+          "places": [
+            {
+              "name": "Avalon",
+              "lat": 33.34280083984848,
+              "lon": -118.32857531472004,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "6": {
+          "heading": "Lover’s Cove",
+          "places": [
+            {
+              "name": "Lover’s Cove",
+              "lat": -34.4152117,
+              "lon": 19.2045595,
+              "source": "nominatim-far",
+              "query": "Lover’s Cove",
+              "label": "Food Lover's Market, Cove Street, Sandbaai, Overstrand Ward 7, Hermanus, Overstrand Local Municipality, Overberg District Municipality, Western Cape, 7200, South Africa",
+              "flag": "not drawn — 16172 km from the itinerary's map pins; correct it here to draw it"
+            }
+          ]
+        },
+        "7": {
+          "heading": "Catalina to Marina del Rey",
+          "places": [
+            {
+              "name": "Catalina",
+              "lat": 32.4996147,
+              "lon": -110.926146,
+              "source": "nominatim",
+              "query": "Catalina",
+              "label": "Catalina, Pima County, Arizona, 85739, United States"
+            },
+            {
+              "name": "Marina del Rey",
+              "lat": 33.98198680608402,
+              "lon": -118.44203307607032,
+              "source": "map-pin"
+            }
+          ]
+        }
+      }
+    },
     "https://www.oceanindependence.com/yacht-charter/itineraries/north-america/new-england/": {
       "title": "New England",
       "days": {
@@ -3218,6 +3819,129 @@
               "source": "nominatim",
               "query": "newport, New England",
               "label": "Naval Health Clinic New England, 43, Smith Road, Newport, Newport County, Rhode Island, 02840, United States"
+            }
+          ]
+        }
+      }
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/north-america/san-juan-islands/": {
+      "title": "San Juan Islands",
+      "days": {
+        "1": {
+          "heading": "Anacortes to Orcas Island",
+          "places": [
+            {
+              "name": "Anacortes",
+              "lat": 48.606655816929276,
+              "lon": -122.60710556650294,
+              "source": "map-pin"
+            },
+            {
+              "name": "Orcas Island",
+              "lat": 48.6337189563491,
+              "lon": -122.93224833018371,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "2": {
+          "heading": "Orcas Island To Lopez Island",
+          "places": [
+            {
+              "name": "Orcas Island",
+              "lat": 48.6337189563491,
+              "lon": -122.93224833018371,
+              "source": "map-pin"
+            },
+            {
+              "name": "Lopez Island",
+              "lat": 48.487570830920255,
+              "lon": -122.89701532359707,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "3": {
+          "heading": "Lopez Island To Friday Harbor",
+          "places": [
+            {
+              "name": "Lopez Island",
+              "lat": 48.487570830920255,
+              "lon": -122.89701532359707,
+              "source": "map-pin"
+            },
+            {
+              "name": "Friday Harbor",
+              "lat": 48.53392549873286,
+              "lon": -123.01989561193554,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "4": {
+          "heading": "Friday Harbor and Yellow Island",
+          "places": [
+            {
+              "name": "Friday Harbor",
+              "lat": 48.53392549873286,
+              "lon": -123.01989561193554,
+              "source": "map-pin"
+            },
+            {
+              "name": "Yellow Island",
+              "lat": 48.5920907797536,
+              "lon": -123.03106088957688,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "5": {
+          "heading": "Roche Harbor and Spieden Island",
+          "places": [
+            {
+              "name": "Roche Harbor",
+              "lat": 48.60947476283038,
+              "lon": -123.14806596456687,
+              "source": "map-pin"
+            },
+            {
+              "name": "Spieden Island",
+              "lat": 48.640238816037716,
+              "lon": -123.1312948598291,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "6": {
+          "heading": "Sucia Island",
+          "places": [
+            {
+              "name": "Sucia Island",
+              "lat": 48.75481149551112,
+              "lon": -122.90469052794481,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "7": {
+          "heading": "Lummi Island",
+          "places": [
+            {
+              "name": "Lummi Island",
+              "lat": 48.72392730433947,
+              "lon": -122.68836921128936,
+              "source": "map-pin"
+            }
+          ]
+        },
+        "8": {
+          "heading": "Return to Anacortes",
+          "places": [
+            {
+              "name": "Anacortes",
+              "lat": 48.606655816929276,
+              "lon": -122.60710556650294,
+              "source": "map-pin"
             }
           ]
         }

@@ -5,11 +5,12 @@ Edit the sources, not this document; it is rewritten on every build.
 
 | Website itineraries | Drawable | Destinations | With itineraries |
 |---|---|---|---|
-| 32 | 31 | 125 | 91 |
+| 38 | 37 | 125 | 94 |
 
 ## Gaps
 
 - Antarctica Itinerary (antarctica-itinerary): drawn without 2 day(s) — day 2 "the southern shetland islands", day 7 "south shetland to punta arenas"
+- Scenic Eclipse in Antarctica (scenic-eclipse-in-antarctica): drawn without 2 day(s) — day 1 "ushuaia", day 12 "ushuaia"
 - East Greenland (east-greenland): drawn without 1 day(s) — day 5 "Hare Fjord, Ofjord, Bear Island, Sydkap"
 - East Greenland (east-greenland): Danmark Island → Northeast Greenland National Park is 550 km — check the coordinates
 - East Greenland (east-greenland): Northeast Greenland National Park → Ittoqqortoormiit is 568 km — check the coordinates
@@ -31,6 +32,14 @@ Edit the sources, not this document; it is rewritten on every build.
 - Langkawi to Phuket (luxury-7-day-yacht-itinerary-langkawi-to-phuket-exploration-ocean-independence): koh hong → koh racha is 703 km — check the coordinates
 - Male to Male (male-to-male): drawn without 3 day(s) — day 4 "maadhu finolhu", day 5 "makunufshi", day 6 "emboodhu finolhu"
 - Cannes to Monaco (cannes-to-monaco): drawn without 1 day(s) — day 2 "the lerin islands"
+- Split to Dubrovnik (croatia-yacht-charter-itinerary-split-to-dubrovnik): drawn without 1 day(s) — day 8 "Optional Extension: Montenegro"
+- monaco to rome (monaco-to-rome): drawn without 1 day(s) — day 4 "cingue terre"
+- Dubai to Abu Dhabi (dubai-to-abu-dhabi): drawn without 3 day(s) — day 2 "dubai moon island and sunset cruise", day 4 "explore the city of dubai before a world-class meal at atlantis hotel", day 6 "explore abu dhabi"
+- Marina del Rey to Marina del Rey (california-coast-marina-del-rey-to-marina-del-rey): drawn without 1 day(s) — day 6 "Lover’s Cove"
+- Marina del Rey to Marina del Rey (california-coast-marina-del-rey-to-marina-del-rey): Little Geiger Cove) → Catalina is 716 km — check the coordinates
+- Marina del Rey to Marina del Rey (california-coast-marina-del-rey-to-marina-del-rey): Catalina → Avalon is 697 km — check the coordinates
+- Marina del Rey to Marina del Rey (california-coast-marina-del-rey-to-marina-del-rey): Avalon → Catalina is 697 km — check the coordinates
+- Marina del Rey to Marina del Rey (california-coast-marina-del-rey-to-marina-del-rey): Catalina → Marina del Rey is 718 km — check the coordinates
 - New England (new-england): day 3 "nantucket" is 977 km from the route — not drawn, check its coordinates
 - New England (new-england): day 5 "vineyard haven" is 1109 km from the route — not drawn, check its coordinates
 - New England (new-england): drawn without 2 day(s) — day 3 "nantucket", day 5 "vineyard haven"
@@ -85,13 +94,13 @@ Edit the sources, not this document; it is rewritten on every build.
 | `indian-ocean/seychelles` | Seychelles | Eden Island to Fregate Island, Seychelles | own page |
 | `indian-ocean/tanzania` | Tanzania | — |  |
 | `mediterranean` | Mediterranean | Rome to Naples · Cannes to Monaco · calvi to cala di volpe | own page |
-| `mediterranean/croatia` | Croatia | Dubrovnik to Trogir | own page |
-| `mediterranean/croatia/dubrovnik` | Dubrovnik | Dubrovnik to Trogir | own page |
-| `mediterranean/croatia/hvar` | Hvar | Dubrovnik to Trogir | own page |
+| `mediterranean/croatia` | Croatia | Dubrovnik to Trogir · Split to Dubrovnik | own page, sails there |
+| `mediterranean/croatia/dubrovnik` | Dubrovnik | Dubrovnik to Trogir · Split to Dubrovnik | own page, sails there |
+| `mediterranean/croatia/hvar` | Hvar | Dubrovnik to Trogir · Split to Dubrovnik | own page, sails there |
 | `mediterranean/cyprus` | Cyprus | — |  |
 | `mediterranean/cyprus/limassol` | Limassol | — |  |
-| `mediterranean/france` | France | Cannes to Monaco · calvi to cala di volpe | own page, sails there |
-| `mediterranean/france/corsica` | Corsica | calvi to cala di volpe | sails there |
+| `mediterranean/france` | France | Cannes to Monaco · monaco to rome · calvi to cala di volpe | own page, sails there |
+| `mediterranean/france/corsica` | Corsica | calvi to cala di volpe · monaco to rome | sails there |
 | `mediterranean/france/corsica/calvi` | Calvi | calvi to cala di volpe | sails there |
 | `mediterranean/france/french-riviera` | The French Riviera | Cannes to Monaco | own page |
 | `mediterranean/france/french-riviera/antibes` | Antibes | Cannes to Monaco | own page |
@@ -102,7 +111,7 @@ Edit the sources, not this document; it is rewritten on every build.
 | `mediterranean/france/french-riviera/porquerolles` | The Porquerolles | Cannes to Monaco | own page |
 | `mediterranean/france/french-riviera/st-tropez` | St Tropez | Cannes to Monaco | own page |
 | `mediterranean/france/french-riviera/villefranche` | Villefranche | Cannes to Monaco | own page |
-| `mediterranean/greece` | Greece | corfu to zakynthos · Cyclades Itinerary | sails there |
+| `mediterranean/greece` | Greece | Rhodes to Bodrum · corfu to zakynthos · Cyclades Itinerary | own page, sails there |
 | `mediterranean/greece/athens` | Athens | Cyclades Itinerary | own page |
 | `mediterranean/greece/crete` | Crete | Cyclades Itinerary | sails there |
 | `mediterranean/greece/the-cyclades` | The Cyclades | Cyclades Itinerary | own page |
@@ -115,18 +124,18 @@ Edit the sources, not this document; it is rewritten on every build.
 | `mediterranean/greece/the-saronic-islands` | The Saronic Islands | Cyclades Itinerary | sails there |
 | `mediterranean/greece/the-saronic-islands/hydra` | Hydra | — |  |
 | `mediterranean/greece/the-saronic-islands/spetses` | Spetses | — |  |
-| `mediterranean/italy` | Italy | Rome to Naples · calvi to cala di volpe | own page, sails there |
+| `mediterranean/italy` | Italy | Rome to Naples · calvi to cala di volpe · monaco to rome | own page, sails there |
 | `mediterranean/italy/amalfi-coast` | Amalfi Coast | Naples to Sicily · Rome to Naples | own page, sails there |
 | `mediterranean/italy/amalfi-coast/amalfi` | Amalfi | Rome to Naples · Naples to Sicily | own page, sails there |
 | `mediterranean/italy/amalfi-coast/capri` | Capri | Naples to Sicily · Rome to Naples | own page, sails there |
 | `mediterranean/italy/amalfi-coast/positano` | Positano | Rome to Naples · Naples to Sicily | own page, sails there |
 | `mediterranean/italy/bari` | Bari | — |  |
 | `mediterranean/italy/ischia` | Ischia | Naples to Sicily · Rome to Naples | own page, sails there |
-| `mediterranean/italy/italian-riviera` | Italian Riviera | Cannes to Monaco | sails there |
-| `mediterranean/italy/italian-riviera/cinque-terre` | Cinque Terre | — |  |
-| `mediterranean/italy/italian-riviera/genoa` | Genoa | — |  |
-| `mediterranean/italy/italian-riviera/lerici` | Lerici | Naples to Sicily | own page |
-| `mediterranean/italy/italian-riviera/portofino` | Portofino | — |  |
+| `mediterranean/italy/italian-riviera` | Italian Riviera | monaco to rome · Cannes to Monaco | sails there |
+| `mediterranean/italy/italian-riviera/cinque-terre` | Cinque Terre | monaco to rome | sails there |
+| `mediterranean/italy/italian-riviera/genoa` | Genoa | monaco to rome | sails there |
+| `mediterranean/italy/italian-riviera/lerici` | Lerici | Naples to Sicily · monaco to rome | own page, sails there |
+| `mediterranean/italy/italian-riviera/portofino` | Portofino | monaco to rome | sails there |
 | `mediterranean/italy/naples` | Naples | Rome to Naples · Naples to Sicily | own page, sails there |
 | `mediterranean/italy/naples/pontine-islands` | Pontine Islands | Rome to Naples | own page |
 | `mediterranean/italy/ravenna` | Ravenna | — |  |
@@ -136,9 +145,9 @@ Edit the sources, not this document; it is rewritten on every build.
 | `mediterranean/italy/sicily/aeolian-islands` | The Aeolian Islands | Aeolian Islands: Catania to Palermo · Naples to Sicily | own page, sails there |
 | `mediterranean/italy/venice` | Venice | — |  |
 | `mediterranean/malta` | Malta | Aeolian Islands: Catania to Palermo · Naples to Sicily | sails there |
-| `mediterranean/montenegro` | Montenegro | Dubrovnik to Trogir | sails there |
-| `mediterranean/montenegro/budva` | Budva | Dubrovnik to Trogir | own page |
-| `mediterranean/montenegro/kotor` | Kotor | Dubrovnik to Trogir | own page |
+| `mediterranean/montenegro` | Montenegro | Dubrovnik to Trogir · Split to Dubrovnik | sails there |
+| `mediterranean/montenegro/budva` | Budva | Dubrovnik to Trogir · Split to Dubrovnik | own page, sails there |
+| `mediterranean/montenegro/kotor` | Kotor | Dubrovnik to Trogir · Split to Dubrovnik | own page, sails there |
 | `mediterranean/spain` | Spain | Palma to Cala Morell | own page |
 | `mediterranean/spain/the-balearics` | The Balearics | Palma to Cala Morell | own page |
 | `mediterranean/spain/the-balearics/formentera` | Formentera | Palma to Cala Morell | own page |
@@ -273,6 +282,18 @@ Edit the sources, not this document; it is rewritten on every build.
 | 7 | paros to mykonos | paros (37.0853, 25.15); mykonos (37.4467, 25.3289) |
 | 8 | mykonos to athens | mykonos (37.4467, 25.3289); athens (37.9715, 23.7258) |
 
+### Dubai to Abu Dhabi — `dubai-to-abu-dhabi` · 7 days · [page](https://www.oceanindependence.com/yacht-charter/itineraries/middle-east/dubai-to-abu-dhabi/)
+
+| Day | Heading as written | Located places |
+|---|---|---|
+| 1 | arrive in dubai | dubai (25.1457229, 55.1691097) |
+| 2 | dubai moon island and sunset cruise |  |
+| 3 | dubai world islands cruise and desert safari | desert safari (25.1925232, 55.6046252) |
+| 4 | explore the city of dubai before a world-class meal at atlantis hotel |  |
+| 5 | cruise from dubai to abu dhabi | abu dhabi (24.4281662, 54.388319) |
+| 6 | explore abu dhabi |  |
+| 7 | house of artisans and departure from abu dhabi | house of artisans (24.4814055, 54.3552298) |
+
 ### Dubrovnik to Trogir — `dubrovnik-to-trogir` · 7 days · [page](https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/dubrovnik-to-trogir/)
 
 | Day | Heading as written | Located places |
@@ -383,6 +404,32 @@ Edit the sources, not this document; it is rewritten on every build.
 | 6 | emboodhu finolhu |  |
 | 7 | male | male (4.1887032, 73.5246201) |
 
+### Marina del Rey to Marina del Rey — `california-coast-marina-del-rey-to-marina-del-rey` · 7 days · [page](https://www.oceanindependence.com/yacht-charter/itineraries/north-america/california-coast-marina-del-rey-to-marina-del-rey/)
+
+| Day | Heading as written | Located places |
+|---|---|---|
+| 1 | Marina del Rey to Malibu | Marina del Rey (33.98198680608402, -118.44203307607032); Malibu (34.002527647191364, -118.79905494193088) |
+| 2 | Malibu to Santa Cruz Island, Channel Islands | Malibu (34.002527647191364, -118.79905494193088); Santa Cruz Island, Channel Islands (34.01433684099572, -119.7484106070519) |
+| 3 | Santa Cruz Island to Catalina (Two Harbors / Little Geiger Cove) | Santa Cruz Island (34.01433684099572, -119.7484106070519); Little Geiger Cove) (33.4574038, -118.515495) |
+| 4 | Catalina | Catalina (32.4996147, -110.926146) |
+| 5 | Avalon | Avalon (33.34280083984848, -118.32857531472004) |
+| 6 | Lover’s Cove |  |
+| 7 | Catalina to Marina del Rey | Catalina (32.4996147, -110.926146); Marina del Rey (33.98198680608402, -118.44203307607032) |
+
+### monaco to rome — `monaco-to-rome` · 9 days · [page](https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/monaco-to-rome/)
+
+| Day | Heading as written | Located places |
+|---|---|---|
+| 1 | monaco | monaco (43.7378664, 7.4155527) |
+| 2 | portofino | portofino (44.3032, 9.2098) |
+| 3 | rapallo | rapallo (44.3492083, 9.2316102) |
+| 4 | cingue terre |  |
+| 5 | portovenere | portovenere (44.0506605, 9.8344585) |
+| 6 | forte dei marmi | forte dei marmi (43.9595891, 10.1699392) |
+| 7 | elba | elba (42.7902379, 10.3402239) |
+| 8 | isola del giglio | isola del giglio (42.353166, 10.8964294) |
+| 9 | rome | rome (41.9102088, 12.3711919) |
+
 ### Naples to Sicily — `naples-to-sicily` · 8 days · [page](https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/naples-to-sicily/)
 
 | Day | Heading as written | Located places |
@@ -469,6 +516,31 @@ Edit the sources, not this document; it is rewritten on every build.
 | 6 | sorrento | sorrento (40.624906, 14.374836) |
 | 7 | naples | naples (40.8539584, 14.0907155) |
 
+### San Juan Islands — `san-juan-islands` · 8 days · [page](https://www.oceanindependence.com/yacht-charter/itineraries/north-america/san-juan-islands/)
+
+| Day | Heading as written | Located places |
+|---|---|---|
+| 1 | Anacortes to Orcas Island | Anacortes (48.606655816929276, -122.60710556650294); Orcas Island (48.6337189563491, -122.93224833018371) |
+| 2 | Orcas Island To Lopez Island | Orcas Island (48.6337189563491, -122.93224833018371); Lopez Island (48.487570830920255, -122.89701532359707) |
+| 3 | Lopez Island To Friday Harbor | Lopez Island (48.487570830920255, -122.89701532359707); Friday Harbor (48.53392549873286, -123.01989561193554) |
+| 4 | Friday Harbor and Yellow Island | Friday Harbor (48.53392549873286, -123.01989561193554); Yellow Island (48.5920907797536, -123.03106088957688) |
+| 5 | Roche Harbor and Spieden Island | Roche Harbor (48.60947476283038, -123.14806596456687); Spieden Island (48.640238816037716, -123.1312948598291) |
+| 6 | Sucia Island | Sucia Island (48.75481149551112, -122.90469052794481) |
+| 7 | Lummi Island | Lummi Island (48.72392730433947, -122.68836921128936) |
+| 8 | Return to Anacortes | Anacortes (48.606655816929276, -122.60710556650294) |
+
+### Scenic Eclipse in Antarctica — `scenic-eclipse-in-antarctica` · 12 days · [page](https://www.oceanindependence.com/yacht-charter/itineraries/antarctica/scenic-eclipse-in-antarctica/)
+
+| Day | Heading as written | Located places |
+|---|---|---|
+| 1 | ushuaia |  |
+| 2–3 | ushuaia to antarctic peninsula | antarctic peninsula (-69.9896303, -65.4005046) |
+| 4 | antarctic peninsula | antarctic peninsula (-69.9896303, -65.4005046) |
+| 5–8 | antarctic peninsula | antarctic peninsula (-69.9896303, -65.4005046) |
+| 9 | antarctic peninsula | antarctic peninsula (-69.9896303, -65.4005046) |
+| 10–11 | antarctic peninsula to ushuaia | antarctic peninsula (-69.9896303, -65.4005046) |
+| 12 | ushuaia |  |
+
 ### Sitka to Juneau, Alaska — `sitka-to-juneau-alaska` · 8 days · [page](https://www.oceanindependence.com/yacht-charter/itineraries/north-america/sitka-to-juneau-alaska/)
 
 | Day | Heading as written | Located places |
@@ -481,6 +553,19 @@ Edit the sources, not this document; it is rewritten on every build.
 | 6 | pleasant bay to tracy arm | pleasant bay (57.6405556, -133.9941667); tracy arm (57.9113889, -133.4022222) |
 | 7 | tracy arm | tracy arm (57.9113889, -133.4022222) |
 | 8 | taku to juneau | taku (58.2956853, -134.3992306); juneau (58.280835, -134.5200039) |
+
+### Split to Dubrovnik — `croatia-yacht-charter-itinerary-split-to-dubrovnik` · 7 days · [page](https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/croatia-yacht-charter-itinerary-split-to-dubrovnik/)
+
+| Day | Heading as written | Located places |
+|---|---|---|
+| 1 | Split and Maslinica | Split (43.514645, 16.442607); Maslinica (43.396945, 16.20633) |
+| 2 | Maslinica to Vis | Maslinica (43.396945, 16.20633); Vis (43.060467, 16.183262) |
+| 3 | The Pakleni Islands and Hvar | Hvar (43.172517, 16.444329) |
+| 4 | Hvar to Korčula | Hvar (43.172517, 16.444329); Korčula (42.959041, 17.132855) |
+| 5 | Korčula to Mljet National Park | Korčula (42.959041, 17.132855); Mljet National Park (42.774991, 17.408564) |
+| 6 | Mljet to Šipan | Mljet (42.7459771, 17.5465663); Šipan (42.729407, 17.863925) |
+| 7 | Šipan to Dubrovnik: Disembark | Šipan (42.729407, 17.863925) |
+| 8–9 | Optional Extension: Montenegro |  |
 
 ### St Maarten to St Maarten — `st-maarten-to-st-maarten` · 8 days · [page](https://www.oceanindependence.com/yacht-charter/itineraries/caribbean/st-maarten-to-st-maarten/)
 
@@ -529,7 +614,7 @@ Edit the sources, not this document; it is rewritten on every build.
 | 6 | the keys | the keys (24.6736205, -81.4981792) |
 | 7 | miami | miami (25.7741566, -80.1935973) |
 
-### The Kimberley — `the-kimberley` · 7 days · [page](https://www.oceanindependence.com/yacht-charter/itineraries/australasia/the-kimberley/)
+### The Kimberley — `the-kimberley` · 7 days · [page](https://www.oceanindependence.com/yacht-charter/itineraries/australia-and-new-zealand/the-kimberley/)
 
 | Day | Heading as written | Located places |
 |---|---|---|

@@ -21,7 +21,7 @@
       "middle-east",
       "antarctica"
     ],
-    "itineraries": 32
+    "itineraries": 38
   },
   "counts": {
     "pages": 125,
@@ -237,38 +237,43 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/caribbean/antigua-to-st-lucia/",
-          "title": "antigua to st lucia",
-          "days": 7,
+          "title": "Antigua to St Lucia",
+          "eyebrow": null,
           "summary": "",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/guadeloupe-days-1-3-3-1024x768.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/guadeloupe-days-1-3-3-1024x768.jpg",
+          "days": 7
         },
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/caribbean/nassau-to-nassau/",
           "title": "Nassau to Nassau",
-          "days": 7,
+          "eyebrow": null,
           "summary": "",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/rsz__pou9874_from_bahamas_tourist_2-1024x682.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/rsz__pou9874_from_bahamas_tourist_2-1024x682.jpg",
+          "days": 7
         },
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/caribbean/st-maarten-to-st-maarten/",
           "title": "St Maarten to St Maarten",
-          "days": 8,
+          "eyebrow": null,
           "summary": "",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/iStock-697222062-Rockland-Estate-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/iStock-697222062-Rockland-Estate-1024x640.jpg",
+          "days": 8
         },
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/caribbean/st-thomas-to-st-thomas/",
           "title": "St. Thomas to St. Thomas",
-          "days": 7,
+          "eyebrow": null,
           "summary": "",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/10/st-thomas-hero-1024x576.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/10/st-thomas-hero-1024x576.jpg",
+          "days": 7
         },
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/caribbean/tortola-to-tortola/",
           "title": "Tortola to Tortola",
-          "days": 10,
+          "eyebrow": null,
           "summary": "",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/10/iStock-480271872-1024x564.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/10/iStock-480271872-1024x564.jpg",
+          "days": 10
         }
       ]
     },
@@ -504,44 +509,50 @@
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/rome-to-naples/",
           "title": "Rome to Naples",
-          "days": 7,
+          "eyebrow": null,
           "summary": "",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/SIM-410026-ITA-Campania-Positano-1-1024x524.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/SIM-410026-ITA-Campania-Positano-1-1024x524.jpg",
+          "days": 7
         },
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/cannes-to-monaco/",
           "title": "Cannes to Monaco",
-          "days": 7,
+          "eyebrow": null,
           "summary": "",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/rsz_sunset-677586-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/rsz_sunset-677586-1024x640.jpg",
+          "days": 7
         },
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/calvi-to-cala-di-volpe/",
-          "title": "calvi to cala di volpe",
-          "days": 7,
+          "title": "Calvi to Cala di Volpe",
+          "eyebrow": null,
           "summary": "",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/01/corsica-1311023-1024x683.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/01/corsica-1311023-1024x683.jpg",
+          "days": 7
         },
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/dubrovnik-to-trogir/",
           "title": "Dubrovnik to Trogir",
-          "days": 7,
+          "eyebrow": null,
           "summary": "",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/CROATIA-GEN-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/CROATIA-GEN-1024x640.jpg",
+          "days": 7
         },
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/gocek-to-gocek/",
           "title": "Gocek to Gocek",
-          "days": 7,
+          "eyebrow": null,
           "summary": "",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/Bodrum1_0-1024x678.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/Bodrum1_0-1024x678.jpg",
+          "days": 7
         },
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/corfu-to-zakynthos/",
-          "title": "corfu to zakynthos",
-          "days": 8,
+          "title": "Corfu to Zakynthos",
+          "eyebrow": null,
           "summary": "",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/Greece-hero-1024x683.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/Greece-hero-1024x683.jpg",
+          "days": 8
         }
       ]
     },
@@ -885,10 +896,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/antarctica/antarctica-itinerary/",
-          "title": "Antarctica Itinerary",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Antarctica Itinerary",
           "summary": "The startling white continent of Antarctica, strewn with shimmering blue bergs and home to incredible wildlife, provides adventurous yacht charterers with the ultimate voyage of discovery.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/lemairekanal-856304_0-1024x769.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/lemairekanal-856304_0-1024x769.jpg",
+          "days": null
         }
       ]
     },
@@ -951,10 +963,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/arctic/east-greenland/",
-          "title": "East Greenland",
-          "days": 9,
+          "title": "",
+          "eyebrow": "Charter Itinerary East Greenland",
           "summary": "East Greenland supplies an unparalleled blend of breathtaking natural beauty and thrilling exploration. Whether you’re drawn to the awe-inspiring Northern Lights, the abundance of wildlife, or discovering some of the world’s most remote destinations, this region promises an unforgettable adventure.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2025/03/iStock-2043897110-1024x683.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2025/03/iStock-2043897110-1024x683.jpg",
+          "days": null
         }
       ]
     },
@@ -1016,10 +1029,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/arctic/longyearbyen-to-longyearbyen/",
-          "title": "Longyearbyen to Longyearbyen",
-          "days": 10,
+          "title": "10-Day Charter Itinerary Longyearbyen to Longyearbyen",
+          "eyebrow": null,
           "summary": "Discover one of the world’s most extraordinary destinations on an exclusive expedition to Svalbard, a remote Arctic archipelago renowned for its untamed beauty, abundant wildlife, and dramatic landscapes.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/11/Secret-Atlas_Natural-Wonders-Of-Svalbard-5-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/11/Secret-Atlas_Natural-Wonders-Of-Svalbard-5-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -1086,11 +1100,12 @@
       "featured": true,
       "itineraryLinks": [
         {
-          "url": "https://www.oceanindependence.com/yacht-charter/itineraries/australasia/the-kimberley/",
-          "title": "The Kimberley",
-          "days": 7,
+          "url": "https://www.oceanindependence.com/yacht-charter/itineraries/australia-and-new-zealand/the-kimberley/",
+          "title": "",
+          "eyebrow": "Charter Itinerary The Kimberly",
           "summary": "Travel around the north-western edge of Australia to discover a raw, wild coastline dotted with some 2600 beautiful islands; welcome to The Kimberley.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/MAIN-IMAGE-geike-GORGE-KIMBERLEY.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/MAIN-IMAGE-geike-GORGE-KIMBERLEY.jpg",
+          "days": null
         }
       ]
     },
@@ -1157,10 +1172,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/south-pacific/bay-of-islands/",
-          "title": "Bay of Islands",
-          "days": 8,
+          "title": "",
+          "eyebrow": "Charter Itinerary Bay of Islands",
           "summary": "Unearth the majestic beauty of New Zealand with our 8-day luxury yacht charter New Zealand itinerary.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/beautiful-beach-79.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/beautiful-beach-79.jpg",
+          "days": null
         }
       ]
     },
@@ -1325,10 +1341,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/caribbean/st-maarten-to-st-maarten/",
-          "title": "St Maarten to St Maarten",
-          "days": 8,
+          "title": "",
+          "eyebrow": "Charter Itinerary St Maarten to St Maarten",
           "summary": "With a fabulous choice of stunning bays, wonderful marinas and exceptional towns to explore, you will be spoiled for choice during this superyacht charter itinerary.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_caribbean-2221745_2-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_caribbean-2221745_2-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -1487,10 +1504,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/caribbean/nassau-to-nassau/",
-          "title": "Nassau to Nassau",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Nassau to Nassau",
           "summary": "With an incredible choice of 700 islands and some 2,400 cays, the Bahamas are a rich, varied and idyllic yachting destination.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/rsz__pou9874_from_bahamas_tourist_2-1-1024x682.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/rsz__pou9874_from_bahamas_tourist_2-1-1024x682.jpg",
+          "days": null
         }
       ]
     },
@@ -1813,10 +1831,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/central-america/panama-to-costa-rica/",
-          "title": "panama to costa rica",
-          "days": 8,
+          "title": "",
+          "eyebrow": "Charter Itinerary Panama to Costa Rica",
           "summary": "This luxurious Panamá - Costa Rica itinerary promises a sensory feast across two vibrant countries. Expect a heady mix of tropical jungles and wildlife-rich national parks.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/water-fall-2355759.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/water-fall-2355759.jpg",
+          "days": null
         }
       ]
     },
@@ -1875,10 +1894,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/central-america/la-paz-to-la-paz/",
-          "title": "la paz to la paz",
-          "days": 8,
+          "title": "",
+          "eyebrow": "Charter Itinerary La Paz to La Paz",
           "summary": "The narrow Sea of Cortez is flanked by mainland Mexico and Baja California, offering an intriguing coastline that still remains somewhat of a secret destination.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/flamingo-1899458-1024x682.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/flamingo-1899458-1024x682.jpg",
+          "days": null
         }
       ]
     },
@@ -1937,10 +1957,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/indian-ocean/male-to-male/",
-          "title": "Male to Male",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Male to Male",
           "summary": "With irresistible white beaches and deep blue lagoons, island-hopping in the Maldives is sheer paradise. In this tropical haven enjoy idyllic scenery, tasty cuisine and exceptional marine life.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/maldives-2122547-1.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/maldives-2122547-1.jpg",
+          "days": null
         }
       ]
     },
@@ -2000,10 +2021,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/indian-ocean/eden-island-to-fregate-island-seychelles/",
-          "title": "Eden Island to Fregate Island, Seychelles",
-          "days": 9,
+          "title": "",
+          "eyebrow": "Charter Itinerary Eden Island to Fregate Island, Seychelles",
           "summary": "Offering a unique experience of untapped tropical scenery, flavours and scents, the perfect weather and relaxed atmosphere of the Seychelles provides an idyllic charter getaway.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_seychelles-3746207-1.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_seychelles-3746207-1.jpg",
+          "days": null
         }
       ]
     },
@@ -2305,10 +2327,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/dubrovnik-to-trogir/",
-          "title": "Dubrovnik to Trogir",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Dubrovnik to Trogir",
           "summary": "Explore gorgeous backdrops and exciting sailing along the coastline of Croatia. The stunning beaches, secluded coves and traditional villages are all best accessed by superyacht.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/CROATIA-GEN-2-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/CROATIA-GEN-2-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -2662,10 +2685,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/cannes-to-monaco/",
-          "title": "Cannes to Monaco",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Cannes to Monaco",
           "summary": "Enjoy cruising the glittering French coastline. Explore quaint perched towns, admire Baroque architecture, enjoy fine cuisine and soak up the beautiful scenery.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/french-riviera-monaco-min-1024x683.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/french-riviera-monaco-min-1024x683.jpg",
+          "days": null
         }
       ]
     },
@@ -2846,7 +2870,17 @@
         "yf-40001",
         "yf-19770"
       ],
-      "featured": true
+      "featured": true,
+      "itineraryLinks": [
+        {
+          "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/rhodes-to-bodrum/",
+          "title": "Rhodes to Bodrum",
+          "eyebrow": "Charter Itinerary",
+          "summary": "Providing minimal distances between the islands, a charter across the Dodecanese is filled with beauty off the beaten track.",
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rhodes-3276738-2.jpg",
+          "days": null
+        }
+      ]
     },
     {
       "id": "mediterranean/italy",
@@ -3149,10 +3183,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/rome-to-naples/",
-          "title": "Rome to Naples",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Rome to Naples",
           "summary": "The Italian Amalfi coastline is a yachting haven, offering a variety of exceptional anchorages, fabulous cuisine, coastal towns and picturesque fishing villages. This is a wonderful location to experience la dolce vita while on a yacht charter.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/SIM-410026-ITA-Campania-Positano-1-1024x524.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/SIM-410026-ITA-Campania-Positano-1-1024x524.jpg",
+          "days": null
         }
       ]
     },
@@ -3538,10 +3573,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/palma-to-cala-morell/",
-          "title": "Palma to Cala Morell",
-          "days": 9,
+          "title": "",
+          "eyebrow": "Charter Itinerary Palma to Cala Morell",
           "summary": "Superb treasures of the Western Mediterranean, the Balearic Islands combine natural beauty with excellent nightlife and stunning beaches -cruise from Mallorca to Menorca and explore the landscape.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/menorca-2325268-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/menorca-2325268-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -3702,10 +3738,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/gocek-to-gocek/",
-          "title": "Gocek to Gocek",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Gocek to Gocek",
           "summary": "Clear warm seas and dazzling blue bays are trademarks of cruising in Turkey. Charming and animated, coastal villages and waterfront boulevards are filled with locals simply embracing life.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/Bodrum1_0-1024x678.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/Bodrum1_0-1024x678.jpg",
+          "days": null
         }
       ]
     },
@@ -3828,10 +3865,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/north-america/sitka-to-juneau-alaska/",
-          "title": "Sitka to Juneau, Alaska",
-          "days": 8,
+          "title": "",
+          "eyebrow": "Charter Itinerary Sitka to Juneau, Alaska",
           "summary": "The short yet exceptional Alaska charter season brings an opportunity to discover natural wonders and fascinating history along one of the most stunning coastlines in the world.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2023/11/tracy-arm-fjord-369634-1024x678.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2023/11/tracy-arm-fjord-369634-1024x678.jpg",
+          "days": null
         }
       ]
     },
@@ -3962,10 +4000,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/north-america/the-florida-keys/",
-          "title": "The Florida Keys",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary The Florida Keys",
           "summary": "Located south of Miami, the Florida Keys encompass more than 40 islands, offering an itinerary covering some of the best diving and snorkelling in the US.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/aerial-2039342-1-1024x505.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/aerial-2039342-1-1024x505.jpg",
+          "days": null
         }
       ]
     },
@@ -4026,10 +4065,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/north-america/new-england/",
-          "title": "New England",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary New England",
           "summary": "Located in the north east corner of the US, New England is brimming with unmitigated charm. Explore this stunning coastline on a yacht charter to discover the many delights of this charming region.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/whites-beach-3994144-VERMONT-1.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/whites-beach-3994144-VERMONT-1.jpg",
+          "days": null
         }
       ]
     },
@@ -4091,10 +4131,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/northern-europe/stavanger-to-bergen/",
-          "title": "Stavanger to Bergen",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Stavanger to Bergen",
           "summary": "Norway is the essence of unspoiled beauty: incredible fjords, rivers and waterfalls abound in the alluring land of the midnight sun. An itinerary here makes the very most of outdoor opportunities.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/shutterstock_647002174.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/shutterstock_647002174.jpg",
+          "days": null
         }
       ]
     },
@@ -4258,10 +4299,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/south-america/patagonia-itinerary/",
-          "title": "Patagonia Itinerary",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Patagonia Itinerary",
           "summary": "Experience four seasons in one day when visiting Patagonia. On the southern frontier of South America, bordered by Argentina and Chile, the exceptional landscape offers exciting adventures.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/mount-fitzroy-2225382-1.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/mount-fitzroy-2225382-1.jpg",
+          "days": null
         }
       ]
     },
@@ -4313,10 +4355,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/indian-ocean/luxury-7-day-yacht-itinerary-langkawi-to-phuket-exploration-ocean-independence/",
-          "title": "Langkawi to Phuket",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Langkawi to Phuket",
           "summary": "This itinerary is a blend of two stunning countries in South East Asia. Malaysia and Thailand's beautiful islands will deliver a host of amazing beaches, dive sites, and scenic beauty along the way.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/thailand-2359865.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/thailand-2359865.jpg",
+          "days": null
         }
       ]
     },
@@ -4373,10 +4416,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/indian-ocean/luxury-7-day-yacht-itinerary-langkawi-to-phuket-exploration-ocean-independence/",
-          "title": "Langkawi to Phuket",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Langkawi to Phuket",
           "summary": "This itinerary is a blend of two stunning countries in South East Asia. Malaysia and Thailand's beautiful islands will deliver a host of amazing beaches, dive sites, and scenic beauty along the way.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/thailand-2359865.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/thailand-2359865.jpg",
+          "days": null
         }
       ]
     },
@@ -4436,10 +4480,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/indian-ocean/luxury-7-day-yacht-itinerary-langkawi-to-phuket-exploration-ocean-independence/",
-          "title": "Langkawi to Phuket",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Langkawi to Phuket",
           "summary": "This itinerary is a blend of two stunning countries in South East Asia. Malaysia and Thailand's beautiful islands will deliver a host of amazing beaches, dive sites, and scenic beauty along the way.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/thailand-2359865-1-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/thailand-2359865-1-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -4501,10 +4546,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/south-pacific/fiji-itinerary/",
-          "title": "Fiji Itinerary",
-          "days": 10,
+          "title": "",
+          "eyebrow": "Charter Itinerary Fiji Itinerary",
           "summary": "Packed with experiences, Fiji is a versatile getaway in paradise. Whether you seek world-class diving, jungle trekking, sheer relaxation on the beach or family activities, you will find it here.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/Fiji-1-105.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/Fiji-1-105.jpg",
+          "days": null
         }
       ]
     },
@@ -4776,11 +4822,12 @@
       "featured": true,
       "itineraryLinks": [
         {
-          "url": "https://www.oceanindependence.com/yacht-charter/itineraries/australasia/the-kimberley/",
-          "title": "The Kimberley",
-          "days": 7,
+          "url": "https://www.oceanindependence.com/yacht-charter/itineraries/australia-and-new-zealand/the-kimberley/",
+          "title": "",
+          "eyebrow": "Charter Itinerary The Kimberley",
           "summary": "Travel around the north-western edge of Australia to discover a raw, wild coastline dotted with some 2600 beautiful islands; welcome to The Kimberley.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/MAIN-IMAGE-geike-GORGE-KIMBERLEY.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/MAIN-IMAGE-geike-GORGE-KIMBERLEY.jpg",
+          "days": null
         }
       ]
     },
@@ -4977,10 +5024,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/caribbean/antigua-to-st-lucia/",
-          "title": "antigua to st lucia",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Antigua to St Lucia",
           "summary": "The stunning Leeward islands of the Caribbean provide an excellent opportunity to enjoy a leisurely cruise amidst secluded tranquility. Relax as you sail crystal waters surrounded by beauty.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/guadeloupe-days-1-3-3-1024x768.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/guadeloupe-days-1-3-3-1024x768.jpg",
+          "days": null
         }
       ]
     },
@@ -5119,10 +5167,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/caribbean/st-maarten-to-st-maarten/",
-          "title": "St Maarten to St Maarten",
-          "days": 8,
+          "title": "",
+          "eyebrow": "Charter Itinerary St Maarten to St Maarten",
           "summary": "With a fabulous choice of stunning bays, wonderful marinas and exceptional towns to explore, you will be spoiled for choice during this superyacht charter itinerary.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/04/Depositphotos_524348864_L-1024x576.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/04/Depositphotos_524348864_L-1024x576.jpg",
+          "days": null
         }
       ]
     },
@@ -5262,10 +5311,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/caribbean/st-maarten-to-st-maarten/",
-          "title": "St Maarten to St Maarten",
-          "days": 8,
+          "title": "",
+          "eyebrow": "Charter Itinerary St Maarten to St Maarten",
           "summary": "With a fabulous choice of stunning bays, wonderful marinas and exceptional towns to explore, you will be spoiled for choice during this superyacht charter itinerary.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_caribbean-2221745_2-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_caribbean-2221745_2-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -5414,10 +5464,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/caribbean/nassau-to-nassau/",
-          "title": "Nassau to Nassau",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Nassau to Nassau",
           "summary": "The perfect choice for a relaxed yachting experience, the islands and cays of the Bahamas offer endless possibilities for idyllic cruising.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/rsz__pou9874_from_bahamas_tourist_2-1-1024x682.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/rsz__pou9874_from_bahamas_tourist_2-1-1024x682.jpg",
+          "days": null
         }
       ]
     },
@@ -5566,10 +5617,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/caribbean/nassau-to-nassau/",
-          "title": "Nassau to Nassau",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Nassau to Nassau",
           "summary": "The perfect choice for a relaxed yachting experience, the islands and cays of the Bahamas offer endless possibilities for idyllic cruising.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/rsz__pou9874_from_bahamas_tourist_2-1-1024x682.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/rsz__pou9874_from_bahamas_tourist_2-1-1024x682.jpg",
+          "days": null
         }
       ]
     },
@@ -5719,10 +5771,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/caribbean/nassau-to-nassau/",
-          "title": "Nassau to Nassau",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Nassau to Nassau",
           "summary": "The perfect choice for a relaxed yachting experience, the islands and cays of the Bahamas offer endless possibilities for idyllic cruising.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/rsz__pou9874_from_bahamas_tourist_2-1-1024x682.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/rsz__pou9874_from_bahamas_tourist_2-1-1024x682.jpg",
+          "days": null
         }
       ]
     },
@@ -5871,10 +5924,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/caribbean/nassau-to-nassau/",
-          "title": "Nassau to Nassau",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Nassau to Nassau",
           "summary": "The perfect choice for a relaxed yachting experience, the islands and cays of the Bahamas offer endless possibilities for idyllic cruising.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/rsz__pou9874_from_bahamas_tourist_2-1-1024x682.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/rsz__pou9874_from_bahamas_tourist_2-1-1024x682.jpg",
+          "days": null
         }
       ]
     },
@@ -6023,10 +6077,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/caribbean/nassau-to-nassau/",
-          "title": "Nassau to Nassau",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Nassau to Nassau",
           "summary": "The perfect choice for a relaxed yachting experience, the islands and cays of the Bahamas offer endless possibilities for idyllic cruising.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/rsz__pou9874_from_bahamas_tourist_2-1024x682.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/rsz__pou9874_from_bahamas_tourist_2-1024x682.jpg",
+          "days": null
         }
       ]
     },
@@ -6260,10 +6315,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/caribbean/tortola-to-tortola/",
-          "title": "Tortola to Tortola",
-          "days": 10,
+          "title": "",
+          "eyebrow": "Charter Itinerary Tortola to Tortola",
           "summary": "Whether you’re exploring pristine beaches, indulging in world-class snorkelling and diving, or enjoying a vibrant beach club scene, this 10-day itinerary through the British Virgin Islands offers a mix of relaxation, adventure, and discovery for everyone.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/10/iStock-480271872-1024x564.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/10/iStock-480271872-1024x564.jpg",
+          "days": null
         }
       ]
     },
@@ -6326,10 +6382,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/caribbean/st-thomas-to-st-thomas/",
-          "title": "St. Thomas to St. Thomas",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary St Thomas to St Thomas",
           "summary": "Explore the beauty of the U.S. Virgin Islands on this eight-day yacht charter itinerary, ideal for both adventure and relaxation. Discover vibrant coral reefs, historic sites, and serene anchorages from St. Thomas to the untouched bays of St. John. For a blend of luxury, nature, and local culture, view the full itinerary for inspiration.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/10/st-thomas-hero-1024x576.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/10/st-thomas-hero-1024x576.jpg",
+          "days": null
         }
       ]
     },
@@ -6499,10 +6556,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/dubrovnik-to-trogir/",
-          "title": "Dubrovnik to Trogir",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Dubrovnik to Trogir",
           "summary": "Explore gorgeous backdrops and exciting sailing along the coastline of Croatia. The stunning beaches, secluded coves and traditional villages are all best accessed by superyacht.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/CROATIA-GEN-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/CROATIA-GEN-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -6670,10 +6728,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/dubrovnik-to-trogir/",
-          "title": "Dubrovnik to Trogir",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Dubrovnik to Trogir",
           "summary": "Explore gorgeous backdrops and exciting sailing along the coastline of Croatia. The stunning beaches, secluded coves and traditional villages are all best accessed by superyacht.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/CROATIA-GEN-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/CROATIA-GEN-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -7283,10 +7342,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/cannes-to-monaco/",
-          "title": "Cannes to Monaco",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Cannes to Monaco",
           "summary": "Enjoy cruising the glittering French coastline. Explore quaint perched towns, admire Baroque architecture, enjoy fine cuisine and soak up the beautiful scenery.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2023/11/rsz_sunset-677586-2.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2023/11/rsz_sunset-677586-2.jpg",
+          "days": null
         }
       ]
     },
@@ -7460,10 +7520,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/cyclades-itinerary/",
-          "title": "Cyclades Itinerary",
-          "days": 8,
+          "title": "",
+          "eyebrow": "Charter Itinerary Cyclades Itinerary",
           "summary": "The beauty of chartering in the Cyclades is the freedom to hop between islands, depending on where the mood takes you. The warm, calm waters are a huge draw alongside the relaxed coastal vibe.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/santorini-1948680-1-1024x688.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/santorini-1948680-1-1024x688.jpg",
+          "days": null
         }
       ]
     },
@@ -7811,10 +7872,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/cyclades-itinerary/",
-          "title": "Cyclades Itinerary",
-          "days": 8,
+          "title": "",
+          "eyebrow": "Charter Itinerary Cyclades Itinerary",
           "summary": "The beauty of chartering in the Cyclades is the freedom to hop between islands, depending on where the mood takes you. The warm, calm waters are a huge draw alongside the relaxed coastal vibe.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/santorini-1948680-1-1024x688.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/santorini-1948680-1-1024x688.jpg",
+          "days": null
         }
       ]
     },
@@ -7986,10 +8048,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/rhodes-to-bodrum/",
-          "title": "Rhodes to Bodrum",
-          "days": 8,
+          "title": "",
+          "eyebrow": "Charter Itinerary Rhodes to Bodrum",
           "summary": "Providing minimal distances between the islands, a charter across the Dodecanese is filled with beauty off the beaten track.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rhodes-3276738.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rhodes-3276738.jpg",
+          "days": null
         }
       ]
     },
@@ -8169,10 +8232,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/south-pacific/bay-of-islands/",
-          "title": "Bay of Islands",
-          "days": 8,
+          "title": "",
+          "eyebrow": "Charter Itinerary Corfu to Zakynthos",
           "summary": "Embark on a voyage through mythical history and magical beaches in the Ionian with our Corfu to Zakynthos yacht charter. These incredible islands have a slightly cooler climate than much of Greece.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_zakynthos-2089571.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_zakynthos-2089571.jpg",
+          "days": null
         }
       ]
     },
@@ -8669,10 +8733,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/naples-to-sicily/",
-          "title": "Naples to Sicily",
-          "days": 8,
+          "title": "",
+          "eyebrow": "Charter Itinerary Naples to Sicily",
           "summary": "This Naples to Sicily yacht charter itinerary provides an unmissable journey, allowing you to experience the captivating beauty of southern Italy's romantic islands and its iconic coastline.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/Italian-Riviera-2-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/Italian-Riviera-2-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -9246,10 +9311,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/naples-to-sicily/",
-          "title": "Naples to Sicily",
-          "days": 8,
+          "title": "",
+          "eyebrow": "Charter Itinerary Naples to Sicily",
           "summary": "This Naples to Sicily yacht charter itinerary provides an unmissable journey, allowing you to experience the captivating beauty of southern Italy's romantic islands and its iconic coastline.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/Italian-Riviera-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/Italian-Riviera-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -9846,10 +9912,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/rome-to-naples/",
-          "title": "Rome to Naples",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Rome to Naples",
           "summary": "The Italian Amalfi coastline is a yachting haven, offering a variety of exceptional anchorages, fabulous cuisine and coastal towns. This is a wonderful location to experience la dolce vita.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/SIM-410026-ITA-Campania-Positano-1024x524.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/SIM-410026-ITA-Campania-Positano-1024x524.jpg",
+          "days": null
         }
       ]
     },
@@ -10724,10 +10791,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/naples-to-sicily/",
-          "title": "Naples to Sicily",
-          "days": 8,
+          "title": "",
+          "eyebrow": "Charter Itinerary Naples to Sicily",
           "summary": "This Naples to Sicily yacht charter itinerary provides an unmissable journey, allowing you to experience the captivating beauty of southern Italy's romantic islands and its iconic coastline.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/Italian-Riviera.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/Italian-Riviera.jpg",
+          "days": null
         }
       ]
     },
@@ -11169,10 +11237,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/dubrovnik-to-trogir/",
-          "title": "Dubrovnik to Trogir",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Dubrovnik to Trogir",
           "summary": "Explore gorgeous backdrops and exciting sailing along the coastline of Croatia. The stunning beaches, secluded coves and traditional villages are all best accessed by superyacht.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/CROATIA-GEN-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/CROATIA-GEN-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -11327,10 +11396,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/dubrovnik-to-trogir/",
-          "title": "Dubrovnik to Trogir",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Dubrovnik to Trogir",
           "summary": "Explore gorgeous backdrops and exciting sailing along the coastline of Croatia. The stunning beaches, secluded coves and traditional villages are all best accessed by superyacht.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/CROATIA-GEN-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/CROATIA-GEN-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -11470,10 +11540,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/palma-to-cala-morell/",
-          "title": "Palma to Cala Morell",
-          "days": 9,
+          "title": "",
+          "eyebrow": "Charter Itinerary Palma to Cala Morell",
           "summary": "Superb treasures of the Western Mediterranean, the Balearic Islands combine natural beauty with excellent nightlife and stunning beaches - cruise from Mallorca to Menorca and explore the landscape.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/menorca-2325268-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/menorca-2325268-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -11704,10 +11775,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/gocek-to-gocek/",
-          "title": "Gocek to Gocek",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Göcek to Göcek",
           "summary": "Clear warm seas and dazzling blue bays are trademarks of cruising in Turkey. Charming and animated, coastal villages and waterfront boulevards are filled with locals simply embracing life.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/Bodrum1_0-1024x678.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/Bodrum1_0-1024x678.jpg",
+          "days": null
         }
       ]
     },
@@ -11817,10 +11889,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/gocek-to-gocek/",
-          "title": "Gocek to Gocek",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Gocek to Gocek",
           "summary": "Clear warm seas and dazzling blue bays are trademarks of cruising in Turkey. Charming and animated, coastal villages and waterfront boulevards are filled with locals simply embracing life.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/Bodrum1_0-1024x678.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/02/Bodrum1_0-1024x678.jpg",
+          "days": null
         }
       ]
     },
@@ -11965,10 +12038,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/caribbean/st-maarten-to-st-maarten/",
-          "title": "St Maarten to St Maarten",
-          "days": 8,
+          "title": "",
+          "eyebrow": "Charter Itinerary St Maarten to St Maarten",
           "summary": "With a fabulous choice of stunning bays, wonderful marinas and exceptional towns to explore, you will be spoiled for choice during this superyacht charter itinerary.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/BVH-20722353-Dominican-RepSamana-Playa-1-1024x768.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/BVH-20722353-Dominican-RepSamana-Playa-1-1024x768.jpg",
+          "days": null
         }
       ]
     },
@@ -12065,10 +12139,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/cannes-to-monaco/",
-          "title": "Cannes to Monaco",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Cannes to Monaco",
           "summary": "Enjoy cruising the glittering French coastline. Explore quaint perched towns, admire Baroque architecture, enjoy fine cuisine and soak up the beautiful scenery.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_sunset-677586-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_sunset-677586-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -12119,10 +12194,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/cannes-to-monaco/",
-          "title": "Cannes to Monaco",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Cannes to Monaco",
           "summary": "Enjoy cruising the glittering French coastline. Explore quaint perched towns, admire Baroque architecture, enjoy fine cuisine and soak up the beautiful scenery.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_sunset-677586-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_sunset-677586-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -12174,10 +12250,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/cannes-to-monaco/",
-          "title": "Cannes to Monaco",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Cannes to Monaco",
           "summary": "Enjoy cruising the glittering French coastline. Explore quaint perched towns, admire Baroque architecture, enjoy fine cuisine and soak up the beautiful scenery.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_sunset-677586-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_sunset-677586-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -12229,10 +12306,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/cannes-to-monaco/",
-          "title": "Cannes to Monaco",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Cannes to Monaco",
           "summary": "Enjoy cruising the glittering French coastline. Explore quaint perched towns, admire Baroque architecture, enjoy fine cuisine and soak up the beautiful scenery.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_sunset-677586-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_sunset-677586-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -12283,10 +12361,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/cannes-to-monaco/",
-          "title": "Cannes to Monaco",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Cannes to Monaco",
           "summary": "Enjoy cruising the glittering French coastline. Explore quaint perched towns, admire Baroque architecture, enjoy fine cuisine and soak up the beautiful scenery.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_sunset-677586-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_sunset-677586-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -12338,10 +12417,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/cannes-to-monaco/",
-          "title": "Cannes to Monaco",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Cannes to Monaco",
           "summary": "Enjoy cruising the glittering French coastline. Explore quaint perched towns, admire Baroque architecture, enjoy fine cuisine and soak up the beautiful scenery.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_sunset-677586-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_sunset-677586-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -12393,10 +12473,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/cannes-to-monaco/",
-          "title": "Cannes to Monaco",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Cannes to Monaco",
           "summary": "Enjoy cruising the glittering French coastline. Explore quaint perched towns, admire Baroque architecture, enjoy fine cuisine and soak up the beautiful scenery.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_sunset-677586-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_sunset-677586-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -12450,10 +12531,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/cannes-to-monaco/",
-          "title": "Cannes to Monaco",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Cannes to Monaco",
           "summary": "Enjoy cruising the glittering French coastline. Explore quaint perched towns, admire Baroque architecture, enjoy fine cuisine and soak up the beautiful scenery.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_sunset-677586-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_sunset-677586-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -12595,10 +12677,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/corfu-to-zakynthos/",
-          "title": "corfu to zakynthos",
-          "days": 8,
+          "title": "",
+          "eyebrow": "Charter Itinerary Corfu to Zakynthos",
           "summary": "Embark on a voyage through mythical history and magical beaches in the Ionian with our Corfu to Zakynthos yacht charter. These incredible islands have a slightly cooler climate than much of Greece.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_zakynthos-2089571-1-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_zakynthos-2089571-1-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -12650,10 +12733,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/corfu-to-zakynthos/",
-          "title": "corfu to zakynthos",
-          "days": 8,
+          "title": "",
+          "eyebrow": "Charter Itinerary Corfu to Zakynthos",
           "summary": "Embark on a voyage through mythical history and magical beaches in the Ionian with our Corfu to Zakynthos yacht charter. These incredible islands have a slightly cooler climate than much of Greece.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_zakynthos-2089571-1-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_zakynthos-2089571-1-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -12801,10 +12885,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/rome-to-naples/",
-          "title": "Rome to Naples",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Rome to Naples",
           "summary": "The Italian Amalfi coastline is a yachting haven, offering a variety of exceptional anchorages, fabulous cuisine and coastal towns. This is a wonderful location to experience la dolce vita.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2023/11/rsz_sim-410026-ita_campania_positano-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2023/11/rsz_sim-410026-ita_campania_positano-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -12856,10 +12941,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/naples-to-sicily/",
-          "title": "Naples to Sicily",
-          "days": 8,
+          "title": "",
+          "eyebrow": "Charter Itinerary Naples to Sicily",
           "summary": "This Naples to Sicily yacht charter itinerary provides an unmissable journey, allowing you to experience the captivating beauty of southern Italy's romantic islands and its iconic coastline.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/Italian-Riviera-3-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/Italian-Riviera-3-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -12911,10 +12997,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/rome-to-naples/",
-          "title": "Rome to Naples",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Rome to Naples",
           "summary": "The Italian Amalfi coastline is a yachting haven, offering a variety of exceptional anchorages, fabulous cuisine and coastal towns. This is a wonderful location to experience la dolce vita.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2023/11/rsz_sim-410026-ita_campania_positano-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2023/11/rsz_sim-410026-ita_campania_positano-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -13059,10 +13146,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/naples-to-sicily/",
-          "title": "Naples to Sicily",
-          "days": 8,
+          "title": "",
+          "eyebrow": "Charter Itinerary Naples to Sicily",
           "summary": "This Naples to Sicily yacht charter itinerary provides an unmissable journey, allowing you to experience the captivating beauty of southern Italy's romantic islands and its iconic coastline.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/Italian-Riviera-2-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/Italian-Riviera-2-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -13172,10 +13260,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/rome-to-naples/",
-          "title": "Rome to Naples",
-          "days": 7,
+          "title": "",
+          "eyebrow": "Charter Itinerary Rome to Naples",
           "summary": "The Italian Amalfi coastline is a yachting haven, offering a variety of exceptional anchorages, fabulous cuisine and coastal towns. This is a wonderful location to experience la dolce vita.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/SIM-410026-ITA-Campania-Positano-1-1024x524.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/SIM-410026-ITA-Campania-Positano-1-1024x524.jpg",
+          "days": null
         }
       ]
     },
@@ -13272,10 +13361,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/aeolian-islands-catania-to-palermo/",
-          "title": "Aeolian Islands: Catania to Palermo",
-          "days": 9,
+          "title": "",
+          "eyebrow": "Charter Itinerary Aeolian Islands: Catania to Palermo",
           "summary": "Once the haunt of ancient deities, the beautiful Aeolian Islands in the Tyrrhenian Sea are now worshipped for their raw natural beauty and glittering nightlife.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_istock-1018266952_sicily_main-1-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/rsz_istock-1018266952_sicily_main-1-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -13332,10 +13422,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/palma-to-cala-morell/",
-          "title": "Palma to Cala Morell",
-          "days": 9,
+          "title": "",
+          "eyebrow": "Charter Itinerary Palma to Cala Morell",
           "summary": "Superb treasures of the Western Mediterranean, the Balearic Islands combine natural beauty with excellent nightlife and stunning beaches -cruise from Mallorca to Menorca and explore the landscape.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/menorca-2325268-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/menorca-2325268-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -13408,10 +13499,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/palma-to-cala-morell/",
-          "title": "Palma to Cala Morell",
-          "days": 9,
+          "title": "",
+          "eyebrow": "Charter Itinerary Palma to Cala Morell",
           "summary": "Superb treasures of the Western Mediterranean, the Balearic Islands combine natural beauty with excellent nightlife and stunning beaches -cruise from Mallorca to Menorca and explore the landscape.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/menorca-2325268-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/menorca-2325268-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -13483,10 +13575,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/palma-to-cala-morell/",
-          "title": "Palma to Cala Morell",
-          "days": 9,
+          "title": "",
+          "eyebrow": "Charter Itinerary Palma to Cala Morell",
           "summary": "Superb treasures of the Western Mediterranean, the Balearic Islands combine natural beauty with excellent nightlife and stunning beaches -cruise from Mallorca to Menorca and explore the landscape.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/menorca-2325268-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/menorca-2325268-1024x640.jpg",
+          "days": null
         }
       ]
     },
@@ -13543,10 +13636,11 @@
       "itineraryLinks": [
         {
           "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/palma-to-cala-morell/",
-          "title": "Palma to Cala Morell",
-          "days": 9,
+          "title": "",
+          "eyebrow": "Charter Itinerary Palma to Cala Morell",
           "summary": "Superb treasures of the Western Mediterranean, the Balearic Islands combine natural beauty with excellent nightlife and stunning beaches -cruise from Mallorca to Menorca and explore the landscape.",
-          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/menorca-2325268-1024x640.jpg"
+          "image": "https://www.oceanindependence.com/wp-content/uploads/2024/03/menorca-2325268-1024x640.jpg",
+          "days": null
         }
       ]
     }
@@ -20960,6 +21054,65 @@
         }
       ]
     },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/antarctica/scenic-eclipse-in-antarctica/": {
+      "url": "https://www.oceanindependence.com/yacht-charter/itineraries/antarctica/scenic-eclipse-in-antarctica/",
+      "title": "Scenic Eclipse in Antarctica",
+      "days": 12,
+      "metaDescription": "Charter the Scenic Eclipse, a purpose-built vessel, for a private Antarctica voyage. Ocean Independence arranges the Scenic Eclipse charter. Enquire today.",
+      "heroImage": "https://www.oceanindependence.com/wp-content/uploads/2024/02/15259.25-scaled.jpg",
+      "intro": [
+        "At the base of the globe, the Antarctic Peninsula is a land of white icescapes, towering peaks and protected channels.",
+        "Home to an abundance of wildlife with vast populations of penguins, seals and whales, the region offers a feast for the senses and a once in a lifetime chance to witness an outstanding range of biodiversity that few have experienced before.",
+        "Discover areas largely untouched by humans, a pristine wonderland where the natural world thrives. Mega yacht SCENIC ECLIPSE offers the chance to explore this remote landscape in depth. Wake up to icebergs floating past and spend your days exploring the Antarctic Peninsula and surrounding islands by Zodiac, kayak, helicopter and submarine, all with the help of a team of expert guides."
+      ],
+      "stops": [
+        {
+          "day": 1,
+          "place": "ushuaia",
+          "text": "Arrive in Ushuaia, Argentina – recognised as the southernmost city in the world – where your crew will warmly greet you as you board SCENIC ECLIPSE. Settle in and get acquainted with the wealth of luxury amenities on board before toasting the start of your voyage while your Captain introduces your expert Discovery Leaders and their team. Set sail and cruise through the Beagle Channel, where you can admire stunning views of the Andean mountains of Tierra del Fuego from the comfort of your private veranda."
+        },
+        {
+          "day": 2,
+          "dayEnd": 3,
+          "place": "ushuaia to antarctic peninsula",
+          "text": "Relax and enjoy the amazing facilities of SCENIC ECLIPSE as you cruise towards the Antarctic Peninsula. Join your team of expert guides in the state-of-the-art theatre for a presentation on your upcoming adventures. Explore the extensive range of dining options and take time for some pampering at the spa. The first sightings of icebergs and snow-capped mountains signal that you have reached the Antarctic Peninsula."
+        },
+        {
+          "day": 4,
+          "place": "antarctic peninsula",
+          "text": "A range of exploration options are now available and the Antarctic Peninsula is yours to discover. Your experienced Discovery Team Leaders, who have made countless journeys to Antarctica, will use their expertise to design your adventures. There are endless opportunities to explore with 18-20 hours of daylight."
+        },
+        {
+          "day": 5,
+          "dayEnd": 8,
+          "place": "antarctic peninsula",
+          "text": "Cruise on the Zodiacs around ice formations, step onto islands to view vast penguin rookeries and seals, kayak around icebergs and hear the ice cracking and whales feeding below. Your expert Captain and crew will navigate some of the most beautiful waterways which may include traversing the stunning 11-kilometre-long Lemaire Channel, where steep cliffs hem in the iceberg-filled passage."
+        },
+        {
+          "day": 9,
+          "place": "antarctic peninsula",
+          "text": "Visit a working scientific base and discuss life in the Antarctic with the staff. If conditions are right in late February and March, you will have the chance to cross the Antarctic Circle at latitude 66°33’ South."
+        },
+        {
+          "day": 10,
+          "dayEnd": 11,
+          "place": "antarctic peninsula to ushuaia",
+          "text": "Bid farewell to this land of stunning scenery and adventure and depart for Argentina. Make the most of the outstanding facilities on your two-day journey back to Ushuaia."
+        },
+        {
+          "day": 12,
+          "place": "ushuaia",
+          "text": "Enjoy your final breakfast on board, then disembark in Ushuaia. Take the chance to explore the unique city before continuing your onward journey."
+        }
+      ],
+      "mapPins": [
+        {
+          "lat": -68.1303839,
+          "lon": -67.105728,
+          "label": "antarctica"
+        }
+      ]
+    },
     "https://www.oceanindependence.com/yacht-charter/itineraries/arctic/east-greenland/": {
       "url": "https://www.oceanindependence.com/yacht-charter/itineraries/arctic/east-greenland/",
       "title": "East Greenland",
@@ -21113,8 +21266,8 @@
         }
       ]
     },
-    "https://www.oceanindependence.com/yacht-charter/itineraries/australasia/the-kimberley/": {
-      "url": "https://www.oceanindependence.com/yacht-charter/itineraries/australasia/the-kimberley/",
+    "https://www.oceanindependence.com/yacht-charter/itineraries/australia-and-new-zealand/the-kimberley/": {
+      "url": "https://www.oceanindependence.com/yacht-charter/itineraries/australia-and-new-zealand/the-kimberley/",
       "title": "The Kimberley",
       "days": 7,
       "metaDescription": "The Kimberley Coast is only reachable by sea. Visit ancient gorges and tidal waterfalls by superyacht with Ocean Independence. Enquire for seasons.",
@@ -22136,6 +22289,103 @@
         }
       ]
     },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/croatia-yacht-charter-itinerary-split-to-dubrovnik/": {
+      "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/croatia-yacht-charter-itinerary-split-to-dubrovnik/",
+      "title": "Split to Dubrovnik",
+      "days": 7,
+      "metaDescription": "A 7-day Croatia yacht charter itinerary from Split to Dubrovnik: Trogir, Hvar, Vis, Korčula and Mljet, with recommended yachts and sample charter costs.",
+      "heroImage": "https://www.oceanindependence.com/wp-content/uploads/2026/08/iStock-487277594-3500x2334.jpg",
+      "intro": [
+        "Seven days on the Dalmatian coast moves through some of the most varied sailing in the Adriatic: a UNESCO-listed Roman palace, an island that spent four decades as a closed military zone, pine forests reaching the water's edge, and the medieval walls of Dubrovnik at the end of it.",
+        "This Croatia yacht charter itinerary runs Split to Dubrovnik via Maslinica, Vis, Hvar, Korčula, Mljet and Šipan, covering the central and southern Dalmatian coast at a pace that leaves time to actually be in each place.",
+        "Croatia has over 1,200 islands along its Adriatic coastline. Most charter guests never need more than a dozen of them. There are plenty of reasons to charter in Croatia beyond this single route, but the itinerary below covers the best of the central and south Dalmatian islands in seven days, with a clearly optional extension into Montenegro for those who want more."
+      ],
+      "stops": [
+        {
+          "day": 1,
+          "place": "Split and Maslinica",
+          "text": "Embarkation is in Split. The morning before embarkation goes to Diocletian’s Palace, a Roman emperor’s retirement complex built in the fourth century and now the living heart of Split’s Old Town, with restaurants, bars and apartments occupying the original imperial apartments and mausoleum. It’s one of the better-preserved Roman structures in Europe and worth the hour ashore before the yacht slips its lines. The cruise to Maslinica takes around an hour. Sitting on the western tip of Šolta island, Maslinica is one of the most sheltered anchorages in central Dalmatia: a small harbour village overlooked by the eighteenth-century Martinis Marchi castle on its own islet at the bay’s entrance, with olive groves running back into the hills behind. The waterfront has a handful of excellent restaurants, and the pace is noticeably slower than Split. Dinner ashore or on board, with a walk out to the castle islet for those who want the view back over the bay at sunset."
+        },
+        {
+          "day": 2,
+          "place": "Maslinica to Vis",
+          "text": "The morning is unhurried, with time to explore Maslinica’s waterfront and, tide and appetite allowing, a swim in one of the coves nearby before the yacht heads for Vis. Vis is the furthest inhabited island from the Croatian mainland, and the quietest stop on the route. It was closed to all foreign visitors from the late 1940s until 1989, used as a major Yugoslav naval base with over 20 kilometres of underground tunnels carved into the island’s interior. That isolation preserved it. The fishing villages, the food, the landscape and the pace of life on Vis feel noticeably different from the islands that have had decades of tourism to contend with. Stern to in Vis town for a fascinating tour of the underground tunnels with a local guide, before heading south. Enjoy an afternoon tender ride around the coast before the yacht docks in Komiža Bay on the southwest side of the island, a small fishing village with a harbour full of traditional wooden boats. Komiža has some excellent lobster restaurants, perfect for a dinner ashore."
+        },
+        {
+          "day": 3,
+          "place": "The Pakleni Islands and Hvar",
+          "text": "Komiža gets one last unhurried look before the yacht heads for Hvar, with the afternoon spent at anchor in the Pakleni Islands, the scatter of pine-covered islets just off Hvar that offer some of the best swimming and watersports on the route. Lunch on board, tenders in the water. The tender ride into Hvar Town in the afternoon takes minutes. Hvar has a reputation for nightlife and beach clubs, and the main square delivers on both if that is what the group wants. It is also genuinely beautiful, and the views from the old fortress above the town over the Pakleni Islands and out to the open Adriatic are worth the climb alone. Anchor overnight in the islands or in the harbour."
+        },
+        {
+          "day": 4,
+          "place": "Hvar to Korčula",
+          "text": "The morning belongs to Hvar before the yacht moves on. Korčula is described as Little Dubrovnik for its medieval stone architecture, its walls and towers and the density of its old town crammed onto a small peninsula. It’s also claimed, with varying levels of evidence, as the birthplace of Marco Polo. The old town is worth an evening: dinner ashore in one of the restaurants in the old walls, with the Adriatic on three sides. The passage takes between 3-4 hours, depending on conditions. The yacht anchors for lunch at a bay on the way across, chosen on the day."
+        },
+        {
+          "day": 5,
+          "place": "Korčula to Mljet National Park",
+          "text": "Mljet is the green island, and one of Croatia’s truly beautiful national parks. Dense pine and oak forests run to the water’s edge, and the national park in the western third of the island contains two saltwater lakes connected by a channel, Malo Jezero and Veliko Jezero, surrounded by woodland with a small Benedictine monastery sitting on an island in the larger lake. The yacht stern-ties among the trees, lunch on board, and the afternoon is on foot: a walk through the pine forest to Veliko Jezero, a boat trip to the monastery, a swim in the lake. Dinner on board as the light drops into the forest. The passage from Korčula takes around two hours. Mljet National Park requires an entry fee, paid on arrival."
+        },
+        {
+          "day": 6,
+          "place": "Mljet to Šipan",
+          "text": "A last morning in Mljet National Park before the yacht heads for the Elaphiti Islands, the small archipelago scattered southwest of Dubrovnik. Šipan is the largest of the group and the quietest: no cars, no crowds, just olive groves, old stone farmhouses, and a scatter of ruined summer villas built by Dubrovnik’s nobility, who used the island as a retreat from the city for centuries. The yacht ties up in Šipanska Luka, the main village on the island’s southwestern coast, where a scatter of restaurants line the small harbour. The afternoon is unhurried: a walk up through the olive terraces, a swim off the yacht, or simply time on deck watching the light change over the bay. Dinner ashore at one of the harbourside restaurants, or on board if the group prefers to stay put."
+        },
+        {
+          "day": 7,
+          "place": "Šipan to Dubrovnik: Disembark",
+          "text": "The final passage is short, around an hour and a half, and brings the yacht into Dubrovnik itself. The tender ride into the Old Town takes only minutes from the anchorage: the medieval walls, the Stradun, the Rector’s Palace and the cable car to the top of Mount Srđ for the view over the walled city and the Adriatic beyond. Final breakfast on board, with time for a last look at Dubrovnik’s Old Town before disembarkation. Or, for those who want to continue, the optional Montenegro extension begins here."
+        },
+        {
+          "day": 8,
+          "dayEnd": 9,
+          "place": "Optional Extension: Montenegro",
+          "text": "Guests wishing to extend into Montenegro should note that departing Croatian waters at Dubrovnik requires a formal customs clearance. This isn’t a complex process but it needs to be planned in advance with the Captain. It isn’t a simple continuation of the same cruise. The passage from Dubrovnik to Kotor takes between 2-3 hours. Kotor sits deep into the Bay of Kotor, a deep fjord-like inlet in the Montenegrin coast, with a walled old town and mountains rising steeply behind it. Day 8 continues to Portonovi, with the Aman resort available for dinner or a spa visit. Day 9 runs the Montenegro coast to Budva or directly to Tivat for departure, depending on the group’s schedule."
+        }
+      ],
+      "mapPins": [
+        {
+          "lat": 43.514645,
+          "lon": 16.442607,
+          "label": "Split"
+        },
+        {
+          "lat": 43.396945,
+          "lon": 16.20633,
+          "label": "Maslinica"
+        },
+        {
+          "lat": 43.060467,
+          "lon": 16.183262,
+          "label": "Vis"
+        },
+        {
+          "lat": 43.172517,
+          "lon": 16.444329,
+          "label": "Hvar"
+        },
+        {
+          "lat": 42.959041,
+          "lon": 17.132855,
+          "label": "Korčula"
+        },
+        {
+          "lat": 42.774991,
+          "lon": 17.408564,
+          "label": "Mljet National Park"
+        },
+        {
+          "lat": 42.729407,
+          "lon": 17.863925,
+          "label": "Šipan"
+        },
+        {
+          "lat": 42.650813,
+          "lon": 18.09462,
+          "label": "Dubrovnik"
+        }
+      ]
+    },
     "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/cyclades-itinerary/": {
       "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/cyclades-itinerary/",
       "title": "Cyclades Itinerary",
@@ -22308,6 +22558,76 @@
           "lat": 36.7534,
           "lon": 28.9425,
           "label": "Gocek"
+        }
+      ]
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/monaco-to-rome/": {
+      "url": "https://www.oceanindependence.com/yacht-charter/itineraries/mediterranean/monaco-to-rome/",
+      "title": "monaco to rome",
+      "days": 9,
+      "metaDescription": "Sail from glamorous Monaco along the Italian Riviera to Rome on a 9-day crewed yacht charter. Portofino, Capri, Amalfi Coast, and more with OI.",
+      "heroImage": "https://www.oceanindependence.com/wp-content/uploads/2024/02/iStock-542710202-2.jpg",
+      "intro": [
+        "The Italian coastline is a wonderful yacht charter destination, filled with diversity and something special to please all tastes. Whether seeking a romantic getaway, a multi-generational family holiday or time with good friends, there is magic to be found on your Monaco to Rome yacht itinerary.",
+        "From glittering Monaco to the charms of chic Portofino, the colourful appeal of Cinque Terre to the beauty of Elba, cruising these endless coastal delights on board a luxury yacht is an exhilarating journey from Monaco to Italy. The Italian Riviera, a stunning stretch from Monaco to Rome, is renowned for its mild climate, prolific heritage sites and classical atmosphere; the perfect destination to experience an unforgettable luxury yacht charter."
+      ],
+      "stops": [
+        {
+          "day": 1,
+          "place": "monaco",
+          "text": "Embark your yacht in the glittering port of Monaco. The principality of Monaco is the world’s second smallest country, making up for its size with immense personality. Sitting atop narrow coastal area with three sides bounded by France and facing the dazzling Mediterranean, it is an inexcusably thrilling destination. As your Monaco to Rome yacht charter sets sail, marvel at one of the most beautiful harbours set against dramatic cliffs and brimming with mega yachts, exuding an aura of exclusive elegance."
+        },
+        {
+          "day": 2,
+          "place": "portofino",
+          "text": "Vibrant and charming, Portofino is a splash of colourful houses sat against a riot of lush hillside greenery and sapphire blue waters. Renowned for emanating style, the beating heart is the piazzetta, nestling in a small coastal nook, teeming with chic bars, boutiques and restaurants. Luxury yachts bob in the sparkling bay and anchorages abound. Enjoy a leisurely stroll, refresh with delicious gelato and head hillside to the Church of St.George for stunning views. The setting of the harbour is spectacular and the locals so welcoming, it is well recommended to spend some time soaking up the atmosphere."
+        },
+        {
+          "day": 3,
+          "place": "rapallo",
+          "text": "With a nostalgic air, the palm-lined beach, trompe l’oeil façades and seaside 16th-century castle all add to Rapallo’s appeal. Waterfront restaurants create a lively dining scene, the fascinating monastery of San Fruttuoso is best visited by yacht and don’t miss taking the local funivia (cable railway) up to the stunning Sanctuary of Montallegro with spectacular views. For the ultimate beach experience, Silent Bay at Sestri Levanti ticks all the boxes. A locals favourite, houses tumble down to the golden sands and colourful fishing boats dot the shoreline. Ashore there are boutiques and gelato shops to discover in the bustling old town."
+        },
+        {
+          "day": 4,
+          "place": "cingue terre",
+          "text": "Directly translated, Cinque Terre means ‘Five Lands’; namely the coastal villages of Monterosso al Mare, Vernazza, Corniglia, Manarola, and Riomaggiore. This unique region is part of the Cinque Terre National Park and is a UNESCO World Heritage site. Here, hilltop houses are painted in a range of vivid colours so that local fishermen can see their homes from the sea. No big label shops will take your attention from the main event: lunch. Meander through the narrow streets, stop and sip an ice-cold limoncello and soak up the laid back atmosphere with a plate of fresh antipasti. Here’s a place to slow down and watch the world go by."
+        },
+        {
+          "day": 5,
+          "place": "portovenere",
+          "text": "Nestled in the Bay of Poets, a yachting haven, picturesque Portovenere is adorned with traditional gelato-coloured buildings. Approaching from the water, the quaint harbour is surrounded by old fishermen's houses and interspersed with lively cafés. This charming medieval village offers a slice of fascinating culture - a great place for wandering and to soak up the relaxed atmosphere. Wind your way up the cobbled alleys from the harbour to find great views at the castle and take lunch at one of the excellent local restaurants where freshly caught fish is always on the menu."
+        },
+        {
+          "day": 6,
+          "place": "forte dei marmi",
+          "text": "Renowned for its vast expanse of sandy beaches, Forte dei Marmi is a popular seaside region on the Tuscan coast. Characterised by The Pontile, this long, central pier offers wide views across the Tyrrhenian Sea and back towards the city flanked by the Apuan Alps. Ashore the smart town is a highly stylish zone, the marble streets are lined with fashionable boutiques and designer stores. Enjoy leisurely relaxation on the enchanting 11 kilometres of beach, strewn with chic “bagni” beach clubs offering day to night entertainment. The backdrop of elegant luxury villas that dot the hillsides simply add to the exclusive feel emanating from this vibrant location."
+        },
+        {
+          "day": 7,
+          "place": "elba",
+          "text": "The largest island of the Tuscan archipelago, Elba boasts transparent blue waters, lush landscapes and bright buildings thronging with friendly locals. It is no wonder this is a popular place for yacht charters to include on their itinerary. In this little slice of paradise the many beaches offer sand, shingle and pebbles, while scuba diving is excellent thanks to the surrounding well-preserved coral reef. Steeped in history and culture, Portoferraio is one of the oldest regional towns, where buildings display stunning architecture. Soak up panoramas from the top of Monte Capanne accessed by chairlift, or visit Capoliveri, famous for markets and traditional artisan produce."
+        },
+        {
+          "day": 8,
+          "place": "isola del giglio",
+          "text": "With a host of sensational beaches boasting crystalline waters, scuba divers, snorkellers and swimmers all relish time on Giglio Island. Porto Santo Stefano stands hillside with an imposing Spanish style fortress that dominates the harbour. Take a wander around the citadel walls and staircases to fully explore the history alongside some incredible views. Do not miss the superb array of beaches here - at Caldane the sand is almost red, influenced by the surrounding rocks while Cannelle is only accessible from the water, so an ideal spot for yachts to anchor in tranquillity."
+        },
+        {
+          "day": 9,
+          "place": "rome",
+          "text": "End your Monaco to Rome yacht charter in the Eternal City, a deeply complex and vastly sprawling metropolis that is impossible to appreciate in just one day. However, capturing a few of the highlights on a sightseeing tour is worth planning ahead. Disembarking from your journey from Monaco to Rome, the Colosseum and Forum are amongst the most iconic attractions that await. Throw coins in the Trevi Fountain and you’ll be sure to return to explore more of Rome in the future. As you disembark your luxury yacht charter, make plans to explore ashore in this fascinating part of the world."
+        }
+      ],
+      "mapPins": [
+        {
+          "lat": 43.7378664,
+          "lon": 7.4155527,
+          "label": "MONACO"
+        },
+        {
+          "lat": 41.9102088,
+          "lon": 12.3711919,
+          "label": "ROME"
         }
       ]
     },
@@ -22577,6 +22897,143 @@
         }
       ]
     },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/middle-east/dubai-to-abu-dhabi/": {
+      "url": "https://www.oceanindependence.com/yacht-charter/itineraries/middle-east/dubai-to-abu-dhabi/",
+      "title": "Dubai to Abu Dhabi",
+      "days": 7,
+      "metaDescription": "Sail between Dubai and Abu Dhabi on a 7-day luxury yacht charter. Iconic skylines, cultural landmarks, and Arabian Gulf anchorages await with OI.",
+      "heroImage": "https://www.oceanindependence.com/wp-content/uploads/2024/02/Dubai-itinerary-hero-2-min-1-1.jpg",
+      "intro": [
+        "Where the desert meets the sea and luxury meets innovation; Dubai and the Arabian Gulf present a totally unique yachting experience with unmatched luxury and endless cultural discovery.",
+        "Dubai is a destination like no other. Known for its luxury, opulence, and extravagance, it's a city that promises to leave a lasting impression. Whether you're interested in history and culture, luxurious living, or simply soaking up the sun and taking in the spectacular views, Dubai is the perfect destination for your next superyacht charter."
+      ],
+      "stops": [
+        {
+          "day": 1,
+          "place": "arrive in dubai",
+          "text": "Begin your journey in the city where opulence and grandeur are the norm. As soon as you arrive, you'll be struck by the phenomenal architecture. From towering skyscrapers, and iconic landmarks to the gleaming high-end boutiques that line the streets. After being welcomed aboard your luxury yacht, stroll through the city and take in the sights and sounds of one of the most vibrant and exciting places on earth before a night out to remember at one of Dubai’s incredible nightclubs."
+        },
+        {
+          "day": 2,
+          "place": "dubai moon island and sunset cruise",
+          "text": "Cruise to Dubai's Moon Island and anchor for an afternoon of endless waterborne fun and an alfresco lunch with a view of the city’s impressive skyline. As the evening approaches enjoy a sunset cruise along the picturesque coastline of the Arabian Gulf. This is the perfect opportunity to take in the stunning views of the city and the surrounding waters, including the world famous Palm Jumeirah and Burj Al Arab while enjoying a glass of champagne and delicious dinner."
+        },
+        {
+          "day": 3,
+          "place": "dubai world islands cruise and desert safari",
+          "text": "Embark on a cruise around Dubai's World Islands. An icon of this manmade metropolis, you would be forgiven for mistaking these sand islands shaped like the world map for a Maldivian paradise. From a luxury yacht, explore these beautiful and exclusive white sand islands in complete privacy. Return to shore and embark on a desert safari. A must when in the UAE; experience the thrill of dune bashing and sandboarding before a camel ride to a heritage falconry experience, and traditional Arabian meal under the stars."
+        },
+        {
+          "day": 4,
+          "place": "explore the city of dubai before a world-class meal at atlantis hotel",
+          "text": "A city of contrasts, where tradition and modernity exist in perfect harmony, spend the day exploring the city of Dubai. Visit its many modern attractions such as the Burj Khalifa, the world's tallest building and the Dubai Mall, the largest mall in the world full of high-end designer labels. Or, for a taste of traditional emirati culture head to Bur Dubai and explore the traditional gold, spice, and textiles souks. After a day of adventure and discovery, retire to your luxury yacht and get ready for a night to remember. Round off your time in Dubai with a bang and indulge in a world-class meal at one of the many luxurious Michelin-star restaurants Dubai has to offer. A particular favourite being Ossiano found beneath the aquarium of the famed Atlantis hotel."
+        },
+        {
+          "day": 5,
+          "place": "cruise from dubai to abu dhabi",
+          "text": "Set sail from Dubai marina and see the city from a different perspective. From the rocky brown mountains to the affluent cosmopolitan skyscrapers in downtown Dubai, the coastline shows how the city has rapidly emerged from the desert. While Dubai fades into the distance and the glittering emirate you are headed for emerges on the horizon, enjoy an alfresco lunch set against the expanse of the Arabian desert. Enjoy a cocktail under the warm Middle Eastern sun and watch the Abu Dhabi skyline grow from the deck of your private superyacht. Be sure you are on deck as you pull into the iconic Yas Marina. A yachting experience unlike any other, this purpose built superyacht harbour is surrounded with glittering architectural wonders that - from a yacht - are simply breathtaking."
+        },
+        {
+          "day": 6,
+          "place": "explore abu dhabi",
+          "text": "Experience the opulence of Abu Dhabi with a day devoted to exploring this captivating Emirate. Begin with a leisurely morning stroll along the scenic Corniche, taking in the breathtaking views of the Arabian Gulf. As the day progresses, indulge in Abu Dhabi’s incredible attractions. From the thrills of Ferrari World to the artistic and cultural delights of the Louvre Museum, and the awe-inspiring Sheikh Zayed Grand Mosque, whatever your preference, Abu Dhabi will deliver."
+        },
+        {
+          "day": 7,
+          "place": "house of artisans and departure from abu dhabi",
+          "text": "Begin your day with a delicious breakfast on board before heading to the House of Artisans in Abu Dhabi. This cultural centre showcases the preservation of traditional craft techniques, such as sea craft, Talli embroidery, Al-sadu, and Khoos. Explore the local souks and perhaps purchase a unique keepsake to remember your trip by. As you conclude your Middle Eastern sailing adventure, return to your yacht to say goodbye to your Captain and crew before departing from Abu Dhabi International Airport with memories of a lifetime."
+        }
+      ],
+      "mapPins": [
+        {
+          "lat": 25.1457229,
+          "lon": 55.1691097,
+          "label": "DUBAI"
+        },
+        {
+          "lat": 24.4281662,
+          "lon": 54.388319,
+          "label": "ABU DHABI"
+        }
+      ]
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/north-america/california-coast-marina-del-rey-to-marina-del-rey/": {
+      "url": "https://www.oceanindependence.com/yacht-charter/itineraries/north-america/california-coast-marina-del-rey-to-marina-del-rey/",
+      "title": "Marina del Rey to Marina del Rey",
+      "days": 7,
+      "metaDescription": "Charter a superyacht along the California coast from Marina del Rey, Santa Barbara, and Big Sur. Ocean Independence arranges this California charter route.",
+      "heroImage": "https://www.oceanindependence.com/wp-content/uploads/2025/07/iStock-525737350.jpg",
+      "intro": [
+        "California’s sun-kissed coast is the perfect setting for a California yacht charter, where wild beauty meets sophisticated shore side experiences.",
+        "From Malibu’s glamour to the Channel Islands’ rugged charm and Catalina’s laid-back elegance, this seven-day California yacht charter itinerary is the ultimate West Coast adventure.",
+        "With sea cliffs, marine reserves and coastal towns, this luxury yacht California experience is perfect for those who want a mix of outdoor adventure, fine dining and immersive service – on and off the boat. Expect days of snorkelling, hiking, wildlife encounters and sunset cocktails – all with the highest standard of service.",
+        "Whether you’re looking for a private yacht charter California escape or a multi-day journey along the iconic coastline, this curated itinerary has the perfect blend of adventure, culture and relaxation."
+      ],
+      "stops": [
+        {
+          "day": 1,
+          "place": "Marina del Rey to Malibu",
+          "text": "Step aboard your private yacht charter in Marina del Rey and be welcomed with a curated brunch and champagne. Cruise north along the coast, anchor off Malibu’s Paradise Cove or Point Dume. Spend the afternoon with watersports, sunbathing or just relaxing in true luxury yacht California style. As the sun sets, tender ashore for dinner at Geoffrey’s Malibu – an iconic spot for fresh seafood and sweeping ocean views. Return to your yacht for a peaceful night at anchor off Malibu."
+        },
+        {
+          "day": 2,
+          "place": "Malibu to Santa Cruz Island, Channel Islands",
+          "text": "Head to Santa Cruz Island in Channel Islands National Park – a highlight of any California yacht charter itinerary. Explore the Painted Cave by tender or kayak along the island’s rugged shores. Choose from snorkelling, hiking the coastal trails or just taking in the untouched beauty of the islands. End the day with a chef prepared dinner featuring local ingredients and a peaceful night at anchor surrounded by nature."
+        },
+        {
+          "day": 3,
+          "place": "Santa Cruz Island to Catalina (Two Harbors / Little Geiger Cove)",
+          "text": "Cruise to Catalina Island, a classic stop on any California yacht charter. Anchor in Little Geiger Cove or Cat Harbor for snorkelling, paddleboarding or hiking the island’s untouched trails. Enjoy a casual beach barbecue set up by your crew or dine on board under the stars. Overnight at anchor in this peaceful, secluded spot."
+        },
+        {
+          "day": 4,
+          "place": "Catalina",
+          "text": "Go ashore for a day of Catalina fun. Explore by golf cart, spot buffalo in the wild and take in the island views. For thrill-seekers, book the Descanso Canyon Zip Line Eco Tour or a guided nature hike. Relax at Descanso Beach Club with beachfront cocktails and private cabanas before dining at Avalon favourites like Maggie’s Blue Rose or Steve’s Steakhouse. Overnight at anchor near Two Harbors or Avalon."
+        },
+        {
+          "day": 5,
+          "place": "Avalon",
+          "text": "Cruise into Avalon Harbor, Catalina’s hub. Wander the boutiques, visit the Wrigley Memorial & Botanic Garden or tour the historic Catalina Casino. Opt for a spa treatment at Island Spa Catalina or hike the Garden to Sky Trail for stunning views. For dinner, choose between Bluewater Grill, The Naughty Fox or a bespoke onboard dining experience — the choice is yours on this luxury yacht California adventure."
+        },
+        {
+          "day": 6,
+          "place": "Lover’s Cove",
+          "text": "Anchor near Lover’s Cove Marine Preserve for a full day of water fun. Snorkel among the Garibaldi fish, explore the kelp forests or arrange a dive with an expert guide. After an exhilarating day, relax with a seafood tasting menu and paired wines crafted by your private chef. Overnight at anchor near Lover’s Cove or Avalon."
+        },
+        {
+          "day": 7,
+          "place": "Catalina to Marina del Rey",
+          "text": "Start the day with breakfast overlooking the Catalina coastline. Enjoy a swim or quiet coffee on deck before cruising back to Marina del Rey. Disembark in the afternoon after a farewell toast, concluding your unforgettable yacht charter experience on the California Coastline."
+        }
+      ],
+      "mapPins": [
+        {
+          "lat": 33.98198680608402,
+          "lon": -118.44203307607032,
+          "label": "marina del rey"
+        },
+        {
+          "lat": 34.002527647191364,
+          "lon": -118.79905494193088,
+          "label": "malibu"
+        },
+        {
+          "lat": 34.01433684099572,
+          "lon": -119.7484106070519,
+          "label": "santa cruz island"
+        },
+        {
+          "lat": 33.44024851439372,
+          "lon": -118.49950401542885,
+          "label": "two harbors"
+        },
+        {
+          "lat": 33.34280083984848,
+          "lon": -118.32857531472004,
+          "label": "avalon"
+        }
+      ]
+    },
     "https://www.oceanindependence.com/yacht-charter/itineraries/north-america/new-england/": {
       "url": "https://www.oceanindependence.com/yacht-charter/itineraries/north-america/new-england/",
       "title": "New England",
@@ -22631,6 +23088,106 @@
           "lat": 43.97617,
           "lon": -74.0641613,
           "label": "NEW ENGLAND"
+        }
+      ]
+    },
+    "https://www.oceanindependence.com/yacht-charter/itineraries/north-america/san-juan-islands/": {
+      "url": "https://www.oceanindependence.com/yacht-charter/itineraries/north-america/san-juan-islands/",
+      "title": "San Juan Islands",
+      "days": 8,
+      "metaDescription": "Sail the Pacific Northwest by superyacht, with orca sightings, secluded coves, and the Victoria waterfront. Ocean Independence arranges San Juan charters.",
+      "heroImage": "https://www.oceanindependence.com/wp-content/uploads/2024/09/hero-3500x2621.jpg",
+      "intro": [
+        "This 8-day San Juan Islands yacht charter itinerary weaving through a series of picturesque islands, offers a perfect blend of outdoor adventure, serene relaxation, and luxurious indulgence.",
+        "Nestled in the northern border of Washington State in the Pacific Northwest, the San Juan Islands are a mesmerising archipelago known for their pristine landscapes, diverse wildlife, and charming seaside communities. With over 170 islands to explore, this region is a haven for yacht charters and luxury travellers alike. Orca whales breach the surface of the sparkling waters, eagles soar above lush evergreen forests, and the islands’ quaint towns beckon with artisanal shops and gourmet dining. Whether you’re drawn to adventure, history, or simply to admire natural beauty, the San Juan Islands have so much to offer."
+      ],
+      "stops": [
+        {
+          "day": 1,
+          "place": "Anacortes to Orcas Island",
+          "text": "Your journey begins at Anacortes Marina, where you'll embark on your luxury yacht charter. After a short and scenic voyage (19nm), arrive dockside at Orcas Island, known as the \"gem of the San Juans.\""
+        },
+        {
+          "day": 2,
+          "place": "Orcas Island To Lopez Island",
+          "text": "Spend the day exploring Orcas Island's diverse offerings, from the exhilaration of whale watching to exploring local vineyards and wine tasting. Tee off amidst breathtaking views at the golf course, immerse yourself in the vibrant local art scene, or take a hike to one of the island’s stunning waterfalls. Head to Lopez island (13nm) to spend the night dockside or at anchor soaking in the natural splendour."
+        },
+        {
+          "day": 3,
+          "place": "Lopez Island To Friday Harbor",
+          "text": "Spend the day in Lopez Island, where you can visit the Shark Reef Sanctuary and observe seals in their natural habitat. Afterward, explore the sandy beaches of Odlin County Park and endeavour on an adventurous kayaking excursion. For those that want a more relaxing experience, visit the charming Lopez Island vineyards to taste fine wines produced using organically grown grapes. Travel a short distance to Friday Harbor (3nm) and spend the night dockside."
+        },
+        {
+          "day": 4,
+          "place": "Friday Harbor and Yellow Island",
+          "text": "Spend the day in Friday Harbor’s historic district and step back in time as you wander through its charming streets. Explore art galleries, museums, and boutique shops. Cruise a short distance to Yellow Island (3nm), famed for its dramatic display of wildflowers. Take in the natural beauty of these vibrant blooms, before heading to Roche Harbor for the night (6nm)."
+        },
+        {
+          "day": 5,
+          "place": "Roche Harbor and Spieden Island",
+          "text": "Awake in Roche Harbor, a vibrant destination where you can visit the iconic Sculpture Park and marvel over 100 works of art set within tranquil gardens. Savour fresh, local shellfish at the Westcott Bay Shellfish Company and stroll through the historic village. For spirit lovers, visit the local distillery and taste award-winning brandy and gins. In the afternoon, take a short trip to Spieden Island (2nm), famed for its exotic wildlife. Return to Roche Harbor for another night dockside."
+        },
+        {
+          "day": 6,
+          "place": "Sucia Island",
+          "text": "A leisurely cruise brings you to Sucia Island (13nm), a true paradise for nature lovers. Spend the day exploring the island's many hiking trails, tide pools, and scenic viewpoints, or simply enjoy the yacht’s watertoys while anchored in Echo Bay. The quiet, natural beauty of Sucia Island makes for a peaceful overnight stay at anchor."
+        },
+        {
+          "day": 7,
+          "place": "Lummi Island",
+          "text": "Your penultimate day takes you to Lummi Island, where you can visit the exclusive Artisan Wine Gallery and sample exquisite wines. Stroll through the scenic Sculpture Woods park featuring unique artworks set amidst nature's beauty. After a day of exploring, enjoy a restful night anchored near Lummi Island, with the one-of-a-kind landscape providing a perfect backdrop."
+        },
+        {
+          "day": 8,
+          "place": "Return to Anacortes",
+          "text": "On your final day, enjoy a leisurely breakfast on board as you slowly make your way back to Anacortes Marina (22nm). This itinerary was curated by Capt Bailey Wallisch of MY First Home."
+        }
+      ],
+      "mapPins": [
+        {
+          "lat": 48.606655816929276,
+          "lon": -122.60710556650294,
+          "label": "anacortes"
+        },
+        {
+          "lat": 48.6337189563491,
+          "lon": -122.93224833018371,
+          "label": "orcas island"
+        },
+        {
+          "lat": 48.487570830920255,
+          "lon": -122.89701532359707,
+          "label": "lopez island"
+        },
+        {
+          "lat": 48.53392549873286,
+          "lon": -123.01989561193554,
+          "label": "friday harbor"
+        },
+        {
+          "lat": 48.5920907797536,
+          "lon": -123.03106088957688,
+          "label": "yellow island"
+        },
+        {
+          "lat": 48.60947476283038,
+          "lon": -123.14806596456687,
+          "label": "roche harbor"
+        },
+        {
+          "lat": 48.640238816037716,
+          "lon": -123.1312948598291,
+          "label": "spieden island"
+        },
+        {
+          "lat": 48.75481149551112,
+          "lon": -122.90469052794481,
+          "label": "sucia island"
+        },
+        {
+          "lat": 48.72392730433947,
+          "lon": -122.68836921128936,
+          "label": "lummi island"
         }
       ]
     },

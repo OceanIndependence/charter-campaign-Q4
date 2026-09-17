@@ -14,6 +14,15 @@ Edit coordinates in `content/itinerary-stops.json`; a re-run keeps hand-correcte
 | Antarctica Itinerary | 5 | the danco coast & gerlache strait | gerlache strait | -64.2910062 | -61.6665287 | nominatim (“gerlache strait”) |  |
 | Antarctica Itinerary | 7 | south shetland to punta arenas | south shetland | 60.0249367 | -1.3553058 | nominatim-far (“south shetland”) | not drawn — 15197 km from the itinerary's map pins; correct it here to draw it |
 | Antarctica Itinerary | 7 | south shetland to punta arenas | punta arenas | -53.6657968 | -72.125165 | nominatim-far (“punta arenas, Antarctica”) | not drawn — 1630 km from the itinerary's map pins; correct it here to draw it |
+| Scenic Eclipse in Antarctica | 1 | ushuaia | ushuaia | -54.807306 | -68.3084133 | nominatim-far (“ushuaia”) | not drawn — 1483 km from the itinerary's map pins; correct it here to draw it |
+| Scenic Eclipse in Antarctica | 2 | ushuaia to antarctic peninsula | ushuaia | -54.807306 | -68.3084133 | nominatim-far (“ushuaia”) | not drawn — 1483 km from the itinerary's map pins; correct it here to draw it |
+| Scenic Eclipse in Antarctica | 2 | ushuaia to antarctic peninsula | antarctic peninsula | -69.9896303 | -65.4005046 | nominatim (“antarctic peninsula”) |  |
+| Scenic Eclipse in Antarctica | 4 | antarctic peninsula | antarctic peninsula | -69.9896303 | -65.4005046 | nominatim (“antarctic peninsula”) |  |
+| Scenic Eclipse in Antarctica | 5 | antarctic peninsula | antarctic peninsula | -69.9896303 | -65.4005046 | nominatim (“antarctic peninsula”) |  |
+| Scenic Eclipse in Antarctica | 9 | antarctic peninsula | antarctic peninsula | -69.9896303 | -65.4005046 | nominatim (“antarctic peninsula”) |  |
+| Scenic Eclipse in Antarctica | 10 | antarctic peninsula to ushuaia | antarctic peninsula | -69.9896303 | -65.4005046 | nominatim (“antarctic peninsula”) |  |
+| Scenic Eclipse in Antarctica | 10 | antarctic peninsula to ushuaia | ushuaia | -54.807306 | -68.3084133 | nominatim-far (“ushuaia”) | not drawn — 1483 km from the itinerary's map pins; correct it here to draw it |
+| Scenic Eclipse in Antarctica | 12 | ushuaia | ushuaia | -54.807306 | -68.3084133 | nominatim-far (“ushuaia”) | not drawn — 1483 km from the itinerary's map pins; correct it here to draw it |
 | East Greenland | 1 | Constable Point | Constable Point | 70.74403197062057 | -22.64610511515993 | map-pin |  |
 | East Greenland | 2 | Viking Bay To Danmark Island | Viking Bay | 51.3579386 | 1.4434103 | nominatim-far (“Viking Bay”) | not drawn — 2527 km from the itinerary's map pins; correct it here to draw it |
 | East Greenland | 2 | Viking Bay To Danmark Island | Danmark Island | 70.51690938981069 | -26.24798290428327 | map-pin |  |
@@ -181,8 +190,8 @@ Edit coordinates in `content/itinerary-stops.json`; a re-run keeps hand-correcte
 | calvi to cala di volpe | 1 | calvi to girolata | calvi | 42.1514291 | 9.1995459 | map-pin |  |
 | calvi to cala di volpe | 1 | calvi to girolata | girolata | 42.3496868 | 8.6124546 | nominatim (“girolata”) |  |
 | calvi to cala di volpe | 2 | girolata - ajaccio | girolata | 42.3496868 | 8.6124546 | nominatim (“girolata”) |  |
-| calvi to cala di volpe | 2 | girolata - ajaccio | ajaccio | 41.9655054 | 8.8142967 | nominatim (“ajaccio, Mediterranean”) |  |
-| calvi to cala di volpe | 3 | ajaccio - bonifacio | ajaccio | 41.9655054 | 8.8142967 | nominatim (“ajaccio, Mediterranean”) |  |
+| calvi to cala di volpe | 2 | girolata - ajaccio | ajaccio | 41.9192 | 8.7386 | reviewed |  |
+| calvi to cala di volpe | 3 | ajaccio - bonifacio | ajaccio | 41.9192 | 8.7386 | reviewed |  |
 | calvi to cala di volpe | 3 | ajaccio - bonifacio | bonifacio | 41.3872348 | 9.1590609 | nominatim (“bonifacio”) |  |
 | calvi to cala di volpe | 4 | bonifacio - maddalena islands | bonifacio | 41.3872348 | 9.1590609 | nominatim (“bonifacio”) |  |
 | calvi to cala di volpe | 4 | bonifacio - maddalena islands | maddalena islands | 41.2392733 | 9.4133654 | nominatim (“maddalena islands”) |  |
@@ -204,67 +213,91 @@ Edit coordinates in `content/itinerary-stops.json`; a re-run keeps hand-correcte
 | corfu to zakynthos | 2 | corfu - paxos | paxos | 39.2093982 | 20.1616339 | nominatim (“paxos, Corfu”) |  |
 | corfu to zakynthos | 3 | paxos - anti paxos - levkas | paxos | 39.2093982 | 20.1616339 | nominatim (“paxos, Corfu”) |  |
 | corfu to zakynthos | 3 | paxos - anti paxos - levkas | anti paxos | — | — | unresolved |  |
-| corfu to zakynthos | 3 | paxos - anti paxos - levkas | levkas | 34.8475665 | 32.4300491 | nominatim (“levkas”) | near the edge of the itinerary's area (1164 km) |
-| corfu to zakynthos | 4 | levkas - meganissi - levkas | levkas | 34.8475665 | 32.4300491 | nominatim (“levkas”) | near the edge of the itinerary's area (1164 km) |
+| corfu to zakynthos | 3 | paxos - anti paxos - levkas | levkas | 38.8333 | 20.7 | reviewed |  |
+| corfu to zakynthos | 4 | levkas - meganissi - levkas | levkas | 38.8333 | 20.7 | reviewed |  |
 | corfu to zakynthos | 4 | levkas - meganissi - levkas | meganissi | 38.6578118 | 20.7892758 | nominatim (“meganissi”) |  |
-| corfu to zakynthos | 5 | levkas - ithaca | levkas | 34.8475665 | 32.4300491 | nominatim (“levkas”) | near the edge of the itinerary's area (1164 km) |
-| corfu to zakynthos | 5 | levkas - ithaca | ithaca | 38.4018961 | 20.6700929 | nominatim (“ithaca”) |  |
-| corfu to zakynthos | 6 | ithaca - kefalonia | ithaca | 39.6227544 | 19.9249768 | nominatim (“ithaca, Corfu”) |  |
-| corfu to zakynthos | 6 | ithaca - kefalonia | kefalonia | 37.9049885 | 20.7086988 | nominatim (“kefalonia, Zakynthos”) |  |
-| corfu to zakynthos | 7 | kefalonia - zakynthos | kefalonia | 37.9049885 | 20.7086988 | nominatim (“kefalonia, Zakynthos”) |  |
+| corfu to zakynthos | 5 | levkas - ithaca | levkas | 38.8333 | 20.7 | reviewed |  |
+| corfu to zakynthos | 5 | levkas - ithaca | ithaca | 38.4 | 20.7167 | reviewed |  |
+| corfu to zakynthos | 6 | ithaca - kefalonia | ithaca | 38.4 | 20.7167 | reviewed |  |
+| corfu to zakynthos | 6 | ithaca - kefalonia | kefalonia | 38.25 | 20.55 | reviewed |  |
+| corfu to zakynthos | 7 | kefalonia - zakynthos | kefalonia | 38.25 | 20.55 | reviewed |  |
 | corfu to zakynthos | 7 | kefalonia - zakynthos | zakynthos | 37.7892119 | 20.6416409 | map-pin |  |
+| Split to Dubrovnik | 1 | Split and Maslinica | Split | 43.514645 | 16.442607 | map-pin |  |
+| Split to Dubrovnik | 1 | Split and Maslinica | Maslinica | 43.396945 | 16.20633 | map-pin |  |
+| Split to Dubrovnik | 2 | Maslinica to Vis | Maslinica | 43.396945 | 16.20633 | map-pin |  |
+| Split to Dubrovnik | 2 | Maslinica to Vis | Vis | 43.060467 | 16.183262 | map-pin |  |
+| Split to Dubrovnik | 3 | The Pakleni Islands and Hvar | The Pakleni Islands | — | — | unresolved |  |
+| Split to Dubrovnik | 3 | The Pakleni Islands and Hvar | Hvar | 43.172517 | 16.444329 | map-pin |  |
+| Split to Dubrovnik | 4 | Hvar to Korčula | Hvar | 43.172517 | 16.444329 | map-pin |  |
+| Split to Dubrovnik | 4 | Hvar to Korčula | Korčula | 42.959041 | 17.132855 | map-pin |  |
+| Split to Dubrovnik | 5 | Korčula to Mljet National Park | Korčula | 42.959041 | 17.132855 | map-pin |  |
+| Split to Dubrovnik | 5 | Korčula to Mljet National Park | Mljet National Park | 42.774991 | 17.408564 | map-pin |  |
+| Split to Dubrovnik | 6 | Mljet to Šipan | Mljet | 42.7459771 | 17.5465663 | nominatim (“Mljet”) |  |
+| Split to Dubrovnik | 6 | Mljet to Šipan | Šipan | 42.729407 | 17.863925 | map-pin |  |
+| Split to Dubrovnik | 7 | Šipan to Dubrovnik: Disembark | Šipan | 42.729407 | 17.863925 | map-pin |  |
+| Split to Dubrovnik | 7 | Šipan to Dubrovnik: Disembark | Dubrovnik: Disembark | — | — | unresolved |  |
+| Split to Dubrovnik | 8 | Optional Extension: Montenegro | Optional Extension: Montenegro | — | — | unresolved |  |
 | Cyclades Itinerary | 1 | athens to kea | athens | 37.9715 | 23.7258 | atlas:mediterranean/greece/athens |  |
 | Cyclades Itinerary | 1 | athens to kea | kea | 37.6048603 | 24.3274958 | nominatim (“kea”) |  |
 | Cyclades Itinerary | 2 | kea to sifnos | kea | 37.6048603 | 24.3274958 | nominatim (“kea”) |  |
 | Cyclades Itinerary | 2 | kea to sifnos | sifnos | 36.9312277 | 24.7285799 | nominatim (“sifnos, The Cyclades”) |  |
 | Cyclades Itinerary | 3 | sifnos to milos | sifnos | 36.9312277 | 24.7285799 | nominatim (“sifnos, The Cyclades”) |  |
-| Cyclades Itinerary | 3 | sifnos to milos | milos | 37.977122 | 23.7332378 | nominatim (“milos, Athens”) |  |
-| Cyclades Itinerary | 4 | milos to santorini | milos | 37.977122 | 23.7332378 | nominatim (“milos, Athens”) |  |
+| Cyclades Itinerary | 3 | sifnos to milos | milos | 36.7333 | 24.4167 | reviewed |  |
+| Cyclades Itinerary | 4 | milos to santorini | milos | 36.7333 | 24.4167 | reviewed |  |
 | Cyclades Itinerary | 4 | milos to santorini | santorini | 36.3932 | 25.4615 | atlas:mediterranean/greece/the-cyclades/santorini |  |
 | Cyclades Itinerary | 5 | Santorini to Ios | Santorini | 36.3932 | 25.4615 | atlas:mediterranean/greece/the-cyclades/santorini |  |
 | Cyclades Itinerary | 5 | Santorini to Ios | Ios | 36.7173241 | 25.3331121 | nominatim (“Ios”) |  |
 | Cyclades Itinerary | 6 | Ios to Paros | Ios | 36.7173241 | 25.3331121 | nominatim (“Ios”) |  |
-| Cyclades Itinerary | 6 | Ios to Paros | Paros | 38.0252336 | 23.6686718 | nominatim (“Paros, Athens”) |  |
-| Cyclades Itinerary | 7 | paros to mykonos | paros | 38.0252336 | 23.6686718 | nominatim (“paros, Athens”) |  |
+| Cyclades Itinerary | 6 | Ios to Paros | Paros | 37.0853 | 25.15 | reviewed |  |
+| Cyclades Itinerary | 7 | paros to mykonos | paros | 37.0853 | 25.15 | reviewed |  |
 | Cyclades Itinerary | 7 | paros to mykonos | mykonos | 37.4467 | 25.3289 | atlas:mediterranean/greece/the-cyclades/mykonos |  |
 | Cyclades Itinerary | 8 | mykonos to athens | mykonos | 37.4467 | 25.3289 | atlas:mediterranean/greece/the-cyclades/mykonos |  |
 | Cyclades Itinerary | 8 | mykonos to athens | athens | 37.9715 | 23.7258 | atlas:mediterranean/greece/athens |  |
 | Dubrovnik to Trogir | 1 | dubrovnik | dubrovnik | 42.6481608 | 18.0840907 | map-pin |  |
 | Dubrovnik to Trogir | 2 | mljet | mljet | 42.7459771 | 17.5465663 | nominatim (“mljet, Croatia”) |  |
-| Dubrovnik to Trogir | 3 | vis | vis | 43.0233908 | 16.2072337 | nominatim (“vis, Mediterranean”) |  |
+| Dubrovnik to Trogir | 3 | vis | vis | 43.0614 | 16.1833 | reviewed |  |
 | Dubrovnik to Trogir | 4 | hvar | hvar | 43.1756 | 16.444 | atlas:mediterranean/croatia/hvar |  |
 | Dubrovnik to Trogir | 5 | brac | brac | 43.3239449 | 16.6548451 | nominatim (“brac, Croatia”) |  |
-| Dubrovnik to Trogir | 6 | split | split | 43.5045333 | 16.4067599 | nominatim (“split, Mediterranean”) |  |
+| Dubrovnik to Trogir | 6 | split | split | 43.5081 | 16.4402 | reviewed |  |
 | Dubrovnik to Trogir | 7 | trogir | trogir | 43.5278499 | 16.2383224 | map-pin |  |
 | Gocek to Gocek | 1 | gocek to oraklar | gocek | 36.7534 | 28.9425 | map-pin |  |
-| Gocek to Gocek | 1 | gocek to oraklar | oraklar | 38.6780644 | 28.4017396 | nominatim (“oraklar, Turkey”) |  |
+| Gocek to Gocek | 1 | gocek to oraklar | oraklar | 36.6903 | 28.9364 | reviewed |  |
 | Gocek to Gocek | 2 | knidos to datca | knidos | 36.686356 | 27.3739492 | nominatim (“knidos, Turkey”) |  |
 | Gocek to Gocek | 2 | knidos to datca | datca | 36.7263403 | 27.6873855 | nominatim (“datca, Turkey”) |  |
 | Gocek to Gocek | 3 | datca to kadirga | datca | 36.7263403 | 27.6873855 | nominatim (“datca, Turkey”) |  |
-| Gocek to Gocek | 3 | datca to kadirga | kadirga | 40.6871508 | 29.875592 | nominatim (“kadirga, Turkey”) |  |
-| Gocek to Gocek | 4 | kadirga to marmaris | kadirga | 40.6871508 | 29.875592 | nominatim (“kadirga, Turkey”) |  |
+| Gocek to Gocek | 3 | datca to kadirga | kadirga | 36.6592 | 28.0642 | reviewed |  |
+| Gocek to Gocek | 4 | kadirga to marmaris | kadirga | 36.6592 | 28.0642 | reviewed |  |
 | Gocek to Gocek | 4 | kadirga to marmaris | marmaris | 36.8157 | 28.2881 | atlas:mediterranean/turkey/marmaris |  |
 | Gocek to Gocek | 5 | marmaris to ekincik | marmaris | 36.8157 | 28.2881 | atlas:mediterranean/turkey/marmaris |  |
-| Gocek to Gocek | 5 | marmaris to ekincik | ekincik | 41.0884593 | 32.9404467 | nominatim (“ekincik, Turkey”) |  |
-| Gocek to Gocek | 6 | ekincik to gocek | ekincik | 41.0884593 | 32.9404467 | nominatim (“ekincik, Turkey”) |  |
+| Gocek to Gocek | 5 | marmaris to ekincik | ekincik | 36.8167 | 28.55 | reviewed |  |
+| Gocek to Gocek | 6 | ekincik to gocek | ekincik | 36.8167 | 28.55 | reviewed |  |
 | Gocek to Gocek | 6 | ekincik to gocek | gocek | 36.7534 | 28.9425 | map-pin |  |
 | Gocek to Gocek | 7 | gocek | gocek | 36.7534 | 28.9425 | map-pin |  |
+| monaco to rome | 1 | monaco | monaco | 43.7378664 | 7.4155527 | map-pin |  |
+| monaco to rome | 2 | portofino | portofino | 44.3032 | 9.2098 | atlas:mediterranean/italy/italian-riviera/portofino |  |
+| monaco to rome | 3 | rapallo | rapallo | 44.3492083 | 9.2316102 | nominatim (“rapallo”) |  |
+| monaco to rome | 4 | cingue terre | cingue terre | — | — | unresolved |  |
+| monaco to rome | 5 | portovenere | portovenere | 44.0506605 | 9.8344585 | nominatim (“portovenere”) |  |
+| monaco to rome | 6 | forte dei marmi | forte dei marmi | 43.9595891 | 10.1699392 | nominatim (“forte dei marmi”) |  |
+| monaco to rome | 7 | elba | elba | 42.7902379 | 10.3402239 | nominatim (“elba”) |  |
+| monaco to rome | 8 | isola del giglio | isola del giglio | 42.353166 | 10.8964294 | nominatim (“isola del giglio”) |  |
+| monaco to rome | 9 | rome | rome | 41.9102088 | 12.3711919 | map-pin |  |
 | Naples to Sicily | 1 | naples - ischia | naples | 40.8539584 | 14.0907155 | map-pin |  |
 | Naples to Sicily | 1 | naples - ischia | ischia | 40.7361 | 13.9555 | atlas:mediterranean/italy/ischia |  |
 | Naples to Sicily | 2 | ischia - galli islands | ischia | 40.7361 | 13.9555 | atlas:mediterranean/italy/ischia |  |
-| Naples to Sicily | 2 | ischia - galli islands | galli islands | 28.078369 | -16.7292309 | nominatim-far (“galli islands”) | not drawn — 3068 km from the itinerary's map pins; correct it here to draw it |
-| Naples to Sicily | 3 | galli islands - capri | galli islands | 28.078369 | -16.7292309 | nominatim-far (“galli islands”) | not drawn — 3068 km from the itinerary's map pins; correct it here to draw it |
+| Naples to Sicily | 2 | ischia - galli islands | galli islands | 40.5772 | 14.4342 | reviewed |  |
+| Naples to Sicily | 3 | galli islands - capri | galli islands | 40.5772 | 14.4342 | reviewed |  |
 | Naples to Sicily | 3 | galli islands - capri | capri | 40.5532 | 14.2222 | atlas:mediterranean/italy/amalfi-coast/capri |  |
 | Naples to Sicily | 4 | capri - maratea | capri | 40.5532 | 14.2222 | atlas:mediterranean/italy/amalfi-coast/capri |  |
-| Naples to Sicily | 4 | capri - maratea | maratea | 38.0925263 | 12.6643029 | nominatim (“maratea, Sicily”) |  |
-| Naples to Sicily | 5 | maratea - lipari | maratea | 38.0925263 | 12.6643029 | nominatim (“maratea, Sicily”) |  |
+| Naples to Sicily | 4 | capri - maratea | maratea | 39.9942 | 15.7156 | reviewed |  |
+| Naples to Sicily | 5 | maratea - lipari | maratea | 39.9942 | 15.7156 | reviewed |  |
 | Naples to Sicily | 5 | maratea - lipari | lipari | 38.48137 | 14.9396624 | nominatim (“lipari, Sicily”) |  |
 | Naples to Sicily | 6 | lipari | lipari | 38.48137 | 14.9396624 | nominatim (“lipari, Sicily”) |  |
 | Naples to Sicily | 7 | lipari - taormina - sicily | lipari | 38.48137 | 14.9396624 | nominatim (“lipari, Sicily”) |  |
 | Naples to Sicily | 7 | lipari - taormina - sicily | taormina | 37.8512218 | 15.2830191 | nominatim (“taormina, Sicily”) |  |
 | Naples to Sicily | 7 | lipari - taormina - sicily | sicily | 38.2681 | 15.2344 | atlas:mediterranean/italy/sicily |  |
 | Naples to Sicily | 8 | Taormina - Catania | Taormina | 37.8512218 | 15.2830191 | nominatim (“Taormina, Sicily”) |  |
-| Naples to Sicily | 8 | Taormina - Catania | Catania | 37.7958754 | 14.8256336 | nominatim (“Catania, Ischia”) |  |
+| Naples to Sicily | 8 | Taormina - Catania | Catania | 37.5079 | 15.083 | reviewed |  |
 | Palma to Cala Morell | 1 | palma to cabrera island | palma | 39.5700115 | 2.6395556 | map-pin |  |
 | Palma to Cala Morell | 1 | palma to cabrera island | cabrera island | 39.1453231 | 2.9466726 | nominatim (“cabrera island, Spain”) |  |
 | Palma to Cala Morell | 2 | cabrera island to ibiza town | cabrera island | 39.1453231 | 2.9466726 | nominatim (“cabrera island, Spain”) |  |
@@ -272,11 +305,11 @@ Edit coordinates in `content/itinerary-stops.json`; a re-run keeps hand-correcte
 | Palma to Cala Morell | 3 | ibiza town to formentera | ibiza town | 38.9072784 | 1.4353783 | nominatim (“ibiza town, Spain”) |  |
 | Palma to Cala Morell | 3 | ibiza town to formentera | formentera | 38.7062 | 1.4 | atlas:mediterranean/spain/the-balearics/formentera |  |
 | Palma to Cala Morell | 4 | formentera to isla es vedra | formentera | 38.7062 | 1.4 | atlas:mediterranean/spain/the-balearics/formentera |  |
-| Palma to Cala Morell | 4 | formentera to isla es vedra | isla es vedra | 42.7750931 | -8.4792395 | nominatim (“isla es vedra, Spain”) | near the edge of the itinerary's area (1034 km) |
-| Palma to Cala Morell | 5 | isla es vedra to andraitx, mallorca | isla es vedra | 42.7750931 | -8.4792395 | nominatim (“isla es vedra, Spain”) | near the edge of the itinerary's area (1034 km) |
+| Palma to Cala Morell | 4 | formentera to isla es vedra | isla es vedra | 38.87 | 1.2 | reviewed |  |
+| Palma to Cala Morell | 5 | isla es vedra to andraitx, mallorca | isla es vedra | 38.87 | 1.2 | reviewed |  |
 | Palma to Cala Morell | 5 | isla es vedra to andraitx, mallorca | andraitx, mallorca | — | — | unresolved |  |
-| Palma to Cala Morell | 6 | to puerto soller | to puerto soller | 38.6913867 | 0.1427367 | nominatim (“to puerto soller, Spain”) |  |
-| Palma to Cala Morell | 7 | puerto soller to pollensa | puerto soller | 38.6913867 | 0.1427367 | nominatim (“puerto soller, Spain”) |  |
+| Palma to Cala Morell | 6 | to puerto soller | to puerto soller | 39.795 | 2.6928 | reviewed |  |
+| Palma to Cala Morell | 7 | puerto soller to pollensa | puerto soller | 39.795 | 2.6928 | reviewed |  |
 | Palma to Cala Morell | 7 | puerto soller to pollensa | pollensa | 39.8792073 | 3.0157098 | nominatim (“pollensa, Spain”) |  |
 | Palma to Cala Morell | 8 | pollensa to cala morell, menorca | pollensa | 39.8792073 | 3.0157098 | nominatim (“pollensa, Spain”) |  |
 | Palma to Cala Morell | 8 | pollensa to cala morell, menorca | cala morell, menorca | 40.0536371 | 3.8805538 | map-pin |  |
@@ -286,8 +319,8 @@ Edit coordinates in `content/itinerary-stops.json`; a re-run keeps hand-correcte
 | Rhodes to Bodrum | 2 | rhodes to symi | rhodes | 36.1677658 | 27.6358734 | map-pin |  |
 | Rhodes to Bodrum | 2 | rhodes to symi | symi | 36.5904011 | 27.8411975 | nominatim (“symi”) |  |
 | Rhodes to Bodrum | 3 | symi to arki | symi | 36.5904011 | 27.8411975 | nominatim (“symi”) |  |
-| Rhodes to Bodrum | 3 | symi to arki | arki | 37.341709 | 36.06414 | nominatim (“arki, Mediterranean”) |  |
-| Rhodes to Bodrum | 4 | arki to lipsi | arki | 37.341709 | 36.06414 | nominatim (“arki, Mediterranean”) |  |
+| Rhodes to Bodrum | 3 | symi to arki | arki | 37.38 | 26.74 | reviewed |  |
+| Rhodes to Bodrum | 4 | arki to lipsi | arki | 37.38 | 26.74 | reviewed |  |
 | Rhodes to Bodrum | 4 | arki to lipsi | lipsi | 37.2955537 | 26.7687298 | nominatim (“lipsi”) |  |
 | Rhodes to Bodrum | 5 | lipsi to patmos | lipsi | 37.2955537 | 26.7687298 | nominatim (“lipsi”) |  |
 | Rhodes to Bodrum | 5 | lipsi to patmos | patmos | 37.3867725 | 26.7341062 | nominatim (“patmos”) |  |
@@ -303,6 +336,29 @@ Edit coordinates in `content/itinerary-stops.json`; a re-run keeps hand-correcte
 | Rome to Naples | 5 | amalfi | amalfi | 40.634 | 14.6027 | atlas:mediterranean/italy/amalfi-coast/amalfi |  |
 | Rome to Naples | 6 | sorrento | sorrento | 40.624906 | 14.374836 | nominatim (“sorrento, Italy”) |  |
 | Rome to Naples | 7 | naples | naples | 40.8539584 | 14.0907155 | map-pin |  |
+| Dubai to Abu Dhabi | 1 | arrive in dubai | dubai | 25.1457229 | 55.1691097 | map-pin |  |
+| Dubai to Abu Dhabi | 2 | dubai moon island and sunset cruise | dubai moon island | — | — | unresolved |  |
+| Dubai to Abu Dhabi | 2 | dubai moon island and sunset cruise | sunset cruise | 21.1754354 | 94.8578669 | nominatim-far (“sunset cruise”) | not drawn — 4108 km from the itinerary's map pins; correct it here to draw it |
+| Dubai to Abu Dhabi | 3 | dubai world islands cruise and desert safari | dubai world islands cruise | — | — | unresolved |  |
+| Dubai to Abu Dhabi | 3 | dubai world islands cruise and desert safari | desert safari | 25.1925232 | 55.6046252 | nominatim (“desert safari”) |  |
+| Dubai to Abu Dhabi | 4 | explore the city of dubai before a world-class meal at atlantis hotel | explore the city of dubai before a world-class meal at atlantis hotel | — | — | unresolved |  |
+| Dubai to Abu Dhabi | 5 | cruise from dubai to abu dhabi | cruise from dubai | — | — | unresolved |  |
+| Dubai to Abu Dhabi | 5 | cruise from dubai to abu dhabi | abu dhabi | 24.4281662 | 54.388319 | map-pin |  |
+| Dubai to Abu Dhabi | 6 | explore abu dhabi | explore abu dhabi | — | — | unresolved |  |
+| Dubai to Abu Dhabi | 7 | house of artisans and departure from abu dhabi | house of artisans | 24.4814055 | 54.3552298 | nominatim (“house of artisans”) |  |
+| Dubai to Abu Dhabi | 7 | house of artisans and departure from abu dhabi | departure from abu dhabi | — | — | unresolved |  |
+| Marina del Rey to Marina del Rey | 1 | Marina del Rey to Malibu | Marina del Rey | 33.98198680608402 | -118.44203307607032 | map-pin |  |
+| Marina del Rey to Marina del Rey | 1 | Marina del Rey to Malibu | Malibu | 34.002527647191364 | -118.79905494193088 | map-pin |  |
+| Marina del Rey to Marina del Rey | 2 | Malibu to Santa Cruz Island, Channel Islands | Malibu | 34.002527647191364 | -118.79905494193088 | map-pin |  |
+| Marina del Rey to Marina del Rey | 2 | Malibu to Santa Cruz Island, Channel Islands | Santa Cruz Island, Channel Islands | 34.01433684099572 | -119.7484106070519 | map-pin |  |
+| Marina del Rey to Marina del Rey | 3 | Santa Cruz Island to Catalina (Two Harbors / Little Geiger Cove) | Santa Cruz Island | 34.01433684099572 | -119.7484106070519 | map-pin |  |
+| Marina del Rey to Marina del Rey | 3 | Santa Cruz Island to Catalina (Two Harbors / Little Geiger Cove) | Catalina (Two Harbors | — | — | unresolved |  |
+| Marina del Rey to Marina del Rey | 3 | Santa Cruz Island to Catalina (Two Harbors / Little Geiger Cove) | Little Geiger Cove) | 33.4574038 | -118.515495 | nominatim (“Little Geiger Cove)”) |  |
+| Marina del Rey to Marina del Rey | 4 | Catalina | Catalina | 32.4996147 | -110.926146 | nominatim (“Catalina”) |  |
+| Marina del Rey to Marina del Rey | 5 | Avalon | Avalon | 33.34280083984848 | -118.32857531472004 | map-pin |  |
+| Marina del Rey to Marina del Rey | 6 | Lover’s Cove | Lover’s Cove | -34.4152117 | 19.2045595 | nominatim-far (“Lover’s Cove”) | not drawn — 16172 km from the itinerary's map pins; correct it here to draw it |
+| Marina del Rey to Marina del Rey | 7 | Catalina to Marina del Rey | Catalina | 32.4996147 | -110.926146 | nominatim (“Catalina”) |  |
+| Marina del Rey to Marina del Rey | 7 | Catalina to Marina del Rey | Marina del Rey | 33.98198680608402 | -118.44203307607032 | map-pin |  |
 | New England | 1 | newport | newport | 41.5046524 | -71.3213828 | nominatim (“newport, New England”) |  |
 | New England | 2 | edgartown | edgartown | 41.3930256 | -70.6034012 | nominatim (“edgartown, New England”) |  |
 | New England | 3 | nantucket | nantucket | 39.9342867 | -82.7427263 | nominatim (“nantucket, New England”) |  |
@@ -310,6 +366,19 @@ Edit coordinates in `content/itinerary-stops.json`; a re-run keeps hand-correcte
 | New England | 5 | vineyard haven | vineyard haven | 35.4620428 | -81.482705 | nominatim (“vineyard haven, North America”) | near the edge of the itinerary's area (1139 km) |
 | New England | 6 | block island | block island | 41.660934 | -71.5526448 | nominatim (“block island, New England”) |  |
 | New England | 7 | newport | newport | 41.5046524 | -71.3213828 | nominatim (“newport, New England”) |  |
+| San Juan Islands | 1 | Anacortes to Orcas Island | Anacortes | 48.606655816929276 | -122.60710556650294 | map-pin |  |
+| San Juan Islands | 1 | Anacortes to Orcas Island | Orcas Island | 48.6337189563491 | -122.93224833018371 | map-pin |  |
+| San Juan Islands | 2 | Orcas Island To Lopez Island | Orcas Island | 48.6337189563491 | -122.93224833018371 | map-pin |  |
+| San Juan Islands | 2 | Orcas Island To Lopez Island | Lopez Island | 48.487570830920255 | -122.89701532359707 | map-pin |  |
+| San Juan Islands | 3 | Lopez Island To Friday Harbor | Lopez Island | 48.487570830920255 | -122.89701532359707 | map-pin |  |
+| San Juan Islands | 3 | Lopez Island To Friday Harbor | Friday Harbor | 48.53392549873286 | -123.01989561193554 | map-pin |  |
+| San Juan Islands | 4 | Friday Harbor and Yellow Island | Friday Harbor | 48.53392549873286 | -123.01989561193554 | map-pin |  |
+| San Juan Islands | 4 | Friday Harbor and Yellow Island | Yellow Island | 48.5920907797536 | -123.03106088957688 | map-pin |  |
+| San Juan Islands | 5 | Roche Harbor and Spieden Island | Roche Harbor | 48.60947476283038 | -123.14806596456687 | map-pin |  |
+| San Juan Islands | 5 | Roche Harbor and Spieden Island | Spieden Island | 48.640238816037716 | -123.1312948598291 | map-pin |  |
+| San Juan Islands | 6 | Sucia Island | Sucia Island | 48.75481149551112 | -122.90469052794481 | map-pin |  |
+| San Juan Islands | 7 | Lummi Island | Lummi Island | 48.72392730433947 | -122.68836921128936 | map-pin |  |
+| San Juan Islands | 8 | Return to Anacortes | Anacortes | 48.606655816929276 | -122.60710556650294 | map-pin |  |
 | Sitka to Juneau, Alaska | 1 | sitka to appleton cove | sitka | 57.0934675 | -135.3111146 | map-pin |  |
 | Sitka to Juneau, Alaska | 1 | sitka to appleton cove | appleton cove | 57.4716667 | -135.2780556 | nominatim (“appleton cove, Alaska”) |  |
 | Sitka to Juneau, Alaska | 2 | appleton cove to sitkoh bay | appleton cove | 57.4716667 | -135.2780556 | nominatim (“appleton cove, Alaska”) |  |
@@ -370,4 +439,4 @@ Edit coordinates in `content/itinerary-stops.json`; a re-run keeps hand-correcte
 | Fiji Itinerary | 9 | vomo island | vomo island | — | — | unresolved |  |
 | Fiji Itinerary | 10 | namotu island | namotu island | -17.84417 | 177.1833865 | nominatim (“namotu island, Fiji”) |  |
 
-**364 places** across 32 itineraries: 298 drawn, 66 not drawn (unresolved or too far), 31 flagged.
+**433 places** across 38 itineraries: 352 drawn, 81 not drawn (unresolved or too far), 30 flagged.
