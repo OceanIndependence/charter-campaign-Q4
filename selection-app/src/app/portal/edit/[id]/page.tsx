@@ -11,7 +11,7 @@ import { ADMIN_CONSULTANTS_PATH, adminNavLabel, PROFILE_PATH, consultantNeedsPho
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Charter Portal — Edit Selection",
+  title: "Retail Charter Portal — Edit Selection",
   robots: { index: false, follow: false },
 };
 

@@ -61,7 +61,7 @@ f33d74f 2026-09-08 Make the fleet refresh and image pipeline idempotent; count B
 f3d9900 2026-09-07 Distinct exterior default, uncacheable client pages, drag-to-reorder yachts
 7329d99 2026-09-07 Fill specs immediately; prepare images separately and in parallel
 ...
-6ed811d 2026-09-04 Add Charter Portal consultant form with dynamic Yachtfolio fleet
+6ed811d 2026-09-04 Add Retail Charter Portal consultant form with dynamic Yachtfolio fleet
 ```
 
 The manifest was introduced in a single commit, `f33d74f`, authored

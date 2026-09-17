@@ -32,11 +32,11 @@ export default function LoginForm() {
 
   return (
     <div className={styles.page}>
-      <PortalHeader consultant="CHARTER PORTAL" initial="OI" />
+      <PortalHeader consultant="RETAIL CHARTER PORTAL" initial="OI" />
       <div className={styles.loginWrap}>
         <form className={styles.loginCard} onSubmit={submit}>
           <div>
-            <div className={styles.eyebrow}>CHARTER PORTAL</div>
+            <div className={styles.eyebrow}>RETAIL CHARTER PORTAL</div>
             <h1 className={styles.title} style={{ fontSize: "clamp(22px, 3vw, 28px)" }}>
               Sign In
             </h1>

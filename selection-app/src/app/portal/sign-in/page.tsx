@@ -10,7 +10,7 @@ import { isPortalAuthedServer } from "@/server/portal-auth";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Sign in — Charter Portal",
+  title: "Sign in — Retail Charter Portal",
   robots: { index: false, follow: false },
 };
 
@@ -35,11 +35,11 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
   const identities = provider.selectableIdentities();
   return (
     <div className={styles.page}>
-      <PortalHeader consultant="CHARTER PORTAL" initial="OI" />
+      <PortalHeader consultant="RETAIL CHARTER PORTAL" initial="OI" />
       <div className={styles.loginWrap}>
         <div className={styles.loginCard}>
           <div>
-            <div className={styles.eyebrow}>CHARTER PORTAL</div>
+            <div className={styles.eyebrow}>RETAIL CHARTER PORTAL</div>
             <h1 className={styles.title} style={{ fontSize: "clamp(22px, 3vw, 28px)" }}>
               Choose Consultant
             </h1>

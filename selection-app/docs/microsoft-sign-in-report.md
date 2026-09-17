@@ -43,7 +43,7 @@ be registered.
 **Who may sign in.** Only people with a consultant record. After the token
 is validated the callback looks the person up by object ID, then by sign-in
 address among active records. No record: back to the sign-in screen with
-"This Microsoft account has no consultant profile in the Charter Portal.
+"This Microsoft account has no consultant profile in the Retail Charter Portal.
 Contact marketing to be added." and no cookie. The record is claimed
 (object ID written in) on the first portal request by the existing
 resolution in `consultant-session.ts`; under Microsoft that resolution

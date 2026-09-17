@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic";
 
 // Preview is behind the portal session and must never be indexed.
 export const metadata: Metadata = {
-  title: "Preview — Charter Portal",
+  title: "Preview — Retail Charter Portal",
   robots: { index: false, follow: false },
 };
 

@@ -27,7 +27,7 @@ for framework patterns).
 **High-fidelity.** Colours, typography, tracking, spacing and interactions
 are final and follow the OI brand system. Recreate pixel-perfectly.
 
-## Data model (populated by the Charter Portal — see Backend notes)
+## Data model (populated by the Retail Charter Portal — see Backend notes)
 Yacht: { id, name, tagline?, lengthM, yearRefit, guests, staterooms (count +
 breakdown string), location, cruisingArea, availability, weeklyRateEUR,
 apaPct (35 default), notes (consultant's personal note), leadImageUrl,
@@ -97,7 +97,7 @@ Never crop or stretch to another ratio.
 - Icons: thin 1px-stroke line icons only (custom SVGs in the prototype). No emoji, no icon fonts.
 
 ## Backend notes (from the product brief)
-- This page is generated per client by consultants through a Charter Portal
+- This page is generated per client by consultants through a Retail Charter Portal
   form (Tier "portal" design, not in this bundle): consultant picks yachts
   from a fleet API dropdown, fields auto-fill (editable), sections toggle,
   then publish → unique client URL (slug per client).

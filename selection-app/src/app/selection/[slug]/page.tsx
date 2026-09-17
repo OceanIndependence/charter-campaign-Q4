@@ -11,7 +11,7 @@ import { noteStorageError } from "@/server/storage.mjs";
 import { CAMPAIGN_ATLAS_URL } from "@/lib/portal-map";
 
 /**
- * Client pages published from the Charter Portal render on demand from the
+ * Client pages published from the Retail Charter Portal render on demand from the
  * stored page config (the publish route revalidates the path on each new
  * version); unpublished or unknown slugs are 404s.
  *

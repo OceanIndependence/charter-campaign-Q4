@@ -1,5 +1,5 @@
 /**
- * Charter Portal form state (drafts) — the editable superset of the Tier 3
+ * Retail Charter Portal form state (drafts) — the editable superset of the Tier 3
  * PageConfig. Field values are strings while being edited; mapping to the
  * typed PageConfig happens in portal-map.ts.
  */

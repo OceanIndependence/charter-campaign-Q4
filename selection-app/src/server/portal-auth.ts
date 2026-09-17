@@ -1,5 +1,5 @@
 /**
- * Consultant-session gate for the Charter Portal and its API routes.
+ * Consultant-session gate for the Retail Charter Portal and its API routes.
  *
  * Optional coarse staging gate: a single shared access key
  * (PORTAL_ACCESS_KEY, server-only env var). /portal/login exchanges the key
@@ -59,5 +59,5 @@ export async function isPortalAuthedServer(): Promise<boolean> {
 /** Return a 401 response, or null when the request is authenticated. */
 export function requirePortalAuth(request: NextRequest): NextResponse | null {
   if (isPortalAuthed(request)) return null;
-  return NextResponse.json({ error: "Not signed in to the Charter Portal." }, { status: 401 });
+  return NextResponse.json({ error: "Not signed in to the Retail Charter Portal." }, { status: 401 });
 }
