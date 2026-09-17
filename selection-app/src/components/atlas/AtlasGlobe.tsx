@@ -14,7 +14,7 @@ export interface GlobeHandle {
   /** Draw a route through the points, or clear it with null */
   setRoute(points: RoutePoint[] | null): void;
   /** Shift the projection window right by px (0 clears); see the engine */
-  setViewShift(px: number): void;
+  setViewShift(px: number, py?: number): void;
 }
 
 interface Props {
@@ -49,14 +49,14 @@ const AtlasGlobe = forwardRef<GlobeHandle, Props>(function AtlasGlobe({ pins, on
     selected: string | null;
     fly: [number, number, number, number] | null;
     route: RoutePoint[] | null;
-    viewShift: number;
+    viewShift: [number, number];
   }>({
     subPins: [],
     focus: null,
     selected: null,
     fly: null,
     route: null,
-    viewShift: 0,
+    viewShift: [0, 0],
   });
 
   pinsRef.current = pins;
@@ -85,7 +85,7 @@ const AtlasGlobe = forwardRef<GlobeHandle, Props>(function AtlasGlobe({ pins, on
       if (p.focus) engine.setFocus(p.focus);
       if (p.selected) engine.setSelected(p.selected);
       if (p.route) engine.setRoute(p.route);
-      if (p.viewShift) engine.setViewShift(p.viewShift);
+      if (p.viewShift[0] || p.viewShift[1]) engine.setViewShift(p.viewShift[0], p.viewShift[1]);
       if (p.fly) engine.flyTo(...p.fly);
       engineRef.current = engine;
       callbacks.current.onReady?.();
@@ -117,7 +117,7 @@ const AtlasGlobe = forwardRef<GlobeHandle, Props>(function AtlasGlobe({ pins, on
       },
       zoomBy: (f) => engineRef.current?.zoomBy(f),
       reset: () => {
-        pending.current = { subPins: [], focus: null, selected: null, fly: null, route: null, viewShift: 0 };
+        pending.current = { subPins: [], focus: null, selected: null, fly: null, route: null, viewShift: [0, 0] };
         engineRef.current?.reset();
       },
       setSubPins: (p) => {
@@ -136,9 +136,9 @@ const AtlasGlobe = forwardRef<GlobeHandle, Props>(function AtlasGlobe({ pins, on
         pending.current.route = points;
         engineRef.current?.setRoute(points);
       },
-      setViewShift: (px) => {
-        pending.current.viewShift = px;
-        engineRef.current?.setViewShift(px);
+      setViewShift: (px, py = 0) => {
+        pending.current.viewShift = [px, py];
+        engineRef.current?.setViewShift(px, py);
       },
     }),
     []
