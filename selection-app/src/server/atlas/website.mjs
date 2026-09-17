@@ -222,6 +222,10 @@ export function parsePage(url, html) {
     if (u && u !== INDEX_URL) links.add(u);
   }
 
+  // Itinerary features and cards — the "#itineraries" section links to the
+  // website's own itinerary pages (day-by-day narrative lives there).
+  const itineraryLinks = parseItineraryLinks(root);
+
   // Featured charter yachts — "Yachts in the Area".
   let yachtSection = root.querySelector("#yachts-in-the-area");
   if (!yachtSection) {
@@ -252,7 +256,233 @@ export function parsePage(url, html) {
     mapZoom,
     cards,
     links: [...links],
+    itineraryLinks,
     yachts,
+  };
+}
+
+/* ------------------------------------------------------------ itineraries */
+
+const ITINERARY_PATH = "/yacht-charter/itineraries/";
+
+export function isItineraryUrl(href) {
+  return typeof href === "string" && href.startsWith(SITE + ITINERARY_PATH) && href.replace(SITE + ITINERARY_PATH, "").replace(/\/$/, "").split("/").length >= 2;
+}
+
+/**
+ * The itinerary blocks a destination page carries: the single "Charter
+ * Itinerary — <title>" feature on country pages and the itinerary card
+ * slider on region pages. Each entry links to a website itinerary page.
+ */
+export function parseItineraryLinks(root) {
+  const out = [];
+  const seen = new Set();
+  const add = (entry) => {
+    if (!entry.url || !isItineraryUrl(entry.url) || seen.has(entry.url)) return;
+    seen.add(entry.url);
+    out.push(entry);
+  };
+  const section = root.querySelector("#itineraries");
+  if (!section) return out;
+  // Card slider first, so a card's own title and length win over the walk below:
+  // <a class="c-itinerary-card" href><h3>Rome to Naples</h3><div>7 days</div>
+  for (const card of section.querySelectorAll(".c-itinerary-card")) {
+    const href = card.getAttribute("href") || card.querySelector("a[href]")?.getAttribute("href");
+    const details = card.querySelectorAll(".o-card__details, .c-itinerary-card__details, p").map(text).filter(Boolean);
+    const daysText = details.find((d) => /\bday/i.test(d)) || "";
+    const days = Number.parseInt(daysText, 10);
+    add({
+      url: href,
+      title: text(card.querySelector("h3")),
+      eyebrow: null,
+      summary: details.filter((d) => d !== daysText).join(" "),
+      image: card.querySelector("img")?.getAttribute("src") || null,
+      days: Number.isFinite(days) ? days : null,
+    });
+  }
+  /**
+   * The featured Charter Itinerary block. Its heading and its button are
+   * siblings, not one block:
+   *
+   *   <div class="s-standard-content"><h2>Charter Itinerary</h2>
+   *     <h3>Rhodes to Bodrum</h3><p>…</p></div>
+   *   <div class="o-button-wrap"><a href="…/rhodes-to-bodrum/">SEE THE FULL ITINERARY</a></div>
+   *
+   * so looking for the link inside the heading's own block finds nothing and
+   * the feature is lost. The section is walked in document order instead,
+   * carrying the most recent heading and paragraphs onto the next itinerary
+   * link that is not part of a card. "Charter Itinerary" is the block's label,
+   * not the route's name, so it is kept as the eyebrow and the h3 is the title.
+   * Only links inside #itineraries count: an itinerary named in passing in the
+   * body copy is prose, not an editorial choice.
+   */
+  let heading = "";
+  let eyebrowText = null;
+  let paras = [];
+  for (const el of section.querySelectorAll("h2, h3, p, a[href]")) {
+    const tag = el.tagName;
+    if (tag === "H2" || tag === "H3") {
+      const t = text(el);
+      if (/^charter itinerar/i.test(t)) eyebrowText = t;
+      else {
+        heading = t;
+        paras = [];
+      }
+      continue;
+    }
+    if (tag === "P") {
+      const t = text(el);
+      if (t) paras.push(t);
+      continue;
+    }
+    if (el.closest(".c-itinerary-card")) continue;
+    const href = el.getAttribute("href");
+    if (!isItineraryUrl(href || "")) continue;
+    const row = el.closest(".c-content-grid__row") || section;
+    add({
+      url: href,
+      title: heading,
+      eyebrow: eyebrowText,
+      summary: paras.join(" "),
+      image: row.querySelector("img")?.getAttribute("src") || null,
+      days: null,
+    });
+  }
+  return out;
+}
+
+const DAY_WORDS = {
+  one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10,
+  eleven: 11, twelve: 12, thirteen: 13, fourteen: 14,
+};
+
+/**
+ * The website's day headings are a day or a day range and the leg, in two
+ * spans: "Day One  corfu", "Day One - Three  Nassau to Compass Cay",
+ * "Day Seven - Eight  kefalonia - zakynthos". The leg is kept exactly as
+ * written (the page renders it in capitals).
+ */
+function parseDayHeading(heading) {
+  const h = heading.replace(/\s+/g, " ").trim();
+  // Two formats are in use. Older pages lead with the word ("Day One rome",
+  // "Day Seven - Eight kefalonia - zakynthos"); newer ones lead with the
+  // number ("1 Day Split and Maslinica", "8-9 Days Optional Extension").
+  const m =
+    h.match(/^days?\s+([a-z]+|\d+)(?:\s*(?:[-–]|&|and)\s*([a-z]+|\d+))?\s*[:–-]?\s+(.*)$/i) ||
+    h.match(/^(\d+)(?:\s*(?:[-–]|&|and)\s*(\d+))?\s+days?\s*[:–-]?\s+(.*)$/i);
+  if (!m) return null;
+  const num = (t) => (t ? (DAY_WORDS[t.toLowerCase()] ?? Number.parseInt(t, 10)) : NaN);
+  const day = num(m[1]);
+  if (!Number.isFinite(day)) return null;
+  const dayEnd = num(m[2]);
+  const place = m[3].trim();
+  if (!place) return null;
+  return Number.isFinite(dayEnd) && dayEnd !== day ? { day, dayEnd, place } : { day, place };
+}
+
+/**
+ * A website itinerary page (/yacht-charter/itineraries/<region>/<slug>/):
+ * title, length, intro copy and the DAY TO DAY narrative, verbatim, plus the
+ * map endpoints the page carries. No geocoding — the day places are names.
+ */
+export function parseItineraryPage(url, html) {
+  const root = parse(html, { blockTextElements: { script: false, style: false, noscript: false } });
+  // Every itinerary page carries its length in an .h5 eyebrow inside the h1,
+  // either bare ("7 days") or as a sentence ("Croatia Yacht Charter Itinerary
+  // - 7 Days"). Left in place it becomes part of the title; the bare form only
+  // parsed because it happened to sit in front of the title.
+  const h1El = root.querySelector("h1");
+  let eyebrow = "";
+  if (h1El) {
+    const e = h1El.querySelector(".h5");
+    if (e) {
+      eyebrow = text(e);
+      e.remove();
+    }
+  }
+  const h1 = text(h1El);
+  const fromEyebrow = eyebrow.match(/(\d+)\s*days?\b/i);
+  const fromTitle = h1.match(/^(\d+)\s*days?\s+(.*)$/i);
+  const title = fromTitle ? fromTitle[2].trim() : h1;
+  const days = fromEyebrow ? Number.parseInt(fromEyebrow[1], 10) : fromTitle ? Number.parseInt(fromTitle[1], 10) : null;
+  const metaDescription = decode(root.querySelector('meta[name="description"]')?.getAttribute("content") || "");
+  const ogImage = root.querySelector('meta[property="og:image"]')?.getAttribute("content") || null;
+  const hero = root.querySelector(".c-hero");
+  const heroImage = sirv2000(
+    hero?.querySelector('picture source[media*="min-width"]')?.getAttribute("srcset")?.split(/\s+/)[0] ||
+      hero?.querySelector("img")?.getAttribute("src") ||
+      ogImage
+  );
+
+  const intro = [];
+  const stops = [];
+  const sections = root.querySelectorAll("section");
+  const daySection = sections.find((sec) => /day to day/i.test(text(sec.querySelector("h2"))));
+  // Intro: standard copy before the day list.
+  const main = root.querySelector("main") || root;
+  for (const block of main.querySelectorAll(".s-standard-content")) {
+    if (daySection && daySection.contains && daySection.contains(block)) continue;
+    if (block.closest(".o-card") || block.closest(".c-featured-items-slider__intro")) continue;
+    if (block.querySelector("h3")) continue;
+    for (const p of block.querySelectorAll("p").map(text).filter(Boolean)) if (!intro.includes(p)) intro.push(p);
+    if (intro.length >= 4) break;
+  }
+  if (daySection) {
+    let current = null;
+    const walk = (node) => {
+      for (const child of node.childNodes) {
+        if (child.nodeType !== 1) continue;
+        const tag = child.tagName;
+        if (tag === "H3" || tag === "H4") {
+          const parsed = parseDayHeading(text(child));
+          current = parsed ? { ...parsed, text: [] } : null;
+          if (current) stops.push(current);
+          continue;
+        }
+        if (tag === "P" && current) {
+          const t = text(child);
+          if (t) current.text.push(t);
+          continue;
+        }
+        walk(child);
+      }
+    };
+    walk(daySection);
+  }
+  if (!stops.length) {
+    // Newer template: the day headings are `h3.o-numbered-heading` in their own
+    // blocks, outside the section that carries the "Day to Day" h2, with the
+    // day's narrative as sibling paragraphs. Scanned in document order.
+    for (const h of root.querySelectorAll("h3, h4")) {
+      const parsed = parseDayHeading(text(h));
+      if (!parsed) continue;
+      const block = h.parentNode;
+      const ps = block ? block.querySelectorAll("p").map(text).filter(Boolean) : [];
+      stops.push({ ...parsed, text: ps });
+    }
+  }
+  let mapPins = [];
+  const map = root.querySelector(".o-google-map[data-map-locations]");
+  if (map) {
+    try {
+      mapPins = JSON.parse(decode(map.getAttribute("data-map-locations")))
+        .map((p) => ({ lat: Number.parseFloat(p.latitude), lon: Number.parseFloat(p.longitude), label: decode(String(p.content || "").replace(/<[^>]+>/g, " ")) }))
+        .filter((p) => Number.isFinite(p.lat) && Number.isFinite(p.lon));
+    } catch {
+      mapPins = [];
+    }
+  }
+  // The day list's own paragraphs are not intro copy.
+  const dayText = new Set(stops.flatMap((s) => s.text));
+  return {
+    url,
+    title,
+    days: days ?? (stops.length || null),
+    metaDescription,
+    heroImage,
+    intro: intro.filter((p) => !dayText.has(p)),
+    stops: stops.map((s) => ({ day: s.day, ...(s.dayEnd ? { dayEnd: s.dayEnd } : {}), place: s.place, text: s.text.join(" ") })),
+    mapPins,
   };
 }
 

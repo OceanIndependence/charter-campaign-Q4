@@ -118,6 +118,28 @@ export function fmtDateLong(iso: string | null | undefined): string {
  * digit, since wa.me expects the number exactly as dialled from abroad.
  * A full URL is passed through.
  */
+/**
+ * The consultant's contact button for a client page: WhatsApp with a
+ * prefilled message where the consultant has a number, else an e-mail with
+ * the same words as the subject and body ("EMAIL ME"). Null when the
+ * consultant has neither, or is inactive (null consultant).
+ */
+export function contactCta(
+  consultant: { whatsapp?: string; email?: string } | null | undefined,
+  message: string,
+  labels: { whatsapp: string; email?: string } = { whatsapp: "WHATSAPP ME" }
+): { href: string; label: string; external: boolean } | null {
+  if (!consultant) return null;
+  const wa = whatsappHref(consultant.whatsapp);
+  if (wa) {
+    const sep = wa.includes("?") ? "&" : "?";
+    return { href: `${wa}${sep}text=${encodeURIComponent(message)}`, label: labels.whatsapp, external: true };
+  }
+  const email = (consultant.email ?? "").trim();
+  if (!email) return null;
+  return { href: `mailto:${email}?subject=${encodeURIComponent(message)}`, label: labels.email ?? "EMAIL ME", external: false };
+}
+
 export function whatsappHref(value: string | undefined): string {
   const v = (value ?? "").trim();
   if (!v) return "";

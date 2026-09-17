@@ -529,6 +529,23 @@
   color: #1d1d1d;
 }
 
+/* The website's sample itineraries for a chosen destination — read-only. */
+.itinSummary {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #1d1d1d;
+}
+
+.itinSummary li::before {
+  content: "· ";
+  color: #257d6b;
+}
+
 .checkChild {
   display: grid;
   gap: 8px;
@@ -1611,21 +1628,14 @@
   color: #1d1d1d;
 }
 
-.destSlot {
-  border: 1px solid #e3e3e1;
+/* A destination slot folds away behind its header exactly as a yacht card
+   does, so it borrows .yachtEntry and .yachtHeader; only the body differs, as a
+   single column rather than the yacht body's field grid. */
+.destBody {
   padding: 22px 20px 26px;
+  border-top: 1px solid #e3e3e1;
   display: grid;
   gap: 18px;
-}
-
-.destSlotHead {
-  display: flex;
-  align-items: baseline;
-  gap: 14px;
-}
-
-.destSlotHead .yachtTitle {
-  flex: 1;
 }
 
 .destNote {

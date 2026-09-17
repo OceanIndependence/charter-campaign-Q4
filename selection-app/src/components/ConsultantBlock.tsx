@@ -1,14 +1,16 @@
 import type { Consultant } from "@/lib/types";
-import { whatsappHref } from "@/lib/format";
+import { contactCta } from "@/lib/format";
 import { MailIcon, PhoneIcon } from "./icons";
 import styles from "./ConsultantBlock.module.css";
 
 /**
  * The contact block at the foot of every client page. Renders what is
  * present: a blank photo lets the text stand alone (no placeholder on a
- * client page), a blank phone or WhatsApp hides that row.
+ * client page), a blank phone hides that row. The button is WHATSAPP ME where
+ * the consultant has a number and EMAIL ME otherwise, on every tier.
  */
 export default function ConsultantBlock({ consultant }: { consultant: Consultant }) {
+  const cta = contactCta(consultant, "Summer 2027 options");
   return (
     <section className={styles.section}>
       <div className={styles.inner}>
@@ -40,9 +42,9 @@ export default function ConsultantBlock({ consultant }: { consultant: Consultant
               </div>
             )}
           </div>
-          {whatsappHref(consultant.whatsapp) && (
-            <a href={whatsappHref(consultant.whatsapp)} className={styles.whatsapp} target="_blank" rel="noopener">
-              WHATSAPP ME
+          {cta && (
+            <a href={cta.href} className={styles.whatsapp} {...(cta.external ? { target: "_blank", rel: "noopener" } : {})}>
+              {cta.label}
             </a>
           )}
         </div>

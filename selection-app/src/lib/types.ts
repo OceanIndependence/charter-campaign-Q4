@@ -174,8 +174,63 @@ export interface DestinationsPageDestination {
   description: AtlasBlock;
   /** Absent when the consultant left it blank */
   consultantNote?: AtlasBlock;
-  /** Two 16:10 images */
-  images: [AtlasBlock, AtlasBlock];
+  /**
+   * Two or three 16:10 images for the panel's peek carousel. Pages published
+   * before the form had a third slot carry two and render a two-slide carousel.
+   */
+  images: AtlasBlock[];
+  /**
+   * The website's sample itineraries for this destination, frozen at publish
+   * time (up to MAX_WEBSITE_ITINERARIES). Absent on pages published before
+   * the panel drew routes, which render no itinerary cards.
+   */
+  itineraries?: DestinationsPageItinerary[];
+}
+
+/** The most sample itineraries one destination panel lists. */
+export const MAX_WEBSITE_ITINERARIES = 3;
+
+/** A located place named in a day heading; a pin on the route. */
+export interface DestinationsPagePoint {
+  name: string;
+  lat: number;
+  lon: number;
+}
+
+/**
+ * One DAY TO DAY entry of a sample itinerary: a day row in the panel. The
+ * heading is the website's, verbatim ("Bonifacio - Maddalena Islands"); the
+ * points are its places located in order, the last being where the day ends,
+ * which is where the camera flies when the row is selected.
+ */
+export interface DestinationsPageStop {
+  day: number;
+  /** Present when the heading covers several days ("Day One - Three") */
+  dayEnd?: number;
+  heading: string;
+  /** The day's narrative, verbatim */
+  text: string;
+  points: DestinationsPagePoint[];
+  /**
+   * The 92 × 62 thumbnail beside the day row: the Atlas image of one of the
+   * day's places where it is itself an Atlas destination, else one of the
+   * destination's own carousel images. Absent when neither exists.
+   */
+  image?: string;
+}
+
+/** A sample itinerary from the website, as frozen into a published page. */
+export interface DestinationsPageItinerary {
+  id: string;
+  /** The itinerary page on the website */
+  url: string;
+  title: string;
+  days: number;
+  /** Introductory paragraphs, verbatim */
+  intro: string[];
+  /** The card blurb on the destination page that links to it, where one exists */
+  teaser?: string;
+  stops: DestinationsPageStop[];
 }
 
 /**
@@ -205,6 +260,12 @@ export interface DestinationsPageSections {
   /** Up to MAX_ITINERARY_LINKS itinerary buttons, in the consultant's order */
   itineraryLinks?: ItineraryLink[];
   compare: boolean;
+  /**
+   * The website's sample itineraries in each destination panel, drawn on the
+   * globe. Absent on pages published before the panel had them; only false
+   * hides cards a page carries.
+   */
+  routes?: boolean;
 }
 
 export interface DestinationsPageConfig {

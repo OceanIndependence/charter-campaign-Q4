@@ -59,6 +59,37 @@ export interface AtlasDestination {
   yachtIds: string[];
   /** Has featured charter yachts — mint pin on the globe */
   featured: boolean;
+  /** The website itinerary pages this destination's page links to (narrative in AtlasSnapshot.itineraries) */
+  itineraryLinks?: AtlasItineraryLink[];
+}
+
+/** One itinerary feature or card on a destination page, linking to a website itinerary page. */
+export interface AtlasItineraryLink {
+  url: string;
+  title: string;
+  days: number | null;
+  /** The card or feature blurb on the destination page */
+  summary: string;
+  image: string | null;
+}
+
+/**
+ * A website itinerary page (/yacht-charter/itineraries/<region>/<slug>/),
+ * captured verbatim: title, length, intro paragraphs and the DAY TO DAY
+ * narrative. The day headings are legs ("Calvi To Girolata"); the page's map
+ * carries the start and end pins only, so stop coordinates come from
+ * content/itinerary-stops.json, not from here.
+ */
+export interface WebsiteItinerary {
+  url: string;
+  title: string;
+  days: number | null;
+  metaDescription: string;
+  heroImage: string | null;
+  intro: string[];
+  /** One per heading; `dayEnd` when the heading is a range ("Day One - Three"); `place` is the leg as written */
+  stops: Array<{ day: number; dayEnd?: number; place: string; text: string }>;
+  mapPins: Array<{ lat: number; lon: number; label: string }>;
 }
 
 export interface AtlasYacht {
@@ -98,7 +129,9 @@ export interface AtlasSnapshot {
     heroImage: string | null;
     ogImage: string | null;
     regionOrder: string[];
-  };
+    /** Website itinerary pages keyed by URL, verbatim */
+  itineraries?: Record<string, WebsiteItinerary>;
+};
   counts: {
     pages: number;
     regions: number;
