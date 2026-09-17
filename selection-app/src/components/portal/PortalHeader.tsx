@@ -3,7 +3,7 @@ import SignOutButton from "./SignOutButton";
 
 /** Sticky portal header, showing the signed-in consultant identity. */
 export default function PortalHeader({
-  consultant = "CHARTER PORTAL",
+  consultant = "RETAIL CHARTER PORTAL",
   initial = "OI",
   photoUrl,
   profileHref,
@@ -31,7 +31,7 @@ export default function PortalHeader({
       <div className={styles.headerLeft}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/assets/logo-black.png" alt="Ocean Independence" className={styles.wordmark} />
-        <span className={styles.portalLabel}>CHARTER PORTAL</span>
+        <span className={styles.portalLabel}>RETAIL CHARTER PORTAL</span>
         {backHref && (
           <a href={backHref} className={styles.backLink}>
             ← DASHBOARD

@@ -9,7 +9,7 @@ import { ADMIN_CONSULTANTS_PATH, adminNavLabel, PROFILE_PATH } from "@/lib/consu
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Charter Portal — Import consultants",
+  title: "Retail Charter Portal — Import consultants",
   robots: { index: false, follow: false },
 };
 
@@ -53,7 +53,7 @@ export default async function ImportConsultantsPage() {
 function NotAnAdmin({ email }: { email: string }) {
   return (
     <main className={styles.main}>
-      <div className={styles.eyebrow}>CHARTER PORTAL — ADMIN</div>
+      <div className={styles.eyebrow}>RETAIL CHARTER PORTAL — ADMIN</div>
       <h1 className={styles.title}>Import consultants</h1>
       <p className={styles.intro}>
         {adminAccessConfigured() ? (

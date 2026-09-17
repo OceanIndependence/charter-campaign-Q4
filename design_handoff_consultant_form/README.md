@@ -1,10 +1,10 @@
-# Handoff: Charter Portal — consultant form (populates the Tier 3 client page)
+# Handoff: Retail Charter Portal — consultant form (populates the Tier 3 client page)
 
 ## Overview
 The back-office form charter consultants use to build a client's Tier 3
 "Yacht Selection" landing page (that page has its own handoff bundle,
 `design_handoff_tier3_yacht_selection` — build against the same data model).
-The consultant signs in to the Charter Portal, fills this form, and publishes;
+The consultant signs in to the Retail Charter Portal, fills this form, and publishes;
 the result is a unique client URL. Demo consultant is "Lucy".
 
 ## About the Design Files
@@ -27,7 +27,7 @@ headers, 10px/0.3–0.4em buttons). Inputs: 1px #D8D8D6 border, 0 radius,
 
 ## Page structure
 1. **Sticky header** (white, hairline bottom rule): black OI wordmark +
-   "CHARTER PORTAL" label; right: "LUCY · LONDON" + 34px ink circle avatar.
+   "RETAIL CHARTER PORTAL" label; right: "LUCY · LONDON" + 34px ink circle avatar.
    (Auth/login is out of scope for this build but the header should read
    from the session.)
 2. **Intro**: eyebrow "NEW CLIENT PRESENTATION", display title "YACHT

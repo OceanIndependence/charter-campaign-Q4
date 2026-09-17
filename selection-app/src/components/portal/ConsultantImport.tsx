@@ -114,7 +114,7 @@ export default function ConsultantImport() {
 
   return (
     <main className={styles.main}>
-      <div className={styles.eyebrow}>CHARTER PORTAL — ADMIN</div>
+      <div className={styles.eyebrow}>RETAIL CHARTER PORTAL — ADMIN</div>
       <h1 className={styles.title}>Import consultants</h1>
       <p className={styles.intro}>
         Creates a consultant record for every row of the seed list that does not already have one. Rows whose email already has a record are

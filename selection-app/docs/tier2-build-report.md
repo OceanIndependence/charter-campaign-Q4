@@ -3,7 +3,7 @@
 Built 09 September 2026 on branch `claude/tier2-personalised-atlas-7vi15o`. Tier 2 is a
 composition of Tier 1 (the 2027 Atlas at `/2027-charter-season`) and Tier 3 (Yacht
 Selection at `/selection/<slug>`): the client page lives at `/atlas/<slug>`, the
-consultant builds it in the same Charter Portal, and nothing below duplicates an
+consultant builds it in the same Retail Charter Portal, and nothing below duplicates an
 existing module.
 
 ## Design reference

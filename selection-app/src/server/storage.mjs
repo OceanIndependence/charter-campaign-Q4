@@ -1,5 +1,5 @@
 /**
- * Durable storage for the Charter Portal — SERVER-ONLY.
+ * Durable storage for the Retail Charter Portal — SERVER-ONLY.
  *
  * Two separate concerns, deliberately kept in two Vercel Blob stores:
  *

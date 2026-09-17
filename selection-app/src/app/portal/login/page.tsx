@@ -6,7 +6,7 @@ import { stagingGateApplies } from "@/server/auth";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Sign in — Charter Portal",
+  title: "Sign in — Retail Charter Portal",
   robots: { index: false, follow: false },
 };
 

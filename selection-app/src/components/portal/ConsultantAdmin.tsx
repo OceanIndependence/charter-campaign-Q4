@@ -68,7 +68,7 @@ export default function ConsultantAdmin() {
   if (rows === null) {
     return (
       <main className={styles.main}>
-        <div className={styles.eyebrow}>CHARTER PORTAL</div>
+        <div className={styles.eyebrow}>RETAIL CHARTER PORTAL</div>
         <p className={styles.intro}>Loading consultants…</p>
       </main>
     );
@@ -78,7 +78,7 @@ export default function ConsultantAdmin() {
     <main className={`${styles.main} ${styles.dashMain}`}>
       <div className={styles.dashHead}>
         <div>
-          <div className={styles.eyebrow}>CHARTER PORTAL — ADMIN</div>
+          <div className={styles.eyebrow}>RETAIL CHARTER PORTAL — ADMIN</div>
           <h1 className={styles.title}>Consultants</h1>
           <p className={styles.intro}>
             Every consultant record and what client pages show for it. Names, titles, addresses, photos and status are yours to correct here;
