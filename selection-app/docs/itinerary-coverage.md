@@ -81,9 +81,9 @@ Edit the sources, not this document; it is rewritten on every build.
 | `caribbean/the-bahamas/nassau` | Nassau | Nassau to Nassau |
 | `caribbean/the-bahamas/the-exumas` | The Exumas | Nassau to Nassau |
 | `caribbean/the-windward-islands` | The Windward Islands | antigua to st lucia |
+| `caribbean/the-windward-islands/dominica` | Dominica | antigua to st lucia |
+| `caribbean/the-windward-islands/martinique` | Martinique | antigua to st lucia |
 | `caribbean/the-windward-islands/st-vincent-the-grenadines` | St Vincent & The Grenadines | — |
-| `caribbean/the-windward-islands/st-vincent-the-grenadines/dominica` | Dominica | antigua to st lucia |
-| `caribbean/the-windward-islands/st-vincent-the-grenadines/martinique` | Martinique | antigua to st lucia |
 | `caribbean/virgin-islands` | Virgin Islands | Tortola to Tortola · St. Thomas to St. Thomas |
 | `caribbean/virgin-islands/british-virgin-islands` | British Virgin Islands | Tortola to Tortola · St. Thomas to St. Thomas |
 | `caribbean/virgin-islands/us-virgin-islands` | U.S. Virgin Islands | St. Thomas to St. Thomas |

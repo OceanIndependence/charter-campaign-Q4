@@ -936,9 +936,6 @@ function ItineraryPanel({
           );
         })}
       </div>
-      <a className={styles.textLink} href={itinerary.url} target="_blank" rel="noopener">
-        READ THIS ITINERARY ON THE WEBSITE →
-      </a>
       {cta && (
         <a className={`${styles.btnOutline} ${styles.itCta}`} href={cta.href} {...(cta.external ? { target: "_blank", rel: "noopener" } : {})}>
           {cta.label}

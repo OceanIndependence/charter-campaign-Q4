@@ -1098,35 +1098,9 @@
   margin-top: 24px;
 }
 
-.days + .textLink {
-  margin-top: 18px;
-}
-
-/* Light theme: the design's deep-teal accent stands in for mint on the
-   light panel, where mint cannot be read. */
-[data-theme="light"] .itinCardEyebrow,
-[data-theme="light"] .itEyebrow,
-[data-theme="light"] .dayRowOn .dayNum,
-[data-theme="light"] .dayRowOn .dayName,
-[data-theme="light"] .itBack:hover {
-  color: #257d6b;
-}
-
-[data-theme="light"] .dayRowOn {
-  border-left-color: #257d6b;
-}
-
-[data-theme="light"] .dayRowOn .dayThumb {
-  border-color: #257d6b;
-}
-
-[data-theme="light"] .itinCard:hover {
-  border-color: rgba(37, 125, 107, 0.6);
-}
-
-[data-theme="light"] .dayRow:hover {
-  border-left-color: rgba(37, 125, 107, 0.6);
-}
+/* The itinerary section keeps the mint accent on both themes: the eyebrows,
+   the selected day's rule, number, name and thumbnail border are mint on the
+   light panel exactly as they are on the dark one. */
 
 @media (max-width: 760px) {
   .header {

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-17T14:09:46.298Z",
+  "generatedAt": "2026-09-17T14:38:36.432Z",
   "itineraries": {
     "https://www.oceanindependence.com/yacht-charter/itineraries/antarctica/antarctica-itinerary/": {
       "title": "Antarctica Itinerary",
@@ -647,7 +647,7 @@
               "name": "dominica",
               "lat": 15.4021,
               "lon": -61.4273,
-              "source": "atlas:caribbean/the-windward-islands/st-vincent-the-grenadines/dominica"
+              "source": "atlas:caribbean/the-windward-islands/dominica"
             }
           ]
         },
@@ -658,13 +658,13 @@
               "name": "dominica",
               "lat": 15.4021,
               "lon": -61.4273,
-              "source": "atlas:caribbean/the-windward-islands/st-vincent-the-grenadines/dominica"
+              "source": "atlas:caribbean/the-windward-islands/dominica"
             },
             {
               "name": "martinique",
               "lat": 14.6415,
               "lon": -61.0242,
-              "source": "atlas:caribbean/the-windward-islands/st-vincent-the-grenadines/martinique"
+              "source": "atlas:caribbean/the-windward-islands/martinique"
             }
           ]
         },
@@ -675,7 +675,7 @@
               "name": "martinique",
               "lat": 14.6415,
               "lon": -61.0242,
-              "source": "atlas:caribbean/the-windward-islands/st-vincent-the-grenadines/martinique"
+              "source": "atlas:caribbean/the-windward-islands/martinique"
             },
             {
               "name": "st lucia",

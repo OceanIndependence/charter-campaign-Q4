@@ -113,9 +113,9 @@ The itineraries each destination shows, in display order. **None** marks a desti
 | `caribbean/leeward-islands/st-barts` | 3 | St Maarten to St Maarten |
 | `caribbean/leeward-islands/st-maarten` | 3 | St Maarten to St Maarten |
 | `caribbean/the-windward-islands` | 2 | Antigua to St Lucia |
+| `caribbean/the-windward-islands/dominica` | 3 | Antigua to St Lucia |
+| `caribbean/the-windward-islands/martinique` | 3 | Antigua to St Lucia |
 | `caribbean/the-windward-islands/st-vincent-the-grenadines` | 3 | **None** |
-| `caribbean/the-windward-islands/st-vincent-the-grenadines/dominica` | 4 | Antigua to St Lucia |
-| `caribbean/the-windward-islands/st-vincent-the-grenadines/martinique` | 4 | Antigua to St Lucia |
 | `caribbean/virgin-islands` | 2 | Tortola to Tortola · St. Thomas to St. Thomas |
 | `caribbean/virgin-islands/british-virgin-islands` | 3 | Tortola to Tortola · St. Thomas to St. Thomas |
 | `caribbean/virgin-islands/us-virgin-islands` | 3 | St. Thomas to St. Thomas |
@@ -268,8 +268,8 @@ The itineraries each destination shows, in display order. **None** marks a desti
 | `caribbean/the-bahamas/bimini-islands` | Nassau to Nassau |
 | `caribbean/the-bahamas/bimini-islands` | The Florida Keys |
 | `caribbean/the-bahamas/grand-bahama` | Nassau to Nassau |
+| `caribbean/the-windward-islands/martinique` | St Maarten to St Maarten |
 | `caribbean/the-windward-islands/st-vincent-the-grenadines` | Antigua to St Lucia |
-| `caribbean/the-windward-islands/st-vincent-the-grenadines/martinique` | St Maarten to St Maarten |
 | `caribbean/virgin-islands` | St Maarten to St Maarten |
 | `caribbean/virgin-islands/us-virgin-islands` | Tortola to Tortola |
 | `mediterranean` | Calvi to Cala di Volpe |
@@ -345,10 +345,20 @@ either way here.
 | `data/destinations.json` | Untouched. `itineraryLinks` is still written by the crawl and is no longer read by the build. |
 | `content/itinerary-stops.json`, the geocoding, the hand corrections, the route drawing | Untouched. |
 
-### The two redirected destination ids
+### The two redirected destination ids — now corrected
 
-The manifest lists `caribbean/the-windward-islands/st-vincent-the-grenadines/dominica` and
-`.../martinique`, which are the ids currently in the snapshot. The reconciliation found both are 301 redirects
-and belong directly under The Windward Islands. If that is ever corrected in the snapshot, these two manifest
-lines must be updated in the same commit, or the build will fail with `manifest: itinerary "…" lists
-destination "…", which has no record in data/destinations.json` — which is the intended behaviour.
+Dominica and Martinique were nested under St Vincent & the Grenadines in the snapshot because the importer
+derived their ids from the URLs it followed rather than from each page's canonical URL. The website tree has
+since been fixed, and both now sit directly under The Windward Islands:
+
+| Was | Is |
+|---|---|
+| `caribbean/the-windward-islands/st-vincent-the-grenadines/dominica` (level 4) | `caribbean/the-windward-islands/dominica` (level 3) |
+| `caribbean/the-windward-islands/st-vincent-the-grenadines/martinique` (level 4) | `caribbean/the-windward-islands/martinique` (level 3) |
+
+`data/destinations.json`, the two manifest lines in `content/itinerary-destinations.json` and the four
+provenance labels in `content/itinerary-stops.json` were all updated in the same commit, so the build does not
+fail with `manifest: itinerary "…" lists destination "…", which has no record in data/destinations.json`.
+Coordinates were carried across unchanged: Dominica stays at 15.4021, -61.4273 and Martinique at 14.6415,
+-61.0242, and the geocoder made no requests on the rebuild. The Windward Islands now lists all three children,
+and St Vincent & the Grenadines lists none.

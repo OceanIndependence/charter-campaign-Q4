@@ -62,10 +62,10 @@ Edit coordinates in `content/itinerary-stops.json`; a re-run keeps hand-correcte
 | antigua to st lucia | 1 | antigua to guadeloupe | guadeloupe | 16.2528827 | -61.5686855 | nominatim (“guadeloupe, Caribbean”) |  |
 | antigua to st lucia | 2 | guadeloupe | guadeloupe | 16.2528827 | -61.5686855 | nominatim (“guadeloupe, Caribbean”) |  |
 | antigua to st lucia | 3 | guadeloupe to dominica | guadeloupe | 16.2528827 | -61.5686855 | nominatim (“guadeloupe, Caribbean”) |  |
-| antigua to st lucia | 3 | guadeloupe to dominica | dominica | 15.4021 | -61.4273 | atlas:caribbean/the-windward-islands/st-vincent-the-grenadines/dominica |  |
-| antigua to st lucia | 4 | dominica to martinique | dominica | 15.4021 | -61.4273 | atlas:caribbean/the-windward-islands/st-vincent-the-grenadines/dominica |  |
-| antigua to st lucia | 4 | dominica to martinique | martinique | 14.6415 | -61.0242 | atlas:caribbean/the-windward-islands/st-vincent-the-grenadines/martinique |  |
-| antigua to st lucia | 5 | martinique to st lucia | martinique | 14.6415 | -61.0242 | atlas:caribbean/the-windward-islands/st-vincent-the-grenadines/martinique |  |
+| antigua to st lucia | 3 | guadeloupe to dominica | dominica | 15.4021 | -61.4273 | atlas:caribbean/the-windward-islands/dominica |  |
+| antigua to st lucia | 4 | dominica to martinique | dominica | 15.4021 | -61.4273 | atlas:caribbean/the-windward-islands/dominica |  |
+| antigua to st lucia | 4 | dominica to martinique | martinique | 14.6415 | -61.0242 | atlas:caribbean/the-windward-islands/martinique |  |
+| antigua to st lucia | 5 | martinique to st lucia | martinique | 14.6415 | -61.0242 | atlas:caribbean/the-windward-islands/martinique |  |
 | antigua to st lucia | 5 | martinique to st lucia | st lucia | 13.9131308 | -61.1357109 | map-pin |  |
 | antigua to st lucia | 6 | the pitons to vieux fort | the pitons | 51.0012651 | -1.3695788 | nominatim-far (“the pitons”) | not drawn — 6600 km from the itinerary's map pins; correct it here to draw it |
 | antigua to st lucia | 6 | the pitons to vieux fort | vieux fort | 13.7381064 | -60.971736 | nominatim (“vieux fort, Caribbean”) |  |

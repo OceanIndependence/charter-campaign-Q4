@@ -1559,6 +1559,8 @@
         }
       ],
       "childIds": [
+        "caribbean/the-windward-islands/dominica",
+        "caribbean/the-windward-islands/martinique",
         "caribbean/the-windward-islands/st-vincent-the-grenadines"
       ],
       "yachtIds": [
@@ -6130,10 +6132,7 @@
           "value": "Martinique · Dominica"
         }
       ],
-      "childIds": [
-        "caribbean/the-windward-islands/st-vincent-the-grenadines/dominica",
-        "caribbean/the-windward-islands/st-vincent-the-grenadines/martinique"
-      ],
+      "childIds": [],
       "yachtIds": [
         "yf-5050",
         "yf-5040",
@@ -11945,12 +11944,12 @@
       "featured": false
     },
     {
-      "id": "caribbean/the-windward-islands/st-vincent-the-grenadines/dominica",
+      "id": "caribbean/the-windward-islands/dominica",
       "slug": "dominica",
       "name": "Dominica",
-      "url": "https://www.oceanindependence.com/yacht-charter/destinations/caribbean/the-windward-islands/st-vincent-the-grenadines/dominica/",
-      "level": 4,
-      "parentId": "caribbean/the-windward-islands/st-vincent-the-grenadines",
+      "url": "https://www.oceanindependence.com/yacht-charter/destinations/caribbean/the-windward-islands/dominica/",
+      "level": 3,
+      "parentId": "caribbean/the-windward-islands",
       "regionId": "caribbean",
       "lat": 15.4021,
       "lon": -61.4273,
@@ -11990,12 +11989,12 @@
       "featured": false
     },
     {
-      "id": "caribbean/the-windward-islands/st-vincent-the-grenadines/martinique",
+      "id": "caribbean/the-windward-islands/martinique",
       "slug": "martinique",
       "name": "Martinique",
-      "url": "https://www.oceanindependence.com/yacht-charter/destinations/caribbean/the-windward-islands/st-vincent-the-grenadines/martinique/",
-      "level": 4,
-      "parentId": "caribbean/the-windward-islands/st-vincent-the-grenadines",
+      "url": "https://www.oceanindependence.com/yacht-charter/destinations/caribbean/the-windward-islands/martinique/",
+      "level": 3,
+      "parentId": "caribbean/the-windward-islands",
       "regionId": "caribbean",
       "lat": 14.6415,
       "lon": -61.0242,
