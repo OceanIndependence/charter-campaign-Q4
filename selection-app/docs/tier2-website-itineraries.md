@@ -108,7 +108,7 @@ ready) and a `zoomMax` prop.
 **Destination state**: eyebrow, name, deck line, paragraph (labels unchanged), the consultant's note, the
 **peek carousel** (§2: 82% slides, 10px gap, scroll-snap, native swipe on touch, pointer drag on desktop with
 snap disabled during the drag and re-enabled on release, arrows stepping exactly one slide, a counter derived
-from `scrollLeft`), SEE THE YACHTS ↓, then the **itinerary cards** (§3: count-aware SAMPLE ITINERARY /
+from `scrollLeft`), SEE THE YACHTS, then the **itinerary cards** (§3: count-aware SAMPLE ITINERARY /
 ITINERARIES heading; each card `<N> DAYS · <FIRST> TO <LAST>` or `· <PORT> RETURN`, the title, the stops
 joined with `·`, VIEW ROUTE ON THE MAP →). The old two-image grid is gone.
 

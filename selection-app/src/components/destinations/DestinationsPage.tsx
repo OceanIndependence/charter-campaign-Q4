@@ -953,7 +953,7 @@ function DestinationPanel({
       )}
       {images.length > 0 && <PeekCarousel images={images.map((img) => img.value)} name={dest.name} />}
       <button type="button" className={styles.textLink} onClick={onSeeYachts}>
-        SEE THE YACHTS ↓
+        SEE THE YACHTS
       </button>
       {itineraries.length > 0 && (
         <div className={styles.itins}>
