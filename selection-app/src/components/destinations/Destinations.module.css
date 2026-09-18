@@ -426,6 +426,25 @@
   color: var(--fg);
 }
 
+/* SEE THE YACHTS, on the VIEW BROCHURE treatment (.cardBrochureLink on the
+   rail, SpecPanel .brochureLink in the drawer): the same small caps over a 2px
+   mint rule, 7px beneath the label. The rule gives the panel's one way out the
+   weight of a button; the type and its hover come from .textLink above. The
+   global `button` reset zeroes border and padding, so both are restated here
+   rather than inherited. */
+.textLinkRule {
+  border-bottom: 2px solid var(--mint);
+  padding-bottom: 7px;
+}
+
+/* Light theme: the label reads in full ink, hover included, as the brochure
+   link does — mint stays decoration and never becomes the text. The rule
+   beneath it stays mint in both themes. */
+[data-theme="light"] .textLinkRule,
+[data-theme="light"] .textLinkRule:hover {
+  color: var(--fg);
+}
+
 .note {
   font-size: 12.5px;
   line-height: 1.75;
