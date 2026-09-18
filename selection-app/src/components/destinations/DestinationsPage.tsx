@@ -21,7 +21,7 @@ const HOME = { lat: 40.2, lon: 12.6, zoom: 2.6 };
 const CHOSEN_ZOOM = 3.6;
 const OTHER_ZOOM = 2.2;
 /** The globe may fly down to a single anchorage on a route (the Atlas stops at 8). */
-const ZOOM_MAX = 80;
+const ZOOM_MAX = 130;
 /** The side panel's width, as in the design: min(460px, 88vw). */
 const PANEL_PX = 460;
 const PANEL_VW = 0.88;
@@ -385,7 +385,13 @@ export default function DestinationsPage({ config }: { config: DestinationsPageC
     }
   }, [itin, byId, chosenIds, clearRoute, scrollPanelTop]);
 
-  /** A stop: about twice as close as the route fit, so its coastline fills the frame. */
+  /**
+   * A stop: much closer than the route fit, so selecting a day reads as a jump
+   * from one anchorage to the next rather than a nudge across the same view.
+   * Still proportional to the route, so a long passage keeps its sense of
+   * scale, but the floor and the ceiling are both close enough that a stop is
+   * a place rather than a region.
+   */
   const selectStop = useCallback(
     (i: number) => {
       const it = openItinerary_;
@@ -398,7 +404,7 @@ export default function DestinationsPage({ config }: { config: DestinationsPageC
       if (!g) return;
       g.setSelected(stopPinId(i));
       const f = fitRoute(it.stops.flatMap((x) => x.points));
-      g.flyTo(end.lat, end.lon, Math.min(48, Math.max(18, f.zoom * 2.2)), 1250);
+      g.flyTo(end.lat, end.lon, Math.min(120, Math.max(34, f.zoom * 3.6)), 1250);
     },
     [openItinerary_]
   );
