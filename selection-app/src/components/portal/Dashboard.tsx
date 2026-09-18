@@ -389,15 +389,15 @@ export default function Dashboard() {
 const TIER_CARDS: Array<{ tier: Tier; title: string; body: string; cta: string }> = [
   {
     tier: 2,
-    title: "Personalised destinations and shortlist",
-    body: "Three destinations for one client, pinned bright on the globe, with the yachts in a rail beneath it and a detail drawer for each.",
-    cta: "CREATE A PERSONALISED SELECTION",
+    title: "Personalised destinations & shortlist",
+    body: "Three destinations chosen for a prospect and available yachts for each.",
+    cta: "CREATE A SELECTION",
   },
   {
     tier: 3,
     title: "Yacht Selection",
-    body: "A shortlist of specific yachts for a client whose destination is already settled: the ring carousel, specification panels and your contact details.",
-    cta: "CREATE A YACHT SELECTION",
+    body: "A shortlist of yachts for a client who has either chartered with you before or has enquired about a charter.",
+    cta: "CREATE A SELECTION",
   },
 ];
 
